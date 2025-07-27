@@ -1,0 +1,216 @@
+{
+  "name": "KRYONIX - Plataforma SaaS Brasileira",
+  "short_name": "KRYONIX",
+  "description": "Plataforma de automação e marketing digital otimizada para empreendedores brasileiros. WhatsApp Business, PIX, IA e muito mais.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#059669",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "tools", "marketing"],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+
+  "icons": [
+    {
+      "src": "/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile-dashboard.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dashboard principal com métricas em tempo real"
+    },
+    {
+      "src": "/screenshots/mobile-whatsapp.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Gestão WhatsApp Business integrada"
+    },
+    {
+      "src": "/screenshots/mobile-automation.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Automações inteligentes para seu negócio"
+    },
+    {
+      "src": "/screenshots/desktop-overview.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Visão completa da plataforma KRYONIX"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "WhatsApp Business",
+      "short_name": "WhatsApp",
+      "description": "Acessar gestão do WhatsApp Business",
+      "url": "/whatsapp?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-whatsapp.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "PIX e Pagamentos",
+      "short_name": "PIX",
+      "description": "Gerenciar recebimentos PIX",
+      "url": "/billing?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-pix.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Automações",
+      "short_name": "Automações",
+      "description": "Criar e gerenciar automações",
+      "url": "/workflows?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-automation.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "IA Assistente",
+      "short_name": "IA",
+      "description": "Conversar com assistente inteligente",
+      "url": "/ai-assistant?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icons/shortcut-ai.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://kryonix.com.br/manifest.json"
+    }
+  ],
+
+  "prefer_related_applications": false,
+
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+
+  "protocol_handlers": [
+    {
+      "protocol": "web+kryonix",
+      "url": "/handle-protocol?url=%s"
+    }
+  ],
+
+  "file_handlers": [
+    {
+      "action": "/import-data",
+      "accept": {
+        "application/json": [".json"],
+        "text/csv": [".csv"],
+        "application/vnd.ms-excel": [".xlsx"]
+      }
+    }
+  ],
+
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "file",
+          "accept": ["image/*", "application/pdf", ".csv", ".xlsx"]
+        }
+      ]
+    }
+  }
+}

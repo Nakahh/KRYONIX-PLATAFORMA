@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # PostgreSQL - Banco de dados principal
+  postgres:
+    image: postgres:15-alpine
+    container_name: kryonix-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kryonix_dev
+      POSTGRES_USER: kryonix
+      POSTGRES_PASSWORD: kryonix123
+      POSTGRES_SCHEMA: public
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - kryonix-network
+
+  # Redis - Cache e filas
+  redis:
+    image: redis:7-alpine
+    container_name: kryonix-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass kryonix123
+    volumes:
+      - redis_data:/data
+    networks:
+      - kryonix-network
+
+  # MinIO - Armazenamento de arquivos
+  minio:
+    image: minio/minio:latest
+    container_name: kryonix-minio-dev
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: kryonix
+      MINIO_ROOT_PASSWORD: kryonix123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - kryonix-network
+
+  # RabbitMQ - Sistema de filas
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: kryonix-rabbitmq-dev
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: kryonix
+      RABBITMQ_DEFAULT_PASS: kryonix123
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - kryonix-network
+
+  # PgAdmin - Interface de administração do PostgreSQL
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: kryonix-pgadmin-dev
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@kryonix.com.br
+      PGADMIN_DEFAULT_PASSWORD: kryonix123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - kryonix-network
+
+  # RedisInsight - Interface de administração do Redis
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: kryonix-redisinsight-dev
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    volumes:
+      - redisinsight_data:/db
+    depends_on:
+      - redis
+    networks:
+      - kryonix-network
+
+  # Mailcatcher - Servidor SMTP local para testes
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: kryonix-mailcatcher-dev
+    restart: unless-stopped
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - kryonix-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  rabbitmq_data:
+  pgadmin_data:
+  redisinsight_data:
+
+networks:
+  kryonix-network:
+    driver: bridge
+    name: kryonix-dev-network

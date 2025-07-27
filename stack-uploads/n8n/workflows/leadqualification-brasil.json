@@ -1,0 +1,242 @@
+{
+  "name": "Qualificação de Leads Brasil - KRYONIX",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/webhook/lead-brasil",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "4c0a3e01-4e6d-4f2e-bdf0-4a6e7d2a8b9c",
+      "name": "Webhook Lead Brasil",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "lead-brasil-kryonix"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Validação de documentos brasileiros\nfunction validarCPF(cpf) {\n  cpf = cpf.replace(/[^\\d]+/g, '');\n  if (cpf.length !== 11 || !!cpf.match(/^(\\d)\\1{10}$/)) return false;\n  \n  let soma = 0;\n  for (let i = 0; i < 9; i++) {\n    soma += parseInt(cpf.charAt(i)) * (10 - i);\n  }\n  let resto = (soma * 10) % 11;\n  if (resto === 10 || resto === 11) resto = 0;\n  if (resto !== parseInt(cpf.charAt(9))) return false;\n  \n  soma = 0;\n  for (let i = 0; i < 10; i++) {\n    soma += parseInt(cpf.charAt(i)) * (11 - i);\n  }\n  resto = (soma * 10) % 11;\n  if (resto === 10 || resto === 11) resto = 0;\n  return resto === parseInt(cpf.charAt(10));\n}\n\nfunction validarCNPJ(cnpj) {\n  cnpj = cnpj.replace(/[^\\d]+/g, '');\n  if (cnpj.length !== 14) return false;\n  \n  let tamanho = cnpj.length - 2;\n  let numeros = cnpj.substring(0, tamanho);\n  let digitos = cnpj.substring(tamanho);\n  let soma = 0;\n  let pos = tamanho - 7;\n  \n  for (let i = tamanho; i >= 1; i--) {\n    soma += numeros.charAt(tamanho - i) * pos--;\n    if (pos < 2) pos = 9;\n  }\n  \n  let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;\n  if (resultado !== parseInt(digitos.charAt(0))) return false;\n  \n  tamanho = tamanho + 1;\n  numeros = cnpj.substring(0, tamanho);\n  soma = 0;\n  pos = tamanho - 7;\n  \n  for (let i = tamanho; i >= 1; i--) {\n    soma += numeros.charAt(tamanho - i) * pos--;\n    if (pos < 2) pos = 9;\n  }\n  \n  resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;\n  return resultado === parseInt(digitos.charAt(1));\n}\n\n// Obter dados do lead\nconst leadData = items[0].json;\nconst documento = leadData.documento || '';\nconst telefone = leadData.telefone || '';\nconst email = leadData.email || '';\nconst nome = leadData.nome || '';\nconst empresa = leadData.empresa || '';\n\n// Validações brasileiras\nlet tipoDocumento = '';\nlet documentoValido = false;\n\nif (documento.replace(/[^\\d]+/g, '').length === 11) {\n  tipoDocumento = 'CPF';\n  documentoValido = validarCPF(documento);\n} else if (documento.replace(/[^\\d]+/g, '').length === 14) {\n  tipoDocumento = 'CNPJ';\n  documentoValido = validarCNPJ(documento);\n}\n\n// Validação de telefone brasileiro\nconst telefoneRegex = /^(?:\\+?55)?(?:\\s?\\(?0?([1-9]{2})\\)?\\s?)?(?:((?:9\\d|[2-9])\\d{3})(\\d{4}))$/;\nconst telefoneValido = telefoneRegex.test(telefone.replace(/[^\\d+]/g, ''));\n\n// Score de qualificação\nlet score = 0;\nif (documentoValido) score += 30;\nif (telefoneValido) score += 25;\nif (email && email.includes('@')) score += 20;\nif (nome && nome.length > 2) score += 15;\nif (empresa && empresa.length > 2) score += 10;\n\n// Classificação do lead\nlet classificacao = '';\nif (score >= 80) classificacao = 'HOT';\nelse if (score >= 60) classificacao = 'WARM';\nelse if (score >= 40) classificacao = 'COLD';\nelse classificacao = 'INVALID';\n\n// Dados enriquecidos\nconst leadEnriquecido = {\n  ...leadData,\n  documento: {\n    numero: documento,\n    tipo: tipoDocumento,\n    valido: documentoValido\n  },\n  telefone: {\n    numero: telefone,\n    valido: telefoneValido,\n    formatado: telefone.replace(/^(\\+?55)?([1-9]{2})(\\d{4,5})(\\d{4})$/, '+55 ($2) $3-$4')\n  },\n  qualificacao: {\n    score: score,\n    classificacao: classificacao,\n    dataQualificacao: new Date().toISOString(),\n    validacoesBrasil: {\n      documentoBrasileiroValido: documentoValido,\n      telefoneBrasileiroValido: telefoneValido\n    }\n  },\n  origem: 'KRYONIX-Brasil',\n  timezone: 'America/Sao_Paulo'\n};\n\nreturn [{ json: leadEnriquecido }];"
+      },
+      "id": "8a1b2c3d-4e5f-6789-0abc-def123456789",
+      "name": "Validação Documentos BR",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.qualificacao.classificacao}}",
+              "operation": "notEqual",
+              "value2": "INVALID"
+            }
+          ]
+        }
+      },
+      "id": "2b3c4d5e-6f78-9abc-def0-123456789abc",
+      "name": "Lead Válido?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api.kryonix.com.br/whatsapp/send",
+        "jsonParameters": true,
+        "bodyParametersJson": "={\n  \"phone\": \"{{$json.telefone.numero}}\",\n  \"message\": \"Olá {{$json.nome}}! 👋\\n\\nObrigado pelo seu interesse na KRYONIX! \\n\\nRecebemos seus dados e em breve nossa equipe entrará em contato.\\n\\n✅ Seus dados foram validados com sucesso\\n📱 Telefone: {{$json.telefone.formatado}}\\n📋 Documento: {{$json.documento.tipo}} válido\\n\\n🚀 Prepare-se para revolucionar seu negócio com nossa IA brasileira!\\n\\nEquipe KRYONIX\",\n  \"instanceName\": \"KRYONIX-MAIN\"\n}",
+        "headerParametersJson": "={\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer 6f78dbffc4acd9a32b926a38892a23f0\"\n}",
+        "options": {}
+      },
+      "id": "3c4d5e6f-7890-abcd-ef12-3456789abcde",
+      "name": "WhatsApp Confirmação",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [900, 180]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api.kryonix.com.br/crm/leads",
+        "jsonParameters": true,
+        "bodyParametersJson": "={{$json}}",
+        "headerParametersJson": "={\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer 6f78dbffc4acd9a32b926a38892a23f0\"\n}",
+        "options": {}
+      },
+      "id": "4d5e6f78-90ab-cdef-1234-56789abcdef0",
+      "name": "Salvar no CRM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.qualificacao.classificacao}}",
+              "value2": "HOT"
+            }
+          ]
+        }
+      },
+      "id": "5e6f7890-abcd-ef12-3456-789abcdef012",
+      "name": "Lead HOT?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "https://api.kryonix.com.br/notifications/team",
+        "jsonParameters": true,
+        "bodyParametersJson": "={\n  \"type\": \"hot_lead\",\n  \"title\": \"🔥 LEAD HOT DETECTADO!\",\n  \"message\": \"Lead de alta qualidade identificado: {{$json.nome}} ({{$json.qualificacao.score}} pontos)\\n\\n📱 {{$json.telefone.formatado}}\\n📧 {{$json.email}}\\n🏢 {{$json.empresa}}\\n\\n⚡ Ação requerida: Contato imediato!\",\n  \"priority\": \"high\",\n  \"channels\": [\"whatsapp\", \"email\", \"slack\"],\n  \"assignTo\": \"vendas-team\"\n}",
+        "headerParametersJson": "={\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer 6f78dbffc4acd9a32b926a38892a23f0\"\n}",
+        "options": {}
+      },
+      "id": "6f789012-3456-789a-bcde-f0123456789a",
+      "name": "Notificar Equipe HOT",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1340, 180]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Lead processado com sucesso\",\n  \"leadId\": \"{{$json.id || 'temp-' + Date.now()}}\",\n  \"qualificacao\": \"{{$json.qualificacao.classificacao}}\",\n  \"score\": {{$json.qualificacao.score}},\n  \"validacoes\": {\n    \"documento\": {{$json.documento.valido}},\n    \"telefone\": {{$json.telefone.valido}}\n  },\n  \"proximosPassos\": [\n    \"Contato via WhatsApp enviado\",\n    \"Lead salvo no CRM\",\n    {{#if (eq $json.qualificacao.classificacao \"HOT\")}}\"Equipe de vendas notificada\"{{else}}\"Lead será processado conforme prioridade\"{{/if}}\n  ],\n  \"timestamp\": \"{{new Date().toISOString()}}\",\n  \"timezone\": \"America/Sao_Paulo\"\n}"
+      },
+      "id": "7890123a-bcde-f012-3456-789abcdef012",
+      "name": "Resposta Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1560, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Lead Brasil": {
+      "main": [
+        [
+          {
+            "node": "Validação Documentos BR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validação Documentos BR": {
+      "main": [
+        [
+          {
+            "node": "Lead Válido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Válido?": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Confirmação",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Salvar no CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Salvar no CRM": {
+      "main": [
+        [
+          {
+            "node": "Lead HOT?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead HOT?": {
+      "main": [
+        [
+          {
+            "node": "Notificar Equipe HOT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resposta Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Confirmação": {
+      "main": [
+        [
+          {
+            "node": "Resposta Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar Equipe HOT": {
+      "main": [
+        [
+          {
+            "node": "Resposta Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "timezone": "America/Sao_Paulo"
+  },
+  "versionId": "brasil-v1.0",
+  "meta": {
+    "instanceId": "kryonix-brasil-leads"
+  },
+  "tags": [
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "brasil",
+      "name": "Brasil"
+    },
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "leads",
+      "name": "Leads"
+    },
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "kryonix",
+      "name": "KRYONIX"
+    }
+  ]
+}

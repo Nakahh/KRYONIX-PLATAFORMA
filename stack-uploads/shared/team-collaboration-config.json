@@ -1,0 +1,233 @@
+{
+  "collaboration_config": {
+    "platform": "KRYONIX Team Collaboration",
+    "version": "2.0",
+    "brazilian_context": true,
+    "integrations": {
+      "whatsapp": {
+        "enabled": true,
+        "evolution_api_url": "https://api.kryonix.com.br",
+        "webhook_notifications": true,
+        "auto_sync_contacts": true,
+        "message_bridge": {
+          "team_to_whatsapp": true,
+          "whatsapp_to_team": true,
+          "format": "brazilian"
+        }
+      },
+      "slack": {
+        "enabled": true,
+        "webhook_url": "https://hooks.slack.com/services/...",
+        "channels": ["#desenvolvimento", "#vendas", "#suporte", "#geral"],
+        "mention_mapping": {
+          "@owner": "@vitor.nakah",
+          "@admin": "@admin-team",
+          "@dev": "@dev-team"
+        }
+      },
+      "n8n": {
+        "enabled": true,
+        "workflow_triggers": [
+          "new_project_created",
+          "task_completed",
+          "deadline_approaching",
+          "team_member_joined"
+        ],
+        "automation_endpoints": [
+          "https://n8n.kryonix.com.br/webhook/team-notification",
+          "https://n8n.kryonix.com.br/webhook/project-update"
+        ]
+      }
+    },
+    "notification_channels": {
+      "priority_mapping": {
+        "critica": ["whatsapp", "email", "push", "slack"],
+        "alta": ["email", "push", "slack"],
+        "media": ["push", "slack"],
+        "baixa": ["push"]
+      },
+      "brazilian_templates": {
+        "new_message": {
+          "whatsapp": "🔔 {{author_name}} enviou uma mensagem no canal #{{channel_name}}: \"{{message_preview}}\"",
+          "email": "Nova mensagem de {{author_name}} no KRYONIX Team",
+          "push": "💬 {{author_name}}: {{message_preview}}"
+        },
+        "project_update": {
+          "whatsapp": "📊 Projeto '{{project_name}}' atualizado para {{progress}}% por {{author_name}}",
+          "email": "Atualização do projeto {{project_name}} - KRYONIX",
+          "push": "🚀 {{project_name}} - {{progress}}% concluído"
+        },
+        "deadline_alert": {
+          "whatsapp": "⏰ ATENÇÃO: O prazo do projeto '{{project_name}}' vence em {{days_remaining}} dias!",
+          "email": "Prazo se aproximando: {{project_name}} - KRYONIX",
+          "push": "⚠️ Prazo em {{days_remaining}} dias: {{project_name}}"
+        }
+      }
+    },
+    "security": {
+      "message_encryption": true,
+      "file_scanning": true,
+      "lgpd_compliance": {
+        "data_retention_days": 365,
+        "auto_delete_messages": true,
+        "consent_required": true,
+        "data_export_available": true
+      },
+      "access_control": {
+        "role_based_channels": true,
+        "private_messaging": true,
+        "admin_monitoring": true,
+        "audit_logging": true
+      }
+    },
+    "features": {
+      "voice_calls": {
+        "enabled": true,
+        "max_participants": 10,
+        "recording": true,
+        "transcription": "portuguese"
+      },
+      "video_calls": {
+        "enabled": true,
+        "max_participants": 25,
+        "screen_sharing": true,
+        "recording": true,
+        "whiteboard": true
+      },
+      "file_sharing": {
+        "max_file_size": "100MB",
+        "allowed_types": [
+          "pdf",
+          "doc",
+          "docx",
+          "xls",
+          "xlsx",
+          "ppt",
+          "pptx",
+          "jpg",
+          "png",
+          "gif",
+          "mp4",
+          "avi",
+          "zip",
+          "rar"
+        ],
+        "virus_scanning": true,
+        "preview_generation": true
+      },
+      "project_management": {
+        "kanban_boards": true,
+        "gantt_charts": true,
+        "time_tracking": true,
+        "milestone_tracking": true,
+        "resource_allocation": true,
+        "brazilian_holidays": true
+      }
+    },
+    "ai_integration": {
+      "smart_notifications": {
+        "enabled": true,
+        "model": "gpt-4o",
+        "language": "pt-BR",
+        "features": [
+          "message_summarization",
+          "priority_detection",
+          "sentiment_analysis",
+          "auto_categorization",
+          "smart_routing"
+        ]
+      },
+      "virtual_assistant": {
+        "enabled": true,
+        "name": "KRYONIX Assistant",
+        "personality": "professional_brazilian",
+        "capabilities": [
+          "schedule_meetings",
+          "create_tasks",
+          "generate_reports",
+          "answer_questions",
+          "provide_insights"
+        ]
+      }
+    },
+    "analytics": {
+      "team_productivity": {
+        "message_frequency": true,
+        "response_times": true,
+        "collaboration_index": true,
+        "project_velocity": true
+      },
+      "engagement_metrics": {
+        "active_users": true,
+        "peak_hours": true,
+        "channel_popularity": true,
+        "feature_usage": true
+      },
+      "performance_insights": {
+        "bottleneck_detection": true,
+        "workload_distribution": true,
+        "deadline_tracking": true,
+        "quality_metrics": true
+      }
+    },
+    "brazilian_customizations": {
+      "timezone": "America/Sao_Paulo",
+      "date_format": "DD/MM/YYYY",
+      "currency": "BRL",
+      "number_format": "pt-BR",
+      "work_schedule": {
+        "start": "08:00",
+        "end": "18:00",
+        "lunch_break": {
+          "start": "12:00",
+          "end": "13:00"
+        },
+        "days": [1, 2, 3, 4, 5]
+      },
+      "holidays": [
+        "2025-01-01",
+        "2025-02-24",
+        "2025-02-25",
+        "2025-04-18",
+        "2025-04-21",
+        "2025-05-01",
+        "2025-09-07",
+        "2025-10-12",
+        "2025-11-02",
+        "2025-11-15",
+        "2025-12-25"
+      ],
+      "cultural_adaptations": {
+        "greeting_style": "informal_friendly",
+        "emoji_usage": "frequent",
+        "communication_tone": "warm_professional",
+        "meeting_culture": "collaborative"
+      }
+    }
+  },
+  "installation_notes": {
+    "dependencies": [
+      "WebRTC for voice/video calls",
+      "Socket.IO for real-time messaging",
+      "File storage integration (MinIO)",
+      "Push notification service",
+      "Email integration (SendGrid)"
+    ],
+    "configuration_steps": [
+      "1. Configure environment variables for all integrations",
+      "2. Set up webhook endpoints for external services",
+      "3. Initialize database tables for chat and projects",
+      "4. Configure notification templates",
+      "5. Set up file upload handling",
+      "6. Test real-time connections",
+      "7. Verify LGPD compliance settings"
+    ],
+    "brazilian_compliance": {
+      "lgpd_requirements": "All message data encrypted and anonymizable",
+      "data_sovereignty": "All data stored within Brazil",
+      "user_consent": "Explicit consent required for data processing",
+      "data_portability": "Users can export all their data",
+      "right_to_deletion": "Users can request complete data deletion"
+    }
+  }
+}
