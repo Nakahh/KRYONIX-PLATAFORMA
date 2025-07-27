@@ -48,6 +48,7 @@ let notificationRoutes: any = null;
 let authRoutes: any = null;
 let authAdvancedRoutes: any = null;
 let stackConfigRoutes: any = null;
+let pixRoutes: any = null;
 let initializeDatabase: any = null;
 let checkDatabaseHealth: any = null;
 
@@ -63,6 +64,7 @@ if (process.env.NODE_ENV !== "test" && typeof window === "undefined") {
     authRoutes = require("./routes/auth");
     authAdvancedRoutes = require("./routes/auth-advanced");
     stackConfigRoutes = require("./routes/stack-config");
+    pixRoutes = require("./routes/pix");
     const dbConnection = require("./db/connection");
     initializeDatabase = dbConnection.initializeDatabase;
     checkDatabaseHealth = dbConnection.checkDatabaseHealth;
@@ -228,6 +230,7 @@ export function createServer() {
           mautic_marketing: mauticRoutes ? "active" : "not_loaded",
           notifications: notificationRoutes ? "active" : "not_loaded",
           authentication: authRoutes ? "active" : "not_loaded",
+          pix_payments: pixRoutes ? "active" : "not_loaded",
         },
       });
     } catch (error) {
@@ -483,6 +486,11 @@ export function createServer() {
     v1Router.use("/stack-config", stackConfigRoutes.default);
   }
 
+  // PIX Payment API routes (only if loaded)
+  if (pixRoutes) {
+    v1Router.use("/pix", pixRoutes.default);
+  }
+
   // Mount v1 routes with rate limiting
   app.use("/api/v1", apiRateLimit, v1Router);
 
@@ -682,6 +690,11 @@ export async function startServer() {
       console.log(
         "   - GET  /api/v1/notifications/track/* - Notification tracking",
       );
+    }
+
+    if (pixRoutes) {
+      console.log("   - POST /api/v1/pix/* - PIX Payment API");
+      console.log("   - POST /api/v1/pix/webhook - PIX Webhooks");
     }
 
     return app;

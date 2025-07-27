@@ -1,65 +1,88 @@
 {
-  "webhookConfig": {
-    "url": "https://api.kryonix.com.br/webhooks/evolution",
-    "events": [
-      "MESSAGES_UPSERT",
-      "MESSAGES_UPDATE",
-      "MESSAGES_DELETE",
-      "SEND_MESSAGE",
-      "CONTACTS_UPDATE",
-      "CONTACTS_UPSERT",
-      "PRESENCE_UPDATE",
-      "CHATS_UPDATE",
-      "CHATS_UPSERT",
-      "CHATS_DELETE",
-      "GROUPS_UPSERT",
-      "GROUPS_UPDATE",
-      "GROUP_PARTICIPANTS_UPDATE",
-      "CONNECTION_UPDATE",
-      "LABELS_EDIT",
-      "LABELS_ASSOCIATION",
-      "CALL_UPDATE"
-    ],
-    "base64": false,
-    "byEvents": true
-  },
-  "instanceConfig": {
-    "instanceName": "KRYONIX-MAIN",
-    "token": "6f78dbffc4acd9a32b926a38892a23f0",
-    "qrcode": true,
-    "markMessagesRead": true,
-    "delayMessage": 1000,
-    "markOnlineOnConnect": true,
-    "syncFullHistory": true,
-    "rejectCall": false,
-    "msgRetryCounterValue": 3,
-    "customUserAgent": "WhatsApp/2.2147.18 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
-    "browser": ["KRYONIX", "Chrome", "20.0.04"]
-  },
-  "businessProfile": {
-    "description": "Plataforma KRYONIX - Automação e IA para empresas brasileiras",
-    "category": "PROFESSIONAL_SERVICES",
-    "email": "contato@kryonix.com.br",
-    "website": ["https://kryonix.com.br"],
-    "address": {
-      "countryCode": "BR",
-      "locality": "São Paulo",
-      "region": "SP"
+  "webhooks": {
+    "kryonix_main": {
+      "url": "https://api.kryonix.com.br/api/v1/whatsapp/webhook",
+      "enabled": true,
+      "events": [
+        "MESSAGES_UPSERT",
+        "MESSAGES_UPDATE",
+        "CONNECTION_UPDATE",
+        "PRESENCE_UPDATE"
+      ],
+      "headers": {
+        "Authorization": "Bearer ${KRYONIX_API_KEY}",
+        "Content-Type": "application/json",
+        "X-Instance-Name": "{{instanceName}}",
+        "X-Event-Type": "{{eventType}}"
+      }
+    },
+    "n8n_automation": {
+      "url": "https://webhookn8n.kryonix.com.br/webhook/whatsapp",
+      "enabled": true,
+      "events": ["MESSAGES_UPSERT", "NEW_JWT_TOKEN"],
+      "headers": {
+        "Authorization": "Bearer ${N8N_WEBHOOK_KEY}",
+        "Content-Type": "application/json"
+      }
+    },
+    "typebot_integration": {
+      "url": "https://typebot.kryonix.com.br/api/v1/sessions/{{instanceName}}/continueChat",
+      "enabled": true,
+      "events": ["TYPEBOT_START", "TYPEBOT_CHANGE_STATUS"],
+      "headers": {
+        "Authorization": "Bearer ${TYPEBOT_API_KEY}",
+        "Content-Type": "application/json"
+      }
+    },
+    "mautic_leads": {
+      "url": "https://mautic.kryonix.com.br/api/contacts/new",
+      "enabled": true,
+      "events": ["CONTACTS_UPSERT", "CONTACTS_UPDATE"],
+      "headers": {
+        "Authorization": "Bearer ${MAUTIC_API_KEY}",
+        "Content-Type": "application/json"
+      }
+    },
+    "chatwoot_integration": {
+      "url": "https://chat.kryonix.com.br/api/v1/accounts/1/conversations",
+      "enabled": true,
+      "events": ["MESSAGES_UPSERT"],
+      "headers": {
+        "api_access_token": "${CHATWOOT_API_KEY}",
+        "Content-Type": "application/json"
+      }
     }
   },
-  "brasilianSettings": {
-    "timezone": "America/Sao_Paulo",
-    "language": "pt-BR",
-    "businessHours": {
-      "start": "08:00",
-      "end": "18:00",
-      "timezone": "America/Sao_Paulo"
+  "webhook_settings": {
+    "retry_attempts": 3,
+    "retry_delay": 5000,
+    "timeout": 10000,
+    "verify_ssl": true,
+    "log_webhooks": true,
+    "webhook_by_events": true
+  },
+  "event_filters": {
+    "MESSAGES_UPSERT": {
+      "filter_own_messages": true,
+      "filter_status_messages": true,
+      "min_message_length": 1
     },
-    "autoReply": {
-      "greeting": "Olá! 👋 Bem-vindo à KRYONIX. Como posso ajudá-lo hoje?",
-      "businessHours": "Nosso horário de atendimento é de segunda a sexta, das 8h às 18h (horário de Brasília).",
-      "afterHours": "No momento estamos fora do horário de atendimento. Responderemos em breve no próximo dia útil!",
-      "weekends": "Finais de semana nossa equipe está descansando 😊. Retornaremos na segunda-feira!"
+    "CONNECTION_UPDATE": {
+      "log_connection_changes": true,
+      "notify_disconnections": true
+    },
+    "CONTACTS_UPSERT": {
+      "filter_system_contacts": true,
+      "require_name": false
+    }
+  },
+  "webhook_security": {
+    "validate_origin": true,
+    "allowed_ips": ["144.202.90.55", "127.0.0.1"],
+    "require_auth": true,
+    "rate_limit": {
+      "max_requests": 1000,
+      "window_ms": 60000
     }
   }
 }

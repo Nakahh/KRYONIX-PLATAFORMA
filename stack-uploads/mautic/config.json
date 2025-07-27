@@ -1,0 +1,78 @@
+{
+  "name": "mautic",
+  "displayName": "Mautic Marketing",
+  "description": "Plataforma de automação de marketing completa",
+  "version": "5.0.4",
+  "category": "marketing",
+  "config": {
+    "database": {
+      "driver": "postgresql",
+      "host": "${DATABASE_HOST}",
+      "port": 5432,
+      "name": "mautic",
+      "user": "${DATABASE_USER}",
+      "password": "${DATABASE_PASSWORD}"
+    },
+    "site": {
+      "url": "https://mautic.${DOMAIN}",
+      "secret_key": "${MAUTIC_SECRET_KEY}",
+      "admin_email": "${ADMIN_EMAIL}",
+      "admin_password": "${ADMIN_PASSWORD}"
+    },
+    "email": {
+      "mailer_dsn": "${MAILER_DSN}",
+      "mailer_from_name": "Plataforma KRYONIX",
+      "mailer_from_email": "noreply@${DOMAIN}"
+    },
+    "integrations": {
+      "evolution_api": {
+        "webhook_url": "https://evolution.${DOMAIN}/webhook/mautic",
+        "api_key": "${EVOLUTION_API_KEY}"
+      },
+      "n8n": {
+        "webhook_url": "https://n8n.${DOMAIN}/webhook/mautic",
+        "api_token": "${N8N_API_TOKEN}"
+      }
+    },
+    "features": {
+      "tracking": true,
+      "dynamic_content": true,
+      "lead_scoring": true,
+      "campaigns": true,
+      "social_monitoring": true
+    }
+  },
+  "environment_variables": [
+    "MAUTIC_SECRET_KEY",
+    "DATABASE_HOST",
+    "DATABASE_USER",
+    "DATABASE_PASSWORD",
+    "ADMIN_EMAIL",
+    "ADMIN_PASSWORD",
+    "MAILER_DSN",
+    "DOMAIN",
+    "EVOLUTION_API_KEY",
+    "N8N_API_TOKEN"
+  ],
+  "docker_compose": {
+    "image": "mautic/mautic:5-apache",
+    "ports": ["8001:80"],
+    "volumes": [
+      "mautic_data:/var/www/html",
+      "./mautic/config:/var/www/html/app/config"
+    ],
+    "environment": {
+      "MAUTIC_DB_HOST": "${DATABASE_HOST}",
+      "MAUTIC_DB_NAME": "mautic",
+      "MAUTIC_DB_USER": "${DATABASE_USER}",
+      "MAUTIC_DB_PASSWORD": "${DATABASE_PASSWORD}",
+      "MAUTIC_TRUSTED_PROXIES": "0.0.0.0/0"
+    }
+  },
+  "health_check": {
+    "url": "/s/dashboard",
+    "method": "GET",
+    "expected_status": 200,
+    "interval": 30
+  }
+}

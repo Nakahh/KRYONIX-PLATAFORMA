@@ -1,0 +1,126 @@
+{
+  "server": {
+    "type": "http",
+    "port": 8080,
+    "url": "https://api.kryonix.com.br",
+    "exposedInside": false
+  },
+  "cors": {
+    "origin": [
+      "https://kryonix.com.br",
+      "https://app.kryonix.com.br",
+      "https://dashboard.kryonix.com.br"
+    ],
+    "methods": ["GET", "POST", "PUT", "DELETE"],
+    "credentials": true
+  },
+  "database": {
+    "enabled": true,
+    "connection": {
+      "uri": "${DATABASE_URL}",
+      "type": "postgresql",
+      "host": "postgres.kryonix.com.br",
+      "port": 5432,
+      "username": "kryonix",
+      "password": "${DB_PASSWORD}",
+      "database": "evolution_api",
+      "synchronize": false,
+      "logging": false
+    },
+    "redis": {
+      "enabled": true,
+      "uri": "${REDIS_URL}",
+      "prefix": "evolution:kryonix"
+    }
+  },
+  "webhook": {
+    "global": {
+      "url": "https://webhooks.kryonix.com.br/whatsapp",
+      "enabled": true,
+      "webhookByEvents": true
+    },
+    "events": [
+      "APPLICATION_STARTUP",
+      "QRCODE_UPDATED",
+      "CONNECTION_UPDATE",
+      "MESSAGES_UPSERT",
+      "MESSAGES_UPDATE",
+      "MESSAGES_DELETE",
+      "SEND_MESSAGE",
+      "CONTACTS_SET",
+      "CONTACTS_UPSERT",
+      "CONTACTS_UPDATE",
+      "PRESENCE_UPDATE",
+      "CHATS_SET",
+      "CHATS_UPSERT",
+      "CHATS_UPDATE",
+      "CHATS_DELETE",
+      "GROUPS_UPSERT",
+      "GROUP_UPDATE",
+      "GROUP_PARTICIPANTS_UPDATE",
+      "NEW_JWT_TOKEN",
+      "TYPEBOT_START",
+      "TYPEBOT_CHANGE_STATUS"
+    ]
+  },
+  "config_session_phone": {
+    "client": "KRYONIX",
+    "name": "KRYONIX Evolution API"
+  },
+  "qrcode": {
+    "limit": 30,
+    "color": {
+      "dark": "#198754",
+      "light": "#FFFFFF"
+    }
+  },
+  "typebot": {
+    "enabled": true,
+    "url": "https://typebot.kryonix.com.br",
+    "typebot": "kryonix-atendimento"
+  },
+  "auth": {
+    "api_key": {
+      "key": "${EVOLUTION_API_KEY}",
+      "enabled": true
+    },
+    "jwt": {
+      "enabled": true,
+      "secret": "${JWT_SECRET}",
+      "expiresIn": "1d"
+    }
+  },
+  "instance": {
+    "name": "KRYONIX WhatsApp",
+    "number": "${WHATSAPP_NUMBER}",
+    "token": "${WHATSAPP_TOKEN}",
+    "qrcode": true,
+    "integration": "WHATSAPP-BAILEYS"
+  },
+  "chamaai": {
+    "enabled": false
+  },
+  "openai_enabled": false,
+  "dify": {
+    "enabled": true,
+    "url": "https://dify.kryonix.com.br",
+    "token": "${DIFY_API_KEY}"
+  },
+  "production": true,
+  "log": {
+    "level": ["error", "warn", "info", "debug", "verbose"],
+    "color": true,
+    "baileys": "error"
+  },
+  "del_instance": {
+    "enabled": false
+  },
+  "provider": {
+    "enabled": true,
+    "host": "postgres.kryonix.com.br",
+    "port": 5432,
+    "username": "kryonix",
+    "password": "${DB_PASSWORD}",
+    "database": "evolution_api"
+  }
+}

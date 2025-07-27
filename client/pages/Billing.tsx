@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useMobileAdvanced } from '../hooks/use-mobile-advanced';
+import { useMobileAdvanced } from "../hooks/use-mobile-advanced";
 import {
   Card,
   CardContent,
@@ -27,6 +27,10 @@ import {
   Cloud,
   Shield,
   AlertTriangle,
+  QrCode,
+  Receipt,
+  Smartphone,
+  DollarSign,
 } from "lucide-react";
 import {
   Plan,
@@ -216,10 +220,13 @@ const BillingPage: React.FC = () => {
       </div>
 
       <Tabs defaultValue="plans" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="plans">Planos Disponíveis</TabsTrigger>
-          <TabsTrigger value="subscription">Minha Assinatura</TabsTrigger>
-          <TabsTrigger value="usage">Uso & Limites</TabsTrigger>
+        <TabsList
+          className={`grid w-full ${isMobile ? "grid-cols-2" : "grid-cols-4"}`}
+        >
+          <TabsTrigger value="plans">Planos</TabsTrigger>
+          <TabsTrigger value="subscription">Assinatura</TabsTrigger>
+          <TabsTrigger value="usage">Uso</TabsTrigger>
+          <TabsTrigger value="pix">PIX</TabsTrigger>
         </TabsList>
 
         <TabsContent value="plans" className="space-y-6">
@@ -545,6 +552,155 @@ const BillingPage: React.FC = () => {
               </CardContent>
             </Card>
           )}
+        </TabsContent>
+
+        <TabsContent value="pix" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Pagamento PIX */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <QrCode className="h-5 w-5 text-green-600" />
+                  Pagamento PIX
+                </CardTitle>
+                <CardDescription>
+                  Pague suas faturas instantaneamente com PIX
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PixPayment
+                  defaultAmount={currentPlan?.price || 0}
+                  description={`Assinatura ${currentPlan?.name || "KRYONIX"} - ${new Date().toLocaleDateString("pt-BR")}`}
+                  onPaymentComplete={(data) => {
+                    alert(`Pagamento PIX confirmado! TXID: ${data.txid}`);
+                    loadBillingData();
+                  }}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Histórico PIX */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Receipt className="h-5 w-5" />
+                  Histórico PIX
+                </CardTitle>
+                <CardDescription>Suas últimas transações PIX</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Mock histórico PIX */}
+                  {[
+                    {
+                      id: "1",
+                      date: "2024-01-15",
+                      amount: currentPlan?.price || 97,
+                      status: "CONCLUIDA",
+                      description: `Assinatura ${currentPlan?.name || "KRYONIX"}`,
+                      txid: "E12345678901234567890123456789012",
+                    },
+                    {
+                      id: "2",
+                      date: "2024-01-01",
+                      amount: currentPlan?.price || 97,
+                      status: "CONCLUIDA",
+                      description: `Assinatura ${currentPlan?.name || "KRYONIX"}`,
+                      txid: "E98765432109876543210987654321098",
+                    },
+                  ].map((transaction) => (
+                    <div
+                      key={transaction.id}
+                      className="flex items-center justify-between p-3 border rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-green-100 rounded-full">
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm">
+                            {transaction.description}
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            {new Date(transaction.date).toLocaleDateString(
+                              "pt-BR",
+                            )}{" "}
+                            • TXID: {transaction.txid.slice(-8)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-green-600">
+                          {formatCurrency(transaction.amount, "BRL")}
+                        </p>
+                        <Badge
+                          variant="outline"
+                          className="text-xs bg-green-50 text-green-700"
+                        >
+                          Pago
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Se não houver histórico */}
+                  {!currentPlan && (
+                    <div className="text-center py-8">
+                      <QrCode className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                      <h3 className="text-lg font-medium mb-2">
+                        Nenhuma Transação PIX
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        Suas transações PIX aparecerão aqui após o primeiro
+                        pagamento
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Vantagens PIX */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Smartphone className="h-5 w-5 text-blue-600" />
+                Vantagens do PIX
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center p-4">
+                  <div className="p-3 bg-green-100 rounded-full w-fit mx-auto mb-3">
+                    <Clock className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h4 className="font-semibold mb-2">Instantâneo</h4>
+                  <p className="text-sm text-gray-600">
+                    Transferência imediata, 24h por dia, 7 dias por semana
+                  </p>
+                </div>
+                <div className="text-center p-4">
+                  <div className="p-3 bg-blue-100 rounded-full w-fit mx-auto mb-3">
+                    <Shield className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h4 className="font-semibold mb-2">Seguro</h4>
+                  <p className="text-sm text-gray-600">
+                    Transações criptografadas e monitoradas pelo Banco Central
+                  </p>
+                </div>
+                <div className="text-center p-4">
+                  <div className="p-3 bg-purple-100 rounded-full w-fit mx-auto mb-3">
+                    <DollarSign className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <h4 className="font-semibold mb-2">Sem Taxa</h4>
+                  <p className="text-sm text-gray-600">
+                    Transfers gratuitas para pessoas físicas
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
