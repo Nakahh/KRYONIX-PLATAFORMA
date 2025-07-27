@@ -192,7 +192,12 @@ export async function checkDatabaseHealth() {
 export { redis as Redis };
 
 // Export function to get data source (compatibility)
-export const getDataSource = () => AppDataSource;
+export const getDataSource = () => {
+  if (!AppDataSource.isInitialized) {
+    return null;
+  }
+  return AppDataSource;
+};
 
 // Database connection class for compatibility
 export class DatabaseConnection {

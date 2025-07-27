@@ -9,6 +9,29 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
 import { initializePassport } from "./config/passport";
+import {
+  cacheMiddleware,
+  apiCache,
+  userCache,
+  analyticsCache,
+  whatsappCache,
+  cacheWarmingMiddleware,
+  compressionMiddleware,
+  getCacheStats,
+  clearAllCache,
+  invalidateCache,
+} from "./middleware/cache";
+import {
+  authRateLimit,
+  apiRateLimit,
+  whatsappRateLimit,
+  billingRateLimit,
+  suspiciousIPMiddleware,
+  suspiciousUserAgentMiddleware,
+  securityAuditMiddleware,
+  autoBlockMiddleware,
+  getSecurityStats,
+} from "./middleware/security";
 
 import { handleDemo } from "./routes/demo";
 import * as billingRoutes from "./routes/billing";
@@ -119,6 +142,18 @@ export function createServer() {
   app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+  // Security middlewares
+  app.use(suspiciousIPMiddleware());
+  app.use(suspiciousUserAgentMiddleware());
+  app.use(securityAuditMiddleware());
+  app.use(autoBlockMiddleware());
+
+  // Cache warming middleware
+  app.use(cacheWarmingMiddleware());
+
+  // Compression middleware
+  app.use(compressionMiddleware());
+
   // Raw body for webhooks
   app.use("/api/billing/webhook", express.raw({ type: "application/json" }));
   app.use("/api/webhooks/whatsapp/:tenantId/:instanceId", express.json());
@@ -127,6 +162,47 @@ export function createServer() {
   app.get("/api/ping", (_req, res) => {
     const ping = process.env.PING_MESSAGE ?? "KRYONIX API is running! ��";
     res.json({ message: ping });
+  });
+
+  // Cache management endpoints
+  app.get("/api/cache/stats", async (_req, res) => {
+    try {
+      const stats = await getCacheStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get cache stats" });
+    }
+  });
+
+  app.post("/api/cache/clear", async (_req, res) => {
+    try {
+      await clearAllCache();
+      res.json({ message: "Cache cleared successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to clear cache" });
+    }
+  });
+
+  app.post("/api/cache/invalidate/:pattern", async (req, res) => {
+    try {
+      await invalidateCache(req.params.pattern);
+      res.json({
+        message: `Cache invalidated for pattern: ${req.params.pattern}`,
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to invalidate cache" });
+    }
+  });
+
+  // Security management endpoints
+  app.get("/api/security/stats", async (req, res) => {
+    try {
+      const days = parseInt(req.query.days as string) || 7;
+      const stats = await getSecurityStats(days);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get security stats" });
+    }
   });
 
   app.get("/api/health", async (_req, res) => {
@@ -166,28 +242,32 @@ export function createServer() {
   // Demo route
   app.get("/api/demo", handleDemo);
 
-  // Authentication routes (no versioning)
+  // Authentication routes (no versioning) with rate limiting
   if (authRoutes) {
-    app.use("/api/auth", authRoutes.default);
+    app.use("/api/auth", authRateLimit, authRoutes.default);
   }
   if (authAdvancedRoutes) {
-    app.use("/api/v1/auth", authAdvancedRoutes.default);
+    app.use("/api/v1/auth", authRateLimit, authAdvancedRoutes.default);
   }
 
   // API v1 routes
   const v1Router = express.Router();
 
-  // Billing API routes
+  // Billing API routes (com cache)
   v1Router.get("/billing/health", billingRoutes.healthCheck);
-  v1Router.get("/billing/plans", billingRoutes.getPlans);
-  v1Router.get("/billing/plans/:planId", billingRoutes.getPlan);
+  v1Router.get("/billing/plans", apiCache, billingRoutes.getPlans);
+  v1Router.get("/billing/plans/:planId", apiCache, billingRoutes.getPlan);
 
   v1Router.post("/billing/subscriptions", ...billingRoutes.createSubscription);
-  v1Router.get("/billing/subscription", ...billingRoutes.getSubscription);
+  v1Router.get(
+    "/billing/subscription",
+    userCache,
+    ...billingRoutes.getSubscription,
+  );
   v1Router.put("/billing/subscription", ...billingRoutes.updateSubscription);
   v1Router.delete("/billing/subscription", ...billingRoutes.cancelSubscription);
 
-  v1Router.get("/billing/usage", ...billingRoutes.getUsage);
+  v1Router.get("/billing/usage", analyticsCache, ...billingRoutes.getUsage);
   v1Router.put("/billing/usage", ...billingRoutes.updateUsage);
 
   v1Router.post(
@@ -403,8 +483,8 @@ export function createServer() {
     v1Router.use("/stack-config", stackConfigRoutes.default);
   }
 
-  // Mount v1 routes
-  app.use("/api/v1", v1Router);
+  // Mount v1 routes with rate limiting
+  app.use("/api/v1", apiRateLimit, v1Router);
 
   // Webhook endpoints (no versioning for external services)
   if (whatsappRoutes) {

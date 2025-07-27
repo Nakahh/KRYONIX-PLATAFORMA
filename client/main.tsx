@@ -88,12 +88,49 @@ if (isDevelopment && import.meta.hot) {
   import.meta.hot.accept();
 }
 
-// Service Worker para PWA
+// Service Worker avançado para PWA
 if ("serviceWorker" in navigator && !isDevelopment) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").then(
+    navigator.serviceWorker.register("/sw-advanced.js").then(
       (registration) => {
-        console.log("🚀 Service Worker registrado com sucesso");
+        console.log("🚀 Service Worker avançado registrado com sucesso");
+
+        // Verificar por atualizações
+        registration.addEventListener("updatefound", () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener("statechange", () => {
+              if (
+                newWorker.state === "installed" &&
+                navigator.serviceWorker.controller
+              ) {
+                // Nova versão disponível
+                if (
+                  confirm(
+                    "Nova versão do KRYONIX disponível! Deseja atualizar?",
+                  )
+                ) {
+                  newWorker.postMessage({ type: "SKIP_WAITING" });
+                  window.location.reload();
+                }
+              }
+            });
+          }
+        });
+
+        // Escutar mensagens do Service Worker
+        navigator.serviceWorker.addEventListener("message", (event) => {
+          const { type, data } = event.data || {};
+
+          switch (type) {
+            case "NOTIFICATION_CLICK":
+              // Navegar para URL da notificação
+              if (data.url && window.location.pathname !== data.url) {
+                window.location.href = data.url;
+              }
+              break;
+          }
+        });
       },
       (error) => {
         console.warn("⚠️ Falha ao registrar Service Worker:", error);

@@ -2,15 +2,21 @@
   "name": "KRYONIX - Plataforma SaaS Brasileira",
   "short_name": "KRYONIX",
   "description": "Plataforma de automação e marketing digital otimizada para empreendedores brasileiros. WhatsApp Business, PIX, IA e muito mais.",
-  "start_url": "/",
+  "start_url": "/?utm_source=pwa",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#059669",
+  "theme_color": "#0ea5e9",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "pt-BR",
   "dir": "ltr",
-  "categories": ["business", "productivity", "tools", "marketing"],
+  "categories": [
+    "business",
+    "productivity",
+    "tools",
+    "marketing",
+    "automation"
+  ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
 
   "icons": [

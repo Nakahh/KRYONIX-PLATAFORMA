@@ -151,7 +151,7 @@ const secondaryNavigation = [
   },
 ];
 
-export default function KryonixLayout({ children }: KryonixLayoutProps) {
+function KryonixLayout({ children }: KryonixLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const navigate = useNavigate();
@@ -623,3 +623,6 @@ export default function KryonixLayout({ children }: KryonixLayoutProps) {
     </div>
   );
 }
+
+export { KryonixLayout };
+export default KryonixLayout;
