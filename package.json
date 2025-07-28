@@ -1,6 +1,7 @@
 {
   "name": "kryonix-platform",
-  "version": "1.0.0",
+  "version": "1.0.0", 
+  "type": "module",
   "description": "KRYONIX - Plataforma SaaS 100% Autônoma por IA",
   "main": "index.js",
   "scripts": {
@@ -8,12 +9,13 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "node server.js",
-    "test": "echo \"Tests will be implemented in future parts\" && exit 0"
+    "test": "echo \"Tests will be implemented in future parts\" && exit 0",
+    "setup": "npm install"
   },
   "keywords": [
     "saas",
     "ai",
-    "autonomous",
+    "autonomous", 
     "mobile-first",
     "portuguese",
     "kryonix"
@@ -36,7 +38,7 @@
     "npm": ">=9.0.0"
   },
   "repository": {
-    "type": "git",
+    "type": "git", 
     "url": "https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
   },
   "homepage": "https://www.kryonix.com.br"
