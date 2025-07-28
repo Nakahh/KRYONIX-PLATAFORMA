@@ -360,17 +360,17 @@ services:
       - "kryonix.service=web"
       - "kryonix.description=KRYONIX Web Application"
 
-  webhook:
+  kryonix-webhook:
     image: node:18-bullseye-slim
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
-        max_attempts: 3
+        max_attempts: 5
         delay: 5s
-      placement:
-        constraints:
-          - node.role == manager
+      labels:
+        - "com.docker.stack.description=KRYONIX Auto Deploy Webhook"
+        - "com.docker.service.name=KRYONIX Webhook"
     ports:
       - "9002:9002"
     networks:
@@ -387,7 +387,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
       - /var/log:/var/log
-    command: ["node", "webhook-listener.js"]
+    command: ["sh", "-c", "apt-get update && apt-get install -y curl git && node webhook-listener.js"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kryonix-webhook.rule=Host(`webhook.kryonix.com.br`)"
@@ -395,6 +395,8 @@ services:
       - "traefik.http.routers.kryonix-webhook.tls.certresolver=leresolver"
       - "traefik.http.services.kryonix-webhook.loadbalancer.server.port=9002"
       - "traefik.docker.network=Kryonix-NET"
+      - "kryonix.service=webhook"
+      - "kryonix.description=KRYONIX Auto Deploy Webhook"
 
   kryonix-monitor:
     image: prom/blackbox-exporter:latest
