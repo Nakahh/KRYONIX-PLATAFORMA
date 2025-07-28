@@ -372,6 +372,15 @@ else
     log_info "Rede $NETWORK_NAME já existe ✓"
 fi
 
+# Verificar se a rede traefik-public existe
+if ! docker network ls | grep -q "traefik-public"; then
+    log_warning "Rede traefik-public não encontrada, criando..."
+    docker network create -d overlay --attachable traefik-public
+    log_success "Rede traefik-public criada"
+else
+    log_info "Rede traefik-public já existe ✓"
+fi
+
 # Criar webhook listener para GitHub
 log_info "Configurando webhook listener..."
 cat > webhook-listener.js << 'WEBHOOK_EOF'
@@ -450,7 +459,7 @@ function deployProject() {
             return;
         }
         if (stderr) {
-            log('���️ Deploy warnings: ' + stderr);
+            log('⚠️ Deploy warnings: ' + stderr);
         }
         log('✅ Deploy output: ' + stdout);
     });
@@ -1173,7 +1182,7 @@ else
 fi
 
 # 7. Verificar específico do swarm
-log_info "🔗 Verificando configuração do Docker Swarm:"
+log_info "���� Verificando configuração do Docker Swarm:"
 docker node ls >/dev/null 2>&1 && echo "   ✅ Swarm ativo" || echo "   ❌ Swarm inativo"
 docker network ls | grep -q "kryonix-plataforma_default" && echo "   ✅ Rede do stack existe" || echo "   ⚠️ Rede do stack não existe"
 
@@ -1604,7 +1613,7 @@ if [ "$FAILED_SERVICES" -gt 0 ]; then
     sleep 60
 fi
 
-# 4. DIAGNÓSTICO ESPECÍFICO DO SERVIÇO WEB
+# 4. DIAGNÓSTICO ESPECÍFICO DO SERVI��O WEB
 log_info "🎯 DIAGNÓSTICO ESPECÍFICO DO SERVIÇO WEB:"
 
 # Verificar status atual
@@ -2111,7 +2120,7 @@ chmod +x diagnostico-kryonix.sh
 cat > reparar-kryonix.sh << 'REPAIR_EOF'
 #!/bin/bash
 
-echo "🔧 KRYONIX - Reparo Automático"
+echo "🔧 KRYONIX - Reparo Autom��tico"
 echo "=============================="
 echo ""
 
@@ -2301,7 +2310,7 @@ monitoramento_continuo() {
 if [ "$1" = "--continuo" ] || [ "$1" = "-c" ]; then
     monitoramento_continuo
 else
-    echo "🔍 Verificação Única:"
+    echo "🔍 Verificação ��nica:"
     echo ""
 
     verificar_servico "Web Application" "3000" "http://localhost:3000/health"
