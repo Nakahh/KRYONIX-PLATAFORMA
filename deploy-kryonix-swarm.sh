@@ -1028,6 +1028,8 @@ services:
 networks:
   Kryonix-NET:
     external: true
+  traefik-public:
+    external: true
 STACK_EOF
 
 # Deploy do stack completo
@@ -2491,7 +2493,7 @@ log_info "Enviando notificação de deploy inicial..."
 curl -X POST https://ntfy.kryonix.com.br/kryonix-deploy \
     -H "Authorization: Basic a3J5b25peDpWaXRvckAxMjM0NTY=" \
     -H "Content-Type: application/json" \
-    -d '{"title":"KRYONIX Sistema Ativo","message":"Deploy automático configurado e funcionando! Sistema 100% operacional �����","priority":3,"tags":["rocket","white_check_mark","gear"]}' 2>/dev/null || true
+    -d '{"title":"KRYONIX Sistema Ativo","message":"Deploy automático configurado e funcionando! Sistema 100% operacional ������","priority":3,"tags":["rocket","white_check_mark","gear"]}' 2>/dev/null || true
 
 # Relatório final detalhado com troubleshooting
 echo ""
