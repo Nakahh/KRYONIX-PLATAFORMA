@@ -159,12 +159,29 @@ log_info "Docker Swarm detectado ✓"
 # Limpeza completa antes do deploy
 log_info "Executando limpeza completa do ambiente..."
 
-# Parar e remover stack se existir
+# Parar e remover stack se existir (incluindo nomes antigos)
+log_info "🔧 Aplicando correção HTTPS integrada..."
 if docker stack ls | grep -q "Kryonix"; then
     log_warning "Removendo stack Kryonix existente..."
     docker stack rm Kryonix
-    sleep 30  # Aguardar remoção completa
 fi
+if docker stack ls | grep -q "kryonix-plataforma"; then
+    log_warning "Removendo stack kryonix-plataforma existente..."
+    docker stack rm kryonix-plataforma
+fi
+if docker stack ls | grep -q "kryonix-web-isolated"; then
+    log_warning "Removendo stack kryonix-web-isolated..."
+    docker stack rm kryonix-web-isolated
+fi
+if docker stack ls | grep -q "kryonix-test"; then
+    log_warning "Removendo stack kryonix-test..."
+    docker stack rm kryonix-test
+fi
+if docker stack ls | grep -q "kryonix-minimal"; then
+    log_warning "Removendo stack kryonix-minimal..."
+    docker stack rm kryonix-minimal
+fi
+sleep 30  # Aguardar remoção completa
 
 # Remover configs antigos se existirem
 if docker config ls | grep -q "kryonix_monitor_config"; then
