@@ -987,7 +987,7 @@ services:
       - traefik_default
     environment:
       - WEBHOOK_PORT=8082
-      - WEBHOOK_SECRET=Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
+      - WEBHOOK_SECRET=Kr7$$n0x-V1t0r-2025-#Jwt$$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
       - PROJECT_DIR=/opt/kryonix-plataform
     working_dir: /opt/kryonix-plataform
     volumes:
@@ -1551,7 +1551,7 @@ SIMPLE_SERVER_EOF
                                     IMAGE_FIXED=true
                                     break 2
                                 elif [ $i -eq 15 ]; then
-                                    echo "      ⚠️ Container roda mas HTTP não responde. Logs atuais:"
+                                    echo "      ⚠��� Container roda mas HTTP não responde. Logs atuais:"
                                     docker logs test-rebuild --tail 10 2>/dev/null | sed 's/^/         /'
                                 fi
                             fi
@@ -2425,7 +2425,7 @@ log_info "🏥 Executando health checks avançados..."
 
 # Status final dos serviços antes dos health checks
 FINAL_SERVICE_STATUS=$(docker service ls --format "{{.Name}}: {{.Replicas}}" | grep kryonix)
-log_info "��� Status final dos serviços:"
+log_info "📊 Status final dos serviços:"
 echo "$FINAL_SERVICE_STATUS" | sed 's/^/    /'
 
 # Web Service com troubleshooting
@@ -2586,7 +2586,7 @@ log_info "Enviando notificação de deploy inicial..."
 curl -X POST https://ntfy.kryonix.com.br/kryonix-deploy \
     -H "Authorization: Basic a3J5b25peDpWaXRvckAxMjM0NTY=" \
     -H "Content-Type: application/json" \
-    -d '{"title":"KRYONIX Sistema Ativo","message":"Deploy automático configurado e funcionando! Sistema 100% operacional ������","priority":3,"tags":["rocket","white_check_mark","gear"]}' 2>/dev/null || true
+    -d '{"title":"KRYONIX Sistema Ativo","message":"Deploy automático configurado e funcionando! Sistema 100% operacional �����","priority":3,"tags":["rocket","white_check_mark","gear"]}' 2>/dev/null || true
 
 # Relatório final detalhado com troubleshooting
 echo ""
