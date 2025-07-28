@@ -55,7 +55,7 @@ BRANCHES:
 
 #### **1.3 Estrutura de Pastas**
 ```
-kryonix-saas-platform/
+kryonix-plataforma/
 ├── .github/
 │   ├── workflows/
 │   │   ├── deploy-production.yml
