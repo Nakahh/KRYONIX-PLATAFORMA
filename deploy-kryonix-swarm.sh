@@ -404,7 +404,7 @@ if ! docker network ls | grep -q "traefik_default"; then
     docker network create -d overlay --attachable traefik_default
     log_success "Rede traefik_default criada"
 else
-    log_info "Rede traefik_default já existe ✓"
+    log_info "Rede traefik_default j�� existe ✓"
 fi
 
 # Criar webhook listener para GitHub
@@ -440,7 +440,7 @@ function verifySignature(payload, signature) {
 }
 
 function deployProject() {
-    log('🚀 Iniciando deploy automático...');
+    log('🚀 Iniciando deploy autom��tico...');
 
     const deployScript = `
         cd ${PROJECT_DIR}
@@ -548,7 +548,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
     log(`🎣 KRYONIX Webhook Listener rodando na porta ${PORT}`);
-    log(`�� Health check: http://0.0.0.0:${PORT}/health`);
+    log(`🔍 Health check: http://0.0.0.0:${PORT}/health`);
 });
 
 process.on('SIGTERM', () => {
@@ -762,7 +762,7 @@ kryonix:
     auth: "Basic a3J5b25peDpWaXRvckAxMjM0NTY="
 CONFIG_EOF
 
-# Criar configuração no Docker config
+# Criar configura��ão no Docker config
 log_info "Criando configuração kryonix_monitor_config..."
 docker config create kryonix_monitor_config monitor-config.yml
 log_success "Configuração kryonix_monitor_config criada ✓"
@@ -1079,7 +1079,7 @@ if [ ! -z "$TEST_CONTAINER" ]; then
             fi
         else
             echo "   ❌ Container parou de rodar no segundo $i"
-            echo "   📝 Logs finais do container:"
+            echo "   ���� Logs finais do container:"
             docker logs kryonix-diagnostic-test 2>/dev/null | tail -20 | sed 's/^/      /'
 
             echo "   📝 Exit code do container:"
@@ -1568,7 +1568,7 @@ if [ "$WEB_REPLICAS" != "1/1" ]; then
     echo "   ✅ Monitor funcionando: $MONITOR_OK"
 
     if [ "$WEBHOOK_OK" = "true" ] || [ "$MONITOR_OK" = "true" ]; then
-        log_info "�� Outros serviços funcionam - problema específico do web service"
+        log_info "💡 Outros serviços funcionam - problema específico do web service"
 
         # Diagnóstico focado no web service
         log_info "🔬 Análise detalhada do web service:"
@@ -1729,7 +1729,7 @@ done
 
 # 6. Resumo do que foi tentado
 if [ "$FAILED_SERVICES" -gt 0 ]; then
-    log_info "���� RESUMO DAS CORREÇÕES APLICADAS:"
+    log_info "📋 RESUMO DAS CORREÇÕES APLICADAS:"
     [ "$STANDALONE_OK" = true ] && echo "   ✅ Teste standalone: PASSOU" || echo "   ❌ Teste standalone: FALHOU"
     echo "   🔄 Restart de serviços: EXECUTADO"
     echo "   🚀 Redeploy: EXECUTADO"
@@ -1906,7 +1906,7 @@ chmod +x setup-github-webhook.sh
 log_info "Configurando webhook no GitHub..."
 ./setup-github-webhook.sh
 
-# Criar todos os scripts de monitoramento em português
+# Criar todos os scripts de monitoramento em portugu��s
 log_info "Criando scripts de monitoramento em português..."
 
 # Criar script de status para monitoramento em português
@@ -2187,7 +2187,7 @@ verificar_servico() {
     fi
 }
 
-# Função para status dos containers
+# Funç��o para status dos containers
 status_containers() {
     echo "🐳 Status dos Containers:"
     docker stack ps Kryonix --format "table {{.Name}}\t{{.CurrentState}}\t{{.Error}}" | head -10
@@ -2601,3 +2601,12 @@ echo "   ✅ Regras persistentes configuradas"
 echo "   ✅ Suporte UFW, FirewallD e iptables"
 echo ""
 log_success "✅ Sistema KRYONIX 100% Automático Funcionando! 🚀🌟"
+echo ""
+echo "🎯 INFORMAÇÕES FINAIS:"
+echo "   📋 Nome do serviço: Kryonix_kryonix-web"
+echo "   🌍 Domínios configurados:"
+echo "      • https://www.kryonix.com.br (principal)"
+echo "      • https://kryonix.com.br (redirect)"
+echo "      • http://144.202.90.55:8080 (direto)"
+echo "   ⏰ SSL pode levar 2-3 minutos para propagar"
+echo "   🔍 Verificar: docker service ls | grep Kryonix"
