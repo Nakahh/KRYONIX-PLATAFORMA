@@ -414,8 +414,6 @@ services:
         target: /etc/blackbox_exporter/config.yml
     command:
       - '--config.file=/etc/blackbox_exporter/config.yml'
-    ports:
-      - "9115:9115"
 
 networks:
   Kryonix-NET:
@@ -666,7 +664,7 @@ chmod +x kryonix-diagnostic.sh
 
 echo ""
 echo "=========================================================="
-log_success "🚀 KRYONIX Deploy TOTALMENTE AUTOMÁTICO Concluído!"
+log_success "�� KRYONIX Deploy TOTALMENTE AUTOMÁTICO Concluído!"
 echo "=========================================================="
 echo ""
 echo "📋 Comandos úteis:"
