@@ -443,14 +443,14 @@ log_info "Verificando status dos serviços..."
 docker stack ps kryonix-plataforma
 
 # Mostrar logs se serviços falharam
-if ! docker service ls | grep kryonix-plataforma_web | grep -q "2/2"; then
+if ! docker service ls | grep kryonix-plataforma_kryonix-web | grep -q "1/1"; then
     log_warning "Serviço web com problemas - mostrando logs..."
-    docker service logs kryonix-plataforma_web --tail 10 2>/dev/null || true
+    docker service logs kryonix-plataforma_kryonix-web --tail 15 2>/dev/null || true
 fi
 
-if ! docker service ls | grep kryonix-plataforma_webhook | grep -q "1/1"; then
+if ! docker service ls | grep kryonix-plataforma_kryonix-webhook | grep -q "1/1"; then
     log_warning "Serviço webhook com problemas - mostrando logs..."
-    docker service logs kryonix-plataforma_webhook --tail 10 2>/dev/null || true
+    docker service logs kryonix-plataforma_kryonix-webhook --tail 15 2>/dev/null || true
 fi
 
 # Iniciar monitor em background se não existir
