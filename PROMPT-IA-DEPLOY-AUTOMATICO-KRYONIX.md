@@ -543,8 +543,12 @@ volumes:
   letsencrypt_data:
 
 networks:
-  kryonix-network:
+  kryonix-net:
+    name: Kryonix-NET
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
 ```
 
 ---
