@@ -626,7 +626,7 @@ check_service() {
         fi
         
         retries=$((retries + 1))
-        echo "��� $service_name: Tentativa $retries/$MAX_RETRIES..."
+        echo "⏳ $service_name: Tentativa $retries/$MAX_RETRIES..."
         sleep $RETRY_INTERVAL
     done
     
@@ -998,6 +998,67 @@ Execute todas as etapas acima para configurar:
 
 ---
 
-**📱 Notificações WhatsApp**: +55 17 98180-5327  
-**🌐 Monitoramento**: https://www.kryonix.com.br/progresso  
+**📱 Notificações WhatsApp**: +55 17 98180-5327
+**🌐 Monitoramento**: https://www.kryonix.com.br/progresso
 **🚀 Status**: Deploy automático ativo 24/7
+
+---
+
+## 🔧 **TROUBLESHOOTING - PROBLEMAS COMUNS**
+
+### **Problema 1**: `npm install` falha no GitHub Actions
+```bash
+# Solução: Verificar se package.json existe
+ls -la package.json
+# Se não existir, criar conforme ETAPA 0
+```
+
+### **Problema 2**: Container não consegue acessar outro container
+```bash
+# Solução: Verificar se estão na mesma rede
+docker network ls
+docker network inspect Kryonix-NET
+# Containers devem estar em Kryonix-NET
+```
+
+### **Problema 3**: Health check sempre falha
+```bash
+# Solução: Testar comando manualmente
+docker exec kryonix-frontend wget --spider http://localhost:3000/health
+# Ajustar comando conforme necessário
+```
+
+### **Problema 4**: Build Docker falha
+```bash
+# Solução: Verificar se todos os arquivos existem
+ls -la package.json server.js vite.config.js Dockerfile
+# Criar arquivos conforme ETAPA 0 se necessário
+```
+
+### **Problema 5**: Deploy SSH falha
+```bash
+# Solução: Verificar conexão SSH
+ssh -o StrictHostKeyChecking=no root@144.202.90.55 'echo "Conexão OK"'
+# Verificar se SSH_PRIVATE_KEY está configurado no GitHub
+```
+
+### **Comandos de Diagnóstico**
+```bash
+# Ver status dos containers
+docker ps -a
+
+# Ver logs de um container específico
+docker logs kryonix-frontend
+
+# Verificar rede
+docker network inspect Kryonix-NET
+
+# Testar conectividade entre containers
+docker exec kryonix-frontend ping kryonix-backend
+
+# Verificar health checks
+docker inspect kryonix-frontend | grep -A 10 "Health"
+
+# Restart manual se necessário
+docker-compose down && docker-compose up -d
+```
