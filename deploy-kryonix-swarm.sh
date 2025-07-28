@@ -1058,7 +1058,7 @@ services:
       "
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.monitor.rule=Host(\`monitor.kryonix.com.br\`)"
+      - "traefik.http.routers.monitor.rule=Host(\\`monitor.kryonix.com.br\\`)"
       - "traefik.http.routers.monitor.entrypoints=web,websecure"
       - "traefik.http.routers.monitor.tls.certresolver=letsencrypt"
       - "traefik.http.services.monitor.loadbalancer.server.port=8084"
@@ -1449,7 +1449,7 @@ app.get('/', (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
+    console.log(`�� KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
     console.log(`💚 Health check: http://0.0.0.0:${PORT}/health`);
     console.log(`📱 Mobile-first otimizado`);
 });
