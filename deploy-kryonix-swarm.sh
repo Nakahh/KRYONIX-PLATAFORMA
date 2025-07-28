@@ -279,6 +279,7 @@ FROM node:18-bullseye-slim
 RUN apt-get update && apt-get install -y \
     tini \
     curl \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
@@ -691,7 +692,7 @@ echo "   🎯 Portainer: https://painel.kryonix.com.br"
 echo "   📊 Grafana: https://grafana.kryonix.com.br"
 echo "   💬 Chatwoot: https://chat.kryonix.com.br"
 echo "   🤖 TypeBot: https://typebot.kryonix.com.br"
-echo "   🔧 N8N: https://n8n.kryonix.com.br"
+echo "   �� N8N: https://n8n.kryonix.com.br"
 echo "   📋 Ntfy: https://ntfy.kryonix.com.br"
 echo ""
 echo "🤖 DEPLOY 100% AUTOMÁTICO ATIVO:"
