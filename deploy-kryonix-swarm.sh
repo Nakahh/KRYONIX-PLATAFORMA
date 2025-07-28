@@ -450,7 +450,7 @@ function deployProject() {
             return;
         }
         if (stderr) {
-            log('⚠️ Deploy warnings: ' + stderr);
+            log('���️ Deploy warnings: ' + stderr);
         }
         log('✅ Deploy output: ' + stdout);
     });
@@ -932,7 +932,7 @@ services:
       - "traefik.http.routers.kryonix-app.entrypoints=websecure"
       - "traefik.http.routers.kryonix-app.tls.certresolver=letsencrypt"
       - "traefik.http.services.kryonix-app.loadbalancer.server.port=8080"
-      - "traefik.docker.network=Kryonix-NET"
+      - "traefik.docker.network=traefik-public"
       - "kryonix.service=web"
       - "kryonix.description=KRYONIX Web Application"
     healthcheck:
