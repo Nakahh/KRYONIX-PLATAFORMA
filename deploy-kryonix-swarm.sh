@@ -960,7 +960,7 @@ services:
       - PORT=8080
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.kryonix.rule=Host(`www.kryonix.com.br`) || Host(`kryonix.com.br`)"
+      - "traefik.http.routers.kryonix.rule=Host(\\`www.kryonix.com.br\\`) || Host(\\`kryonix.com.br\\`)"
       - "traefik.http.routers.kryonix.entrypoints=web,websecure"
       - "traefik.http.routers.kryonix.tls.certresolver=letsencrypt"
       - "traefik.http.services.kryonix.loadbalancer.server.port=8080"
@@ -1449,7 +1449,7 @@ app.get('/', (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`�� KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
+    console.log(`✅ KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
     console.log(`💚 Health check: http://0.0.0.0:${PORT}/health`);
     console.log(`📱 Mobile-first otimizado`);
 });
