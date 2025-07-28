@@ -23,7 +23,7 @@ log_error() {
 
 # Configurações - INFORMAÇÕES REAIS KRYONIX
 REPO_URL="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PROJECT_DIR="/opt/kryonix-plataforma"
+PROJECT_DIR="/opt/kryonix-plataform"
 WEBHOOK_PORT="9000"
 WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
 GITHUB_TOKEN="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"
