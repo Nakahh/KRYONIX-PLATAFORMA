@@ -350,7 +350,7 @@ services:
       - NODE_ENV=production
       - PORT=3000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -664,7 +664,7 @@ chmod +x kryonix-diagnostic.sh
 
 echo ""
 echo "=========================================================="
-log_success "�� KRYONIX Deploy TOTALMENTE AUTOMÁTICO Concluído!"
+log_success "🚀 KRYONIX Deploy TOTALMENTE AUTOMÁTICO Concluído!"
 echo "=========================================================="
 echo ""
 echo "📋 Comandos úteis:"
