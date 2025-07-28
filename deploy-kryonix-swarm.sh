@@ -548,7 +548,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
     log(`🎣 KRYONIX Webhook Listener rodando na porta ${PORT}`);
-    log(`🔍 Health check: http://0.0.0.0:${PORT}/health`);
+    log(`�� Health check: http://0.0.0.0:${PORT}/health`);
 });
 
 process.on('SIGTERM', () => {
@@ -1568,7 +1568,7 @@ if [ "$WEB_REPLICAS" != "1/1" ]; then
     echo "   ✅ Monitor funcionando: $MONITOR_OK"
 
     if [ "$WEBHOOK_OK" = "true" ] || [ "$MONITOR_OK" = "true" ]; then
-        log_info "💡 Outros serviços funcionam - problema específico do web service"
+        log_info "�� Outros serviços funcionam - problema específico do web service"
 
         # Diagnóstico focado no web service
         log_info "🔬 Análise detalhada do web service:"
@@ -1729,7 +1729,7 @@ done
 
 # 6. Resumo do que foi tentado
 if [ "$FAILED_SERVICES" -gt 0 ]; then
-    log_info "📋 RESUMO DAS CORREÇÕES APLICADAS:"
+    log_info "���� RESUMO DAS CORREÇÕES APLICADAS:"
     [ "$STANDALONE_OK" = true ] && echo "   ✅ Teste standalone: PASSOU" || echo "   ❌ Teste standalone: FALHOU"
     echo "   🔄 Restart de serviços: EXECUTADO"
     echo "   🚀 Redeploy: EXECUTADO"
@@ -2421,8 +2421,42 @@ curl -I http://www.kryonix.com.br 2>/dev/null || echo "   ❌ HTTP não acessív
 log_info "📋 Verificações importantes:"
 echo "   1. DNS do domínio deve apontar para este servidor ($(curl -s ifconfig.me 2>/dev/null || echo 'IP_DESCONHECIDO'))"
 echo "   2. Traefik deve estar escutando nas portas 80 e 443"
-echo "   3. Serviço deve estar na rede traefik-public"
+echo "   3. Serviço deve estar na rede traefik_default"
 echo "   4. Labels do Traefik devem estar corretos"
+
+# Teste completo de conectividade HTTPS
+log_info "🌐 Teste completo de conectividade:"
+SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || echo "144.202.90.55")
+echo "   📍 IP do servidor: $SERVER_IP"
+
+echo "   🔍 Testando URLs:"
+echo "     IP direto: http://$SERVER_IP:8080"
+if curl -I -m 5 http://localhost:8080/health 2>/dev/null | grep -q "200"; then
+    echo "     ✅ IP direto funciona"
+else
+    echo "     ❌ IP direto não funciona"
+fi
+
+echo "     HTTP: http://www.kryonix.com.br"
+if curl -I -m 10 http://www.kryonix.com.br 2>/dev/null | grep -q "200\|301\|302"; then
+    echo "     ✅ HTTP funciona"
+else
+    echo "     ❌ HTTP não funciona"
+fi
+
+echo "     HTTPS: https://www.kryonix.com.br"
+if curl -I -m 10 https://www.kryonix.com.br 2>/dev/null | grep -q "200"; then
+    echo "     ✅ HTTPS funciona"
+else
+    echo "     ❌ HTTPS não funciona (pode levar 2-3 minutos para certificado SSL)"
+fi
+
+echo "     Root domain: https://kryonix.com.br"
+if curl -I -m 10 https://kryonix.com.br 2>/dev/null | grep -q "200"; then
+    echo "     ✅ Root domain funciona"
+else
+    echo "     ❌ Root domain não funciona"
+fi
 
 # Verificar monitor com troubleshooting
 MONITOR_STATUS="FALHA"
