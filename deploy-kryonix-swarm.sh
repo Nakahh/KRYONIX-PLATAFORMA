@@ -969,7 +969,7 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
 
-  kryonix-webhook:
+  webhook:
     image: node:18-bullseye-slim
     deploy:
       replicas: 1
@@ -1301,7 +1301,7 @@ SIMPLE_STACK_EOF
 
         # 5. Verificar se o teste funciona
         if docker service ls | grep kryonix-test_kryonix-web | grep -q "1/1"; then
-            log_success "✅ SUCESSO! Configuração simplificada funciona"
+            log_success "✅ SUCESSO! Configura��ão simplificada funciona"
 
             # Remover teste e recriar com configuração completa
             docker stack rm kryonix-test >/dev/null 2>&1
@@ -1771,7 +1771,7 @@ echo "$FINAL_STATUS" | sed 's/^/   /'
 log_info "🌐 Testando conectividade com foco no web service..."
 
 # Teste específico da porta 8080 (web service)
-echo "   ���� TESTE PRIORITÁRIO - Porta 8080 (Web Service):"
+echo "   🎯 TESTE PRIORITÁRIO - Porta 8080 (Web Service):"
 if netstat -tlnp 2>/dev/null | grep -q ":8080 "; then
     log_success "      ✅ Porta 8080 está sendo escutada"
 
@@ -2642,7 +2642,7 @@ echo ""
 echo "🔗 Links úteis (quando funcionando):"
 echo "   🏠 Home: http://localhost:8080"
 echo "   📊 Progresso: http://localhost:8080/progresso"
-echo "   ���� Health: http://localhost:8080/health"
+echo "   💚 Health: http://localhost:8080/health"
 echo "   📡 Webhook: http://localhost:8082/health"
 echo "   📊 Monitor: http://localhost:8084/health"
 echo ""
