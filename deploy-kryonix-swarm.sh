@@ -926,6 +926,12 @@ services:
       - NODE_ENV=production
       - PORT=8080
     labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kryonix-app.rule=Host(`www.kryonix.com.br`) || Host(`kryonix.com.br`)"
+      - "traefik.http.routers.kryonix-app.entrypoints=websecure"
+      - "traefik.http.routers.kryonix-app.tls.certresolver=leresolver"
+      - "traefik.http.services.kryonix-app.loadbalancer.server.port=8080"
+      - "traefik.docker.network=Kryonix-NET"
       - "kryonix.service=web"
       - "kryonix.description=KRYONIX Web Application"
     healthcheck:
@@ -1841,7 +1847,7 @@ analisar_logs_servico() {
         elif echo "$LOGS" | grep -q "node: not found"; then
             echo "   ❌ ERRO: Node.js não encontrado no container"
         elif echo "$LOGS" | grep -q "server.js"; then
-            echo "   ⚠️ Menção ao server.js encontrada nos logs"
+            echo "   ���️ Menção ao server.js encontrada nos logs"
         else
             echo "   ��� Padrão de erro não identificado"
         fi
