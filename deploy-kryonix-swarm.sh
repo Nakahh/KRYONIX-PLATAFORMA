@@ -375,11 +375,11 @@ services:
         constraints:
           - node.role == manager
     ports:
-      - "9001:9001"
+      - "9002:9002"
     networks:
       - Kryonix-NET
     environment:
-      - WEBHOOK_PORT=9001
+      - WEBHOOK_PORT=9002
       - WEBHOOK_SECRET=Kr7$$n0x-V1t0r-2025-#Jwt$$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
       - PROJECT_DIR=/opt/kryonix-plataform
       - NETWORK_NAME=Kryonix-NET
@@ -652,4 +652,4 @@ echo "   ✅ GitHub Token: github_pat_11AVPMT2Y0..."
 echo "   ✅ SendGrid API: SG.hu7o_dY7QduLbXxH..."
 echo "   ✅ NTFY Auth: Basic a3J5b25peDpWaXRvckA..."
 echo ""
-log_success "✅ Sistema KRYONIX 100% Automático Funcionando! 🚀��"
+log_success "✅ Sistema KRYONIX 100% Automático Funcionando! 🚀🌟"
