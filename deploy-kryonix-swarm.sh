@@ -960,14 +960,19 @@ services:
       - PORT=8080
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.kryonix.rule=Host(\\`www.kryonix.com.br\\`) || Host(\\`kryonix.com.br\\`)"
-      - "traefik.http.routers.kryonix.entrypoints=web,websecure"
-      - "traefik.http.routers.kryonix.tls.certresolver=letsencrypt"
-      - "traefik.http.services.kryonix.loadbalancer.server.port=8080"
-      - "traefik.docker.network=traefik_default"
-      - "traefik.http.routers.kryonix.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.kryonix-http.rule=Host(\\`kryonix.com.br\\`) || Host(\\`www.kryonix.com.br\\`)"
+      - "traefik.http.routers.kryonix-http.entrypoints=web"
+      - "traefik.http.routers.kryonix-http.service=kryonix-service"
+      - "traefik.http.routers.kryonix-https.rule=Host(\\`kryonix.com.br\\`) || Host(\\`www.kryonix.com.br\\`)"
+      - "traefik.http.routers.kryonix-https.entrypoints=websecure"
+      - "traefik.http.routers.kryonix-https.tls=true"
+      - "traefik.http.routers.kryonix-https.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.kryonix-https.service=kryonix-service"
+      - "traefik.http.routers.kryonix-http.middlewares=https-redirect"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      - "traefik.http.services.kryonix-service.loadbalancer.server.port=8080"
 
   webhook:
     image: node:18-bullseye-slim
@@ -1498,7 +1503,7 @@ SIMPLE_SERVER_EOF
 
             # Verificar se houve crash imediato
             if echo "$BASIC_TEST" | grep -q -E "(Error|error|EADDRINUSE|EACCES|Cannot find module|SyntaxError)"; then
-                echo "      ❌ ERRO detectado na aplicação:"
+                echo "      ��� ERRO detectado na aplicação:"
                 echo "$BASIC_TEST" | grep -E "(Error|error|EADDRINUSE|EACCES|Cannot find module|SyntaxError)" | sed 's/^/         /'
 
                 log_error "   Aplicação tem erro crítico - PARANDO para não desperdiçar recursos"
