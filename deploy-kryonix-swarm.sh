@@ -928,23 +928,27 @@ services:
       - "8080:8080"
     networks:
       - traefik-public
+      - traefik_default
     environment:
       - NODE_ENV=production
       - PORT=8080
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.kryonix-app.rule=Host(`www.kryonix.com.br`) || Host(`kryonix.com.br`)"
-      - "traefik.http.routers.kryonix-app.entrypoints=web,websecure"
-      - "traefik.http.routers.kryonix-app.tls.certresolver=letsencrypt"
-      - "traefik.http.services.kryonix-app.loadbalancer.server.port=8080"
-      - "traefik.docker.network=traefik-public"
-      - "traefik.http.routers.kryonix-app.middlewares=redirect-to-https"
+      - "traefik.http.routers.kryonix.rule=Host(`www.kryonix.com.br`) || Host(`kryonix.com.br`)"
+      - "traefik.http.routers.kryonix.entrypoints=web,websecure"
+      - "traefik.http.routers.kryonix.tls.certresolver=letsencrypt"
+      - "traefik.http.services.kryonix.loadbalancer.server.port=8080"
+      - "traefik.docker.network=traefik_default"
+      - "traefik.http.routers.kryonix.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
 
 
 
 networks:
   traefik-public:
+    external: true
+  traefik_default:
     external: true
 STACK_EOF
 
@@ -2388,7 +2392,7 @@ curl -I https://www.kryonix.com.br 2>/dev/null || echo "   ❌ HTTPS não acess�
 echo "   Testando conectividade HTTP:"
 curl -I http://www.kryonix.com.br 2>/dev/null || echo "   ❌ HTTP não acessível"
 
-log_info "📋 Verificações importantes:"
+log_info "��� Verificações importantes:"
 echo "   1. DNS do domínio deve apontar para este servidor ($(curl -s ifconfig.me 2>/dev/null || echo 'IP_DESCONHECIDO'))"
 echo "   2. Traefik deve estar escutando nas portas 80 e 443"
 echo "   3. Serviço deve estar na rede traefik-public"
