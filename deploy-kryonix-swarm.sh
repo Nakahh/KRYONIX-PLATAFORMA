@@ -498,7 +498,7 @@ const server = http.createServer((req, res) => {
                 }
                 
             } catch (e) {
-                log(`❌ Erro no webhook: ${e.message}`);
+                log(`��� Erro no webhook: ${e.message}`);
                 res.statusCode = 400;
                 res.end('Bad Request');
             }
@@ -934,10 +934,12 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kryonix-app.rule=Host(`www.kryonix.com.br`) || Host(`kryonix.com.br`)"
-      - "traefik.http.routers.kryonix-app.entrypoints=websecure"
+      - "traefik.http.routers.kryonix-app.entrypoints=web,websecure"
       - "traefik.http.routers.kryonix-app.tls.certresolver=letsencrypt"
       - "traefik.http.services.kryonix-app.loadbalancer.server.port=8080"
       - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.kryonix-app.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
 
 
@@ -1119,7 +1121,7 @@ if [ "$FAILED_SERVICES" -gt 0 ]; then
         log_info "   1️⃣ Verificando constraints de recursos..."
 
         # 2. Remover e recriar serviços com configurações mais permissivas
-        log_info "   2️⃣ Removendo serviços para recriar..."
+        log_info "   2️�� Removendo serviços para recriar..."
         docker service rm kryonix-plataforma_kryonix-web >/dev/null 2>&1 || true
         docker service rm kryonix-plataforma_kryonix-webhook >/dev/null 2>&1 || true
         docker service rm kryonix-plataforma_kryonix-monitor >/dev/null 2>&1 || true
@@ -1165,7 +1167,7 @@ networks:
     attachable: true
 SIMPLE_STACK_EOF
 
-        # 4. Deploy apenas do serviço web para teste
+        # 4. Deploy apenas do servi��o web para teste
         log_info "   4️⃣ Deploy do serviço web simplificado..."
         docker stack deploy -c docker-stack-simple.yml kryonix-test
 
@@ -1185,7 +1187,7 @@ SIMPLE_STACK_EOF
 
         else
             log_error "❌ Mesmo configuração simplificada falha"
-            log_info "   �� Logs do serviço teste:"
+            log_info "   📝 Logs do serviço teste:"
             docker service logs kryonix-test_kryonix-web --tail 15 2>/dev/null | sed 's/^/      /'
 
             # Limpar teste
@@ -1481,7 +1483,7 @@ networks:
 MINIMAL_STACK_EOF
 
                 # Deploy mínimo
-                log_info "   ��� Deploy com configuração MÍNIMA (sem swarm overlay)..."
+                log_info "   🚀 Deploy com configuração MÍNIMA (sem swarm overlay)..."
                 docker stack rm kryonix-plataforma >/dev/null 2>&1
                 sleep 30
                 docker stack deploy -c docker-stack-minimal.yml kryonix-minimal
@@ -1994,7 +1996,7 @@ else
 fi
 
 echo ""
-echo "🐳 Imagens Docker:"
+echo "�� Imagens Docker:"
 docker images | grep kryonix
 echo ""
 
@@ -2483,7 +2485,7 @@ echo "   🏠 Home: http://localhost:8080"
 echo "   📊 Progresso: http://localhost:8080/progresso"
 echo "   💚 Health: http://localhost:8080/health"
 echo "   📡 Webhook: http://localhost:8082/health"
-echo "   📊 Monitor: http://localhost:8084/health"
+echo "   ���� Monitor: http://localhost:8084/health"
 echo ""
 echo "📋 Comandos úteis em PORTUGUÊS:"
 echo "   ./status-kryonix.sh          # Status completo do sistema"
