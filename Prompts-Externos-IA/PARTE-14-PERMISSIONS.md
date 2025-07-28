@@ -1,0 +1,5 @@
+# PARTE-14: PERMISSÕES E ROLES - RBAC GRANULAR
+
+**PROMPT PARA IA EXTERNA:**
+
+Configure sistema permissões mobile-first para KRYONIX no servidor 144.202.90.55. Acesse via SSH, vá para /opt/kryonix, implemente RBAC (Role-Based Access Control) mobile, configure ACL granular, crie roles predefinidos (admin, user, mobile_user, tenant_admin), implemente permissions dinâmicas, configure inheritance roles, integre Keycloak roles mapping, configure API permissions middleware, implemente UI permissions mobile-friendly, configure tenant-level permissions, implemente resource-based permissions, configure conditional permissions, integre audit permissions PostgreSQL, configure cache permissions Redis, implemente permissions sync mobile, configure bulk permissions management, implemente permissions testing, configure permissions backup, integre monitoring permissions, configure alerts permissions WhatsApp (+5517981805327), use credenciais kryonix/Vitor@123456, configure PostgreSQL permissions schema, teste scenarios permissions mobile, commit mudanças no GitHub, reporte status completo em português.

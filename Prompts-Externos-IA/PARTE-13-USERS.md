@@ -1,0 +1,5 @@
+# PARTE-13: SISTEMA DE USUÁRIOS - GESTÃO COMPLETA MOBILE
+
+**PROMPT PARA IA EXTERNA:**
+
+Configure sistema usuários mobile-first para KRYONIX no servidor 144.202.90.55. Acesse via SSH, vá para /opt/kryonix, crie módulo gestão usuários React mobile, configure CRUD usuários mobile-optimized, implemente perfis usuário avatar upload MinIO, configure preferências usuário mobile, implemente histórico atividades, configure multi-tenant usuários, implemente onboarding mobile wizard, configure verificação email/SMS, implemente reset password mobile, configure sessões mobile Redis, integre Keycloak user management, configure API usuários RESTful, implemente search usuários mobile, configure export usuários, implemente bulk operations mobile, configure auditoria usuários, integre WhatsApp user notifications, configure cache usuários Redis, implemente sync offline mobile, configure backup usuários automático, use credenciais kryonix/Vitor@123456, configure PostgreSQL users schema, teste funcionalidades mobile, commit mudanças no GitHub, reporte status completo em português.

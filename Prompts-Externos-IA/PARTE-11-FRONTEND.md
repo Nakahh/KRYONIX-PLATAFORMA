@@ -1,0 +1,5 @@
+# PARTE-11: INTERFACE PRINCIPAL - REACT APP MOBILE-FIRST
+
+**PROMPT PARA IA EXTERNA:**
+
+Configure interface principal mobile-first para KRYONIX no servidor 144.202.90.55. Acesse via SSH, vá para /opt/kryonix, crie React App otimizado 80% usuários mobile, configure Vite/Next.js build system, implemente design system KRYONIX mobile-first, configure PWA offline-first, implemente autenticação Keycloak SSO, configure roteamento React Router mobile, implemente componentes touch-friendly, configure state management Zustand/Redux, implemente lazy loading mobile, configure Service Workers cache, implemente push notifications, configure performance 60fps garantido, configure Tailwind CSS mobile-first, implemente dark/light mode, configure i18n português brasileiro, integre APIs REST/GraphQL, configure bundle optimization, implemente error boundaries, configure testing Jest/Cypress, configure App https://app.kryonix.com.br via Traefik, use credenciais kryonix/Vitor@123456, configure Docker production, integre monitoring RUM, commit mudanças no GitHub, reporte status completo em português.
