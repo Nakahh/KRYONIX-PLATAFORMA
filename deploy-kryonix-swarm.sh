@@ -942,7 +942,7 @@ cat > docker-stack.yml << 'STACK_EOF'
 version: '3.8'
 
 services:
-  kryonix-web:
+  web:
     image: kryonix-plataforma:latest
     deploy:
       replicas: 1
@@ -1771,7 +1771,7 @@ echo "$FINAL_STATUS" | sed 's/^/   /'
 log_info "🌐 Testando conectividade com foco no web service..."
 
 # Teste específico da porta 8080 (web service)
-echo "   🎯 TESTE PRIORITÁRIO - Porta 8080 (Web Service):"
+echo "   ���� TESTE PRIORITÁRIO - Porta 8080 (Web Service):"
 if netstat -tlnp 2>/dev/null | grep -q ":8080 "; then
     log_success "      ✅ Porta 8080 está sendo escutada"
 
@@ -2642,7 +2642,7 @@ echo ""
 echo "🔗 Links úteis (quando funcionando):"
 echo "   🏠 Home: http://localhost:8080"
 echo "   📊 Progresso: http://localhost:8080/progresso"
-echo "   💚 Health: http://localhost:8080/health"
+echo "   ���� Health: http://localhost:8080/health"
 echo "   📡 Webhook: http://localhost:8082/health"
 echo "   📊 Monitor: http://localhost:8084/health"
 echo ""
