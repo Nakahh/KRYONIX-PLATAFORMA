@@ -910,8 +910,8 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
 log_success "Imagem taggeada com timestamp: $TIMESTAMP"
 
-# Atualizar docker-stack.yml corrigido
-log_info "Criando configuração do stack corrigida..."
+# Criar configuração simplificada do stack
+log_info "Criando configuração SIMPLIFICADA do stack..."
 cat > docker-stack.yml << 'STACK_EOF'
 version: '3.8'
 
@@ -922,15 +922,11 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-        max_attempts: 5
-        delay: 30s
-      labels:
-        - "com.docker.stack.description=KRYONIX Web Application"
-        - "com.docker.service.name=KRYONIX Web"
+        max_attempts: 3
+        delay: 10s
     ports:
       - "8080:8080"
     networks:
-      - Kryonix-NET
       - traefik-public
     environment:
       - NODE_ENV=production
@@ -942,14 +938,6 @@ services:
       - "traefik.http.routers.kryonix-app.tls.certresolver=letsencrypt"
       - "traefik.http.services.kryonix-app.loadbalancer.server.port=8080"
       - "traefik.docker.network=traefik-public"
-      - "kryonix.service=web"
-      - "kryonix.description=KRYONIX Web Application"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
 
   kryonix-webhook:
     image: node:18-bullseye-slim
@@ -1543,7 +1531,7 @@ SIMPLE_SERVER_EOF
             fi
 
             if [ "$IMAGE_FIXED" != true ]; then
-                log_error "   ❌ Nova imagem ainda não funciona corretamente"
+                log_error "   �� Nova imagem ainda não funciona corretamente"
 
                 # ÚLTIMA TENTATIVA: Criar configuração MÍNIMA do stack
                 log_info "   🚨 ÚLTIMA TENTATIVA: Configuração mínima do stack..."
@@ -1621,7 +1609,7 @@ WEB_REPLICAS=$(docker service ls --format "{{.Replicas}}" --filter "name=kryonix
 echo "   📊 Status atual do web service: $WEB_REPLICAS"
 
 if [ "$WEB_REPLICAS" != "1/1" ]; then
-    log_warning "🔍 Web service ainda com problemas - investigando..."
+    log_warning "�� Web service ainda com problemas - investigando..."
 
     # Verificar se outros serviços estão funcionando
     WEBHOOK_OK=$(docker service ls --format "{{.Replicas}}" --filter "name=kryonix-plataforma_kryonix-webhook" | grep -q "1/1" && echo "true" || echo "false")
@@ -2321,7 +2309,7 @@ else
     status_containers
     uso_recursos
 
-    echo "💡 Para monitoramento contínuo execute:"
+    echo "��� Para monitoramento contínuo execute:"
     echo "   ./monitorar-kryonix.sh --continuo"
     echo ""
 fi
@@ -2625,7 +2613,7 @@ echo ""
 echo "🔥 FIREWALL E PORTAS CONFIGURADAS:"
 echo "   ✅ Porta 8080 (Web) - aberta automaticamente"
 echo "   ✅ Porta 8082 (Webhook) - aberta automaticamente"
-echo "   ��� Porta 8084 (Monitor) - aberta automaticamente"
+echo "   ✅ Porta 8084 (Monitor) - aberta automaticamente"
 echo "   ✅ Regras persistentes configuradas"
 echo "   ✅ Suporte UFW, FirewallD e iptables"
 echo ""
