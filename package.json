@@ -1,0 +1,45 @@
+{
+  "name": "kryonix-platform",
+  "version": "1.0.0", 
+  "type": "module",
+  "description": "KRYONIX - Plataforma SaaS 100% Autônoma por IA",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node server.js",
+    "test": "echo \"Tests will be implemented in future parts\" && exit 0",
+    "setup": "npm install"
+  },
+  "keywords": [
+    "saas",
+    "ai",
+    "autonomous", 
+    "mobile-first",
+    "portuguese",
+    "kryonix"
+  ],
+  "author": "Vitor Fernandes",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git", 
+    "url": "https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+  },
+  "homepage": "https://www.kryonix.com.br"
+}
