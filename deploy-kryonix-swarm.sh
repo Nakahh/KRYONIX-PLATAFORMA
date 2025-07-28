@@ -638,12 +638,12 @@ echo "📋 Lista de Serviços:"
 docker service ls | grep kryonix
 echo ""
 
-echo "📝 Logs do Web Service (últimas 10 linhas):"
-docker service logs kryonix-plataforma_web --tail 10 2>/dev/null || echo "Serviço não encontrado"
+echo "📝 Logs do Web Service (últimas 15 linhas):"
+docker service logs kryonix-plataforma_kryonix-web --tail 15 2>/dev/null || echo "Serviço não encontrado"
 echo ""
 
-echo "📝 Logs do Webhook Service (últimas 10 linhas):"
-docker service logs kryonix-plataforma_webhook --tail 10 2>/dev/null || echo "Serviço não encontrado"
+echo "📝 Logs do Webhook Service (últimas 15 linhas):"
+docker service logs kryonix-plataforma_kryonix-webhook --tail 15 2>/dev/null || echo "Serviço não encontrado"
 echo ""
 
 echo "🔗 Teste de Conectividade:"
