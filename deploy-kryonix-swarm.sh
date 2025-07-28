@@ -160,9 +160,9 @@ log_info "Docker Swarm detectado ✓"
 log_info "Executando limpeza completa do ambiente..."
 
 # Parar e remover stack se existir
-if docker stack ls | grep -q "kryonix-plataforma"; then
-    log_warning "Removendo stack kryonix-plataforma existente..."
-    docker stack rm kryonix-plataforma
+if docker stack ls | grep -q "Kryonix"; then
+    log_warning "Removendo stack Kryonix existente..."
+    docker stack rm Kryonix
     sleep 30  # Aguardar remoção completa
 fi
 
@@ -1079,7 +1079,7 @@ if [ ! -z "$TEST_CONTAINER" ]; then
     docker stop kryonix-diagnostic-test >/dev/null 2>&1
     docker rm kryonix-diagnostic-test >/dev/null 2>&1
 else
-    echo "   ❌ N��o foi possível criar container teste"
+    echo "   ❌ Não foi possível criar container teste"
     echo "   📝 Erro do docker run:"
     docker run --name kryonix-diagnostic-test-error -p 8085:8080 kryonix-plataforma:latest 2>&1 | sed 's/^/      /'
     docker rm kryonix-diagnostic-test-error >/dev/null 2>&1
@@ -1185,7 +1185,7 @@ SIMPLE_STACK_EOF
 
         else
             log_error "❌ Mesmo configuração simplificada falha"
-            log_info "   📝 Logs do serviço teste:"
+            log_info "   �� Logs do serviço teste:"
             docker service logs kryonix-test_kryonix-web --tail 15 2>/dev/null | sed 's/^/      /'
 
             # Limpar teste
@@ -1481,7 +1481,7 @@ networks:
 MINIMAL_STACK_EOF
 
                 # Deploy mínimo
-                log_info "   🚀 Deploy com configuração MÍNIMA (sem swarm overlay)..."
+                log_info "   ��� Deploy com configuração MÍNIMA (sem swarm overlay)..."
                 docker stack rm kryonix-plataforma >/dev/null 2>&1
                 sleep 30
                 docker stack deploy -c docker-stack-minimal.yml kryonix-minimal
