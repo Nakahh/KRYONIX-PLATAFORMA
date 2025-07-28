@@ -400,7 +400,7 @@ services:
       - "traefik.http.services.kryonix-webhook.loadbalancer.server.port=9002"
       - "traefik.docker.network=Kryonix-NET"
 
-  monitor:
+  kryonix-monitor:
     image: prom/blackbox-exporter:latest
     deploy:
       replicas: 1
@@ -408,6 +408,9 @@ services:
         condition: on-failure
         max_attempts: 3
         delay: 5s
+      labels:
+        - "com.docker.stack.description=KRYONIX Health Monitor"
+        - "com.docker.service.name=KRYONIX Monitor"
     networks:
       - Kryonix-NET
     configs:
@@ -415,6 +418,10 @@ services:
         target: /etc/blackbox_exporter/config.yml
     command:
       - '--config.file=/etc/blackbox_exporter/config.yml'
+    labels:
+      - "traefik.enable=false"
+      - "kryonix.service=monitor"
+      - "kryonix.description=KRYONIX Health Monitor"
 
 networks:
   Kryonix-NET:
@@ -584,7 +591,7 @@ echo "=============================="
 echo ""
 
 # Status dos serviços
-echo "📊 Status dos Serviços:"
+echo "📊 Status dos Servi��os:"
 docker stack ps kryonix-plataforma --format "table {{.Name}}\t{{.Node}}\t{{.DesiredState}}\t{{.CurrentState}}"
 echo ""
 
@@ -692,7 +699,7 @@ echo "   🎯 Portainer: https://painel.kryonix.com.br"
 echo "   📊 Grafana: https://grafana.kryonix.com.br"
 echo "   💬 Chatwoot: https://chat.kryonix.com.br"
 echo "   🤖 TypeBot: https://typebot.kryonix.com.br"
-echo "   �� N8N: https://n8n.kryonix.com.br"
+echo "   🔧 N8N: https://n8n.kryonix.com.br"
 echo "   📋 Ntfy: https://ntfy.kryonix.com.br"
 echo ""
 echo "🤖 DEPLOY 100% AUTOMÁTICO ATIVO:"
