@@ -39,6 +39,39 @@ fi
 
 log_info "Docker Swarm detectado ✓"
 
+# Limpeza completa antes do deploy
+log_info "Executando limpeza completa do ambiente..."
+
+# Parar e remover stack se existir
+if docker stack ls | grep -q "kryonix-plataforma"; then
+    log_warning "Removendo stack kryonix-plataforma existente..."
+    docker stack rm kryonix-plataforma
+    sleep 30  # Aguardar remoção completa
+fi
+
+# Remover configs antigos se existirem
+if docker config ls | grep -q "blackbox_config"; then
+    log_warning "Removendo config blackbox_config antigo..."
+    docker config rm blackbox_config 2>/dev/null || true
+fi
+
+# Limpar containers órfãos
+log_info "Limpando containers órfãos..."
+docker container prune -f 2>/dev/null || true
+
+# Limpar volumes órfãos
+log_info "Limpando volumes órfãos..."
+docker volume prune -f 2>/dev/null || true
+
+# Limpar imagens não utilizadas
+log_info "Limpando imagens antigas..."
+docker image prune -f 2>/dev/null || true
+
+# Remover imagens antigas do kryonix se existirem
+docker images | grep "kryonix-plataforma" | awk '{print $3}' | xargs -r docker rmi -f 2>/dev/null || true
+
+log_success "Limpeza completa finalizada ✓"
+
 # Criar diretório do projeto se não existir
 log_info "Criando diretório do projeto com permissões adequadas..."
 sudo mkdir -p "$PROJECT_DIR"
