@@ -259,8 +259,10 @@ modules:
       fail_if_not_ssl: false
 BLACKBOX_EOF
 
-# Criar/atualizar configuração no Docker config
-docker config create blackbox_config blackbox.yml 2>/dev/null || (docker config rm blackbox_config && docker config create blackbox_config blackbox.yml)
+# Criar configuração no Docker config
+log_info "Criando configuração blackbox_config..."
+docker config create blackbox_config blackbox.yml
+log_success "Configuração blackbox_config criada ✓"
 
 # Criar Dockerfile no projeto
 log_info "Criando Dockerfile..."
