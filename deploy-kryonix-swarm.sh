@@ -498,7 +498,7 @@ const server = http.createServer((req, res) => {
                 }
                 
             } catch (e) {
-                log(`��� Erro no webhook: ${e.message}`);
+                log(`❌ Erro no webhook: ${e.message}`);
                 res.statusCode = 400;
                 res.end('Bad Request');
             }
@@ -960,7 +960,7 @@ sleep 120
 log_info "🔍 Executando diagnóstico automático DETALHADO dos serviços..."
 
 # Verificar status dos serviços
-SERVICE_STATUS=$(docker stack ps kryonix-plataforma --format "table {{.Name}}\t{{.CurrentState}}\t{{.Error}}" --no-trunc 2>/dev/null || echo "Erro ao verificar serviços")
+SERVICE_STATUS=$(docker stack ps Kryonix --format "table {{.Name}}\t{{.CurrentState}}\t{{.Error}}" --no-trunc 2>/dev/null || echo "Erro ao verificar serviços")
 echo "$SERVICE_STATUS"
 
 # Verificar se algum serviço est�� falhando
@@ -1001,7 +1001,7 @@ fi
 
 # 5. Verificar logs específicos dos tasks que falharam
 log_info "📝 Verificando logs de TASKS específicos que falharam:"
-FAILED_TASKS=$(docker stack ps kryonix-plataforma --format "{{.ID}} {{.Name}} {{.CurrentState}}" | grep -E "(Failed|Rejected|Complete)" | head -5)
+FAILED_TASKS=$(docker stack ps Kryonix --format "{{.ID}} {{.Name}} {{.CurrentState}}" | grep -E "(Failed|Rejected|Complete)" | head -5)
 if [ ! -z "$FAILED_TASKS" ]; then
     echo "   📋 Tasks com falha:"
     echo "$FAILED_TASKS" | sed 's/^/      /'
@@ -1121,7 +1121,7 @@ if [ "$FAILED_SERVICES" -gt 0 ]; then
         log_info "   1️⃣ Verificando constraints de recursos..."
 
         # 2. Remover e recriar serviços com configurações mais permissivas
-        log_info "   2️�� Removendo serviços para recriar..."
+        log_info "   2️⃣ Removendo serviços para recriar..."
         docker service rm kryonix-plataforma_kryonix-web >/dev/null 2>&1 || true
         docker service rm kryonix-plataforma_kryonix-webhook >/dev/null 2>&1 || true
         docker service rm kryonix-plataforma_kryonix-monitor >/dev/null 2>&1 || true
@@ -1167,7 +1167,7 @@ networks:
     attachable: true
 SIMPLE_STACK_EOF
 
-        # 4. Deploy apenas do servi��o web para teste
+        # 4. Deploy apenas do serviço web para teste
         log_info "   4️⃣ Deploy do serviço web simplificado..."
         docker stack deploy -c docker-stack-simple.yml kryonix-test
 
@@ -1373,7 +1373,7 @@ SIMPLE_SERVER_EOF
 
             # Verificar se houve crash imediato
             if echo "$BASIC_TEST" | grep -q -E "(Error|error|EADDRINUSE|EACCES|Cannot find module|SyntaxError)"; then
-                echo "      ❌ ERRO detectado na aplicação:"
+                echo "      �� ERRO detectado na aplicação:"
                 echo "$BASIC_TEST" | grep -E "(Error|error|EADDRINUSE|EACCES|Cannot find module|SyntaxError)" | sed 's/^/         /'
 
                 log_error "   Aplicação tem erro crítico - PARANDO para não desperdiçar recursos"
@@ -1646,7 +1646,7 @@ echo "$FINAL_STATUS" | sed 's/^/   /'
 log_info "🌐 Testando conectividade com foco no web service..."
 
 # Teste específico da porta 8080 (web service)
-echo "   🎯 TESTE PRIORITÁRIO - Porta 8080 (Web Service):"
+echo "   🎯 TESTE PRIORIT��RIO - Porta 8080 (Web Service):"
 if netstat -tlnp 2>/dev/null | grep -q ":8080 "; then
     log_success "      ✅ Porta 8080 está sendo escutada"
 
@@ -1733,7 +1733,7 @@ check_port_accessibility "$MONITOR_PORT" "Monitor"
 
 # Verificar status dos serviços
 log_info "Verificando status dos serviços..."
-docker stack ps kryonix-plataforma
+docker stack ps Kryonix
 
 # Análise detalhada dos logs se serviços falharam
 log_info "🔍 ANÁLISE DETALHADA DOS LOGS DE FALHA:"
@@ -1889,7 +1889,7 @@ echo ""
 
 # Status dos serviços
 echo "📊 Status dos Serviços:"
-docker stack ps kryonix-plataforma --format "table {{.Name}}\t{{.Node}}\t{{.DesiredState}}\t{{.CurrentState}}"
+docker stack ps Kryonix --format "table {{.Name}}\t{{.Node}}\t{{.DesiredState}}\t{{.CurrentState}}"
 echo ""
 
 # Health checks
@@ -1941,7 +1941,7 @@ echo "================================="
 echo ""
 
 echo "��� Status dos Serviços:"
-docker stack ps kryonix-plataforma
+docker stack ps Kryonix
 echo ""
 
 echo "📋 Lista de Serviços:"
@@ -1996,7 +1996,7 @@ else
 fi
 
 echo ""
-echo "�� Imagens Docker:"
+echo "🐳 Imagens Docker:"
 docker images | grep kryonix
 echo ""
 
@@ -2160,7 +2160,7 @@ verificar_servico() {
 # Função para status dos containers
 status_containers() {
     echo "🐳 Status dos Containers:"
-    docker stack ps kryonix-plataforma --format "table {{.Name}}\t{{.CurrentState}}\t{{.Error}}" | head -10
+    docker stack ps Kryonix --format "table {{.Name}}\t{{.CurrentState}}\t{{.Error}}" | head -10
     echo ""
 }
 
@@ -2290,7 +2290,7 @@ chmod +x logs-kryonix.sh
 # Verificar status detalhado
 echo ""
 log_success "📊 Status detalhado dos serviços:"
-docker stack ps kryonix-plataforma --no-trunc
+docker stack ps Kryonix --no-trunc
 
 echo ""
 log_info "🔍 Executando health checks..."
@@ -2460,7 +2460,7 @@ else
     echo "❌ SERVIÇO PRINCIPAL COM PROBLEMAS!"
     echo ""
     echo "🛠️ COMANDOS DE DIAGNÓSTICO AVANÇADO:"
-    echo "   📋 Status: docker stack ps kryonix-plataforma --no-trunc"
+    echo "   📋 Status: docker stack ps Kryonix --no-trunc"
     echo "   📝 Logs Web: docker service logs kryonix-plataforma_kryonix-web --follow"
     echo "   🔍 Inspect: docker service inspect kryonix-plataforma_kryonix-web"
     echo "   🐳 Containers: docker ps -a | grep kryonix"
@@ -2485,7 +2485,7 @@ echo "   🏠 Home: http://localhost:8080"
 echo "   📊 Progresso: http://localhost:8080/progresso"
 echo "   💚 Health: http://localhost:8080/health"
 echo "   📡 Webhook: http://localhost:8082/health"
-echo "   ���� Monitor: http://localhost:8084/health"
+echo "   📊 Monitor: http://localhost:8084/health"
 echo ""
 echo "📋 Comandos úteis em PORTUGUÊS:"
 echo "   ./status-kryonix.sh          # Status completo do sistema"
@@ -2501,7 +2501,7 @@ echo "   ./logs-kryonix.sh web        # Logs do serviço web"
 echo "   ./logs-kryonix.sh webhook    # Logs do webhook"
 echo ""
 echo "📋 Comandos Docker avançados:"
-echo "   docker stack ps kryonix-plataforma"
+echo "   docker stack ps Kryonix"
 echo "   docker service logs kryonix-plataforma_kryonix-web -f"
 echo "   docker service logs kryonix-plataforma_kryonix-webhook -f"
 echo "   docker service logs kryonix-plataforma_kryonix-monitor -f"
