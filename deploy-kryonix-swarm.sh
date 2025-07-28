@@ -84,12 +84,16 @@ if [ ! -d ".git" ]; then
     git clone "$REPO_URL" .
     git config --local user.name "KRYONIX Deploy Bot"
     git config --local user.email "deploy@kryonix.com.br"
+    git checkout main
 else
-    log_info "Repositório já existe, fazendo pull..."
+    log_info "Repositório já existe, fazendo pull da branch main..."
     git fetch origin
+    git checkout main
     git reset --hard origin/main
     git clean -fd
 fi
+
+log_success "Repositório atualizado na branch main ✓"
 
 # Verificar se a rede Kryonix-NET existe
 if ! docker network ls | grep -q "$NETWORK_NAME"; then
