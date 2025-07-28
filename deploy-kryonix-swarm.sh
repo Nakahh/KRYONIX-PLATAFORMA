@@ -352,7 +352,7 @@ services:
       - PORT=3000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.kryonix-app.rule=Host(`app.kryonix.com.br`)"
+      - "traefik.http.routers.kryonix-app.rule=Host(`www.kryonix.com.br`) || Host(`kryonix.com.br`)"
       - "traefik.http.routers.kryonix-app.entrypoints=websecure"
       - "traefik.http.routers.kryonix-app.tls.certresolver=leresolver"
       - "traefik.http.services.kryonix-app.loadbalancer.server.port=3000"
