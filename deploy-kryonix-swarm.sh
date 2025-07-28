@@ -396,7 +396,7 @@ services:
       - "traefik.http.routers.kryonix-webhook.rule=Host(`webhook.kryonix.com.br`)"
       - "traefik.http.routers.kryonix-webhook.entrypoints=websecure"
       - "traefik.http.routers.kryonix-webhook.tls.certresolver=leresolver"
-      - "traefik.http.services.kryonix-webhook.loadbalancer.server.port=9001"
+      - "traefik.http.services.kryonix-webhook.loadbalancer.server.port=9002"
       - "traefik.docker.network=Kryonix-NET"
 
   monitor:
