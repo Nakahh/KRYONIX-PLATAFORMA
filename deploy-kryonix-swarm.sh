@@ -505,7 +505,7 @@ done
 
 # Verificar webhook
 for i in {1..10}; do
-    if curl -f http://localhost:9000/health 2>/dev/null; then
+    if curl -f http://localhost:9001/health 2>/dev/null; then
         log_success "✅ Webhook service: OK"
         break
     else
