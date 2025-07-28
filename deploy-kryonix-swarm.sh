@@ -353,8 +353,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 60s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kryonix-app.rule=Host(`app.kryonix.com.br`)"
