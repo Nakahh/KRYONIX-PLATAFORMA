@@ -609,7 +609,7 @@ fi
 
 echo ""
 echo "🔗 Endpoints Ativos:"
-echo "   🏠 App: https://app.kryonix.com.br"
+echo "   🏠 App: https://www.kryonix.com.br"
 echo "   📡 Webhook: https://webhook.kryonix.com.br"
 echo "   🎯 Portainer: https://painel.kryonix.com.br"
 echo "   📊 Grafana: https://grafana.kryonix.com.br"
