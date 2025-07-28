@@ -416,8 +416,8 @@ Requires=docker.service
 Type=oneshot
 RemainAfterExit=yes
 User=root
-WorkingDirectory=/opt/kryonix-plataforma
-ExecStart=/opt/kryonix-plataforma/deploy-kryonix-swarm.sh
+WorkingDirectory=/opt/kryonix-plataform
+ExecStart=/opt/kryonix-plataform/deploy-kryonix-swarm.sh
 StandardOutput=append:/var/log/kryonix-autodeploy.log
 StandardError=append:/var/log/kryonix-autodeploy.log
 
@@ -581,7 +581,7 @@ echo "   🏠 App Principal: https://app.kryonix.com.br"
 echo "   💚 Health Check: http://localhost:3000/health"
 echo "   📡 Webhook GitHub: https://webhook.kryonix.com.br/webhook"
 echo "   🎯 Portainer: https://painel.kryonix.com.br"
-echo "   📊 Grafana: https://grafana.kryonix.com.br"
+echo "   ��� Grafana: https://grafana.kryonix.com.br"
 echo "   💬 Chatwoot: https://chat.kryonix.com.br"
 echo "   🤖 TypeBot: https://typebot.kryonix.com.br"
 echo "   🔧 N8N: https://n8n.kryonix.com.br"
