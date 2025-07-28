@@ -969,7 +969,102 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
 
+  kryonix-webhook:
+    image: node:18-bullseye-slim
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+        delay: 30s
+      labels:
+        - "com.docker.stack.description=KRYONIX Auto Deploy Webhook"
+        - "com.docker.service.name=KRYONIX Webhook"
+    ports:
+      - "8082:8082"
+    networks:
+      - traefik-public
+      - traefik_default
+    environment:
+      - WEBHOOK_PORT=8082
+      - WEBHOOK_SECRET=Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
+      - PROJECT_DIR=/opt/kryonix-plataform
+    working_dir: /opt/kryonix-plataform
+    volumes:
+      - /opt/kryonix-plataform:/opt/kryonix-plataform:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker:ro
+      - /var/log:/var/log
+    command: >
+      sh -c "
+        echo 'Installing dependencies for webhook...' &&
+        apt-get update &&
+        apt-get install -y curl git procps &&
+        echo 'Starting webhook listener on port 8082...' &&
+        echo 'Webhook files:' &&
+        ls -la /opt/kryonix-plataform/ &&
+        if [ -f /opt/kryonix-plataform/webhook-listener.js ]; then
+          node /opt/kryonix-plataform/webhook-listener.js
+        else
+          echo 'ERROR: webhook-listener.js not found!' &&
+          sleep 3600
+        fi
+      "
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.webhook.rule=Host(\`webhook.kryonix.com.br\`)"
+      - "traefik.http.routers.webhook.entrypoints=web,websecure"
+      - "traefik.http.routers.webhook.tls.certresolver=letsencrypt"
+      - "traefik.http.services.webhook.loadbalancer.server.port=8082"
+      - "traefik.docker.network=traefik_default"
+      - "kryonix.service=webhook"
+      - "kryonix.description=KRYONIX Auto Deploy Webhook"
 
+  kryonix-monitor:
+    image: node:18-bullseye-slim
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+        delay: 30s
+      labels:
+        - "com.docker.stack.description=KRYONIX Health Monitor"
+        - "com.docker.service.name=KRYONIX Monitor"
+    ports:
+      - "8084:8084"
+    networks:
+      - traefik-public
+      - traefik_default
+    environment:
+      - MONITOR_PORT=8084
+    working_dir: /opt/kryonix-plataform
+    volumes:
+      - /opt/kryonix-plataform:/opt/kryonix-plataform:ro
+    command: >
+      sh -c "
+        echo 'Installing dependencies for monitor...' &&
+        apt-get update &&
+        apt-get install -y curl procps &&
+        echo 'Starting health monitor on port 8084...' &&
+        echo 'Monitor files:' &&
+        ls -la /opt/kryonix-plataform/ &&
+        if [ -f /opt/kryonix-plataform/kryonix-monitor.js ]; then
+          node /opt/kryonix-plataform/kryonix-monitor.js
+        else
+          echo 'ERROR: kryonix-monitor.js not found!' &&
+          sleep 3600
+        fi
+      "
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.monitor.rule=Host(\`monitor.kryonix.com.br\`)"
+      - "traefik.http.routers.monitor.entrypoints=web,websecure"
+      - "traefik.http.routers.monitor.tls.certresolver=letsencrypt"
+      - "traefik.http.services.monitor.loadbalancer.server.port=8084"
+      - "traefik.docker.network=traefik_default"
+      - "kryonix.service=monitor"
+      - "kryonix.description=KRYONIX Health Monitor"
 
 networks:
   traefik-public:
@@ -2549,7 +2644,7 @@ echo "   🏠 Home: http://localhost:8080"
 echo "   📊 Progresso: http://localhost:8080/progresso"
 echo "   💚 Health: http://localhost:8080/health"
 echo "   📡 Webhook: http://localhost:8082/health"
-echo "   📊 Monitor: http://localhost:8084/health"
+echo "   �� Monitor: http://localhost:8084/health"
 echo ""
 echo "📋 Comandos úteis em PORTUGUÊS:"
 echo "   ./status-kryonix.sh          # Status completo do sistema"
