@@ -1110,7 +1110,7 @@ tail -5 server.js | sed 's/^/   /'
 TEST_CONTAINER=$(docker run -d --name kryonix-diagnostic-test -p 8085:8080 kryonix-plataforma:latest 2>/dev/null)
 if [ ! -z "$TEST_CONTAINER" ]; then
     log_info "   📦 Container criado: $TEST_CONTAINER"
-    log_info "   ⏱️ Monitorando logs por 30 segundos..."
+    log_info "   ��️ Monitorando logs por 30 segundos..."
 
     # Monitorar logs em tempo real
     for i in {1..30}; do
@@ -1170,7 +1170,7 @@ else
 fi
 
 # 7. Verificar específico do swarm
-log_info "��� Verificando configuração do Docker Swarm:"
+log_info "🔗 Verificando configuração do Docker Swarm:"
 docker node ls >/dev/null 2>&1 && echo "   ✅ Swarm ativo" || echo "   ❌ Swarm inativo"
 docker network ls | grep -q "kryonix-plataforma_default" && echo "   ✅ Rede do stack existe" || echo "   ⚠️ Rede do stack não existe"
 
@@ -2578,7 +2578,7 @@ echo "   4. Se persistir: ./restart-kryonix.sh"
 echo "   5. Aguarde 2-3 minutos e verifique: ./status-kryonix.sh"
 echo ""
 echo "🌐 Endpoints KRYONIX:"
-echo "   🏠 App Principal: https://app.kryonix.com.br"
+echo "   🏠 App Principal: https://www.kryonix.com.br"
 echo "   💚 Health Check: http://localhost:8080/health"
 echo "   ��� Webhook GitHub: https://webhook.kryonix.com.br/webhook"
 echo "   🔍 Monitor Health: https://monitor.kryonix.com.br/probe"
