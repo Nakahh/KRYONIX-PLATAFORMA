@@ -476,6 +476,11 @@
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .container { padding: 10px; }
+            .kryonix-banner { padding: 30px 20px; margin-bottom: 20px; }
+            .kryonix-logo { font-size: 3em; }
+            .kryonix-tagline { font-size: 1.1em; }
+            .banner-badges { gap: 8px; }
+            .badge { padding: 6px 12px; font-size: 0.8em; }
             .header-content { flex-direction: column; text-align: center; }
             .progress-overview { padding: 20px; }
             .parts-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
@@ -483,6 +488,12 @@
             .part-number { font-size: 1.3em; }
             .part-title { font-size: 0.8em; }
             .logs-container { height: 200px; font-size: 0.8em; }
+        }
+
+        @media (max-width: 480px) {
+            .kryonix-logo { font-size: 2.5em; letter-spacing: -1px; }
+            .kryonix-tagline { font-size: 1em; }
+            .banner-badges { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
