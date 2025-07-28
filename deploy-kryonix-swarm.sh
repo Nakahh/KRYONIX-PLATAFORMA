@@ -2469,6 +2469,24 @@ for i in {1..8}; do
     fi
 done
 
+# Verificar DNS e Traefik
+log_info "🔍 Verificando configuração DNS e Traefik..."
+echo "   DNS para www.kryonix.com.br:"
+nslookup www.kryonix.com.br 2>/dev/null || echo "   ❌ DNS não resolvido"
+echo "   DNS para kryonix.com.br:"
+nslookup kryonix.com.br 2>/dev/null || echo "   ❌ DNS não resolvido"
+
+echo "   Testando conectividade HTTPS:"
+curl -I https://www.kryonix.com.br 2>/dev/null || echo "   ❌ HTTPS não acessível"
+echo "   Testando conectividade HTTP:"
+curl -I http://www.kryonix.com.br 2>/dev/null || echo "   ❌ HTTP não acessível"
+
+log_info "📋 Verificações importantes:"
+echo "   1. DNS do domínio deve apontar para este servidor ($(curl -s ifconfig.me 2>/dev/null || echo 'IP_DESCONHECIDO'))"
+echo "   2. Traefik deve estar escutando nas portas 80 e 443"
+echo "   3. Serviço deve estar na rede traefik-public"
+echo "   4. Labels do Traefik devem estar corretos"
+
 # Verificar monitor com troubleshooting
 MONITOR_STATUS="FALHA"
 log_info "📊 Testando Monitor Service (porta 8084)..."
@@ -2607,7 +2625,7 @@ echo ""
 echo "🔥 FIREWALL E PORTAS CONFIGURADAS:"
 echo "   ✅ Porta 8080 (Web) - aberta automaticamente"
 echo "   ✅ Porta 8082 (Webhook) - aberta automaticamente"
-echo "   ✅ Porta 8084 (Monitor) - aberta automaticamente"
+echo "   ��� Porta 8084 (Monitor) - aberta automaticamente"
 echo "   ✅ Regras persistentes configuradas"
 echo "   ✅ Suporte UFW, FirewallD e iptables"
 echo ""
