@@ -335,11 +335,11 @@ services:
         constraints:
           - node.role == manager
     ports:
-      - "9000:9000"
+      - "9001:9001"
     networks:
       - Kryonix-NET
     environment:
-      - WEBHOOK_PORT=9000
+      - WEBHOOK_PORT=9001
       - WEBHOOK_SECRET=Kr7$$n0x-V1t0r-2025-#Jwt$$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
       - PROJECT_DIR=/opt/kryonix-plataform
       - NETWORK_NAME=Kryonix-NET
