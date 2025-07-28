@@ -948,7 +948,7 @@ STACK_EOF
 
 # Deploy do stack completo
 log_info "Fazendo deploy do stack corrigido..."
-docker stack deploy -c docker-stack.yml kryonix-plataforma
+docker stack deploy -c docker-stack.yml Kryonix
 
 # Aguardar inicialização com mais tempo
 log_info "Aguardando inicialização dos serviços (120 segundos)..."
@@ -1079,7 +1079,7 @@ if [ ! -z "$TEST_CONTAINER" ]; then
     docker stop kryonix-diagnostic-test >/dev/null 2>&1
     docker rm kryonix-diagnostic-test >/dev/null 2>&1
 else
-    echo "   ❌ Não foi possível criar container teste"
+    echo "   ❌ N��o foi possível criar container teste"
     echo "   📝 Erro do docker run:"
     docker run --name kryonix-diagnostic-test-error -p 8085:8080 kryonix-plataforma:latest 2>&1 | sed 's/^/      /'
     docker rm kryonix-diagnostic-test-error >/dev/null 2>&1
