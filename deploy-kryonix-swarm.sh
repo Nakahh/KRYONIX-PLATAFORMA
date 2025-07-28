@@ -942,8 +942,6 @@ services:
 
 
 networks:
-  Kryonix-NET:
-    external: true
   traefik-public:
     external: true
 STACK_EOF
@@ -2466,7 +2464,7 @@ else
     echo "   🐳 Containers: docker ps -a | grep kryonix"
     echo "   🔌 Portas: netstat -tlnp | grep -E '8080|8082|8084'"
     echo ""
-    echo "���� COMANDOS DE CORREÇÃO:"
+    echo "🔧 COMANDOS DE CORREÇÃO:"
     echo "   🔄 Restart: docker service update --force kryonix-plataforma_kryonix-web"
     echo "   🗑️ Limpar: docker stack rm kryonix-plataforma && sleep 30"
     echo "   🚀 Redeploy: docker stack deploy -c docker-stack.yml kryonix-plataforma"
