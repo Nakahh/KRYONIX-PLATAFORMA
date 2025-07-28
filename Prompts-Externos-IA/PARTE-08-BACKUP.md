@@ -1,5 +1,0 @@
-# PARTE-08: BACKUP AUTOMÁTICO - SISTEMA INTELIGENTE
-
-**PROMPT PARA IA EXTERNA:**
-
-Configure sistema backup automático mobile-first para KRYONIX no servidor 144.202.90.55. Acesse via SSH, vá para /opt/kryonix, crie scripts backup PostgreSQL (prioridade databases mobile), Redis (sessões mobile), MinIO (assets mobile), configure S3 storage remoto, implemente backup incremental, configure cron jobs (PostgreSQL cada 2h, Redis cada 1h, MinIO cada 4h), crie sistema restore automático, configure compressão e encriptação AES-256, integre alertas WhatsApp (+5517981805327), configure retenção (daily 30d, weekly 12w, monthly 12m), crie dashboard backup https://backup.kryonix.com.br, configure health checks automáticos, implemente cleanup automático, configure MinIO client para S3, crie scripts master orquestração, configure backup paralelo, integre Prometheus metrics, use credenciais kryonix/Vitor@123456, configure Docker services, teste backup/restore, commit mudanças no GitHub, reporte status completo em português.

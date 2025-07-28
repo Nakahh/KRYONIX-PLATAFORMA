@@ -1,5 +1,0 @@
-# PARTE-12: DASHBOARD ADMINISTRATIVO - MÉTRICAS TEMPO REAL
-
-**PROMPT PARA IA EXTERNA:**
-
-Configure dashboard admin mobile-first para KRYONIX no servidor 144.202.90.55. Acesse via SSH, vá para /opt/kryonix, crie dashboard React admin responsivo, configure métricas tempo real WebSockets, implemente charts mobile-friendly (Chart.js/D3), configure KPIs SaaS mobile (usuários ativos, performance, receita), integre Grafana embeds, configure tabelas responsivas data tables, implemente filtros mobile touch, configure export relatórios PDF/Excel, implemente real-time notifications, configure permissions RBAC admin, integre APIs todas partes KRYONIX, configure cache Redis dashboard, implemente search global mobile, configure tema KRYONIX branding, configure Dashboard https://admin.kryonix.com.br via Traefik, integre Keycloak admin auth, configure monitoring dashboard usage, implemente alertas WhatsApp admin (+5517981805327), use credenciais kryonix/Vitor@123456, configure Docker admin service, teste performance mobile dashboard, commit mudanças no GitHub, reporte status completo em português.
