@@ -618,6 +618,52 @@ STATUS_EOF
 
 chmod +x kryonix-status.sh
 
+# Criar script de diagnóstico
+cat > kryonix-diagnostic.sh << 'DIAGNOSTIC_EOF'
+#!/bin/bash
+
+echo "🔍 KRYONIX - Diagnóstico Completo"
+echo "================================="
+echo ""
+
+echo "📊 Status dos Serviços:"
+docker stack ps kryonix-plataforma
+echo ""
+
+echo "📋 Lista de Serviços:"
+docker service ls | grep kryonix
+echo ""
+
+echo "📝 Logs do Web Service (últimas 10 linhas):"
+docker service logs kryonix-plataforma_web --tail 10 2>/dev/null || echo "Serviço não encontrado"
+echo ""
+
+echo "📝 Logs do Webhook Service (últimas 10 linhas):"
+docker service logs kryonix-plataforma_webhook --tail 10 2>/dev/null || echo "Serviço não encontrado"
+echo ""
+
+echo "🔗 Teste de Conectividade:"
+echo "   Web Service (porta 3000):"
+curl -I http://localhost:3000 2>/dev/null || echo "   ❌ Não conectou"
+
+echo "   Webhook Service (porta 9002):"
+curl -I http://localhost:9002 2>/dev/null || echo "   ❌ Não conectou"
+
+echo ""
+echo "🐳 Imagens Docker:"
+docker images | grep kryonix
+echo ""
+
+echo "🌐 Rede Docker:"
+docker network ls | grep Kryonix-NET
+echo ""
+
+echo "💾 Configs Docker:"
+docker config ls | grep blackbox
+DIAGNOSTIC_EOF
+
+chmod +x kryonix-diagnostic.sh
+
 echo ""
 echo "=========================================================="
 log_success "🚀 KRYONIX Deploy TOTALMENTE AUTOMÁTICO Concluído!"
@@ -667,4 +713,4 @@ echo "   ✅ GitHub Token: github_pat_11AVPMT2Y0..."
 echo "   ✅ SendGrid API: SG.hu7o_dY7QduLbXxH..."
 echo "   ✅ NTFY Auth: Basic a3J5b25peDpWaXRvckA..."
 echo ""
-log_success "✅ Sistema KRYONIX 100% Automático Funcionando! ��🌟"
+log_success "✅ Sistema KRYONIX 100% Automático Funcionando! 🚀🌟"
