@@ -1012,7 +1012,7 @@ services:
       "
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.webhook.rule=Host(\`webhook.kryonix.com.br\`)"
+      - "traefik.http.routers.webhook.rule=Host(\\`webhook.kryonix.com.br\\`)"
       - "traefik.http.routers.webhook.entrypoints=web,websecure"
       - "traefik.http.routers.webhook.tls.certresolver=letsencrypt"
       - "traefik.http.services.webhook.loadbalancer.server.port=8082"
@@ -1551,7 +1551,7 @@ SIMPLE_SERVER_EOF
                                     IMAGE_FIXED=true
                                     break 2
                                 elif [ $i -eq 15 ]; then
-                                    echo "      ⚠��� Container roda mas HTTP não responde. Logs atuais:"
+                                    echo "      ⚠️ Container roda mas HTTP não responde. Logs atuais:"
                                     docker logs test-rebuild --tail 10 2>/dev/null | sed 's/^/         /'
                                 fi
                             fi
