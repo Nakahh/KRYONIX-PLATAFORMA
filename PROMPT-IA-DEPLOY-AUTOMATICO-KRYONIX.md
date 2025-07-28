@@ -11,6 +11,177 @@ Execute TODAS as etapas abaixo de forma automática e sequencial. Configure depl
 
 ---
 
+## 📋 **ETAPA 0: ESTRUTURA INICIAL OBRIGATÓRIA DO PROJETO**
+
+### **CORREÇÃO CRÍTICA**: Sempre criar estrutura Node.js completa
+
+### **Criar arquivo: `package.json`** (SE NÃO EXISTIR)
+```json
+{
+  "name": "kryonix-platform",
+  "version": "1.0.0",
+  "description": "🚀 KRYONIX - Plataforma SaaS 100% Autônoma por Inteligência Artificial",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node server.js",
+    "preview": "vite preview",
+    "test": "echo 'Tests will be added in Part 01' && exit 0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.8",
+    "@types/node": "^20.10.5"
+  },
+  "keywords": ["kryonix", "saas", "ai", "autonomous", "platform"],
+  "author": "Vitor Fernandes",
+  "license": "MIT"
+}
+```
+
+### **Criar arquivo: `vite.config.js`** (SE NÃO EXISTIR)
+```javascript
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  root: 'public',
+  server: {
+    port: 5173,
+    host: true,
+    open: false
+  },
+  build: {
+    outDir: '../dist',
+    emptyOutDir: true
+  }
+})
+```
+
+### **Criar arquivo: `server.js`** (SE NÃO EXISTIR)
+```javascript
+import express from 'express';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import morgan from 'morgan';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middlewares de segurança e performance
+app.use(helmet());
+app.use(compression());
+app.use(cors());
+app.use(morgan('combined'));
+app.use(express.json());
+
+// Servir arquivos estáticos
+app.use(express.static(join(__dirname, 'public')));
+app.use(express.static(join(__dirname, 'dist')));
+
+// Health check endpoints
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    service: 'KRYONIX Platform',
+    version: '1.0.0',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    message: 'Deploy automático ativo - Parte 01 em desenvolvimento'
+  });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    api: 'KRYONIX API',
+    version: '1.0.0',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Página de progresso em tempo real
+app.get('/progresso', (req, res) => {
+  res.sendFile(join(__dirname, 'public', 'progresso.html'));
+});
+
+// Catch-all para SPA
+app.get('*', (req, res) => {
+  res.sendFile(join(__dirname, 'public', 'index.html'));
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 KRYONIX Server running on port ${PORT}`);
+  console.log(`📱 Health: http://localhost:${PORT}/health`);
+  console.log(`📊 Progresso: http://localhost:${PORT}/progresso`);
+});
+```
+
+### **Criar arquivo: `Dockerfile`** (OBRIGATÓRIO)
+```dockerfile
+# Multi-stage build para otimização
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copiar package files
+COPY package*.json ./
+
+# Instalar dependências
+RUN npm ci --only=production
+
+# Copiar código source
+COPY . .
+
+# Build da aplicação
+RUN npm run build
+
+# Imagem final de produção
+FROM node:18-alpine AS production
+
+WORKDIR /app
+
+# Instalar apenas dependências de produção
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copiar build da aplicação
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/server.js ./server.js
+
+# Criar usuário não-root
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+
+# Mudança de propriedade
+RUN chown -R nodejs:nodejs /app
+USER nodejs
+
+# Expor porta
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
+
+# Comando de inicialização
+CMD ["node", "server.js"]
+```
+
 ## 📋 **ETAPA 1: CONFIGURAR GITHUB ACTIONS CI/CD**
 
 ### **Criar arquivo: `.github/workflows/deploy-kryonix.yml`**
@@ -34,31 +205,45 @@ jobs:
   # Job 1: Build e Test
   build-and-test:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: 📥 Checkout código
       uses: actions/checkout@v4
-      
+
     - name: 📦 Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
-        
+
+    - name: 🔧 Verificar estrutura do projeto
+      run: |
+        echo "Verificando arquivos essenciais..."
+        if [ ! -f "package.json" ]; then
+          echo "❌ package.json não encontrado!"
+          exit 1
+        fi
+        if [ ! -f "server.js" ]; then
+          echo "❌ server.js não encontrado!"
+          exit 1
+        fi
+        if [ ! -f "vite.config.js" ]; then
+          echo "❌ vite.config.js não encontrado!"
+          exit 1
+        fi
+        echo "✅ Estrutura do projeto OK"
+
     - name: 📚 Instalar dependências
       run: |
         npm ci
-        if [ -d "backend" ]; then cd backend && npm ci; fi
-        
+
     - name: 🧪 Executar testes
       run: |
         npm test
-        if [ -d "backend" ]; then cd backend && npm test; fi
-        
+
     - name: 🏗️ Build aplicação
       run: |
         npm run build
-        if [ -d "backend" ]; then cd backend && npm run build; fi
         
     - name: 📊 Upload artifacts
       uses: actions/upload-artifact@v4
