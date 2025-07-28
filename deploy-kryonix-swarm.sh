@@ -432,7 +432,22 @@ docker stack deploy -c docker-stack.yml kryonix-plataforma
 
 # Aguardar inicialização
 log_info "Aguardando inicialização dos serviços..."
-sleep 90
+sleep 120
+
+# Verificar status dos serviços
+log_info "Verificando status dos serviços..."
+docker stack ps kryonix-plataforma
+
+# Mostrar logs se serviços falharam
+if ! docker service ls | grep kryonix-plataforma_web | grep -q "2/2"; then
+    log_warning "Serviço web com problemas - mostrando logs..."
+    docker service logs kryonix-plataforma_web --tail 10 2>/dev/null || true
+fi
+
+if ! docker service ls | grep kryonix-plataforma_webhook | grep -q "1/1"; then
+    log_warning "Serviço webhook com problemas - mostrando logs..."
+    docker service logs kryonix-plataforma_webhook --tail 10 2>/dev/null || true
+fi
 
 # Iniciar monitor em background se não existir
 if ! pgrep -f "monitor-kryonix.sh" > /dev/null; then
@@ -652,4 +667,4 @@ echo "   ✅ GitHub Token: github_pat_11AVPMT2Y0..."
 echo "   ✅ SendGrid API: SG.hu7o_dY7QduLbXxH..."
 echo "   ✅ NTFY Auth: Basic a3J5b25peDpWaXRvckA..."
 echo ""
-log_success "✅ Sistema KRYONIX 100% Automático Funcionando! 🚀🌟"
+log_success "✅ Sistema KRYONIX 100% Automático Funcionando! ��🌟"
