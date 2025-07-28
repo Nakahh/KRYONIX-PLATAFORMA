@@ -1492,7 +1492,7 @@ SIMPLE_SERVER_EOF
             log_info "   5️⃣ Teste extensivo da nova imagem..."
 
             # Teste 1: Verificar se a imagem pelo menos inicia
-            log_info "   🧪 Teste 1: Verificação básica da imagem (10 segundos):"
+            log_info "   �� Teste 1: Verificação básica da imagem (10 segundos):"
             BASIC_TEST=$(timeout 10 docker run --rm --name test-basic -e PORT=8080 kryonix-plataforma:latest 2>&1)
             echo "$BASIC_TEST" | sed 's/^/      /'
 
@@ -1669,7 +1669,7 @@ if [ "$WEB_REPLICAS" != "1/1" ]; then
         log_info "🔬 Análise detalhada do web service:"
 
         # 1. Logs mais recentes
-        echo "   📝 Logs mais recentes do web service:"
+        echo "   ��� Logs mais recentes do web service:"
         docker service logs Kryonix_kryonix-web --tail 20 2>/dev/null | sed 's/^/      /' || echo "      Sem logs disponíveis"
 
         # 2. Tasks específicos do web service
@@ -2644,7 +2644,7 @@ echo "   🏠 Home: http://localhost:8080"
 echo "   📊 Progresso: http://localhost:8080/progresso"
 echo "   💚 Health: http://localhost:8080/health"
 echo "   📡 Webhook: http://localhost:8082/health"
-echo "   �� Monitor: http://localhost:8084/health"
+echo "   📊 Monitor: http://localhost:8084/health"
 echo ""
 echo "📋 Comandos úteis em PORTUGUÊS:"
 echo "   ./status-kryonix.sh          # Status completo do sistema"
@@ -2698,10 +2698,15 @@ echo ""
 log_success "✅ Sistema KRYONIX 100% Automático Funcionando! 🚀🌟"
 echo ""
 echo "🎯 INFORMAÇÕES FINAIS:"
-echo "   📋 Nome do serviço: Kryonix_kryonix-web"
+echo "   📋 Serviços deployados:"
+echo "      • Kryonix_kryonix-web (aplicação principal)"
+echo "      • Kryonix_kryonix-webhook (deploy automático)"
+echo "      • Kryonix_kryonix-monitor (monitoramento)"
 echo "   🌍 Domínios configurados:"
 echo "      • https://www.kryonix.com.br (principal)"
 echo "      • https://kryonix.com.br (redirect)"
+echo "      • https://webhook.kryonix.com.br (webhook)"
+echo "      • https://monitor.kryonix.com.br (monitor)"
 echo "      • http://144.202.90.55:8080 (direto)"
 echo "   ⏰ SSL pode levar 2-3 minutos para propagar"
 echo "   🔍 Verificar: docker service ls | grep Kryonix"
