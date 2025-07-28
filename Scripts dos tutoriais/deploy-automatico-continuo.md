@@ -21,8 +21,8 @@ Configurar sistema que:
 #### **1.1 Criar Repositório Principal**
 ```bash
 # No GitHub, criar repositório:
-# Nome: kryonix-saas-platform
-# URL: https://github.com/vitorfernandes/kryonix-saas-platform
+# Nome: kryonix-plataforma
+# URL: https://github.com/nakahh/kryonix-plataforma
 # Privado: SIM
 # README: SIM
 # .gitignore: Node
