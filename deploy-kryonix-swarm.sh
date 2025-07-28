@@ -1020,7 +1020,7 @@ services:
       - "kryonix.service=webhook"
       - "kryonix.description=KRYONIX Auto Deploy Webhook"
 
-  kryonix-monitor:
+  monitor:
     image: node:18-bullseye-slim
     deploy:
       replicas: 1
@@ -1301,7 +1301,7 @@ SIMPLE_STACK_EOF
 
         # 5. Verificar se o teste funciona
         if docker service ls | grep kryonix-test_kryonix-web | grep -q "1/1"; then
-            log_success "✅ SUCESSO! Configura��ão simplificada funciona"
+            log_success "✅ SUCESSO! Configuração simplificada funciona"
 
             # Remover teste e recriar com configuração completa
             docker stack rm kryonix-test >/dev/null 2>&1
@@ -1735,7 +1735,7 @@ WEB_ONLY_EOF
             # Deploy apenas do web service
             docker stack deploy -c docker-web-only.yml kryonix-web-isolated
 
-            log_info "   ⏱️ Aguardando web service isolado (60 segundos)..."
+            log_info "   ���️ Aguardando web service isolado (60 segundos)..."
             sleep 60
 
             # Verificar se funcionou isolado
