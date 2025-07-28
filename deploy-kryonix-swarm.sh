@@ -732,7 +732,7 @@ log_info "Criando configuração kryonix_monitor_config..."
 docker config create kryonix_monitor_config monitor-config.yml
 log_success "Configuração kryonix_monitor_config criada ✓"
 
-# Criar todos os scripts de monitoramento em português
+# Criar todos os scripts de monitoramento em portugu��s
 log_info "Criando scripts de monitoramento em português..."
 
 # Criar script adicional de status simplificado
@@ -1025,9 +1025,8 @@ services:
       - "kryonix.description=KRYONIX Health Monitor"
 
 networks:
-  default:
-    driver: overlay
-    attachable: true
+  Kryonix-NET:
+    external: true
 STACK_EOF
 
 # Deploy do stack completo
@@ -2472,7 +2471,7 @@ for i in {1..8}; do
             if netstat -tlnp 2>/dev/null | grep -q ":8084 "; then
                 echo "    ✅ Porta 8084 sendo escutada"
             else
-                echo "    �� Porta 8084 não sendo escutada"
+                echo "    ��� Porta 8084 não sendo escutada"
                 # Verificar se arquivo monitor existe
                 if [ -f "kryonix-monitor.js" ]; then
                     echo "    ✅ Arquivo kryonix-monitor.js existe"
