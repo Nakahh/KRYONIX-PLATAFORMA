@@ -922,6 +922,7 @@ services:
       - "8080:8080"
     networks:
       - Kryonix-NET
+      - traefik-public
     environment:
       - NODE_ENV=production
       - PORT=8080
@@ -1110,7 +1111,7 @@ tail -5 server.js | sed 's/^/   /'
 TEST_CONTAINER=$(docker run -d --name kryonix-diagnostic-test -p 8085:8080 kryonix-plataforma:latest 2>/dev/null)
 if [ ! -z "$TEST_CONTAINER" ]; then
     log_info "   📦 Container criado: $TEST_CONTAINER"
-    log_info "   ��️ Monitorando logs por 30 segundos..."
+    log_info "   ⏱️ Monitorando logs por 30 segundos..."
 
     # Monitorar logs em tempo real
     for i in {1..30}; do
