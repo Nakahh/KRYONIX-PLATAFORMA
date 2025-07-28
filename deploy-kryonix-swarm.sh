@@ -542,7 +542,7 @@ else
     echo "   ❌ Web Service: FALHA"
 fi
 
-if curl -f http://localhost:9000/health 2>/dev/null; then
+if curl -f http://localhost:9001/health 2>/dev/null; then
     echo "   ✅ Webhook Service: OK"
 else
     echo "   ❌ Webhook Service: FALHA"
