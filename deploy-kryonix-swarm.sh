@@ -921,7 +921,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - default
+      - Kryonix-NET
     environment:
       - NODE_ENV=production
       - PORT=8080
