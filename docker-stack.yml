@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  web:
+    image: kryonix-plataforma:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    networks:
+      - kryonix-net
+      - traefik-public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+      labels:
+        # Traefik básico
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        
+        # Configuração HTTP (porta 80)
+        - traefik.http.routers.kryonix-http.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)
+        - traefik.http.routers.kryonix-http.entrypoints=web
+        - traefik.http.routers.kryonix-http.service=kryonix-service
+        
+        # Configuração HTTPS (porta 443)
+        - traefik.http.routers.kryonix-https.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)
+        - traefik.http.routers.kryonix-https.entrypoints=websecure
+        - traefik.http.routers.kryonix-https.tls=true
+        - traefik.http.routers.kryonix-https.tls.certresolver=letsencrypt
+        - traefik.http.routers.kryonix-https.service=kryonix-service
+        
+        # Redirecionamento HTTP -> HTTPS
+        - traefik.http.routers.kryonix-http.middlewares=https-redirect
+        - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+        - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+        
+        # Configuração do serviço
+        - traefik.http.services.kryonix-service.loadbalancer.server.port=8080
+        
+        # Headers de segurança
+        - traefik.http.middlewares.kryonix-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+        - traefik.http.middlewares.kryonix-headers.headers.customrequestheaders.X-Forwarded-For={client_ip}
+        - traefik.http.routers.kryonix-https.middlewares=kryonix-headers
+
+  webhook:
+    image: kryonix-plataforma:latest
+    ports:
+      - "8082:8082"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - kryonix-net
+    volumes:
+      - ./webhook-listener.js:/app/webhook-listener.js:ro
+    command: ["node", "webhook-listener.js"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  monitor:
+    image: kryonix-plataforma:latest
+    ports:
+      - "8084:8084"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - kryonix-net
+    volumes:
+      - ./kryonix-monitor.js:/app/kryonix-monitor.js:ro
+    command: ["node", "kryonix-monitor.js"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  kryonix-net:
+    external: true
+    name: Kryonix-NET
+  traefik-public:
+    external: true
+    name: traefik-public
+
+configs:
+  kryonix_monitor_config:
+    external: true
