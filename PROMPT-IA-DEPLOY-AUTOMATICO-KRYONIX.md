@@ -418,34 +418,37 @@ services:
       - "traefik.http.routers.kryonix-app.tls.certresolver=letsencrypt"
       - "traefik.http.services.kryonix-app.loadbalancer.server.port=3000"
     networks:
-      - kryonix-network
+      - kryonix-net
 
-  # Backend API KRYONIX
+  # Backend API KRYONIX (Usando mesmo container mas porta diferente)
   kryonix-backend:
     image: ghcr.io/nakahh/kryonix-plataforma:latest
     container_name: kryonix-backend
     restart: always
     ports:
-      - "4000:4000"
+      - "4000:3000"  # Mapear para mesma porta interna do Node.js
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:kryonix2025@postgres:5432/kryonix
-      - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=${{ secrets.JWT_SECRET }}
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:kryonix2025@kryonix-postgres:5432/kryonix
+      - REDIS_URL=redis://kryonix-redis:6379
+      - JWT_SECRET=${JWT_SECRET:-kryonix-default-secret-2025}
     depends_on:
       - postgres
       - redis
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health", "||", "exit", "1"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 60s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kryonix-api.rule=Host(`api.kryonix.com.br`)"
       - "traefik.http.routers.kryonix-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.kryonix-api.loadbalancer.server.port=3000"
     networks:
-      - kryonix-network
+      - kryonix-net
 
   # PostgreSQL Database
   postgres:
@@ -456,32 +459,35 @@ services:
       POSTGRES_DB: kryonix
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: kryonix2025
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kryonix"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 60s
     networks:
-      - kryonix-network
+      - kryonix-net
 
   # Redis Cache
   redis:
     image: redis:7-alpine
     container_name: kryonix-redis
     restart: always
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --requirepass kryonix2025
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "kryonix2025", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 30s
     networks:
-      - kryonix-network
+      - kryonix-net
 
   # Traefik Proxy
   traefik:
@@ -490,7 +496,9 @@ services:
     restart: always
     command:
       - "--api.dashboard=true"
+      - "--api.insecure=true"
       - "--providers.docker=true"
+      - "--providers.docker.network=Kryonix-NET"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
@@ -498,6 +506,7 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=admin@kryonix.com.br"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--global.sendAnonymousUsage=false"
     ports:
       - "80:80"
       - "443:443"
@@ -505,8 +514,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - letsencrypt_data:/letsencrypt
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/ping", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
-      - kryonix-network
+      - kryonix-net
 
   # Monitor de Health Check
   healthcheck-monitor:
@@ -515,19 +529,29 @@ services:
     restart: always
     command: |
       sh -c "
-        apk add --no-cache curl
+        apk add --no-cache curl wget
+        echo '🚀 KRYONIX Health Monitor iniciado...'
         while true; do
-          # Verificar saúde dos serviços
-          if ! curl -f http://kryonix-frontend:3000/health; then
-            echo 'Frontend unhealthy - restarting...'
-            docker restart kryonix-frontend
+          echo '[$(date)] Verificando saúde dos serviços...'
+
+          # Verificar Frontend
+          if ! wget --quiet --tries=1 --timeout=10 --spider http://kryonix-frontend:3000/health; then
+            echo '⚠️ Frontend unhealthy - tentando restart...'
+            # Não pode reiniciar containers de dentro do container
+            echo '❌ Frontend offline detectado'
+          else
+            echo '✅ Frontend OK'
           fi
-          
-          if ! curl -f http://kryonix-backend:4000/health; then
-            echo 'Backend unhealthy - restarting...'
-            docker restart kryonix-backend
+
+          # Verificar Backend
+          if ! wget --quiet --tries=1 --timeout=10 --spider http://kryonix-backend:3000/health; then
+            echo '⚠️ Backend unhealthy'
+            echo '❌ Backend offline detectado'
+          else
+            echo '✅ Backend OK'
           fi
-          
+
+          echo '[$(date)] Próxima verificação em 60s...'
           sleep 60
         done
       "
@@ -535,7 +559,7 @@ services:
       - kryonix-frontend
       - kryonix-backend
     networks:
-      - kryonix-network
+      - kryonix-net
 
 volumes:
   postgres_data:
