@@ -42,3 +42,25 @@ coverage/
 # Temporary folders
 tmp/
 temp/
+
+# Docker e Deploy
+docker-compose.override.yml
+.docker/
+docker-data/
+
+# Certificados SSL
+letsencrypt/
+certs/
+*.pem
+*.key
+*.crt
+
+# Secrets e configurações sensíveis
+secrets/
+.secrets
+config/local.*
+
+# Arquivos de monitoramento
+monitor.log
+health-check.log
+deploy.log
