@@ -234,7 +234,7 @@ fi
 # Executar validação pré-deploy
 log_info "Executando validação pré-deploy..."
 if ! validate_before_deploy; then
-    log_error "Validação pré-deploy falhou! Abortando deploy."
+    log_error "Validaç��o pré-deploy falhou! Abortando deploy."
     exit 1
 fi
 log_success "Validação pré-deploy passou! ✓"
@@ -724,10 +724,10 @@ kryonix:
   version: "1.0.0"
   check_interval: 30
   targets:
-    - url: "http://kryonix-plataforma_kryonix-web:3000/health"
+    - url: "http://Kryonix_kryonix-web:3000/health"
       name: "KRYONIX Web Service"
       timeout: 5
-    - url: "http://kryonix-plataforma_kryonix-webhook:9002/health" 
+    - url: "http://Kryonix_kryonix-webhook:9002/health" 
       name: "KRYONIX Webhook Service"
       timeout: 5
   notifications:
@@ -765,8 +765,8 @@ cat > restart-kryonix.sh << 'RESTART_EOF'
 echo "🔄 KRYONIX - Restart Rápido de Serviços"
 echo "======================================"
 echo "Reiniciando serviços..."
-docker service update --force kryonix-plataforma_kryonix-web
-docker service update --force kryonix-plataforma_kryonix-webhook
+docker service update --force Kryonix_kryonix-web
+docker service update --force Kryonix_kryonix-webhook
 docker service update --force kryonix-plataforma_kryonix-monitor
 echo "✅ Restart concluído! Aguarde 1-2 minutos para os serviços ficarem online."
 RESTART_EOF
@@ -1064,7 +1064,7 @@ if [ ! -z "$TEST_CONTAINER" ]; then
     # Se chegou ao final ainda rodando
     if docker ps | grep -q "kryonix-diagnostic-test"; then
         if [ "$STANDALONE_OK" != true ]; then
-            echo "   ⚠️ Container rodando mas HTTP não responde após 30s"
+            echo "   ⚠️ Container rodando mas HTTP n��o responde após 30s"
             echo "   📝 Logs atuais:"
             docker logs kryonix-diagnostic-test --tail 15 2>/dev/null | sed 's/^/      /'
 
@@ -1095,7 +1095,7 @@ docker network ls | grep -q "kryonix-plataforma_default" && echo "   ✅ Rede do
 
 # 8. Verificar constraints e recursos dos serviços
 log_info "⚙�� Verificando constraints dos serviços:"
-for service in kryonix-plataforma_kryonix-web kryonix-plataforma_kryonix-webhook kryonix-plataforma_kryonix-monitor; do
+for service in Kryonix_kryonix-web Kryonix_kryonix-webhook kryonix-plataforma_kryonix-monitor; do
     if docker service ls | grep -q "$service"; then
         REPLICAS=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "$service" | awk '{print $2}')
         echo "   $service: $REPLICAS"
@@ -1118,12 +1118,12 @@ if [ "$FAILED_SERVICES" -gt 0 ]; then
         log_info "🔧 CORREÇÃO ESPECÍFICA PARA SWARM:"
 
         # 1. Verificar se é problema de recursos
-        log_info "   1️⃣ Verificando constraints de recursos..."
+        log_info "   1️�� Verificando constraints de recursos..."
 
         # 2. Remover e recriar serviços com configurações mais permissivas
         log_info "   2️⃣ Removendo serviços para recriar..."
-        docker service rm kryonix-plataforma_kryonix-web >/dev/null 2>&1 || true
-        docker service rm kryonix-plataforma_kryonix-webhook >/dev/null 2>&1 || true
+        docker service rm Kryonix_kryonix-web >/dev/null 2>&1 || true
+        docker service rm Kryonix_kryonix-webhook >/dev/null 2>&1 || true
         docker service rm kryonix-plataforma_kryonix-monitor >/dev/null 2>&1 || true
 
         log_info "   ⏱️ Aguardando remoção completa (30 segundos)..."
@@ -1373,7 +1373,7 @@ SIMPLE_SERVER_EOF
 
             # Verificar se houve crash imediato
             if echo "$BASIC_TEST" | grep -q -E "(Error|error|EADDRINUSE|EACCES|Cannot find module|SyntaxError)"; then
-                echo "      �� ERRO detectado na aplicação:"
+                echo "      ❌ ERRO detectado na aplicação:"
                 echo "$BASIC_TEST" | grep -E "(Error|error|EADDRINUSE|EACCES|Cannot find module|SyntaxError)" | sed 's/^/         /'
 
                 log_error "   Aplicação tem erro crítico - PARANDO para não desperdiçar recursos"
@@ -1524,14 +1524,14 @@ fi
 log_info "🎯 DIAGNÓSTICO ESPECÍFICO DO SERVIÇO WEB:"
 
 # Verificar status atual
-WEB_REPLICAS=$(docker service ls --format "{{.Replicas}}" --filter "name=kryonix-plataforma_kryonix-web" 2>/dev/null || echo "0/1")
+WEB_REPLICAS=$(docker service ls --format "{{.Replicas}}" --filter "name=Kryonix_kryonix-web" 2>/dev/null || echo "0/1")
 echo "   📊 Status atual do web service: $WEB_REPLICAS"
 
 if [ "$WEB_REPLICAS" != "1/1" ]; then
     log_warning "🔍 Web service ainda com problemas - investigando..."
 
     # Verificar se outros serviços estão funcionando
-    WEBHOOK_OK=$(docker service ls --format "{{.Replicas}}" --filter "name=kryonix-plataforma_kryonix-webhook" | grep -q "1/1" && echo "true" || echo "false")
+    WEBHOOK_OK=$(docker service ls --format "{{.Replicas}}" --filter "name=Kryonix_kryonix-webhook" | grep -q "1/1" && echo "true" || echo "false")
     MONITOR_OK=$(docker service ls --format "{{.Replicas}}" --filter "name=kryonix-plataforma_kryonix-monitor" | grep -q "1/1" && echo "true" || echo "false")
 
     echo "   ✅ Webhook funcionando: $WEBHOOK_OK"
@@ -1545,24 +1545,24 @@ if [ "$WEB_REPLICAS" != "1/1" ]; then
 
         # 1. Logs mais recentes
         echo "   📝 Logs mais recentes do web service:"
-        docker service logs kryonix-plataforma_kryonix-web --tail 20 2>/dev/null | sed 's/^/      /' || echo "      Sem logs disponíveis"
+        docker service logs Kryonix_kryonix-web --tail 20 2>/dev/null | sed 's/^/      /' || echo "      Sem logs disponíveis"
 
         # 2. Tasks específicos do web service
         echo "   📋 Tasks do web service:"
-        docker service ps kryonix-plataforma_kryonix-web --format "{{.CurrentState}} {{.Error}}" --no-trunc | head -5 | sed 's/^/      /'
+        docker service ps Kryonix_kryonix-web --format "{{.CurrentState}} {{.Error}}" --no-trunc | head -5 | sed 's/^/      /'
 
         # 3. Comparar configuração do web service com os que funcionam
         log_info "   ⚙️ Verificando configuração específica do web service:"
 
         # 4. Tentar restart forçado apenas do web service
         log_info "   🔄 Restart forçado APENAS do web service:"
-        docker service update --force --update-parallelism 1 --update-delay 10s kryonix-plataforma_kryonix-web
+        docker service update --force --update-parallelism 1 --update-delay 10s Kryonix_kryonix-web
 
         log_info "   ⏱️ Aguardando restart do web service (45 segundos)..."
         sleep 45
 
         # 5. Verificar se melhorou
-        NEW_WEB_STATUS=$(docker service ls --format "{{.Replicas}}" --filter "name=kryonix-plataforma_kryonix-web")
+        NEW_WEB_STATUS=$(docker service ls --format "{{.Replicas}}" --filter "name=Kryonix_kryonix-web")
         echo "   📊 Status após restart: $NEW_WEB_STATUS"
 
         if [ "$NEW_WEB_STATUS" = "1/1" ]; then
@@ -1571,7 +1571,7 @@ if [ "$WEB_REPLICAS" != "1/1" ]; then
             log_warning "   ⚠️ Restart não resolveu. Tentando recriar apenas o web service..."
 
             # 6. Recriar apenas o web service
-            docker service rm kryonix-plataforma_kryonix-web >/dev/null 2>&1
+            docker service rm Kryonix_kryonix-web >/dev/null 2>&1
             sleep 15
 
             # Extrair apenas a configuração do web service do docker-stack.yml
@@ -1646,7 +1646,7 @@ echo "$FINAL_STATUS" | sed 's/^/   /'
 log_info "🌐 Testando conectividade com foco no web service..."
 
 # Teste específico da porta 8080 (web service)
-echo "   🎯 TESTE PRIORIT��RIO - Porta 8080 (Web Service):"
+echo "   🎯 TESTE PRIORITÁRIO - Porta 8080 (Web Service):"
 if netstat -tlnp 2>/dev/null | grep -q ":8080 "; then
     log_success "      ✅ Porta 8080 está sendo escutada"
 
@@ -1680,7 +1680,7 @@ else
     # Diagnóstico adicional se web service não escuta
     echo "      🔍 Diagnóstico adicional:"
     echo "         - Containers rodando: $(docker ps --format "{{.Names}}" | grep kryonix | wc -l)"
-    echo "         - Web service status: $(docker service ls --format "{{.Replicas}}" --filter "name=kryonix-plataforma_kryonix-web")"
+    echo "         - Web service status: $(docker service ls --format "{{.Replicas}}" --filter "name=Kryonix_kryonix-web")"
 fi
 
 # Teste rápido das outras portas
@@ -1784,8 +1784,8 @@ analisar_logs_servico() {
 }
 
 # Analisar cada serviço
-analisar_logs_servico "kryonix-plataforma_kryonix-web" "Serviço Web"
-analisar_logs_servico "kryonix-plataforma_kryonix-webhook" "Serviço Webhook"
+analisar_logs_servico "Kryonix_kryonix-web" "Serviço Web"
+analisar_logs_servico "Kryonix_kryonix-webhook" "Serviço Webhook"
 analisar_logs_servico "kryonix-plataforma_kryonix-monitor" "Serviço Monitor"
 
 # Diagnóstico adicional da imagem
@@ -1957,11 +1957,11 @@ docker config ls | grep kryonix
 echo ""
 
 echo "📝 Logs do Web Service (últimas 15 linhas):"
-docker service logs kryonix-plataforma_kryonix-web --tail 15 2>/dev/null || echo "Serviço não encontrado"
+docker service logs Kryonix_kryonix-web --tail 15 2>/dev/null || echo "Serviço não encontrado"
 echo ""
 
 echo "📝 Logs do Webhook Service (últimas 15 linhas):"
-docker service logs kryonix-plataforma_kryonix-webhook --tail 15 2>/dev/null || echo "Serviço não encontrado"
+docker service logs Kryonix_kryonix-webhook --tail 15 2>/dev/null || echo "Serviço não encontrado"
 echo ""
 
 echo "📝 Logs do Monitor Service (últimas 15 linhas):"
@@ -2008,16 +2008,16 @@ echo "   - Verificar se as configs Docker foram criadas"
 
 echo ""
 echo "🔧 Comandos para Diagnóstico Avançado:"
-echo "   docker service inspect kryonix-plataforma_kryonix-web"
-echo "   docker service inspect kryonix-plataforma_kryonix-webhook"
+echo "   docker service inspect Kryonix_kryonix-web"
+echo "   docker service inspect Kryonix_kryonix-webhook"
 echo "   docker service inspect kryonix-plataforma_kryonix-monitor"
 echo "   docker network inspect Kryonix-NET"
 echo "   netstat -tulpn | grep -E ':3000|:9002|:9115'"
 
 echo ""
 echo "🚀 Para Reiniciar Serviços:"
-echo "   docker service update --force kryonix-plataforma_kryonix-web"
-echo "   docker service update --force kryonix-plataforma_kryonix-webhook"
+echo "   docker service update --force Kryonix_kryonix-web"
+echo "   docker service update --force Kryonix_kryonix-webhook"
 echo "   docker service update --force kryonix-plataforma_kryonix-monitor"
 DIAGNOSTIC_EOF
 
@@ -2047,16 +2047,16 @@ log_warning() {
 log_info "Verificando status dos serviços..."
 
 # Reparar Web Service
-if ! docker service ls | grep kryonix-plataforma_kryonix-web | grep -q "1/1"; then
+if ! docker service ls | grep Kryonix_kryonix-web | grep -q "1/1"; then
     log_warning "Reparando Web Service..."
-    docker service update --force kryonix-plataforma_kryonix-web
+    docker service update --force Kryonix_kryonix-web
     sleep 30
 fi
 
 # Reparar Webhook Service
-if ! docker service ls | grep kryonix-plataforma_kryonix-webhook | grep -q "1/1"; then
+if ! docker service ls | grep Kryonix_kryonix-webhook | grep -q "1/1"; then
     log_warning "Reparando Webhook Service..."
-    docker service update --force kryonix-plataforma_kryonix-webhook
+    docker service update --force Kryonix_kryonix-webhook
     sleep 30
 fi
 
@@ -2247,24 +2247,24 @@ echo ""
 case "$1" in
     "web")
         echo "📱 Logs do Web Service:"
-        docker service logs kryonix-plataforma_kryonix-web -f
+        docker service logs Kryonix_kryonix-web -f
         ;;
     "webhook")
         echo "📡 Logs do Webhook Service:"
-        docker service logs kryonix-plataforma_kryonix-webhook -f
+        docker service logs Kryonix_kryonix-webhook -f
         ;;
     "monitor")
         echo "📊 Logs do Monitor Service:"
         docker service logs kryonix-plataforma_kryonix-monitor -f
         ;;
     "todos")
-        echo "📋 Todos os Logs (últimas 20 linhas de cada):"
+        echo "📋 Todos os Logs (��ltimas 20 linhas de cada):"
         echo ""
         echo "=== WEB SERVICE ==="
-        docker service logs kryonix-plataforma_kryonix-web --tail 20 2>/dev/null
+        docker service logs Kryonix_kryonix-web --tail 20 2>/dev/null
         echo ""
         echo "=== WEBHOOK SERVICE ==="
-        docker service logs kryonix-plataforma_kryonix-webhook --tail 20 2>/dev/null
+        docker service logs Kryonix_kryonix-webhook --tail 20 2>/dev/null
         echo ""
         echo "=== MONITOR SERVICE ==="
         docker service logs kryonix-plataforma_kryonix-monitor --tail 20 2>/dev/null
@@ -2326,7 +2326,7 @@ for i in {1..15}; do
                     echo "    ⚠️ Serviço responde TCP mas não HTTP - problema na aplicação"
 
                     # Verificar logs do serviço
-                    docker service logs kryonix-plataforma_kryonix-web --tail 5 2>/dev/null | sed 's/^/    LOG: /' || echo "    ❌ Sem logs disponíveis"
+                    docker service logs Kryonix_kryonix-web --tail 5 2>/dev/null | sed 's/^/    LOG: /' || echo "    ❌ Sem logs disponíveis"
                 else
                     echo "    ❌ Conectividade TCP falhou"
                 fi
@@ -2461,13 +2461,13 @@ else
     echo ""
     echo "🛠️ COMANDOS DE DIAGNÓSTICO AVANÇADO:"
     echo "   📋 Status: docker stack ps Kryonix --no-trunc"
-    echo "   📝 Logs Web: docker service logs kryonix-plataforma_kryonix-web --follow"
-    echo "   🔍 Inspect: docker service inspect kryonix-plataforma_kryonix-web"
+    echo "   📝 Logs Web: docker service logs Kryonix_kryonix-web --follow"
+    echo "   🔍 Inspect: docker service inspect Kryonix_kryonix-web"
     echo "   🐳 Containers: docker ps -a | grep kryonix"
     echo "   🔌 Portas: netstat -tlnp | grep -E '8080|8082|8084'"
     echo ""
     echo "🔧 COMANDOS DE CORREÇÃO:"
-    echo "   🔄 Restart: docker service update --force kryonix-plataforma_kryonix-web"
+    echo "   🔄 Restart: docker service update --force Kryonix_kryonix-web"
     echo "   🗑️ Limpar: docker stack rm kryonix-plataforma && sleep 30"
     echo "   🚀 Redeploy: docker stack deploy -c docker-stack.yml kryonix-plataforma"
     echo ""
@@ -2502,8 +2502,8 @@ echo "   ./logs-kryonix.sh webhook    # Logs do webhook"
 echo ""
 echo "📋 Comandos Docker avançados:"
 echo "   docker stack ps Kryonix"
-echo "   docker service logs kryonix-plataforma_kryonix-web -f"
-echo "   docker service logs kryonix-plataforma_kryonix-webhook -f"
+echo "   docker service logs Kryonix_kryonix-web -f"
+echo "   docker service logs Kryonix_kryonix-webhook -f"
 echo "   docker service logs kryonix-plataforma_kryonix-monitor -f"
 echo ""
 echo "🔧 Troubleshooting Automático:"
