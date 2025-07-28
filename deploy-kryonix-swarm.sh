@@ -282,7 +282,7 @@ docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
 log_success "Imagem taggeada com timestamp: $TIMESTAMP"
 
 # Atualizar docker-stack.yml para incluir webhook
-log_info "Atualizando configuração do stack..."
+log_info "Atualizando configura��ão do stack..."
 cat > docker-stack.yml << 'STACK_EOF'
 version: '3.8'
 
@@ -341,7 +341,7 @@ services:
     environment:
       - WEBHOOK_PORT=9000
       - WEBHOOK_SECRET=Kr7$$n0x-V1t0r-2025-#Jwt$$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
-      - PROJECT_DIR=/opt/kryonix-plataforma
+      - PROJECT_DIR=/opt/kryonix-plataform
       - NETWORK_NAME=Kryonix-NET
       - SENDGRID_API_KEY=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
     working_dir: /opt/kryonix-plataforma
@@ -612,4 +612,4 @@ echo "   ✅ GitHub Token: github_pat_11AVPMT2Y0..."
 echo "   ✅ SendGrid API: SG.hu7o_dY7QduLbXxH..."
 echo "   ✅ NTFY Auth: Basic a3J5b25peDpWaXRvckA..."
 echo ""
-log_success "✅ Sistema KRYONIX 100% Automático Funcionando! 🚀🌟"
+log_success "��� Sistema KRYONIX 100% Automático Funcionando! 🚀🌟"
