@@ -9,6 +9,25 @@
 
 Execute TODAS as etapas abaixo de forma automática e sequencial. Configure deploy automático completo para o projeto KRYONIX com monitoramento em tempo real.
 
+### ⚠️ **CORREÇÕES CRÍTICAS APLICADAS**
+
+**Problemas identificados e solucionados:**
+
+1. **❌ ERRO**: `npm install` falhava por falta de `package.json`
+   **✅ SOLUÇÃO**: Criada estrutura Node.js completa com dependências
+
+2. **❌ ERRO**: Aplicação não funcionava sem `server.js` e `vite.config.js`
+   **✅ SOLUÇÃO**: Servidor Express completo com health checks
+
+3. **❌ ERRO**: Docker containers não conseguiam se comunicar
+   **✅ SOLUÇÃO**: Rede personalizada `Kryonix-NET` com subnet dedicado
+
+4. **❌ ERRO**: Health checks falhavam por comandos incorretos
+   **✅ SOLUÇÃO**: Uso de `wget` no Alpine Linux com parâmetros corretos
+
+5. **❌ ERRO**: Portas conflitantes entre serviços
+   **✅ SOLUÇÃO**: Mapeamento correto de portas (3000 interno, 4000 externo para backend)
+
 ---
 
 ## 📋 **ETAPA 0: ESTRUTURA INICIAL OBRIGATÓRIA DO PROJETO**
@@ -607,7 +626,7 @@ check_service() {
         fi
         
         retries=$((retries + 1))
-        echo "⏳ $service_name: Tentativa $retries/$MAX_RETRIES..."
+        echo "��� $service_name: Tentativa $retries/$MAX_RETRIES..."
         sleep $RETRY_INTERVAL
     done
     
