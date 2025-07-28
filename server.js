@@ -5,18 +5,29 @@ const helmet = require('helmet');
 const compression = require('compression');
 
 const app = express();
-const PORT = process.env.PORT || 5173;
+const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Middleware de segurança
 app.use(helmet({
-  contentSecurityPolicy: false, // Desabilitar para desenvolvimento
+  contentSecurityPolicy: NODE_ENV === 'development' ? false : {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
 }));
 
 // Middleware
 app.use(cors());
 app.use(compression());
 app.use(express.json());
-app.use(express.static('public'));
+
+// Servir arquivos estáticos (produção usa dist, desenvolvimento usa public)
+const staticPath = NODE_ENV === 'production' ? 'dist/public' : 'public';
+app.use(express.static(staticPath));
 
 // Rotas para as páginas HTML
 app.get('/', (req, res) => {
