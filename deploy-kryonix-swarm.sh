@@ -732,7 +732,7 @@ log_info "Criando configuração kryonix_monitor_config..."
 docker config create kryonix_monitor_config monitor-config.yml
 log_success "Configuração kryonix_monitor_config criada ✓"
 
-# Criar todos os scripts de monitoramento em portugu��s
+# Criar todos os scripts de monitoramento em português
 log_info "Criando scripts de monitoramento em português..."
 
 # Criar script adicional de status simplificado
@@ -1170,7 +1170,7 @@ else
 fi
 
 # 7. Verificar específico do swarm
-log_info "🔗 Verificando configuração do Docker Swarm:"
+log_info "��� Verificando configuração do Docker Swarm:"
 docker node ls >/dev/null 2>&1 && echo "   ✅ Swarm ativo" || echo "   ❌ Swarm inativo"
 docker network ls | grep -q "kryonix-plataforma_default" && echo "   ✅ Rede do stack existe" || echo "   ⚠️ Rede do stack não existe"
 
@@ -1995,7 +1995,7 @@ fi
 
 echo ""
 echo "🔗 Endpoints Ativos:"
-echo "   🏠 App: https://app.kryonix.com.br"
+echo "   🏠 App: https://www.kryonix.com.br"
 echo "   📡 Webhook: https://webhook.kryonix.com.br"
 echo "   �� Monitor: https://monitor.kryonix.com.br"
 echo "   🎯 Portainer: https://painel.kryonix.com.br"
@@ -2471,7 +2471,7 @@ for i in {1..8}; do
             if netstat -tlnp 2>/dev/null | grep -q ":8084 "; then
                 echo "    ✅ Porta 8084 sendo escutada"
             else
-                echo "    ��� Porta 8084 não sendo escutada"
+                echo "    �� Porta 8084 não sendo escutada"
                 # Verificar se arquivo monitor existe
                 if [ -f "kryonix-monitor.js" ]; then
                     echo "    ✅ Arquivo kryonix-monitor.js existe"
