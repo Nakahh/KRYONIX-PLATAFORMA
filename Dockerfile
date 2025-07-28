@@ -18,7 +18,7 @@ RUN npm install --production && npm cache clean --force
 
 # Copy application files directly
 COPY server.js ./
-COPY public/ ./dist/
+COPY public/ ./public/
 
 # Set ownership
 RUN chown -R kryonix:kryonix /app
@@ -27,11 +27,11 @@ RUN chown -R kryonix:kryonix /app
 USER kryonix
 
 # Expose port
-EXPOSE 3000
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:3000/health || exit 1
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Use tini as init and start server
 ENTRYPOINT ["/usr/bin/tini", "--"]
