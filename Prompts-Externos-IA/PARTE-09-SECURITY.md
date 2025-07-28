@@ -1,0 +1,5 @@
+# PARTE-09: SEGURANÇA AVANÇADA - VAULT + FAIL2BAN
+
+**PROMPT PARA IA EXTERNA:**
+
+Configure segurança avançada mobile-first para KRYONIX no servidor 144.202.90.55. Acesse via SSH, vá para /opt/kryonix, configure HashiCorp Vault para gestão secrets, configure Fail2Ban proteção DDoS, implemente WAF mobile-optimized, configure SSL/TLS automático Let's Encrypt, configure firewall UFW com regras mobile, implemente 2FA para acessos críticos, configure audit logs, configure Vault UI https://vault.kryonix.com.br, integre secrets dinâmicos PostgreSQL/Redis/MinIO, configure policies Vault granulares, implemente auto-unseal, configure Fail2Ban para SSH/HTTP/API abuse, configure rate limiting mobile APIs, integre monitoring segurança, configure backup secrets, implemente rotação automática passwords, configure alertas segurança WhatsApp (+5517981805327), use credenciais kryonix/Vitor@123456, configure Docker Compose seguro, integre LDAP/Keycloak, teste penetration básico, commit mudanças no GitHub, reporte status completo em português.

@@ -1,0 +1,5 @@
+# PARTE-10: API GATEWAY - GATEWAY UNIFICADO
+
+**PROMPT PARA IA EXTERNA:**
+
+Configure API Gateway mobile-first para KRYONIX no servidor 144.202.90.55. Acesse via SSH, vá para /opt/kryonix, configure Kong/Traefik como gateway unificado, configure roteamento APIs mobile-optimized, implemente rate limiting específico mobile, configure load balancing inteligente, configure cache API responses, implemente autenticação JWT mobile, configure CORS otimizado mobile, configure compressão gzip/brotli, implemente circuit breaker, configure health checks APIs, configure logging estruturado, configure métricas Prometheus, configure Gateway UI https://api.kryonix.com.br, integre Keycloak authentication, configure SSL termination, implemente request/response transformation, configure retry policies mobile, integre monitoring APM, configure alertas performance WhatsApp (+5517981805327), use credenciais kryonix/Vitor@123456, configure Docker Compose, integre todas APIs SaaS, teste performance mobile, commit mudanças no GitHub, reporte status completo em português.
