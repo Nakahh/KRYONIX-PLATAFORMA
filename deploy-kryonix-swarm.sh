@@ -381,6 +381,15 @@ else
     log_info "Rede traefik-public já existe ✓"
 fi
 
+# Verificar se a rede traefik_default existe
+if ! docker network ls | grep -q "traefik_default"; then
+    log_warning "Rede traefik_default não encontrada, criando..."
+    docker network create -d overlay --attachable traefik_default
+    log_success "Rede traefik_default criada"
+else
+    log_info "Rede traefik_default já existe ✓"
+fi
+
 # Criar webhook listener para GitHub
 log_info "Configurando webhook listener..."
 cat > webhook-listener.js << 'WEBHOOK_EOF'
@@ -2392,7 +2401,7 @@ curl -I https://www.kryonix.com.br 2>/dev/null || echo "   ❌ HTTPS não acess�
 echo "   Testando conectividade HTTP:"
 curl -I http://www.kryonix.com.br 2>/dev/null || echo "   ❌ HTTP não acessível"
 
-log_info "��� Verificações importantes:"
+log_info "📋 Verificações importantes:"
 echo "   1. DNS do domínio deve apontar para este servidor ($(curl -s ifconfig.me 2>/dev/null || echo 'IP_DESCONHECIDO'))"
 echo "   2. Traefik deve estar escutando nas portas 80 e 443"
 echo "   3. Serviço deve estar na rede traefik-public"
