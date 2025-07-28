@@ -71,16 +71,16 @@
         }
 
         .kryonix-logo {
-            display: inline-block;
-            background: linear-gradient(45deg, #4CAF50, #66BB6A, #81C784);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 4.5em;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .kryonix-logo img {
+            max-width: 400px;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
             animation: pulse-glow 3s ease-in-out infinite;
         }
 
