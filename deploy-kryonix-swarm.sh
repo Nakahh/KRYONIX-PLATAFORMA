@@ -328,21 +328,21 @@ cat > docker-stack.yml << 'STACK_EOF'
 version: '3.8'
 
 services:
-  web:
+  kryonix-web:
     image: kryonix-plataforma:latest
     deploy:
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
-        max_attempts: 3
+        max_attempts: 5
         delay: 10s
       update_config:
         parallelism: 1
         delay: 10s
         failure_action: rollback
-      placement:
-        constraints:
-          - node.role == manager
+      labels:
+        - "com.docker.stack.description=KRYONIX Web Application"
+        - "com.docker.service.name=KRYONIX Web"
     ports:
       - "3000:3000"
     networks:
@@ -350,12 +350,6 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kryonix-app.rule=Host(`app.kryonix.com.br`)"
@@ -363,6 +357,8 @@ services:
       - "traefik.http.routers.kryonix-app.tls.certresolver=leresolver"
       - "traefik.http.services.kryonix-app.loadbalancer.server.port=3000"
       - "traefik.docker.network=Kryonix-NET"
+      - "kryonix.service=web"
+      - "kryonix.description=KRYONIX Web Application"
 
   webhook:
     image: node:18-bullseye-slim
@@ -591,7 +587,7 @@ echo "=============================="
 echo ""
 
 # Status dos serviços
-echo "📊 Status dos Servi��os:"
+echo "📊 Status dos Serviços:"
 docker stack ps kryonix-plataforma --format "table {{.Name}}\t{{.Node}}\t{{.DesiredState}}\t{{.CurrentState}}"
 echo ""
 
