@@ -215,7 +215,7 @@ const server = http.createServer((req, res) => {
                     res.writeHead(200);
                     res.end('Deploy iniciado!');
                 } else {
-                    log(`ℹ️  Push ignorado - branch: ${payload.ref}`);
+                    log(`ℹ���  Push ignorado - branch: ${payload.ref}`);
                     res.writeHead(200);
                     res.end('Push ignorado - não é main branch');
                 }
@@ -545,7 +545,7 @@ done
 
 # Verificar webhook
 for i in {1..10}; do
-    if curl -f http://localhost:9001/health 2>/dev/null; then
+    if curl -f http://localhost:9002/health 2>/dev/null; then
         log_success "✅ Webhook service: OK"
         break
     else
