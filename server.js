@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 
 const app = express();
-const PORT = process.env.PORT || 5173;
+const PORT = process.env.PORT || 8080;
 
 // Middleware de segurança
 app.use(helmet({
@@ -84,9 +84,9 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 KRYONIX Platform rodando em http://localhost:${PORT}`);
-  console.log(`📊 Progresso em: http://localhost:${PORT}/progresso`);
-  console.log(`🔍 Health check: http://localhost:${PORT}/health`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
+  console.log(`📊 Progresso em: http://0.0.0.0:${PORT}/progresso`);
+  console.log(`🔍 Health check: http://0.0.0.0:${PORT}/health`);
   console.log(`📱 Mobile-first otimizado para 80% usuários mobile`);
 });
