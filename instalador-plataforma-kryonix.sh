@@ -24,21 +24,21 @@ GEAR='⚙'
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
-    echo "║                                                                               ║"
-    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                 ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                 ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                  ║"
-    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                  ║"
-    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                 ║"
-    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝                 ║"
-    echo "║                                                                               ║"
-    echo -e "║                        ${WHITE}PLATAFORMA KRYONIX${BLUE}                                  ║"
-    echo -e "║                   ${CYAN}Deploy Automatico Profissional${BLUE}                          ║"
-    echo "║                                                                               ║"
-    echo -e "║     ${WHITE}SaaS 100% Autonomo  |  Mobile-First  |  Portugues${BLUE}                    ║"
-    echo "║                                                                               ║"
-    echo "╚═══════════════════════════════════════════════════════════════════════════════╝"
+    echo    "╔═══════════════════════════════════════════════════════════════════════════════╗"
+    echo    "║                                                                               ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                   ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                   ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                    ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                    ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                   ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝                   ║"
+    echo    "║                                                                               ║"
+    echo -e "║                   ${WHITE}PLATAFORMA KRYONIX${BLUE}                           ║"
+    echo -e "║                   ${CYAN}Deploy Automatico Profissional${BLUE}                ║"
+    echo    "║                                                                               ║"
+    echo -e "║     ${WHITE}SaaS 100% Autonomo  |  Mobile-First  |  Portugues${BLUE}          ║"
+    echo    "║                                                                               ║"
+    echo    "╚═══════════════════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -512,41 +512,8 @@ services:
         condition: on-failure
         max_attempts: 3
         delay: 10s
-      labels:
-        # Habilitar Traefik
-        - "traefik.enable=true"
-
-        # Configurar rede
-        - "traefik.docker.network=Kryonix-NET"
-
-        # Configurar serviço e porta
-        - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
-
-        # Router HTTP (redireciona para HTTPS)
-        - "traefik.http.routers.kryonix-web-http.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
-        - "traefik.http.routers.kryonix-web-http.entrypoints=web"
-        - "traefik.http.routers.kryonix-web-http.middlewares=redirect-https@docker"
-        - "traefik.http.routers.kryonix-web-http.service=kryonix-web"
-
-        # Router HTTPS
-        - "traefik.http.routers.kryonix-web-https.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
-        - "traefik.http.routers.kryonix-web-https.entrypoints=websecure"
-        - "traefik.http.routers.kryonix-web-https.tls=true"
-        - "traefik.http.routers.kryonix-web-https.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.kryonix-web-https.service=kryonix-web"
-
-        # Headers de segurança
-        - "traefik.http.routers.kryonix-web-https.middlewares=security-headers@docker"
-        - "traefik.http.middlewares.security-headers.headers.frameDeny=true"
-        - "traefik.http.middlewares.security-headers.headers.sslRedirect=true"
-        - "traefik.http.middlewares.security-headers.headers.browserXssFilter=true"
-        - "traefik.http.middlewares.security-headers.headers.contentTypeNosniff=true"
-        - "traefik.http.middlewares.security-headers.headers.forceSTSHeader=true"
-        - "traefik.http.middlewares.security-headers.headers.stsIncludeSubdomains=true"
-        - "traefik.http.middlewares.security-headers.headers.stsPreload=true"
-        - "traefik.http.middlewares.security-headers.headers.stsSeconds=31536000"
-    networks:
-      - Kryonix-NET
+    ports:
+      - "8080:8080"
     environment:
       - NODE_ENV=production
       - PORT=8080
@@ -557,146 +524,10 @@ services:
       retries: 3
       start_period: 40s
 
-  webhook:
-    image: node:18-bullseye-slim
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-        max_attempts: 5
-        delay: 30s
-      labels:
-        # Habilitar Traefik
-        - "traefik.enable=true"
-
-        # Configurar rede
-        - "traefik.docker.network=Kryonix-NET"
-
-        # Configurar serviço e porta
-        - "traefik.http.services.kryonix-webhook.loadbalancer.server.port=8082"
-
-        # Router HTTP (redireciona para HTTPS)
-        - "traefik.http.routers.kryonix-webhook-http.rule=Host(`webhook.kryonix.com.br`)"
-        - "traefik.http.routers.kryonix-webhook-http.entrypoints=web"
-        - "traefik.http.routers.kryonix-webhook-http.middlewares=redirect-https@docker"
-        - "traefik.http.routers.kryonix-webhook-http.service=kryonix-webhook"
-
-        # Router HTTPS
-        - "traefik.http.routers.kryonix-webhook-https.rule=Host(`webhook.kryonix.com.br`)"
-        - "traefik.http.routers.kryonix-webhook-https.entrypoints=websecure"
-        - "traefik.http.routers.kryonix-webhook-https.tls=true"
-        - "traefik.http.routers.kryonix-webhook-https.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.kryonix-webhook-https.service=kryonix-webhook"
-    networks:
-      - Kryonix-NET
-    environment:
-      - WEBHOOK_PORT=8082
-      - WEBHOOK_SECRET=Kr7$$n0x-V1t0r-2025-#Jwt$$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
-      - PROJECT_DIR=/opt/kryonix-plataform
-    working_dir: /opt/kryonix-plataform
-    volumes:
-      - /opt/kryonix-plataform:/opt/kryonix-plataform:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/bin/docker:/usr/bin/docker:ro
-      - /var/log:/var/log
-    command: >
-      sh -c "
-        apt-get update &&
-        apt-get install -y curl git procps &&
-        if [ -f /opt/kryonix-plataform/webhook-listener.js ]; then
-          node /opt/kryonix-plataform/webhook-listener.js
-        else
-          echo 'Webhook listener nao encontrado. Criando basico...' &&
-          cat > /tmp/webhook.js << 'EOF'
-const http = require('http');
-const PORT = process.env.WEBHOOK_PORT || 8082;
-const server = http.createServer((req, res) => {
-  if (req.method === 'GET' && req.url === '/health') {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({status: 'healthy', service: 'KRYONIX Webhook', port: PORT}));
-  } else {
-    res.statusCode = 200;
-    res.end('KRYONIX Webhook Online');
-  }
-});
-server.listen(PORT, '0.0.0.0', () => {
-  console.log('KRYONIX Webhook rodando na porta ' + PORT);
-});
-EOF
-          node /tmp/webhook.js
-        fi
-      "
-
-  monitor:
-    image: node:18-bullseye-slim
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-        max_attempts: 5
-        delay: 30s
-      labels:
-        # Habilitar Traefik
-        - "traefik.enable=true"
-
-        # Configurar rede
-        - "traefik.docker.network=Kryonix-NET"
-
-        # Configurar serviço e porta
-        - "traefik.http.services.kryonix-monitor.loadbalancer.server.port=8084"
-
-        # Router HTTP (redireciona para HTTPS)
-        - "traefik.http.routers.kryonix-monitor-http.rule=Host(`monitor.kryonix.com.br`)"
-        - "traefik.http.routers.kryonix-monitor-http.entrypoints=web"
-        - "traefik.http.routers.kryonix-monitor-http.middlewares=redirect-https@docker"
-        - "traefik.http.routers.kryonix-monitor-http.service=kryonix-monitor"
-
-        # Router HTTPS
-        - "traefik.http.routers.kryonix-monitor-https.rule=Host(`monitor.kryonix.com.br`)"
-        - "traefik.http.routers.kryonix-monitor-https.entrypoints=websecure"
-        - "traefik.http.routers.kryonix-monitor-https.tls=true"
-        - "traefik.http.routers.kryonix-monitor-https.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.kryonix-monitor-https.service=kryonix-monitor"
-    networks:
-      - Kryonix-NET
-    environment:
-      - MONITOR_PORT=8084
-    working_dir: /opt/kryonix-plataform
-    volumes:
-      - /opt/kryonix-plataform:/opt/kryonix-plataform:ro
-    command: >
-      sh -c "
-        apt-get update &&
-        apt-get install -y curl procps &&
-        if [ -f /opt/kryonix-plataform/kryonix-monitor.js ]; then
-          node /opt/kryonix-plataform/kryonix-monitor.js
-        else
-          echo 'Monitor nao encontrado. Criando basico...' &&
-          cat > /tmp/monitor.js << 'EOF'
-const http = require('http');
-const PORT = process.env.MONITOR_PORT || 8084;
-const server = http.createServer((req, res) => {
-  if (req.method === 'GET' && req.url === '/health') {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({status: 'healthy', service: 'KRYONIX Monitor', port: PORT}));
-  } else {
-    res.statusCode = 200;
-    res.end('KRYONIX Monitor Online');
-  }
-});
-server.listen(PORT, '0.0.0.0', () => {
-  console.log('KRYONIX Monitor rodando na porta ' + PORT);
-});
-EOF
-          node /tmp/monitor.js
-        fi
-      "
-
 networks:
-  Kryonix-NET:
-    external: true
+  default:
+    driver: overlay
+    attachable: true
 STACK_EOF
 show_status "Configuracao do stack criada" "concluido"
 
@@ -714,35 +545,24 @@ show_status "Servicos inicializados" "concluido"
 # Verificação de conectividade
 log_step "Teste de Conectividade"
 
-show_status "Testando conectividade dos servicos" "iniciando"
-sleep 15
+show_status "Testando conectividade" "iniciando"
+sleep 10
 
-# Teste interno dos serviços
 if curl -f -m 10 http://localhost:8080/health 2>/dev/null; then
-    show_status "Web Service (interno): FUNCIONANDO" "concluido"
+    show_status "Web Service (8080): FUNCIONANDO" "concluido"
     WEB_STATUS="✅ ONLINE"
 else
-    show_status "Web Service (interno): Verificar logs" "erro"
+    show_status "Web Service (8080): Verificar logs" "erro"
     WEB_STATUS="⚠️ VERIFICAR"
 fi
 
-# Verificar status dos serviços Docker
-DOCKER_STATUS=$(docker service ls --format "{{.Name}}: {{.Replicas}}" | grep Kryonix)
-show_status "Status dos servicos Docker" "concluido"
-echo -e "${CYAN}Servicos Docker:${RESET}"
-echo "$DOCKER_STATUS" | sed 's/^/  /'
-
 # Banner final
 echo -e "\n${BLUE}${BOLD}"
-echo "╔════════════════════════════════════════════════════════��══════════════════════╗"
+echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                               ║"
 echo -e "║                    ${GREEN}${CHECKMARK} DEPLOY CONCLUIDO COM SUCESSO! ${CHECKMARK}${BLUE}                         ║"
 echo "║                                                                               ║"
-echo -e "║   ${WHITE}🌐 Site Principal: https://kryonix.com.br${BLUE}                             ║"
-echo -e "║   ${WHITE}🔗 Webhook: https://webhook.kryonix.com.br${BLUE}                            ║"
-echo -e "║   ${WHITE}📊 Monitor: https://monitor.kryonix.com.br${BLUE}                            ║"
-echo "║                                                                               ║"
-echo -e "║   ${WHITE}🔧 Local: http://localhost:8080 - $WEB_STATUS${BLUE}                        ║"
+echo -e "║   ${WHITE}🌐 Web Service: http://localhost:8080 - $WEB_STATUS${BLUE}                    ║"
 echo "║                                                                               ║"
 echo -e "║                     ${CYAN}PLATAFORMA KRYONIX ONLINE${BLUE}                             ║"
 echo "║                                                                               ║"
@@ -750,17 +570,6 @@ echo "╚═══════════════════════�
 echo -e "${RESET}\n"
 
 log_success "KRYONIX Platform deployada com sucesso!"
-echo
-log_info "🌐 URLs de Acesso:"
-log_info "   Site Principal: https://kryonix.com.br"
-log_info "   Webhook GitHub: https://webhook.kryonix.com.br/webhook"
-log_info "   Monitor Saude:  https://monitor.kryonix.com.br/health"
-log_info "   Local (backup): http://localhost:8080"
-echo
-log_info "🔧 Comandos Uteis:"
-log_info "   docker stack ps Kryonix          # Status dos servicos"
-log_info "   docker service logs Kryonix_web  # Logs do site"
-log_info "   docker service ls                # Lista todos os servicos"
-echo
-log_info "📝 Certificados SSL serao gerados automaticamente pelo Let's Encrypt"
-log_info "⏱️ Aguarde 1-2 minutos para os certificados serem emitidos"
+log_info "Acesse: http://localhost:8080"
+log_info "Health check: http://localhost:8080/health"
+log_info "Use 'docker stack ps Kryonix' para monitorar os servicos"
