@@ -29,7 +29,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                   ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                   ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                    ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                    ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔��  ██║   ██║██║╚██╗██║██║ ██╔██╗                    ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                   ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝                   ║"
     echo    "║                                                                               ║"
@@ -38,7 +38,7 @@ show_banner() {
     echo    "║                                                                               ║"
     echo -e "║     ${WHITE}SaaS 100% Autonomo  |  Mobile-First  |  Portugues${BLUE}          ║"
     echo    "║                                                                               ║"
-    echo    "╚═══════════════════════════════════════════════════════════════════════════════╝"
+    echo    "╚═════════════════════════════════════════════════════════════════════════════���═╝"
     echo -e "${RESET}\n"
 }
 
@@ -210,38 +210,44 @@ if [ ! -d ".git" ]; then
         # Método 2: Wget/curl como alternativa
         if command -v wget >/dev/null 2>&1; then
             log_info "Usando wget para download do repositorio..."
-            wget -q https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -O /tmp/kryonix.zip
-            if [ -f /tmp/kryonix.zip ]; then
+            wget --timeout=30 --tries=3 -q https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -O /tmp/kryonix.zip 2>/dev/null
+            if [ -f /tmp/kryonix.zip ] && [ -s /tmp/kryonix.zip ]; then
                 cd /tmp
-                unzip -q kryonix.zip
-                cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/"
-                cd "$PROJECT_DIR"
-                rm -f /tmp/kryonix.zip
-                rm -rf /tmp/KRYONIX-PLATAFORMA-main
-                log_success "Repositorio baixado via wget"
+                if unzip -q kryonix.zip 2>/dev/null; then
+                    if [ -d "KRYONIX-PLATAFORMA-main" ]; then
+                        cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/" 2>/dev/null
+                        cd "$PROJECT_DIR"
+                        rm -f /tmp/kryonix.zip
+                        rm -rf /tmp/KRYONIX-PLATAFORMA-main
+                        log_success "Repositorio baixado via wget"
 
-                # Inicializar git local
-                git init
-                git remote add origin "$REPO_URL"
+                        # Inicializar git local
+                        git init 2>/dev/null
+                        git remote add origin "$REPO_URL" 2>/dev/null
+                    fi
+                fi
             fi
         elif command -v curl >/dev/null 2>&1; then
             log_info "Usando curl para download do repositorio..."
-            curl -L https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -o /tmp/kryonix.zip
-            if [ -f /tmp/kryonix.zip ]; then
+            curl --connect-timeout 30 --max-time 60 -L https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -o /tmp/kryonix.zip 2>/dev/null
+            if [ -f /tmp/kryonix.zip ] && [ -s /tmp/kryonix.zip ]; then
                 cd /tmp
-                unzip -q kryonix.zip
-                cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/"
-                cd "$PROJECT_DIR"
-                rm -f /tmp/kryonix.zip
-                rm -rf /tmp/KRYONIX-PLATAFORMA-main
-                log_success "Repositorio baixado via curl"
+                if unzip -q kryonix.zip 2>/dev/null; then
+                    if [ -d "KRYONIX-PLATAFORMA-main" ]; then
+                        cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/" 2>/dev/null
+                        cd "$PROJECT_DIR"
+                        rm -f /tmp/kryonix.zip
+                        rm -rf /tmp/KRYONIX-PLATAFORMA-main
+                        log_success "Repositorio baixado via curl"
 
-                # Inicializar git local
-                git init
-                git remote add origin "$REPO_URL"
+                        # Inicializar git local
+                        git init 2>/dev/null
+                        git remote add origin "$REPO_URL" 2>/dev/null
+                    fi
+                fi
             fi
         else
-            log_error "Não foi possível baixar o repositório. Usando arquivos mínimos..."
+            log_warning "Wget e curl nao disponiveis. Criando arquivos minimos..."
         fi
     fi
 
