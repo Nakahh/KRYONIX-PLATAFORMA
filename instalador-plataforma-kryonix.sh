@@ -72,7 +72,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ █���╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██��� ██╔██╗      ║"
@@ -84,7 +84,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚══════════════════════════════════════════════���══════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1010,6 +1010,10 @@ git config --global --add safe.directory "$PROJECT_DIR"
 # Corrigir ownership para todos os usuários também
 sudo git config --system --add safe.directory "$PROJECT_DIR"
 git config --global --add safe.directory "$PROJECT_DIR"
+
+# Configurar estratégia de merge para evitar conflitos
+git config --global pull.rebase false
+git config --global init.defaultBranch main
 
 # Criar GitHub Actions workflow
 mkdir -p .github/workflows
