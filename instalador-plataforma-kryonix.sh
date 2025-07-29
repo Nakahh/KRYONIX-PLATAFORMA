@@ -36,7 +36,7 @@ WEBHOOK_PORT="8080"
 # Configurações CI/CD - Credenciais atualizadas
 WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PAT_TOKEN="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"
+PAT_TOKEN="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"
 SERVER_HOST="137.220.34.41"
 SERVER_USER="linuxuser"
 JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5"
@@ -75,7 +75,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗█��║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██��� ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═��  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -775,7 +775,7 @@ log_info "Verificando Traefik existente..."
 
 if docker service ls | grep -q "traefik"; then
     log_success "Traefik encontrado - preservando configuração existente"
-    log_info "🛡️ Não impactando outras stacks do servidor"
+    log_info "���️ Não impactando outras stacks do servidor"
     
     # Detectar configuração do Traefik existente
     TRAEFIK_SERVICE=$(docker service ls --format "{{.Name}}" | grep traefik | head -1)
@@ -1219,7 +1219,7 @@ const server = http.createServer((req, res) => {
                 // Executar deploy com pull do GitHub
                 const deployScript = `
                     cd ${PROJECT_DIR} &&
-                    echo "🔄 Fazendo pull do GitHub..." &&
+                    echo "�� Fazendo pull do GitHub..." &&
                     git remote set-url origin "https://nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" &&
                     git fetch origin &&
                     git reset --hard origin/main &&
@@ -1523,7 +1523,7 @@ if [ "$WEBHOOK_OK" = true ]; then
     fi
 else
     log_warning "⚠️ Webhook pode precisar de alguns minutos para estabilizar"
-    log_info "💡 Teste manual: curl -X POST https://kryonix.com.br/api/github-webhook"
+    log_info "�� Teste manual: curl -X POST https://kryonix.com.br/api/github-webhook"
 fi
 
 sleep 2
@@ -1628,7 +1628,7 @@ echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO
 
 # Banner final épico
 echo -e "${BLUE}${BOLD}"
-echo "╔════════════════════════════════════════════════════════���═══════════════════════════╗"
+echo "╔═════════════════════════════════════════════════════════��══════════════════════════╗"
 echo "║                                                                                    ║"
 echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCESSO! 🎉${BLUE}                       ║"
 echo "║                                                                                    ║"
@@ -1652,7 +1652,7 @@ echo -e "║   ${WHITE}🔑 Secret: Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y
 echo -e "║   ${WHITE}📤 Events: Just push events${BLUE}                                                ║"
 echo -e "║   ${WHITE}📄 Content-Type: application/json${BLUE}                                          ║"
 echo "║                                                                                    ║"
-echo "╚══════════════════��════════════════════════════���════════════════════════════════���═══╝"
+echo "╚═════���════════════��════════════════════════════���════════════════════════════════���═══╝"
 echo -e "${RESET}\n"
 
 log_success "🎯 INSTALADOR KRYONIX COMPLETO! Plataforma + CI/CD 100% funcional!"
