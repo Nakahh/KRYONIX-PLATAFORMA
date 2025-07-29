@@ -26,8 +26,8 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═══════════════════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                               ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                   ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗��█╔╝                   ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██���██╗██╗  ██╗                   ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                   ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                    ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                    ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                   ║"
@@ -591,6 +591,41 @@ services:
         condition: on-failure
         max_attempts: 3
         delay: 10s
+      labels:
+        # Habilitar Traefik
+        - "traefik.enable=true"
+
+        # Configurar rede
+        - "traefik.docker.network=Kryonix-NET"
+
+        # Configurar serviço e porta
+        - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
+
+        # Router HTTP (redireciona para HTTPS)
+        - "traefik.http.routers.kryonix-web-http.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
+        - "traefik.http.routers.kryonix-web-http.entrypoints=web"
+        - "traefik.http.routers.kryonix-web-http.middlewares=redirect-https@docker"
+        - "traefik.http.routers.kryonix-web-http.service=kryonix-web"
+
+        # Router HTTPS
+        - "traefik.http.routers.kryonix-web-https.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
+        - "traefik.http.routers.kryonix-web-https.entrypoints=websecure"
+        - "traefik.http.routers.kryonix-web-https.tls=true"
+        - "traefik.http.routers.kryonix-web-https.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.kryonix-web-https.service=kryonix-web"
+
+        # Headers de segurança
+        - "traefik.http.routers.kryonix-web-https.middlewares=security-headers@docker"
+        - "traefik.http.middlewares.security-headers.headers.frameDeny=true"
+        - "traefik.http.middlewares.security-headers.headers.sslRedirect=true"
+        - "traefik.http.middlewares.security-headers.headers.browserXssFilter=true"
+        - "traefik.http.middlewares.security-headers.headers.contentTypeNosniff=true"
+        - "traefik.http.middlewares.security-headers.headers.forceSTSHeader=true"
+        - "traefik.http.middlewares.security-headers.headers.stsIncludeSubdomains=true"
+        - "traefik.http.middlewares.security-headers.headers.stsPreload=true"
+        - "traefik.http.middlewares.security-headers.headers.stsSeconds=31536000"
+    networks:
+      - Kryonix-NET
     ports:
       - "8080:8080"
     environment:
@@ -604,9 +639,8 @@ services:
       start_period: 40s
 
 networks:
-  default:
-    driver: overlay
-    attachable: true
+  Kryonix-NET:
+    external: true
 STACK_EOF
 show_status "Configuracao do stack criada" "concluido"
 
