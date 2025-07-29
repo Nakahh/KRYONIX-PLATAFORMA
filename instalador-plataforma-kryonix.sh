@@ -57,7 +57,7 @@ STEP_DESCRIPTIONS=(
     "Testando conectividade 🌐"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
-    "Configurando serviço webhook ⚙️"
+    "Configurando serviço webhook ��️"
     "Testando CI/CD 🧪"
     "Finalizando setup completo ✅"
 )
@@ -72,10 +72,10 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██����██╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██��� ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██���   ██║██║╚██╗██║██��� ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═��  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -889,12 +889,21 @@ services:
         - "traefik.http.routers.kryonix-web.entrypoints=web"
         - "traefik.http.routers.kryonix-web.service=kryonix-web"
 
-        # Router HTTPS
+        # Router HTTPS principal
         - "traefik.http.routers.kryonix-web-secure.rule=Host(\`kryonix.com.br\`) || Host(\`www.kryonix.com.br\`)"
         - "traefik.http.routers.kryonix-web-secure.entrypoints=websecure"
         - "traefik.http.routers.kryonix-web-secure.tls=true"
         - "traefik.http.routers.kryonix-web-secure.tls.certresolver=${CERT_RESOLVER:-letsencryptresolver}"
         - "traefik.http.routers.kryonix-web-secure.service=kryonix-web"
+        - "traefik.http.routers.kryonix-web-secure.priority=1"
+
+        # Router específico para API/Webhook (prioridade alta)
+        - "traefik.http.routers.kryonix-api.rule=Host(\`kryonix.com.br\`) && PathPrefix(\`/api\`)"
+        - "traefik.http.routers.kryonix-api.entrypoints=websecure"
+        - "traefik.http.routers.kryonix-api.tls=true"
+        - "traefik.http.routers.kryonix-api.tls.certresolver=${CERT_RESOLVER:-letsencryptresolver}"
+        - "traefik.http.routers.kryonix-api.service=kryonix-web"
+        - "traefik.http.routers.kryonix-api.priority=10"
         
         # Headers básicos de segurança
         - "traefik.http.routers.kryonix-web-secure.middlewares=kryonix-security"
@@ -980,7 +989,7 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 11: CONFIGURAR GITHUB ACTIONS 🚀
+# ETAPA 11: CONFIGURAR GITHUB ACTIONS ���
 # ============================================================================
 
 processing_step
@@ -1059,7 +1068,7 @@ jobs:
             sleep 30
           done
 
-          echo "⚠�� Verificação manual necessária"
+          echo "⚠️ Verificação manual necessária"
           exit 1
 GITHUB_ACTIONS_EOF
 
@@ -1148,7 +1157,7 @@ deploy() {
     sleep 30
     
     # Verificar health
-    info "🔍 Verificando health da aplicaç��o..."
+    info "🔍 Verificando health da aplicação..."
     for i in {1..30}; do
         if curl -f -s "http://localhost:8080/health" > /dev/null; then
             log "✅ Deploy automático concluído com sucesso!"
@@ -1395,7 +1404,7 @@ if [ -z "$(git config --global user.name)" ]; then
 fi
 
 # Forçar rebuild da imagem com código atualizado
-log_info "For��ando rebuild da imagem Docker com webhook..."
+log_info "Forçando rebuild da imagem Docker com webhook..."
 docker build --no-cache -t kryonix-plataforma:latest .
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
