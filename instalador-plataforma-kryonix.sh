@@ -12,9 +12,7 @@ WHITE='\033[1;37m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
-# Caracteres especiais para barras
-PROGRESS_FILL='█'
-PROGRESS_EMPTY='░'
+# Caracteres especiais
 CHECKMARK='✓'
 CROSS='✗'
 ARROW='→'
@@ -24,51 +22,22 @@ GEAR='⚙'
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═══════════════════════════════════════════════════════════════════════════════╗"
-    echo    "║                                                                               ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                   ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                   ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                    ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                    ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                   ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝                   ║"
-    echo    "║                                                                               ║"
-    echo -e "║                   ${WHITE}PLATAFORMA KRYONIX${BLUE}                                          ║"
-    echo -e "║                   ${CYAN}Deploy Automatico Profissional${BLUE}                              ║"
-    echo    "║                                                                               ║"
-    echo -e "║     ${WHITE}SaaS 100% Autonomo  |  Mobile-First  |  Portugues${BLUE}                         ║"
-    echo    "║                                                                               ║"
-    echo    "╚═══════════════════════════════════════════════════════════════════════════════╝"
+    echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
+    echo "║                                                                               ║"
+    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                 ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                 ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                  ║"
+    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                  ║"
+    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                 ║"
+    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝                 ║"
+    echo "║                                                                               ║"
+    echo -e "║                        ${WHITE}PLATAFORMA KRYONIX${BLUE}                                  ║"
+    echo -e "║                   ${CYAN}Deploy Automatico Profissional${BLUE}                          ║"
+    echo "║                                                                               ║"
+    echo -e "║     ${WHITE}SaaS 100% Autonomo  |  Mobile-First  |  Portugues${BLUE}                    ║"
+    echo "║                                                                               ║"
+    echo "╚═══════════════════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
-}
-
-# Função para barra de progresso simples
-show_simple_progress() {
-    local message="$1"
-    local percentage="$2"
-    local width=50
-    
-    local filled=$((percentage * width / 100))
-    local empty=$((width - filled))
-    
-    printf "\r${CYAN}${BOLD}%s${RESET} " "$message"
-    printf "${BLUE}["
-    
-    # Barra preenchida
-    for ((i=0; i<filled; i++)); do
-        printf "${GREEN}${PROGRESS_FILL}"
-    done
-    
-    # Barra vazia
-    for ((i=0; i<empty; i++)); do
-        printf "${WHITE}${PROGRESS_EMPTY}"
-    done
-    
-    printf "${BLUE}]${RESET} ${WHITE}${BOLD}%3d%%${RESET}" "$percentage"
-    
-    if [ "$percentage" -eq 100 ]; then
-        printf " ${GREEN}${BOLD}${CHECKMARK}${RESET}\n"
-    fi
 }
 
 # Função para logs formatados
@@ -90,10 +59,10 @@ log_error() {
 
 log_step() {
     echo -e "\n${PURPLE}${BOLD}[${ARROW} ETAPA]${RESET} $1"
-    echo -e "${BLUE}─────────────────────────────────────────────────────────────────────${RESET}"
+    echo -e "${BLUE}───────────────────────────────────────────────��─────────────────────${RESET}"
 }
 
-# Função para progresso com status
+# Função para status
 show_status() {
     local task="$1"
     local status="$2"
@@ -115,13 +84,8 @@ show_status() {
 }
 
 # Configurações - KRYONIX
-REPO_URL="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PROJECT_DIR="/opt/kryonix-plataform"
 WEB_PORT="8080"
-WEBHOOK_PORT="8082"
-MONITOR_PORT="8084"
-WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
-NETWORK_NAME="Kryonix-NET"
 
 # Mostrar banner
 show_banner
@@ -141,37 +105,15 @@ show_status "Docker Swarm detectado e ativo" "concluido"
 log_step "Limpeza Completa do Ambiente"
 
 show_status "Removendo stacks antigos" "iniciando"
-if docker stack ls | grep -q "Kryonix"; then
-    log_warning "Removendo stack Kryonix existente..."
-    docker stack rm Kryonix > /dev/null 2>&1
-fi
-if docker stack ls | grep -q "kryonix-plataforma"; then
-    log_warning "Removendo stack kryonix-plataforma existente..."
-    docker stack rm kryonix-plataforma > /dev/null 2>&1
-fi
-if docker stack ls | grep -q "kryonix-web-isolated"; then
-    log_warning "Removendo stack kryonix-web-isolated..."
-    docker stack rm kryonix-web-isolated > /dev/null 2>&1
-fi
-if docker stack ls | grep -q "kryonix-test"; then
-    log_warning "Removendo stack kryonix-test..."
-    docker stack rm kryonix-test > /dev/null 2>&1
-fi
-if docker stack ls | grep -q "kryonix-minimal"; then
-    log_warning "Removendo stack kryonix-minimal..."
-    docker stack rm kryonix-minimal > /dev/null 2>&1
-fi
+docker stack ls --format "{{.Name}}" | grep -E "(kryonix|Kryonix)" | xargs -r docker stack rm > /dev/null 2>&1 || true
 show_status "Stacks antigos removidos" "concluido"
 
 show_status "Aguardando remocao completa" "processando"
-sleep 20
+sleep 15
 show_status "Remocao completa" "concluido"
 
 show_status "Limpando recursos orfaos" "iniciando"
-if docker config ls | grep -q "kryonix_monitor_config"; then
-    docker config rm kryonix_monitor_config 2>/dev/null || true
-fi
-
+docker config ls --format "{{.Name}}" | grep kryonix | xargs -r docker config rm 2>/dev/null || true
 docker container prune -f 2>/dev/null || true
 docker volume prune -f 2>/dev/null || true
 docker image prune -f 2>/dev/null || true
@@ -187,149 +129,35 @@ sudo chown -R $USER:$USER "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 show_status "Diretorio do projeto criado" "concluido"
 
-show_status "Configurando repositorio Git" "iniciando"
+show_status "Criando arquivos da aplicacao" "iniciando"
 
-# Configurações globais do Git para evitar interações
-export GIT_TERMINAL_PROMPT=0
-export GIT_ASKPASS=/bin/echo
-git config --global credential.helper store 2>/dev/null || true
-git config --global http.sslverify false 2>/dev/null || true
-
-if [ ! -d ".git" ]; then
-    log_info "Clonando repositorio publico..."
-
-    # Método 1: HTTPS direto sem autenticação
-    if git clone --depth 1 --no-single-branch "$REPO_URL" . 2>/dev/null; then
-        log_success "Clone realizado com sucesso via HTTPS"
-    else
-        log_warning "Tentativa HTTPS falhou. Tentando método alternativo..."
-
-        # Limpar tentativa anterior
-        rm -rf .git 2>/dev/null || true
-
-        # Método 2: Wget/curl como alternativa
-        if command -v wget >/dev/null 2>&1; then
-            log_info "Usando wget para download do repositorio..."
-            wget --timeout=30 --tries=3 -q https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -O /tmp/kryonix.zip 2>/dev/null
-            if [ -f /tmp/kryonix.zip ] && [ -s /tmp/kryonix.zip ]; then
-                cd /tmp
-                if unzip -q kryonix.zip 2>/dev/null; then
-                    if [ -d "KRYONIX-PLATAFORMA-main" ]; then
-                        cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/" 2>/dev/null
-                        cd "$PROJECT_DIR"
-                        rm -f /tmp/kryonix.zip
-                        rm -rf /tmp/KRYONIX-PLATAFORMA-main
-                        log_success "Repositorio baixado via wget"
-
-                        # Inicializar git local
-                        git init 2>/dev/null
-                        git remote add origin "$REPO_URL" 2>/dev/null
-                    fi
-                fi
-            fi
-        elif command -v curl >/dev/null 2>&1; then
-            log_info "Usando curl para download do repositorio..."
-            curl --connect-timeout 30 --max-time 60 -L https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -o /tmp/kryonix.zip 2>/dev/null
-            if [ -f /tmp/kryonix.zip ] && [ -s /tmp/kryonix.zip ]; then
-                cd /tmp
-                if unzip -q kryonix.zip 2>/dev/null; then
-                    if [ -d "KRYONIX-PLATAFORMA-main" ]; then
-                        cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/" 2>/dev/null
-                        cd "$PROJECT_DIR"
-                        rm -f /tmp/kryonix.zip
-                        rm -rf /tmp/KRYONIX-PLATAFORMA-main
-                        log_success "Repositorio baixado via curl"
-
-                        # Inicializar git local
-                        git init 2>/dev/null
-                        git remote add origin "$REPO_URL" 2>/dev/null
-                    fi
-                fi
-            fi
-        else
-            log_warning "Wget e curl nao disponiveis. Criando arquivos minimos..."
-        fi
-    fi
-
-    # Configurações locais do git
-    git config --local user.name "KRYONIX Deploy Bot" 2>/dev/null || true
-    git config --local user.email "deploy@kryonix.com.br" 2>/dev/null || true
-    git config --local credential.helper store 2>/dev/null || true
-
-    # Tentar checkout da branch correta
-    git checkout main 2>/dev/null || git checkout master 2>/dev/null || true
-
-else
-    log_info "Atualizando repositorio existente..."
-
-    # Configurar para não pedir credenciais
-    git config --local credential.helper store 2>/dev/null || true
-
-    # Tentar update via git
-    if git fetch origin --depth 1 2>/dev/null; then
-        git checkout main 2>/dev/null || git checkout master 2>/dev/null || true
-        git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null || true
-        git clean -fd 2>/dev/null || true
-        log_success "Repositorio atualizado via git"
-    else
-        log_warning "Git fetch falhou. Usando método de download direto..."
-
-        # Backup de arquivos importantes
-        [ -f "docker-stack.yml" ] && cp docker-stack.yml /tmp/backup-stack.yml
-        [ -f "Dockerfile" ] && cp Dockerfile /tmp/backup-dockerfile
-
-        # Download fresh
-        if wget -q https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -O /tmp/kryonix-update.zip; then
-            cd /tmp
-            unzip -q kryonix-update.zip
-            # Preservar arquivos gerados pelo script
-            cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/" 2>/dev/null || true
-            cd "$PROJECT_DIR"
-            rm -f /tmp/kryonix-update.zip
-            rm -rf /tmp/KRYONIX-PLATAFORMA-main
-
-            # Restaurar arquivos importantes se existirem
-            [ -f "/tmp/backup-stack.yml" ] && cp /tmp/backup-stack.yml docker-stack.yml
-            [ -f "/tmp/backup-dockerfile" ] && cp /tmp/backup-dockerfile Dockerfile
-
-            log_success "Repositorio atualizado via download"
-        fi
-    fi
-fi
-show_status "Repositorio configurado" "concluido"
-
-show_status "Corrigindo configuracoes" "iniciando"
-# Criar package.json mínimo se não existir
-if [ ! -f "package.json" ]; then
-    log_info "Criando package.json basico..."
-    cat > package.json << 'PACKAGE_EOF'
+# Criar package.json
+cat > package.json << 'PACKAGE_EOF'
 {
   "name": "kryonix-plataforma",
   "version": "1.0.0",
   "description": "KRYONIX - Plataforma SaaS 100% Autonoma por IA",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "helmet": "^7.1.0",
     "compression": "^1.7.4"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Vitor Fernandes",
+  "license": "ISC"
 }
 PACKAGE_EOF
-fi
 
-# Remover type: module se existir
-if grep -q '"type": "module"' package.json; then
-    sed -i '/"type": "module",/d' package.json
-fi
-
-# Criar server.js básico se não existir
-if [ ! -f "server.js" ]; then
-    log_info "Criando server.js basico..."
-    cat > server.js << 'SERVER_EOF'
+# Criar server.js
+cat > server.js << 'SERVER_EOF'
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -339,8 +167,11 @@ const compression = require('compression');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Middleware
-app.use(helmet());
+// Middleware de segurança
+app.use(helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false
+}));
 app.use(cors());
 app.use(compression());
 app.use(express.json());
@@ -352,6 +183,23 @@ app.get('/health', (req, res) => {
         status: 'healthy',
         service: 'KRYONIX Platform',
         version: '1.0.0',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime()
+    });
+});
+
+// API de status
+app.get('/api/status', (req, res) => {
+    res.json({
+        platform: 'KRYONIX',
+        status: 'online',
+        services: {
+            web: 'healthy',
+            database: 'initializing',
+            ai: 'planned'
+        },
+        progress: '2%',
+        stage: 'Parte 01/50',
         timestamp: new Date().toISOString()
     });
 });
@@ -361,212 +209,594 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Página de progresso
+app.get('/progresso', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'progresso.html'));
+});
+
+// 404 handler
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+});
+
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 KRYONIX Platform rodando na porta ${PORT}`);
     console.log(`💚 Health check: http://0.0.0.0:${PORT}/health`);
+    console.log(`🌐 Acesse: http://0.0.0.0:${PORT}`);
+    console.log(`📊 Progresso: http://0.0.0.0:${PORT}/progresso`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('📴 Recebido SIGTERM, desligando gracefully...');
+    process.exit(0);
+});
+
+process.on('SIGINT', () => {
+    console.log('📴 Recebido SIGINT, desligando gracefully...');
+    process.exit(0);
 });
 SERVER_EOF
-fi
 
-# Criar diretório public e index.html se não existir
-if [ ! -d "public" ]; then
-    mkdir -p public
-fi
+# Criar diretório public
+mkdir -p public
 
-if [ ! -f "public/index.html" ]; then
-    log_info "Criando index.html basico..."
-    cat > public/index.html << 'HTML_EOF'
+# Criar index.html
+cat > public/index.html << 'HTML_EOF'
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KRYONIX - Plataforma SaaS Autônoma</title>
+    <link rel="icon" type="image/png" href="/logo-kryonix-favicon.png">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
         }
+        
         .container {
-            text-align: center;
-            padding: 2rem;
-            max-width: 600px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            flex: 1;
         }
-        h1 {
+        
+        .header {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        
+        .hero h1 {
             font-size: 3rem;
             margin-bottom: 1rem;
             font-weight: 700;
         }
-        p {
+        
+        .hero p {
             font-size: 1.2rem;
             margin-bottom: 2rem;
             opacity: 0.9;
         }
+        
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
         }
+        
         .feature {
             background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 10px;
+            padding: 2rem;
+            border-radius: 15px;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
         }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature p {
+            opacity: 0.9;
+        }
+        
         .status {
             background: rgba(0, 255, 0, 0.2);
             border: 1px solid #00ff00;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+            padding: 1rem 2rem;
+            border-radius: 25px;
             display: inline-block;
-            margin-top: 1rem;
+            margin: 2rem 0;
+            font-weight: 600;
+        }
+        
+        .progress-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #00ff00, #32cd32);
+            height: 100%;
+            width: 2%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            margin: 0.5rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .footer p {
+            margin: 0.5rem 0;
+            opacity: 0.8;
+        }
+        
+        .footer a {
+            color: #00ff00;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .loading {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">🚀 KRYONIX</a>
+                <ul class="nav-links">
+                    <li><a href="/progresso">📊 Progresso</a></li>
+                    <li><a href="#status">📋 Status</a></li>
+                    <li><a href="/health">🔍 Health</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1 class="loading" style="animation-delay: 0.2s;">🤖 KRYONIX Platform</h1>
+            <p class="loading" style="animation-delay: 0.4s;">Plataforma SaaS 100% Autônoma por Inteligência Artificial</p>
+            <div class="status loading" style="animation-delay: 0.6s;">
+                ✅ Sistema Online e Operacional
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="features">
+            <div class="feature loading" style="animation-delay: 0.8s;">
+                <h3>🤖 IA Autônoma</h3>
+                <p>15 Agentes especializados trabalhando 24/7</p>
+            </div>
+            <div class="feature loading" style="animation-delay: 1s;">
+                <h3>☁️ SaaS Completo</h3>
+                <p>8 Módulos integrados e escaláveis</p>
+            </div>
+            <div class="feature loading" style="animation-delay: 1.2s;">
+                <h3>📱 Mobile-First</h3>
+                <p>Otimizado para dispositivos móveis</p>
+            </div>
+            <div class="feature loading" style="animation-delay: 1.4s;">
+                <h3>🇧🇷 Nacional</h3>
+                <p>Desenvolvido no Brasil, em Português</p>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section id="status" class="progress-section loading" style="animation-delay: 1.6s;">
+            <h2>📊 Progresso do Desenvolvimento</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p><strong>Progresso:</strong> <span id="progressText">2%</span> - Parte 01/50</p>
+            <p>🔄 Status: Desenvolvimento ativo</p>
+            <p>⏱️ Próxima atualização: Deploy automático via GitHub Actions</p>
+            
+            <div style="margin-top: 2rem;">
+                <a href="/progresso" class="btn btn-primary">📊 Ver Progresso Detalhado</a>
+                <a href="/health" class="btn">🔍 Health Check</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p><strong>🏢 KRYONIX</strong> - Ecossistema Tecnológico Inteligente</p>
+            <p>📱 WhatsApp: +55 17 98180-5327 | 📧 admin@kryonix.com.br</p>
+            <p>🌐 <a href="https://github.com/Nakahh/KRYONIX-PLATAFORMA" target="_blank">GitHub</a> | 📊 <a href="/progresso">Monitor</a></p>
+            <p style="margin-top: 1rem; opacity: 0.7;">
+                🚀 Deploy automático ativo - Versão 1.0.0
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Animações e updates
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualizar progresso
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            setTimeout(() => {
+                if (progressFill) progressFill.style.width = '2%';
+                if (progressText) progressText.textContent = '2%';
+            }, 1000);
+
+            // Fetch status da API
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Status da plataforma:', data);
+                })
+                .catch(err => console.log('API não disponível ainda'));
+        });
+    </script>
+</body>
+</html>
+HTML_EOF
+
+# Criar progresso.html
+cat > public/progresso.html << 'PROGRESS_EOF'
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRYONIX - Progresso do Desenvolvimento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-item {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #00ff00;
+        }
+        
+        .progress-item.pending {
+            border-left-color: #ffff00;
+            opacity: 0.7;
+        }
+        
+        .progress-item.future {
+            border-left-color: #888;
+            opacity: 0.5;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+        
+        .status-done {
+            background: rgba(0, 255, 0, 0.3);
+            border: 1px solid #00ff00;
+        }
+        
+        .status-progress {
+            background: rgba(255, 255, 0, 0.3);
+            border: 1px solid #ffff00;
+        }
+        
+        .status-planned {
+            background: rgba(128, 128, 128, 0.3);
+            border: 1px solid #888;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 KRYONIX</h1>
-        <p>Plataforma SaaS 100% Autônoma por IA</p>
+        <a href="/" class="back-btn">← Voltar ao Dashboard</a>
         
-        <div class="features">
-            <div class="feature">
-                <h3>🤖 Autônoma</h3>
-                <p>100% IA</p>
-            </div>
-            <div class="feature">
-                <h3>📱 Mobile-First</h3>
-                <p>Responsivo</p>
-            </div>
-            <div class="feature">
-                <h3>🇧🇷 Português</h3>
-                <p>Nacional</p>
-            </div>
+        <div class="header">
+            <h1>📊 Progresso KRYONIX Platform</h1>
+            <p>Desenvolvimento em tempo real - 50 Partes Planejadas</p>
         </div>
-        
-        <div class="status">
-            ✅ Plataforma Online
+
+        <div class="progress-item">
+            <h3>🚀 Parte 01 - Deploy Automático e Base <span class="status-badge status-progress">Em Progresso</span></h3>
+            <p><strong>Status:</strong> Configuração do ambiente Docker Swarm</p>
+            <p><strong>Progresso:</strong> 75% - Docker configurado, Traefik ativo</p>
+            <p><strong>Próximo:</strong> Finalizar integração com GitHub Actions</p>
+        </div>
+
+        <div class="progress-item pending">
+            <h3>🔐 Parte 02 - Autenticação Keycloak <span class="status-badge status-planned">Planejado</span></h3>
+            <p><strong>Descrição:</strong> Sistema completo de autenticação e autorização</p>
+            <p><strong>Tecnologias:</strong> Keycloak, OAuth2, JWT</p>
+        </div>
+
+        <div class="progress-item future">
+            <h3>🗄️ Parte 03 - Base de Dados PostgreSQL <span class="status-badge status-planned">Planejado</span></h3>
+            <p><strong>Descrição:</strong> Configuração do banco principal</p>
+            <p><strong>Tecnologias:</strong> PostgreSQL, pgAdmin, Backup automático</p>
+        </div>
+
+        <div class="progress-item future">
+            <h3>📦 Parte 04 - Storage MinIO <span class="status-badge status-planned">Planejado</span></h3>
+            <p><strong>Descrição:</strong> Sistema de armazenamento de arquivos</p>
+            <p><strong>Tecnologias:</strong> MinIO, S3-compatible, CDN</p>
+        </div>
+
+        <div class="progress-item future">
+            <h3>⚡ Parte 05 - Redis Cache <span class="status-badge status-planned">Planejado</span></h3>
+            <p><strong>Descrição:</strong> Cache e sessões distribuídas</p>
+            <p><strong>Tecnologias:</strong> Redis, RedisInsight, Clustering</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; opacity: 0.7;">
+            <p>📅 Última atualização: <span id="lastUpdate"></span></p>
+            <p>🔄 Progresso geral: 2% (1/50 partes)</p>
         </div>
     </div>
+
+    <script>
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString('pt-BR');
+        
+        // Auto-refresh a cada 30 segundos
+        setInterval(() => {
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('pt-BR');
+        }, 30000);
+    </script>
 </body>
 </html>
-HTML_EOF
-fi
+PROGRESS_EOF
 
-show_status "Configuracoes corrigidas" "concluido"
+show_status "Arquivos da aplicacao criados" "concluido"
 
 # Teste local do servidor
 log_step "Teste Local do Servidor"
 
-show_status "Verificando dependencias" "iniciando"
-if [ ! -d "node_modules" ]; then
-    log_info "Instalando dependencias..."
-    npm install
-fi
-show_status "Dependencias verificadas" "concluido"
+show_status "Instalando dependencias" "iniciando"
+npm install --production
+show_status "Dependencias instaladas" "concluido"
 
-show_status "Testando sintaxe" "iniciando"
-if node -c server.js 2>/dev/null; then
-    show_status "Sintaxe do server.js esta correta" "concluido"
-else
-    show_status "Erro de sintaxe no server.js" "erro"
-    node -c server.js
-    exit 1
-fi
-
-show_status "Testando inicializacao" "iniciando"
-timeout 3s node server.js > /tmp/server_test.log 2>&1 &
+show_status "Testando servidor" "iniciando"
+timeout 5s node server.js > /tmp/server_test.log 2>&1 &
 SERVER_PID=$!
-sleep 1
+sleep 2
 
 if ps -p $SERVER_PID > /dev/null 2>&1; then
     kill $SERVER_PID 2>/dev/null
     wait $SERVER_PID 2>/dev/null
     show_status "Servidor testado com sucesso" "concluido"
 else
-    show_status "Servidor nao conseguiu iniciar" "erro"
+    show_status "Erro no teste do servidor" "erro"
     cat /tmp/server_test.log 2>/dev/null
     exit 1
 fi
 
-# Configuração de firewall
+# Configurar firewall
 log_step "Configuracao de Firewall"
 
 show_status "Configurando firewall" "iniciando"
-configure_firewall() {
-    local ports=("$WEB_PORT" "$WEBHOOK_PORT" "$MONITOR_PORT")
-    
-    if command -v ufw >/dev/null 2>&1; then
-        sudo ufw --force enable 2>/dev/null || true
-        for port in "${ports[@]}"; do
-            sudo ufw allow $port/tcp comment "KRYONIX-$port" 2>/dev/null || true
-        done
-    elif command -v firewall-cmd >/dev/null 2>&1; then
-        for port in "${ports[@]}"; do
-            sudo firewall-cmd --add-port=$port/tcp 2>/dev/null || true
-            sudo firewall-cmd --permanent --add-port=$port/tcp 2>/dev/null || true
-        done
-        sudo firewall-cmd --reload 2>/dev/null || true
-    elif command -v iptables >/dev/null 2>&1; then
-        for port in "${ports[@]}"; do
-            sudo iptables -I INPUT -p tcp --dport $port -j ACCEPT 2>/dev/null || true
-        done
-    fi
-}
-
-configure_firewall
+if command -v ufw >/dev/null 2>&1; then
+    sudo ufw --force enable 2>/dev/null || true
+    sudo ufw allow $WEB_PORT/tcp comment "KRYONIX-$WEB_PORT" 2>/dev/null || true
+elif command -v firewall-cmd >/dev/null 2>&1; then
+    sudo firewall-cmd --add-port=$WEB_PORT/tcp 2>/dev/null || true
+    sudo firewall-cmd --permanent --add-port=$WEB_PORT/tcp 2>/dev/null || true
+    sudo firewall-cmd --reload 2>/dev/null || true
+elif command -v iptables >/dev/null 2>&1; then
+    sudo iptables -I INPUT -p tcp --dport $WEB_PORT -j ACCEPT 2>/dev/null || true
+fi
 show_status "Firewall configurado" "concluido"
 
-# Configuração de redes Docker
+# Configurar redes Docker
 log_step "Configuracao de Redes Docker"
 
 show_status "Criando redes Docker" "iniciando"
-if ! docker network ls | grep -q "$NETWORK_NAME"; then
-    docker network create -d overlay --attachable "$NETWORK_NAME" > /dev/null 2>&1
-fi
-if ! docker network ls | grep -q "traefik-public"; then
-    docker network create -d overlay --attachable traefik-public > /dev/null 2>&1
-fi
-if ! docker network ls | grep -q "traefik_default"; then
-    docker network create -d overlay --attachable traefik_default > /dev/null 2>&1
-fi
+docker network create -d overlay --attachable Kryonix-NET 2>/dev/null || true
 show_status "Redes Docker criadas" "concluido"
 
 # Criar Dockerfile
 log_step "Criacao do Dockerfile"
 
-show_status "Criando Dockerfile otimizado" "iniciando"
+show_status "Criando Dockerfile" "iniciando"
 cat > Dockerfile << 'DOCKERFILE_EOF'
 FROM node:18-bullseye-slim
 
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
+# Copiar package files
 COPY package*.json ./
+
+# Instalar dependências
 RUN npm install --production && npm cache clean --force
 
+# Copiar código da aplicação
 COPY server.js ./
 COPY public/ ./public/
 
+# Criar usuário não-root
 RUN groupadd -r kryonix && useradd -r -g kryonix kryonix
 RUN chown -R kryonix:kryonix /app
 
 USER kryonix
 
+# Expor porta
 EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=5 \
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
+# Comando de start
 CMD ["node", "server.js"]
 DOCKERFILE_EOF
 show_status "Dockerfile criado" "concluido"
@@ -574,12 +804,12 @@ show_status "Dockerfile criado" "concluido"
 # Build da imagem
 log_step "Build da Imagem Docker"
 
-show_status "Building imagem kryonix-plataforma" "iniciando"
-docker build --no-cache --pull -t kryonix-plataforma:latest . > /dev/null 2>&1
+show_status "Fazendo build da imagem" "iniciando"
+docker build --no-cache -t kryonix-plataforma:latest . > /dev/null 2>&1
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
-show_status "Imagem criada e taggeada: $TIMESTAMP" "concluido"
+show_status "Imagem criada: kryonix-plataforma:$TIMESTAMP" "concluido"
 
 # Criar configuração do stack
 log_step "Criacao da Configuracao do Stack"
@@ -600,26 +830,26 @@ services:
       labels:
         # Habilitar Traefik
         - "traefik.enable=true"
-
+        
         # Configurar rede
         - "traefik.docker.network=Kryonix-NET"
-
+        
         # Configurar serviço e porta
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
-
+        
         # Router HTTP (redireciona para HTTPS)
         - "traefik.http.routers.kryonix-web-http.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
         - "traefik.http.routers.kryonix-web-http.entrypoints=web"
         - "traefik.http.routers.kryonix-web-http.middlewares=redirect-https@docker"
         - "traefik.http.routers.kryonix-web-http.service=kryonix-web"
-
+        
         # Router HTTPS
         - "traefik.http.routers.kryonix-web-https.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
         - "traefik.http.routers.kryonix-web-https.entrypoints=websecure"
         - "traefik.http.routers.kryonix-web-https.tls=true"
         - "traefik.http.routers.kryonix-web-https.tls.certresolver=letsencryptresolver"
         - "traefik.http.routers.kryonix-web-https.service=kryonix-web"
-
+        
         # Headers de segurança
         - "traefik.http.routers.kryonix-web-https.middlewares=security-headers@docker"
         - "traefik.http.middlewares.security-headers.headers.frameDeny=true"
@@ -658,14 +888,14 @@ docker stack deploy -c docker-stack.yml Kryonix > /dev/null 2>&1
 show_status "Stack deployado" "concluido"
 
 show_status "Aguardando inicializacao dos servicos" "processando"
-sleep 60
+sleep 45
 show_status "Servicos inicializados" "concluido"
 
 # Verificação de conectividade
 log_step "Teste de Conectividade"
 
 show_status "Testando conectividade" "iniciando"
-sleep 10
+sleep 15
 
 if curl -f -m 10 http://localhost:8080/health 2>/dev/null; then
     show_status "Web Service (8080): FUNCIONANDO" "concluido"
@@ -694,6 +924,8 @@ echo
 log_info "🌐 URLs de Acesso:"
 log_info "   Site Principal: https://kryonix.com.br"
 log_info "   Local (backup): http://localhost:8080"
+log_info "   Progresso: http://localhost:8080/progresso"
+log_info "   Health Check: http://localhost:8080/health"
 echo
 log_info "🔧 Comandos Uteis:"
 log_info "   docker stack ps Kryonix          # Status dos servicos"
