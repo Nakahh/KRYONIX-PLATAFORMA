@@ -918,12 +918,29 @@ networks:
 STACK_ADAPTATIVO_EOF
 
 log_info "Fazendo deploy do stack..."
-docker stack deploy -c docker-stack.yml Kryonix > /dev/null 2>&1
+if docker stack deploy -c docker-stack.yml Kryonix 2>/dev/null; then
+    log_info "Aguardando inicialização dos serviços..."
+    sleep 45
 
-log_info "Aguardando inicialização dos serviços..."
-sleep 45
-
-log_success "Stack deployado e operacional"
+    # Verificar se o serviço foi criado
+    if docker service ls | grep -q "Kryonix_web"; then
+        log_success "Stack deployado e operacional"
+    else
+        log_warning "Stack deployado mas verificando serviços..."
+        sleep 15
+        if docker service ls | grep -q "Kryonix"; then
+            log_success "Serviços KRYONIX detectados"
+        else
+            error_step
+            log_error "Falha no deploy do stack"
+            exit 1
+        fi
+    fi
+else
+    error_step
+    log_error "Falha no comando docker stack deploy"
+    exit 1
+fi
 complete_step
 next_step
 
