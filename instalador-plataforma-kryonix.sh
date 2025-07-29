@@ -27,7 +27,7 @@ show_banner() {
     echo    "╔═══════════════════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                               ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                   ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                   ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗��█╔╝                   ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                    ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                    ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                   ║"
@@ -188,28 +188,107 @@ cd "$PROJECT_DIR"
 show_status "Diretorio do projeto criado" "concluido"
 
 show_status "Configurando repositorio Git" "iniciando"
+
+# Configurações globais do Git para evitar interações
+export GIT_TERMINAL_PROMPT=0
+export GIT_ASKPASS=/bin/echo
+git config --global credential.helper store 2>/dev/null || true
+git config --global http.sslverify false 2>/dev/null || true
+
 if [ ! -d ".git" ]; then
     log_info "Clonando repositorio publico..."
-    # Clone sem autenticação para repositório público
-    git clone --depth 1 "$REPO_URL" . || {
-        log_error "Falha ao clonar repositorio. Tentando com configuracao alternativa..."
-        # Tentar com configuração para ignorar SSL se necessário
-        git config --global http.sslverify false
-        git clone --depth 1 "$REPO_URL" . || {
-            log_error "Falha definitiva no clone. Verificar conectividade."
-            exit 1
-        }
-    }
-    git config --local user.name "KRYONIX Deploy Bot"
-    git config --local user.email "deploy@kryonix.com.br"
-    # Garantir que está na branch main
+
+    # Método 1: HTTPS direto sem autenticação
+    if git clone --depth 1 --no-single-branch "$REPO_URL" . 2>/dev/null; then
+        log_success "Clone realizado com sucesso via HTTPS"
+    else
+        log_warning "Tentativa HTTPS falhou. Tentando método alternativo..."
+
+        # Limpar tentativa anterior
+        rm -rf .git 2>/dev/null || true
+
+        # Método 2: Wget/curl como alternativa
+        if command -v wget >/dev/null 2>&1; then
+            log_info "Usando wget para download do repositorio..."
+            wget -q https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -O /tmp/kryonix.zip
+            if [ -f /tmp/kryonix.zip ]; then
+                cd /tmp
+                unzip -q kryonix.zip
+                cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/"
+                cd "$PROJECT_DIR"
+                rm -f /tmp/kryonix.zip
+                rm -rf /tmp/KRYONIX-PLATAFORMA-main
+                log_success "Repositorio baixado via wget"
+
+                # Inicializar git local
+                git init
+                git remote add origin "$REPO_URL"
+            fi
+        elif command -v curl >/dev/null 2>&1; then
+            log_info "Usando curl para download do repositorio..."
+            curl -L https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -o /tmp/kryonix.zip
+            if [ -f /tmp/kryonix.zip ]; then
+                cd /tmp
+                unzip -q kryonix.zip
+                cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/"
+                cd "$PROJECT_DIR"
+                rm -f /tmp/kryonix.zip
+                rm -rf /tmp/KRYONIX-PLATAFORMA-main
+                log_success "Repositorio baixado via curl"
+
+                # Inicializar git local
+                git init
+                git remote add origin "$REPO_URL"
+            fi
+        else
+            log_error "Não foi possível baixar o repositório. Usando arquivos mínimos..."
+        fi
+    fi
+
+    # Configurações locais do git
+    git config --local user.name "KRYONIX Deploy Bot" 2>/dev/null || true
+    git config --local user.email "deploy@kryonix.com.br" 2>/dev/null || true
+    git config --local credential.helper store 2>/dev/null || true
+
+    # Tentar checkout da branch correta
     git checkout main 2>/dev/null || git checkout master 2>/dev/null || true
+
 else
     log_info "Atualizando repositorio existente..."
-    git fetch origin
-    git checkout main 2>/dev/null || git checkout master 2>/dev/null
-    git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null
-    git clean -fd
+
+    # Configurar para não pedir credenciais
+    git config --local credential.helper store 2>/dev/null || true
+
+    # Tentar update via git
+    if git fetch origin --depth 1 2>/dev/null; then
+        git checkout main 2>/dev/null || git checkout master 2>/dev/null || true
+        git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null || true
+        git clean -fd 2>/dev/null || true
+        log_success "Repositorio atualizado via git"
+    else
+        log_warning "Git fetch falhou. Usando método de download direto..."
+
+        # Backup de arquivos importantes
+        [ -f "docker-stack.yml" ] && cp docker-stack.yml /tmp/backup-stack.yml
+        [ -f "Dockerfile" ] && cp Dockerfile /tmp/backup-dockerfile
+
+        # Download fresh
+        if wget -q https://github.com/Nakahh/KRYONIX-PLATAFORMA/archive/refs/heads/main.zip -O /tmp/kryonix-update.zip; then
+            cd /tmp
+            unzip -q kryonix-update.zip
+            # Preservar arquivos gerados pelo script
+            cp -r KRYONIX-PLATAFORMA-main/* "$PROJECT_DIR/" 2>/dev/null || true
+            cd "$PROJECT_DIR"
+            rm -f /tmp/kryonix-update.zip
+            rm -rf /tmp/KRYONIX-PLATAFORMA-main
+
+            # Restaurar arquivos importantes se existirem
+            [ -f "/tmp/backup-stack.yml" ] && cp /tmp/backup-stack.yml docker-stack.yml
+            [ -f "/tmp/backup-dockerfile" ] && cp /tmp/backup-dockerfile Dockerfile
+
+            log_success "Repositorio atualizado via download"
+        fi
+    fi
 fi
 show_status "Repositorio configurado" "concluido"
 
