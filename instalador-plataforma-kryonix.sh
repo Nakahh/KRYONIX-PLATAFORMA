@@ -74,7 +74,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═��  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═��  ╚═══╝╚═╝╚���╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -926,7 +926,7 @@ if docker stack deploy -c docker-stack.yml Kryonix 2>/dev/null; then
     if docker service ls | grep -q "Kryonix_web"; then
         log_success "Stack deployado e operacional"
     else
-        log_warning "Stack deployado mas verificando serviços..."
+        log_warning "Stack deployado mas verificando servi��os..."
         sleep 15
         if docker service ls | grep -q "Kryonix"; then
             log_success "Serviços KRYONIX detectados"
@@ -1281,6 +1281,25 @@ sudo systemctl daemon-reload
 sudo systemctl enable kryonix-deploy.service
 sudo systemctl start kryonix-deploy.service
 
+# Aguardar o serviço inicializar
+sleep 5
+
+# Verificar se o serviço está rodando
+if sudo systemctl is-active kryonix-deploy.service >/dev/null 2>&1; then
+    log_success "✅ Servidor de deploy iniciado"
+
+    # Testar se está respondendo na porta 9001
+    for i in {1..10}; do
+        if curl -f -s "http://127.0.0.1:9001/" >/dev/null 2>&1; then
+            log_success "✅ Servidor de deploy respondendo na porta 9001"
+            break
+        fi
+        sleep 2
+    done
+else
+    log_warning "⚠️ Problema com serviço de deploy, mas continuando..."
+fi
+
 log_success "Servidor de deploy externo configurado"
 log_success "Script de webhook deploy criado"
 complete_step
@@ -1596,7 +1615,7 @@ complete_step
 # ============================================================================
 
 # Mostrar barra final de 100%
-echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[██████████████████████████████��█████████████████████] 100%${RESET}"
+echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████████████████████████████████] 100%${RESET}"
 echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO!${RESET}\n"
 
 # Banner final épico
@@ -1635,7 +1654,7 @@ log_info "   🌐 Plataforma: https://kryonix.com.br"
 log_info "   🔗 Webhook: https://kryonix.com.br/api/github-webhook"
 log_info "   📊 Health: http://localhost:8080/health"
 echo
-log_info "🔧 Comandos úteis:"
+log_info "���� Comandos úteis:"
 log_info "   ./webhook-deploy.sh manual                           # Deploy manual"
 log_info "   curl -X POST https://kryonix.com.br/api/github-webhook # Teste webhook"
 log_info "   curl https://kryonix.com.br/health                   # Health check"
