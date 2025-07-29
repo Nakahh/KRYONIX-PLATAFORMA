@@ -75,9 +75,9 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗█��║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═���  ╚═╝   ╚═╝    ╚═════╝ ╚═��  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═��  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -1113,11 +1113,16 @@ error() {
 
 deploy() {
     local payload="$1"
-    
+
     log "🚀 Iniciando deploy automático do KRYONIX Platform..."
-    
+
     cd "$DEPLOY_PATH"
-    
+
+    # Corrigir ownership do Git antes de fazer pull
+    info "🔧 Corrigindo permissões Git..."
+    git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
+    sudo git config --system --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
+
     # Pull das mudanças
     info "📥 Fazendo pull do repositório..."
     git fetch origin
@@ -1623,7 +1628,7 @@ echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO
 
 # Banner final épico
 echo -e "${BLUE}${BOLD}"
-echo "╔════════════════════════════════════════════════════════════════════════════════════╗"
+echo "╔════════════════════════════════════════════════════════���═══════════════════════════╗"
 echo "║                                                                                    ║"
 echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCESSO! 🎉${BLUE}                       ║"
 echo "║                                                                                    ║"
