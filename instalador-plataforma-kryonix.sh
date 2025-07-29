@@ -67,7 +67,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════��═══════════════════════╗"
+    echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -839,12 +839,16 @@ CMD ["node", "server.js"]
 DOCKERFILE_EOF
 
 log_info "Fazendo build da imagem Docker..."
-docker build --no-cache -t kryonix-plataforma:latest . > /dev/null 2>&1
-
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
-
-log_success "Imagem criada: kryonix-plataforma:$TIMESTAMP"
+if docker build --no-cache -t kryonix-plataforma:latest . 2>/dev/null; then
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
+    log_success "Imagem criada: kryonix-plataforma:$TIMESTAMP"
+else
+    error_step
+    log_error "Falha no build da imagem Docker"
+    log_info "Verifique se o Docker está funcionando: docker version"
+    exit 1
+fi
 complete_step
 next_step
 
@@ -1571,7 +1575,7 @@ complete_step
 # ============================================================================
 
 # Mostrar barra final de 100%
-echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████���███████████████████████████] 100%${RESET}"
+echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████████████████████████████████] 100%${RESET}"
 echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO!${RESET}\n"
 
 # Banner final épico
