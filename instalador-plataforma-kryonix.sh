@@ -67,7 +67,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔══════════════════════════════════════════════════════════���══════╗"
+    echo    "╔═════════════════════════════════════════��═══════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -1062,10 +1062,13 @@ log() {
     local message="${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
     echo -e "$message"
 
-    # Tentar escrever no log do sistema, se falhar usar log local
-    if ! echo -e "$message" >> "$LOG_FILE" 2>/dev/null; then
-        echo -e "$message" >> "./deploy.log" 2>/dev/null || true
-    fi
+    # Tentar escrever no log do sistema primeiro, depois local
+    {
+        echo -e "$message" >> "$LOG_FILE" 2>/dev/null || \
+        echo -e "$message" >> "./deploy.log" 2>/dev/null || \
+        echo -e "$message" >> "/tmp/kryonix-deploy.log" 2>/dev/null || \
+        true
+    }
 }
 
 info() {
@@ -1568,7 +1571,7 @@ complete_step
 # ============================================================================
 
 # Mostrar barra final de 100%
-echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████████████████████████████████] 100%${RESET}"
+echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████���███████████████████████████] 100%${RESET}"
 echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO!${RESET}\n"
 
 # Banner final épico
