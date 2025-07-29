@@ -24,19 +24,19 @@ GEAR='⚙'
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═══════════════════════════��═══════════════════════════════════════════════════╗"
+    echo    "╔═══════════════════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                               ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                   ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                   ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                    ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                    ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                   ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ��═══╝╚═╝╚═╝  ╚═╝                   ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝                   ║"
     echo    "║                                                                               ║"
-    echo -e "║                   ${WHITE}PLATAFORMA KRYONIX${BLUE}                           ║"
-    echo -e "║                   ${CYAN}Deploy Automatico Profissional${BLUE}                ║"
+    echo -e "║                   ${WHITE}PLATAFORMA KRYONIX${BLUE}                                          ║"
+    echo -e "║                   ${CYAN}Deploy Automatico Profissional${BLUE}                              ║"
     echo    "║                                                                               ║"
-    echo -e "║     ${WHITE}SaaS 100% Autonomo  |  Mobile-First  |  Portugues${BLUE}          ║"
+    echo -e "║     ${WHITE}SaaS 100% Autonomo  |  Mobile-First  |  Portugues${BLUE}                         ║"
     echo    "║                                                                               ║"
     echo    "╚═══════════════════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
@@ -199,15 +199,13 @@ if [ ! -d ".git" ]; then
     log_info "Clonando repositorio publico..."
 
     # Método 1: HTTPS direto sem autenticação
-    timeout 60 git clone --depth 1 --no-single-branch "$REPO_URL" . 2>/dev/null
-    if [ $? -eq 0 ] && [ -f "package.json" -o -f "README.md" ]; then
+    if git clone --depth 1 --no-single-branch "$REPO_URL" . 2>/dev/null; then
         log_success "Clone realizado com sucesso via HTTPS"
     else
         log_warning "Tentativa HTTPS falhou. Tentando método alternativo..."
 
         # Limpar tentativa anterior
         rm -rf .git 2>/dev/null || true
-        rm -rf * .[^.]* 2>/dev/null || true
 
         # Método 2: Wget/curl como alternativa
         if command -v wget >/dev/null 2>&1; then
