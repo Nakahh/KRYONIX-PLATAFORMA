@@ -1220,7 +1220,8 @@ const server = http.createServer((req, res) => {
                 const deployScript = `
                     cd ${PROJECT_DIR} &&
                     echo "�� Fazendo pull do GitHub..." &&
-                    git remote set-url origin "https://nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" &&
+                    git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" &&
+                    git config pull.rebase false &&
                     git fetch origin &&
                     git reset --hard origin/main &&
                     echo "🏗️ Fazendo rebuild da imagem..." &&
