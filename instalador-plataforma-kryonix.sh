@@ -1004,6 +1004,10 @@ log_info "Corrigindo permissões Git e diretório..."
 sudo chown -R $USER:$USER "$PROJECT_DIR"
 git config --global --add safe.directory "$PROJECT_DIR"
 
+# Corrigir ownership para todos os usuários também
+sudo git config --system --add safe.directory "$PROJECT_DIR"
+git config --global --add safe.directory "$PROJECT_DIR"
+
 # Criar GitHub Actions workflow
 mkdir -p .github/workflows
 
@@ -1592,7 +1596,7 @@ complete_step
 # ============================================================================
 
 # Mostrar barra final de 100%
-echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████████████████████████████████] 100%${RESET}"
+echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[██████████████████████████████��█████████████████████] 100%${RESET}"
 echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO!${RESET}\n"
 
 # Banner final épico
