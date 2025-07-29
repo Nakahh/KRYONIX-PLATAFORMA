@@ -22,7 +22,7 @@ GEAR='⚙'
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
+    echo "╔════════════════════════════════��══════════════════════════════════════════════╗"
     echo "║                                                                               ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                 ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                 ║"
@@ -59,7 +59,7 @@ log_error() {
 
 log_step() {
     echo -e "\n${PURPLE}${BOLD}[${ARROW} ETAPA]${RESET} $1"
-    echo -e "${BLUE}───────────────────────────────────────────────��─────────────────────${RESET}"
+    echo -e "${BLUE}────────────────────────────────────────────────────────────��────────${RESET}"
 }
 
 # Função para status
@@ -714,6 +714,310 @@ PROGRESS_EOF
 
 show_status "Arquivos da aplicacao criados" "concluido"
 
+show_status "Criando sistema de deploy automatico" "iniciando"
+
+# Criar diretório .github/workflows se não existir
+mkdir -p .github/workflows
+
+# Criar GitHub Actions para deploy automático
+cat > .github/workflows/deploy.yml << 'WORKFLOW_EOF'
+name: 🚀 Deploy Automático KRYONIX
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: 🚀 Deploy para Produção
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout do código
+      uses: actions/checkout@v4
+
+    - name: 🐳 Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: 🏗️ Build da imagem Docker
+      run: |
+        echo "🔨 Building imagem KRYONIX..."
+        docker build -t kryonix-plataforma:latest .
+        docker tag kryonix-plataforma:latest kryonix-plataforma:$(date +%Y%m%d_%H%M%S)
+        echo "✅ Imagem criada com sucesso"
+
+    - name: 🔔 Notificar Webhook de Deploy
+      run: |
+        echo "📡 Enviando notificação de deploy..."
+        curl -X POST ${{ secrets.WEBHOOK_URL || 'http://webhook.kryonix.com.br/deploy' }} \
+          -H "Content-Type: application/json" \
+          -H "X-GitHub-Event: push" \
+          -H "X-Hub-Signature-256: sha256=${{ secrets.WEBHOOK_SECRET || 'auto-deploy' }}" \
+          -d '{
+            "ref": "${{ github.ref }}",
+            "repository": {
+              "name": "${{ github.repository }}",
+              "full_name": "${{ github.repository }}"
+            },
+            "pusher": {
+              "name": "${{ github.actor }}"
+            },
+            "head_commit": {
+              "id": "${{ github.sha }}",
+              "message": "${{ github.event.head_commit.message }}",
+              "timestamp": "${{ github.event.head_commit.timestamp }}"
+            }
+          }' || echo "⚠️ Webhook não disponível - deploy local será executado"
+
+    - name: ✅ Deploy Finalizado
+      run: |
+        echo "🎉 Deploy automático concluído!"
+        echo "📊 Commit: ${{ github.sha }}"
+        echo "👤 Autor: ${{ github.actor }}"
+        echo "🌐 Acesse: https://kryonix.com.br"
+WORKFLOW_EOF
+
+# Criar webhook listener para deploy automático
+cat > webhook-deploy.js << 'WEBHOOK_DEPLOY_EOF'
+const http = require('http');
+const crypto = require('crypto');
+const { exec } = require('child_process');
+const fs = require('fs');
+
+const PORT = process.env.WEBHOOK_PORT || 8082;
+const SECRET = process.env.WEBHOOK_SECRET || 'auto-deploy';
+const PROJECT_DIR = process.env.PROJECT_DIR || '/opt/kryonix-plataform';
+
+function log(message) {
+    const timestamp = new Date().toISOString();
+    const logMessage = `${timestamp} [WEBHOOK] ${message}\n`;
+    console.log(logMessage.trim());
+    try {
+        fs.appendFileSync('/var/log/kryonix-webhook.log', logMessage);
+    } catch (e) {
+        console.log('Warning: Could not write to log file');
+    }
+}
+
+function verifySignature(payload, signature) {
+    if (!signature) return true; // Permitir requests sem signature para testing
+    const hmac = crypto.createHmac('sha256', SECRET);
+    const digest = hmac.update(payload).digest('hex');
+    const expected = `sha256=${digest}`;
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+}
+
+function executeDeployment() {
+    log('🚀 Iniciando deploy automático...');
+
+    const deployScript = `
+        set -e
+        cd ${PROJECT_DIR}
+
+        echo "📥 Fazendo pull das mudanças..."
+        git fetch origin || echo "⚠️ Git fetch falhou"
+        git checkout main 2>/dev/null || git checkout master 2>/dev/null || echo "⚠️ Checkout falhou"
+        git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null || echo "⚠️ Reset falhou"
+        git clean -fd 2>/dev/null || echo "⚠️ Clean falhou"
+
+        echo "🏗️ Fazendo rebuild da imagem..."
+        TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+        docker build --no-cache -t kryonix-plataforma:latest . || {
+            echo "❌ Build falhou, usando imagem anterior"
+            exit 1
+        }
+        docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
+
+        echo "🔄 Fazendo deploy sem downtime..."
+        docker service update --image kryonix-plataforma:latest Kryonix_web || {
+            echo "⚠️ Update via service falhou, tentando redeploy..."
+            docker stack deploy -c docker-stack.yml Kryonix
+        }
+
+        echo "⏳ Aguardando estabilização dos serviços..."
+        sleep 30
+
+        echo "🔍 Verificando saúde dos serviços..."
+        if curl -f http://localhost:8080/health 2>/dev/null; then
+            echo "✅ Deploy concluído com sucesso!"
+            echo "🌐 Site disponível em: https://kryonix.com.br"
+            echo "🔧 Local: http://localhost:8080"
+
+            # Limpar imagens antigas (manter últimas 3)
+            docker images kryonix-plataforma --format "{{.ID}}" | tail -n +4 | xargs -r docker rmi -f 2>/dev/null || true
+
+            return 0
+        else
+            echo "❌ Deploy falhou - serviço não responde"
+            echo "📋 Status dos serviços:"
+            docker service ls | grep Kryonix || echo "Nenhum serviço encontrado"
+            return 1
+        fi
+    `;
+
+    exec(deployScript, { shell: '/bin/bash', timeout: 300000 }, (error, stdout, stderr) => {
+        if (error) {
+            log(`❌ Deploy falhou: ${error.message}`);
+            log(`📋 STDERR: ${stderr}`);
+            return;
+        }
+        if (stderr) {
+            log(`⚠️ Deploy warnings: ${stderr}`);
+        }
+        log(`✅ Deploy output: ${stdout}`);
+        log(`🎉 Deploy automático concluído com sucesso!`);
+    });
+}
+
+const server = http.createServer((req, res) => {
+    if (req.method === 'POST' && (req.url === '/webhook' || req.url === '/deploy')) {
+        let body = '';
+
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+
+        req.on('end', () => {
+            try {
+                const signature = req.headers['x-hub-signature-256'];
+
+                if (!verifySignature(body, signature)) {
+                    log('❌ Assinatura inválida');
+                    res.statusCode = 401;
+                    res.end('Unauthorized');
+                    return;
+                }
+
+                const payload = JSON.parse(body);
+
+                // Verificar se é push na branch main/master
+                if (payload.ref === 'refs/heads/main' || payload.ref === 'refs/heads/master') {
+                    log(`📦 Push detectado no branch: ${payload.ref}`);
+                    log(`👤 Autor: ${payload.pusher?.name || 'Unknown'}`);
+                    log(`💬 Commit: ${payload.head_commit?.message || 'No message'}`);
+
+                    executeDeployment();
+
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({
+                        status: 'success',
+                        message: 'Deploy automático iniciado!',
+                        branch: payload.ref,
+                        timestamp: new Date().toISOString()
+                    }));
+                } else {
+                    log(`ℹ️ Push ignorado - branch: ${payload.ref}`);
+                    res.statusCode = 200;
+                    res.end(JSON.stringify({
+                        status: 'ignored',
+                        message: 'Branch ignorado',
+                        branch: payload.ref
+                    }));
+                }
+
+            } catch (e) {
+                log(`❌ Erro no webhook: ${e.message}`);
+                res.statusCode = 400;
+                res.end(JSON.stringify({
+                    status: 'error',
+                    message: 'Bad Request',
+                    error: e.message
+                }));
+            }
+        });
+
+    } else if (req.method === 'GET' && req.url === '/health') {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({
+            status: 'healthy',
+            service: 'KRYONIX Webhook Deploy',
+            port: PORT,
+            timestamp: new Date().toISOString(),
+            lastDeploy: fs.existsSync('/var/log/kryonix-webhook.log') ?
+                fs.statSync('/var/log/kryonix-webhook.log').mtime : null
+        }));
+
+    } else if (req.method === 'POST' && req.url === '/trigger-deploy') {
+        // Endpoint manual para trigger deploy
+        log('🔧 Deploy manual disparado via API');
+        executeDeployment();
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({
+            status: 'success',
+            message: 'Deploy manual iniciado!',
+            timestamp: new Date().toISOString()
+        }));
+
+    } else {
+        res.writeHead(404);
+        res.end('Not Found');
+    }
+});
+
+server.listen(PORT, '0.0.0.0', () => {
+    log(`🎣 KRYONIX Webhook Deploy rodando na porta ${PORT}`);
+    log(`🔍 Health check: http://0.0.0.0:${PORT}/health`);
+    log(`🚀 Webhook: http://0.0.0.0:${PORT}/webhook`);
+    log(`🔧 Manual deploy: http://0.0.0.0:${PORT}/trigger-deploy`);
+    log(`📡 Aguardando pushes do GitHub...`);
+});
+
+process.on('SIGTERM', () => {
+    log('📴 Webhook deploy desligando...');
+    server.close(() => {
+        log('👋 Webhook deploy desligado');
+        process.exit(0);
+    });
+});
+WEBHOOK_DEPLOY_EOF
+
+# Criar script de setup do repositório
+cat > setup-repo.sh << 'SETUP_EOF'
+#!/bin/bash
+
+echo "🔧 Configurando repositório para deploy automático..."
+
+# Configurar Git se necessário
+if [ ! -d ".git" ]; then
+    echo "📥 Inicializando repositório Git..."
+    git init
+    git remote add origin https://github.com/Nakahh/KRYONIX-PLATAFORMA.git
+fi
+
+# Configurar usuário Git
+git config --local user.name "KRYONIX Deploy Bot"
+git config --local user.email "deploy@kryonix.com.br"
+
+# Adicionar arquivos ao Git
+echo "📝 Adicionando arquivos ao Git..."
+git add .
+git commit -m "🚀 Setup deploy automático KRYONIX Platform
+
+- GitHub Actions configurado
+- Webhook de deploy implementado
+- Sistema de rebuild automático
+- Deploy sem downtime configurado" || echo "⚠️ Commit falhou (normal se não há mudanças)"
+
+echo "✅ Repositório configurado para deploy automático!"
+echo ""
+echo "📋 Próximos passos:"
+echo "1. Configure o webhook no GitHub: https://github.com/Nakahh/KRYONIX-PLATAFORMA/settings/hooks"
+echo "2. URL do webhook: https://webhook.kryonix.com.br/webhook"
+echo "3. Secret: auto-deploy"
+echo "4. Events: push"
+echo ""
+echo "🚀 Deploy automático estará ativo após configuração!"
+SETUP_EOF
+
+chmod +x setup-repo.sh
+
+show_status "Sistema de deploy automatico criado" "concluido"
+
 # Teste local do servidor
 log_step "Teste Local do Servidor"
 
@@ -834,7 +1138,7 @@ services:
         # Configurar rede
         - "traefik.docker.network=Kryonix-NET"
         
-        # Configurar serviço e porta
+        # Configurar servi��o e porta
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
         
         # Router HTTP (redireciona para HTTPS)
