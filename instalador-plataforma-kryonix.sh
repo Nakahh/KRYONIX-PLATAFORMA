@@ -67,7 +67,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔══════════════════════════════════════════════════════════���══════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -1497,7 +1497,10 @@ fi
 
 # Corrigir permissões finais
 log_info "🔧 Aplicando permissões finais..."
-sudo chmod 666 /var/log/kryonix-deploy.log 2>/dev/null || true
+# Tentar corrigir permissões, mas não falhar se der erro
+if [ -f "/var/log/kryonix-deploy.log" ]; then
+    sudo chmod 666 /var/log/kryonix-deploy.log 2>/dev/null || true
+fi
 chmod 666 "$PROJECT_DIR/deploy.log" 2>/dev/null || true
 sudo chown -R $USER:$USER "$PROJECT_DIR" 2>/dev/null || true
 
@@ -1576,7 +1579,7 @@ echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCES
 echo "║                                                                                    ║"
 echo -e "║   ${WHITE}🌐 Plataforma: https://kryonix.com.br - $DOMAIN_STATUS${BLUE}                        ║"
 echo -e "║   ${WHITE}🔧 Local: http://localhost:8080 - $WEB_STATUS${BLUE}                              ║"
-echo -e "��   ${WHITE}🔗 Webhook: https://kryonix.com.br/api/github-webhook${BLUE}                       ║"
+echo -e "║   ${WHITE}🔗 Webhook: https://kryonix.com.br/api/github-webhook${BLUE}                       ║"
 echo -e "║   ${WHITE}📊 Health: http://localhost:8080/health${BLUE}                                     ║"
 echo "║                                                                                    ║"
 echo -e "║                      ${PURPLE}⚡ CI/CD AUTOMÁTICO 100% FUNCIONAL ⚡${BLUE}                       ║"
