@@ -73,7 +73,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗���█║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═��  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -1266,15 +1266,21 @@ processing_step
 log_info "Configurando sistema de logs e backup..."
 
 # Criar estrutura de logs com permissões corretas
-sudo mkdir -p /opt/backups/kryonix
-sudo mkdir -p /var/log
-sudo touch /var/log/kryonix-deploy.log
-sudo chown $USER:$USER /var/log/kryonix-deploy.log
-sudo chmod 666 /var/log/kryonix-deploy.log
+sudo mkdir -p /opt/backups/kryonix 2>/dev/null || true
+sudo mkdir -p /var/log 2>/dev/null || true
 
-# Criar log local também
-touch "$PROJECT_DIR/deploy.log"
-chmod 666 "$PROJECT_DIR/deploy.log"
+# Tentar criar log do sistema, se falhar usar local
+if sudo touch /var/log/kryonix-deploy.log 2>/dev/null; then
+    sudo chown $USER:$USER /var/log/kryonix-deploy.log 2>/dev/null || true
+    sudo chmod 666 /var/log/kryonix-deploy.log 2>/dev/null || true
+    log_info "Log do sistema configurado: /var/log/kryonix-deploy.log"
+else
+    log_warning "Log do sistema não disponível, usando log local"
+fi
+
+# Criar log local sempre
+touch "$PROJECT_DIR/deploy.log" 2>/dev/null || true
+chmod 666 "$PROJECT_DIR/deploy.log" 2>/dev/null || true
 
 # Configurar logrotate para os logs do KRYONIX
 sudo tee /etc/logrotate.d/kryonix > /dev/null << LOGROTATE_EOF
@@ -1570,7 +1576,7 @@ echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCES
 echo "║                                                                                    ║"
 echo -e "║   ${WHITE}🌐 Plataforma: https://kryonix.com.br - $DOMAIN_STATUS${BLUE}                        ║"
 echo -e "║   ${WHITE}🔧 Local: http://localhost:8080 - $WEB_STATUS${BLUE}                              ║"
-echo -e "║   ${WHITE}🔗 Webhook: https://kryonix.com.br/api/github-webhook${BLUE}                       ║"
+echo -e "��   ${WHITE}🔗 Webhook: https://kryonix.com.br/api/github-webhook${BLUE}                       ║"
 echo -e "║   ${WHITE}📊 Health: http://localhost:8080/health${BLUE}                                     ║"
 echo "║                                                                                    ║"
 echo -e "║                      ${PURPLE}⚡ CI/CD AUTOMÁTICO 100% FUNCIONAL ⚡${BLUE}                       ║"
