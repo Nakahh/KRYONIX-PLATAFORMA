@@ -24,19 +24,19 @@ GEAR='⚙'
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔═════════════════════════���═════════════════════════════════════════════════════╗"
+    echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
     echo "║                                                                               ║"
-    echo "║        ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗              ║"
-    echo "║        ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝              ║"
-    echo "║        █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝               ║"
-    echo "║        ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗               ║"
-    echo "║        ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗              ║"
-    echo "║        ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝              ║"
+    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                 ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                 ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                  ║"
+    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                  ║"
+    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                 ║"
+    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝                 ║"
     echo "║                                                                               ║"
     echo "║                        ${WHITE}PLATAFORMA KRYONIX${BLUE}                                  ║"
-    echo "║                   ${CYAN}Deploy Automático Profissional${BLUE}                          ║"
+    echo "║                   ${CYAN}Deploy Automatico Profissional${BLUE}                          ║"
     echo "║                                                                               ║"
-    echo "║   ${WHITE}🤖 SaaS 100% Autônomo${BLUE}  │  ${WHITE}📱 Mobile-First${BLUE}  │  ${WHITE}🇧🇷 Português${BLUE}           ║"
+    echo "║     ${WHITE}SaaS 100% Autonomo  |  Mobile-First  |  Portugues${BLUE}                    ║"
     echo "║                                                                               ║"
     echo "╚═══════════════════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
@@ -69,7 +69,7 @@ show_progress() {
     printf "${BLUE}]${RESET} ${WHITE}${BOLD}%3d%%${RESET}" "$percentage"
     
     if [ "$current" -eq "$total" ]; then
-        printf " ${GREEN}${BOLD}${CHECKMARK} CONCLUÍDO${RESET}\n"
+        printf " ${GREEN}${BOLD}${CHECKMARK} CONCLUIDO${RESET}\n"
     fi
 }
 
@@ -109,7 +109,7 @@ log_step() {
 
 # Função de validação pré-deploy
 validate_before_deploy() {
-    log_step "Validação Pré-Deploy"
+    log_step "Validacao Pre-Deploy"
     
     local ERRORS=0
     local files=("package.json" "server.js" "Dockerfile" "public/index.html")
@@ -120,7 +120,7 @@ validate_before_deploy() {
         if [ -f "$file" ]; then
             log_success "Arquivo $file encontrado"
         else
-            log_error "Arquivo $file NÃO encontrado"
+            log_error "Arquivo $file NAO encontrado"
             ((ERRORS++))
         fi
     done
@@ -129,46 +129,46 @@ validate_before_deploy() {
     
     if [ -f "server.js" ]; then
         if node -c "server.js" 2>/dev/null; then
-            log_success "Sintaxe de server.js está correta"
+            log_success "Sintaxe de server.js esta correta"
         else
             log_error "Erro de sintaxe em server.js"
             ((ERRORS++))
         fi
     fi
     
-    animate_progress 40 "Verificando dependências" 0.08
+    animate_progress 40 "Verificando dependencias" 0.08
     
     if [ -f "package.json" ]; then
         local required_deps=("express" "cors" "helmet" "compression")
         for dep in "${required_deps[@]}"; do
             if grep -q "\"$dep\"" package.json; then
-                log_success "Dependência $dep encontrada"
+                log_success "Dependencia $dep encontrada"
             else
-                log_error "Dependência $dep NÃO encontrada"
+                log_error "Dependencia $dep NAO encontrada"
                 ((ERRORS++))
             fi
         done
     fi
     
-    animate_progress 50 "Verificando configurações de porta" 0.1
+    animate_progress 50 "Verificando configuracoes de porta" 0.1
     
     if [ -f "server.js" ]; then
         if grep -q "8080" server.js; then
             log_success "Porta 8080 configurada no server.js"
         else
-            log_warning "Porta 8080 não encontrada no server.js - corrigindo automaticamente..."
+            log_warning "Porta 8080 nao encontrada no server.js - corrigindo automaticamente..."
             sed -i 's/const PORT = process\.env\.PORT || [0-9][0-9]*/const PORT = process.env.PORT || 8080/' server.js
             sed -i 's/PORT = [0-9][0-9]*/PORT = process.env.PORT || 8080/' server.js
             
             if grep -q "8080" server.js; then
                 log_success "server.js corrigido automaticamente - porta 8080 configurada"
             else
-                log_warning "Não foi possível corrigir server.js automaticamente"
+                log_warning "Nao foi possivel corrigir server.js automaticamente"
             fi
         fi
         
         if ! grep -q "listen.*0.0.0.0" server.js; then
-            log_info "Corrigindo binding do servidor para aceitar conexões externas..."
+            log_info "Corrigindo binding do servidor para aceitar conexoes externas..."
             sed -i "s/app\.listen(PORT,/app.listen(PORT, '0.0.0.0',/" server.js
             sed -i "s/http:\/\/localhost:/http:\/\/0.0.0.0:/g" server.js
             log_success "Binding do servidor corrigido para 0.0.0.0"
@@ -179,7 +179,7 @@ validate_before_deploy() {
         if grep -q "EXPOSE 8080" Dockerfile; then
             log_success "Porta 8080 exposta no Dockerfile"
         else
-            log_warning "Porta 8080 não encontrada no Dockerfile - corrigindo automaticamente..."
+            log_warning "Porta 8080 nao encontrada no Dockerfile - corrigindo automaticamente..."
             if grep -q "EXPOSE" Dockerfile; then
                 sed -i 's/EXPOSE.*/EXPOSE 8080/' Dockerfile
             else
@@ -195,10 +195,11 @@ validate_before_deploy() {
         fi
     fi
     
-    animate_progress 50 50 "Validação pré-deploy"
+    show_progress 50 50 "Validacao pre-deploy CONCLUIDA"
+    echo
     
     if [ $ERRORS -eq 0 ]; then
-        log_success "TODAS AS VALIDAÇÕES PASSARAM!"
+        log_success "TODAS AS VALIDACOES PASSARAM!"
         return 0
     else
         log_error "ENCONTRADOS $ERRORS ERRO(S)!"
@@ -220,9 +221,9 @@ NETWORK_NAME="Kryonix-NET"
 show_banner
 
 # Verificar Docker Swarm
-log_step "Verificação do Docker Swarm"
+log_step "Verificacao do Docker Swarm"
 if ! docker info | grep -q "Swarm: active"; then
-    log_error "Docker Swarm não está ativo!"
+    log_error "Docker Swarm nao esta ativo!"
     log_info "Execute: docker swarm init"
     exit 1
 fi
@@ -254,10 +255,12 @@ if docker stack ls | grep -q "kryonix-minimal"; then
     docker stack rm kryonix-minimal
 fi
 
-animate_progress 25 50 "Aguardando remoção completa" 0.5
+show_progress 25 50 "Aguardando remocao completa"
+echo
+log_info "Aguardando remocao completa dos stacks..."
 sleep 30
 
-animate_progress 50 75 "Limpando recursos órfãos" 0.1
+animate_progress 50 "Limpando recursos orfaos" 0.1
 
 if docker config ls | grep -q "kryonix_monitor_config"; then
     log_warning "Removendo config kryonix_monitor_config antigo..."
@@ -269,33 +272,34 @@ docker volume prune -f 2>/dev/null || true
 docker image prune -f 2>/dev/null || true
 docker images | grep "kryonix-plataforma" | awk '{print $3}' | xargs -r docker rmi -f 2>/dev/null || true
 
-animate_progress 75 75 "Limpeza completa finalizada"
+show_progress 75 75 "Limpeza completa finalizada"
+echo
 log_success "Ambiente limpo e preparado"
 
 # Preparação do projeto
-log_step "Preparação do Projeto"
+log_step "Preparacao do Projeto"
 
-animate_progress 20 "Criando diretório do projeto" 0.1
+animate_progress 20 "Criando diretorio do projeto" 0.1
 sudo mkdir -p "$PROJECT_DIR"
 sudo chown -R $USER:$USER "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
-animate_progress 40 "Configurando repositório Git" 0.2
+animate_progress 40 "Configurando repositorio Git" 0.2
 if [ ! -d ".git" ]; then
-    log_info "Clonando repositório..."
+    log_info "Clonando repositorio..."
     git clone "$REPO_URL" .
     git config --local user.name "KRYONIX Deploy Bot"
     git config --local user.email "deploy@kryonix.com.br"
     git checkout main
 else
-    log_info "Atualizando repositório existente..."
+    log_info "Atualizando repositorio existente..."
     git fetch origin
     git checkout main
     git reset --hard origin/main
     git clean -fd
 fi
 
-animate_progress 60 "Corrigindo configurações" 0.1
+animate_progress 60 "Corrigindo configuracoes" 0.1
 if grep -q '"type": "module"' package.json; then
     sed -i '/"type": "module",/d' package.json
     log_success "Removido 'type: module' do package.json"
@@ -307,34 +311,35 @@ if ! grep -q "const express = require" server.js; then
     log_success "Import do express adicionado"
 fi
 
-animate_progress 60 60 "Preparação do projeto"
+show_progress 60 60 "Preparacao do projeto CONCLUIDA"
+echo
 
 # Executar validação pré-deploy
-log_step "Validação Pré-Deploy"
+log_step "Validacao Pre-Deploy"
 if ! validate_before_deploy; then
-    log_error "Validação pré-deploy falhou! Abortando deploy."
+    log_error "Validacao pre-deploy falhou! Abortando deploy."
     exit 1
 fi
 
 # Teste local do servidor
 log_step "Teste Local do Servidor"
 
-animate_progress 30 "Verificando dependências" 0.1
+animate_progress 30 "Verificando dependencias" 0.1
 if [ ! -d "node_modules" ]; then
-    log_info "Instalando dependências..."
+    log_info "Instalando dependencias..."
     npm install
 fi
 
 animate_progress 60 "Testando sintaxe" 0.1
 if node -c server.js 2>/dev/null; then
-    log_success "Sintaxe do server.js está correta"
+    log_success "Sintaxe do server.js esta correta"
 else
     log_error "Erro de sintaxe no server.js:"
     node -c server.js
     exit 1
 fi
 
-animate_progress 90 "Testando inicialização" 0.2
+animate_progress 90 "Testando inicializacao" 0.2
 timeout 3s node server.js > /tmp/server_test.log 2>&1 &
 SERVER_PID=$!
 sleep 1
@@ -343,15 +348,16 @@ if ps -p $SERVER_PID > /dev/null 2>&1; then
     log_success "Servidor iniciou com sucesso"
     kill $SERVER_PID 2>/dev/null
     wait $SERVER_PID 2>/dev/null
-    animate_progress 90 90 "Teste local do servidor"
+    show_progress 90 90 "Teste local do servidor CONCLUIDO"
+    echo
 else
-    log_error "Servidor não conseguiu iniciar"
+    log_error "Servidor nao conseguiu iniciar"
     cat /tmp/server_test.log 2>/dev/null
     exit 1
 fi
 
 # Configuração de firewall
-log_step "Configuração de Firewall"
+log_step "Configuracao de Firewall"
 
 animate_progress 50 "Detectando tipo de firewall" 0.1
 
@@ -400,17 +406,18 @@ configure_firewall() {
 }
 
 configure_firewall
-animate_progress 50 50 "Configuração de firewall"
+show_progress 50 50 "Configuracao de firewall CONCLUIDA"
+echo
 
 # Configuração de redes Docker
-log_step "Configuração de Redes Docker"
+log_step "Configuracao de Redes Docker"
 
 animate_progress 33 "Verificando rede Kryonix-NET" 0.1
 if ! docker network ls | grep -q "$NETWORK_NAME"; then
     docker network create -d overlay --attachable "$NETWORK_NAME"
     log_success "Rede $NETWORK_NAME criada"
 else
-    log_success "Rede $NETWORK_NAME já existe"
+    log_success "Rede $NETWORK_NAME ja existe"
 fi
 
 animate_progress 66 "Verificando rede traefik-public" 0.1
@@ -418,7 +425,7 @@ if ! docker network ls | grep -q "traefik-public"; then
     docker network create -d overlay --attachable traefik-public
     log_success "Rede traefik-public criada"
 else
-    log_success "Rede traefik-public já existe"
+    log_success "Rede traefik-public ja existe"
 fi
 
 animate_progress 100 "Verificando rede traefik_default" 0.1
@@ -426,11 +433,11 @@ if ! docker network ls | grep -q "traefik_default"; then
     docker network create -d overlay --attachable traefik_default
     log_success "Rede traefik_default criada"
 else
-    log_success "Rede traefik_default já existe"
+    log_success "Rede traefik_default ja existe"
 fi
 
 # Criação de arquivos de serviços
-log_step "Criação de Arquivos de Serviços"
+log_step "Criacao de Arquivos de Servicos"
 
 animate_progress 25 "Criando webhook listener" 0.1
 cat > webhook-listener.js << 'WEBHOOK_EOF'
@@ -463,7 +470,7 @@ function verifySignature(payload, signature) {
 }
 
 function deployProject() {
-    log('🚀 Iniciando deploy automático...');
+    log('🚀 Iniciando deploy automatico...');
 
     const deployScript = `
         cd ${PROJECT_DIR}
@@ -481,7 +488,7 @@ function deployProject() {
         sleep 60
 
         if curl -f http://localhost:8080/health 2>/dev/null; then
-            echo "✅ Deploy concluído com sucesso!"
+            echo "✅ Deploy concluido com sucesso!"
         else
             echo "❌ Deploy falhou - verificar logs"
             exit 1
@@ -513,7 +520,7 @@ const server = http.createServer((req, res) => {
                 const signature = req.headers['x-hub-signature-256'];
                 
                 if (!verifySignature(body, signature)) {
-                    log('❌ Assinatura inválida');
+                    log('❌ Assinatura invalida');
                     res.statusCode = 401;
                     res.end('Unauthorized');
                     return;
@@ -714,7 +721,7 @@ process.on('SIGTERM', () => {
 });
 MONITOR_EOF
 
-animate_progress 75 "Criando configuração do monitor" 0.1
+animate_progress 75 "Criando configuracao do monitor" 0.1
 cat > monitor-config.yml << 'CONFIG_EOF'
 kryonix:
   monitor_name: "KRYONIX Health Monitor"
@@ -735,23 +742,23 @@ docker config create kryonix_monitor_config monitor-config.yml
 animate_progress 100 "Criando scripts de monitoramento" 0.1
 
 # Corrigir arquivos para Docker
-log_step "Correção de Arquivos para Docker"
+log_step "Correcao de Arquivos para Docker"
 
 animate_progress 50 "Corrigindo server.js" 0.1
 sed -i 's/const PORT = process.env.PORT || 5173;/const PORT = process.env.PORT || 8080;/' server.js
 sed -i 's/app.listen(PORT, () => {/app.listen(PORT, "0.0.0.0", () => {/' server.js
 sed -i 's/localhost:${PORT}/0.0.0.0:${PORT}/g' server.js
 
-animate_progress 100 "Verificando arquivos necessários" 0.1
+animate_progress 100 "Verificando arquivos necessarios" 0.1
 if [ ! -f "server.js" ] || [ ! -d "public" ] || [ ! -f "public/index.html" ]; then
-    log_error "Arquivos essenciais não encontrados!"
+    log_error "Arquivos essenciais nao encontrados!"
     exit 1
 fi
 
 log_success "Arquivos verificados e corrigidos"
 
 # Criar Dockerfile
-log_step "Criação do Dockerfile"
+log_step "Criacao do Dockerfile"
 
 animate_progress 100 "Criando Dockerfile otimizado" 0.1
 cat > Dockerfile << 'DOCKERFILE_EOF'
@@ -797,7 +804,7 @@ animate_progress 100 "Imagem criada e taggeada" 0.1
 log_success "Imagem taggeada com timestamp: $TIMESTAMP"
 
 # Criar configuração do stack
-log_step "Criação da Configuração do Stack"
+log_step "Criacao da Configuracao do Stack"
 
 animate_progress 100 "Criando docker-stack.yml" 0.1
 cat > docker-stack.yml << 'STACK_EOF'
@@ -893,18 +900,19 @@ log_step "Deploy do Stack Completo"
 animate_progress 33 "Iniciando deploy do stack" 0.2
 docker stack deploy -c docker-stack.yml Kryonix
 
-animate_progress 66 "Aguardando inicialização dos serviços" 0.5
+animate_progress 66 "Aguardando inicializacao dos servicos" 0.5
+log_info "Aguardando inicializacao dos servicos..."
 sleep 60
 
-animate_progress 100 "Verificando status dos serviços" 0.1
+animate_progress 100 "Verificando status dos servicos" 0.1
 
 # Status final
-log_step "Verificação Final"
+log_step "Verificacao Final"
 
-animate_progress 50 "Verificando status dos serviços" 0.1
+animate_progress 50 "Verificando status dos servicos" 0.1
 docker stack ps Kryonix
 
-animate_progress 100 "Deploy concluído" 0.1
+animate_progress 100 "Deploy concluido" 0.1
 
 # Verificação de conectividade
 log_step "Teste de Conectividade"
@@ -934,10 +942,10 @@ fi
 echo -e "\n${BLUE}${BOLD}"
 echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                               ║"
-echo "║                    ${GREEN}${CHECKMARK} DEPLOY CONCLUÍDO COM SUCESSO! ${CHECKMARK}${BLUE}                         ║"
+echo "║                    ${GREEN}${CHECKMARK} DEPLOY CONCLUIDO COM SUCESSO! ${CHECKMARK}${BLUE}                         ║"
 echo "║                                                                               ║"
 echo "║   ${WHITE}🌐 Web:     http://localhost:8080${BLUE}                                     ║"
-echo "║   ${WHITE}🔗 Webhook: http://localhost:8082${BLUE}                                     ║"
+echo "║   ${WHITE}�� Webhook: http://localhost:8082${BLUE}                                     ║"
 echo "║   ${WHITE}📊 Monitor: http://localhost:8084${BLUE}                                     ║"
 echo "║                                                                               ║"
 echo "║                     ${CYAN}PLATAFORMA KRYONIX ONLINE${BLUE}                             ║"
@@ -946,5 +954,5 @@ echo "╚═══════════════════════�
 echo -e "${RESET}\n"
 
 log_success "KRYONIX Platform deployada com sucesso!"
-log_info "Use docker stack ps Kryonix para monitorar os serviços"
-log_info "Logs disponíveis com: docker service logs [nome_do_serviço]"
+log_info "Use docker stack ps Kryonix para monitorar os servicos"
+log_info "Logs disponiveis com: docker service logs [nome_do_servico]"
