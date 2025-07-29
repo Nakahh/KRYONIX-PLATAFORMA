@@ -33,10 +33,13 @@ PROJECT_DIR="/opt/kryonix-plataform"
 WEB_PORT="8080"
 WEBHOOK_PORT="8080"
 
-# Configurações CI/CD
+# Configurações CI/CD - Credenciais atualizadas
 WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PAT_TOKEN="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"
+SERVER_HOST="137.220.34.41"
+SERVER_USER="linuxuser"
+JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5"
 
 # Variáveis da barra de progresso
 TOTAL_STEPS=15
@@ -74,7 +77,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═��  ╚═══╝╚═╝╚���╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═���  ╚═╝   ╚═╝    ╚═════╝ ╚═��  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -926,7 +929,7 @@ if docker stack deploy -c docker-stack.yml Kryonix 2>/dev/null; then
     if docker service ls | grep -q "Kryonix_web"; then
         log_success "Stack deployado e operacional"
     else
-        log_warning "Stack deployado mas verificando servi��os..."
+        log_warning "Stack deployado mas verificando serviços..."
         sleep 15
         if docker service ls | grep -q "Kryonix"; then
             log_success "Serviços KRYONIX detectados"
@@ -1654,7 +1657,7 @@ log_info "   🌐 Plataforma: https://kryonix.com.br"
 log_info "   🔗 Webhook: https://kryonix.com.br/api/github-webhook"
 log_info "   📊 Health: http://localhost:8080/health"
 echo
-log_info "���� Comandos úteis:"
+log_info "🔧 Comandos úteis:"
 log_info "   ./webhook-deploy.sh manual                           # Deploy manual"
 log_info "   curl -X POST https://kryonix.com.br/api/github-webhook # Teste webhook"
 log_info "   curl https://kryonix.com.br/health                   # Health check"
