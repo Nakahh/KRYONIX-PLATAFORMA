@@ -72,7 +72,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ █���╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██��� ██╔██╗      ║"
@@ -1000,7 +1000,7 @@ git config --global user.name "nakahh"
 git config --global user.email "vitor@kryonix.com.br"
 
 # Configurar URL com token para evitar prompt de senha
-git remote set-url origin "https://nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" 2>/dev/null || true
+git remote set-url origin "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" 2>/dev/null || true
 
 # Corrigir permissões e ownership do Git
 log_info "Corrigindo permissões Git e diretório..."
