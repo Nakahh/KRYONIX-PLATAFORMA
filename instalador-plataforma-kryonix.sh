@@ -72,7 +72,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ███��██╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██����██╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██��� ██╔██╗      ║"
@@ -84,7 +84,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚══════════════════════════════════════════════���══════════════════╝"
+    echo    "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1059,7 +1059,7 @@ jobs:
             sleep 30
           done
 
-          echo "⚠️ Verificação manual necessária"
+          echo "⚠�� Verificação manual necessária"
           exit 1
 GITHUB_ACTIONS_EOF
 
@@ -1148,7 +1148,7 @@ deploy() {
     sleep 30
     
     # Verificar health
-    info "🔍 Verificando health da aplicação..."
+    info "🔍 Verificando health da aplicaç��o..."
     for i in {1..30}; do
         if curl -f -s "http://localhost:8080/health" > /dev/null; then
             log "✅ Deploy automático concluído com sucesso!"
@@ -1395,7 +1395,7 @@ if [ -z "$(git config --global user.name)" ]; then
 fi
 
 # Forçar rebuild da imagem com código atualizado
-log_info "Forçando rebuild da imagem Docker com webhook..."
+log_info "For��ando rebuild da imagem Docker com webhook..."
 docker build --no-cache -t kryonix-plataforma:latest .
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
@@ -1442,7 +1442,7 @@ done
 log_info "Sincronizando com repositório GitHub..."
 
 # Configurar URL com token antes de tentar sync
-git remote set-url origin "https://nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" 2>/dev/null || true
+git remote set-url origin "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" 2>/dev/null || true
 
 # Tentar sincronização sem prompt
 if timeout 15s git fetch origin >/dev/null 2>&1; then
