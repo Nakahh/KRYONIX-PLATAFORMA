@@ -675,8 +675,7 @@ echo "╔═══════════════════════�
 echo "║                                                                               ║"
 echo -e "║                    ${GREEN}${CHECKMARK} DEPLOY CONCLUIDO COM SUCESSO! ${CHECKMARK}${BLUE}                         ║"
 echo "║                                                                               ║"
-echo -e "║   ${WHITE}🌐 Site Principal: https://kryonix.com.br${BLUE}                             ║"
-echo -e "║   ${WHITE}🔧 Local (backup): http://localhost:8080 - $WEB_STATUS${BLUE}                ║"
+echo -e "║   ${WHITE}🌐 Web Service: http://localhost:8080 - $WEB_STATUS${BLUE}                    ║"
 echo "║                                                                               ║"
 echo -e "║                     ${CYAN}PLATAFORMA KRYONIX ONLINE${BLUE}                             ║"
 echo "║                                                                               ║"
@@ -684,15 +683,6 @@ echo "╚═══════════════════════�
 echo -e "${RESET}\n"
 
 log_success "KRYONIX Platform deployada com sucesso!"
-echo
-log_info "🌐 URLs de Acesso:"
-log_info "   Site Principal: https://kryonix.com.br"
-log_info "   Local (backup): http://localhost:8080"
-echo
-log_info "🔧 Comandos Uteis:"
-log_info "   docker stack ps Kryonix          # Status dos servicos"
-log_info "   docker service logs Kryonix_web  # Logs do site"
-log_info "   docker service ls                # Lista todos os servicos"
-echo
-log_info "📝 Certificados SSL serao gerados automaticamente pelo Let's Encrypt"
-log_info "⏱️ Aguarde 1-2 minutos para os certificados serem emitidos"
+log_info "Acesse: http://localhost:8080"
+log_info "Health check: http://localhost:8080/health"
+log_info "Use 'docker stack ps Kryonix' para monitorar os servicos"
