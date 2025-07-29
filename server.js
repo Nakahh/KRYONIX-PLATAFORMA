@@ -3,6 +3,8 @@ const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const { exec } = require('child_process');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -67,7 +69,7 @@ app.get('/api/logs', (req, res) => {
       },
       {
         timestamp: new Date().toISOString(),
-        level: 'success', 
+        level: 'success',
         message: '✅ Estrutura básica configurada'
       },
       {
@@ -77,6 +79,75 @@ app.get('/api/logs', (req, res) => {
       }
     ]
   });
+});
+
+// Webhook GitHub para deploy automático
+app.post('/api/github-webhook', (req, res) => {
+  console.log('🔔 Webhook GitHub recebido:', new Date().toISOString());
+
+  const payload = req.body;
+  const event = req.headers['x-github-event'];
+  const signature = req.headers['x-hub-signature-256'];
+
+  // Log do payload para debug
+  console.log('📋 Event:', event);
+  console.log('📦 Payload ref:', payload?.ref);
+  console.log('🏷️ Repository:', payload?.repository?.name);
+
+  // Verificar se é push na branch main
+  if (event === 'push' && payload?.ref === 'refs/heads/main') {
+    console.log('✅ Push detectado na branch main - iniciando deploy automático');
+
+    // Executar script de deploy
+    const deployScript = '/opt/kryonix-platform/webhook-deploy.sh';
+
+    if (fs.existsSync(deployScript)) {
+      exec(`bash ${deployScript} auto`, (error, stdout, stderr) => {
+        if (error) {
+          console.error('❌ Erro no deploy automático:', error);
+          return;
+        }
+        console.log('📋 Deploy output:', stdout);
+        if (stderr) console.log('⚠️ Deploy stderr:', stderr);
+      });
+
+      res.json({
+        message: 'Deploy automático iniciado',
+        status: 'accepted',
+        ref: payload.ref,
+        timestamp: new Date().toISOString(),
+        deploy_method: 'webhook_script'
+      });
+    } else {
+      // Fallback para rebuild interno
+      console.log('📋 Script não encontrado, usando rebuild interno');
+
+      exec('cd /opt/kryonix-platform && docker build -t kryonix-plataforma:latest . && docker service update --image kryonix-plataforma:latest Kryonix_web', (error, stdout, stderr) => {
+        if (error) {
+          console.error('❌ Erro no rebuild:', error);
+          return;
+        }
+        console.log('✅ Rebuild completado');
+      });
+
+      res.json({
+        message: 'Deploy automático iniciado',
+        status: 'accepted',
+        ref: payload.ref,
+        timestamp: new Date().toISOString(),
+        deploy_method: 'internal_docker_rebuild'
+      });
+    }
+  } else {
+    console.log('ℹ️ Evento ignorado - não é push na main');
+    res.json({
+      message: 'Evento recebido mas ignorado',
+      status: 'ignored',
+      event: event,
+      ref: payload?.ref,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Fallback para SPA
