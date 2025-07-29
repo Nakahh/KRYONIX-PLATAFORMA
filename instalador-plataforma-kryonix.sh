@@ -27,7 +27,7 @@ show_banner() {
     echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
     echo "║                                                                               ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                 ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚██��� ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                 ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                 ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝                  ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗                  ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗                 ║"
@@ -714,31 +714,53 @@ show_status "Servicos inicializados" "concluido"
 # Verificação de conectividade
 log_step "Teste de Conectividade"
 
-show_status "Testando conectividade" "iniciando"
-sleep 10
+show_status "Testando conectividade dos servicos" "iniciando"
+sleep 15
 
+# Teste interno dos serviços
 if curl -f -m 10 http://localhost:8080/health 2>/dev/null; then
-    show_status "Web Service (8080): FUNCIONANDO" "concluido"
+    show_status "Web Service (interno): FUNCIONANDO" "concluido"
     WEB_STATUS="✅ ONLINE"
 else
-    show_status "Web Service (8080): Verificar logs" "erro"
+    show_status "Web Service (interno): Verificar logs" "erro"
     WEB_STATUS="⚠️ VERIFICAR"
 fi
 
+# Verificar status dos serviços Docker
+DOCKER_STATUS=$(docker service ls --format "{{.Name}}: {{.Replicas}}" | grep Kryonix)
+show_status "Status dos servicos Docker" "concluido"
+echo -e "${CYAN}Servicos Docker:${RESET}"
+echo "$DOCKER_STATUS" | sed 's/^/  /'
+
 # Banner final
 echo -e "\n${BLUE}${BOLD}"
-echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
+echo "╔════════════════════════════════════════════════════════��══════════════════════╗"
 echo "║                                                                               ║"
 echo -e "║                    ${GREEN}${CHECKMARK} DEPLOY CONCLUIDO COM SUCESSO! ${CHECKMARK}${BLUE}                         ║"
 echo "║                                                                               ║"
-echo -e "║   ${WHITE}🌐 Web Service: http://localhost:8080 - $WEB_STATUS${BLUE}                    ║"
+echo -e "║   ${WHITE}🌐 Site Principal: https://kryonix.com.br${BLUE}                             ║"
+echo -e "║   ${WHITE}🔗 Webhook: https://webhook.kryonix.com.br${BLUE}                            ║"
+echo -e "║   ${WHITE}📊 Monitor: https://monitor.kryonix.com.br${BLUE}                            ║"
+echo "║                                                                               ║"
+echo -e "║   ${WHITE}🔧 Local: http://localhost:8080 - $WEB_STATUS${BLUE}                        ║"
 echo "║                                                                               ║"
 echo -e "║                     ${CYAN}PLATAFORMA KRYONIX ONLINE${BLUE}                             ║"
 echo "║                                                                               ║"
-echo "╚═════════════════════════════════════════════════════════════════════���═════════╝"
+echo "╚═══════════════════════════════════════════════════════════════════════════════╝"
 echo -e "${RESET}\n"
 
 log_success "KRYONIX Platform deployada com sucesso!"
-log_info "Acesse: http://localhost:8080"
-log_info "Health check: http://localhost:8080/health"
-log_info "Use 'docker stack ps Kryonix' para monitorar os servicos"
+echo
+log_info "🌐 URLs de Acesso:"
+log_info "   Site Principal: https://kryonix.com.br"
+log_info "   Webhook GitHub: https://webhook.kryonix.com.br/webhook"
+log_info "   Monitor Saude:  https://monitor.kryonix.com.br/health"
+log_info "   Local (backup): http://localhost:8080"
+echo
+log_info "🔧 Comandos Uteis:"
+log_info "   docker stack ps Kryonix          # Status dos servicos"
+log_info "   docker service logs Kryonix_web  # Logs do site"
+log_info "   docker service ls                # Lista todos os servicos"
+echo
+log_info "📝 Certificados SSL serao gerados automaticamente pelo Let's Encrypt"
+log_info "⏱️ Aguarde 1-2 minutos para os certificados serem emitidos"
