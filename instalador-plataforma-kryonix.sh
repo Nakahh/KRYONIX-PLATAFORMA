@@ -22,7 +22,7 @@ GEAR='⚙'
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔════════════════════════════════��══════════════════════════════════════════════╗"
+    echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
     echo "║                                                                               ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗                 ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝                 ║"
@@ -59,7 +59,7 @@ log_error() {
 
 log_step() {
     echo -e "\n${PURPLE}${BOLD}[${ARROW} ETAPA]${RESET} $1"
-    echo -e "${BLUE}────────────────────────────────────────────────────────────��────────${RESET}"
+    echo -e "${BLUE}─────────────────────────────────────────────────────────────────────${RESET}"
 }
 
 # Função para status
@@ -1138,7 +1138,7 @@ services:
         # Configurar rede
         - "traefik.docker.network=Kryonix-NET"
         
-        # Configurar servi��o e porta
+        # Configurar serviço e porta
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
         
         # Router HTTP (redireciona para HTTPS)
@@ -1178,6 +1178,58 @@ services:
       retries: 3
       start_period: 40s
 
+  webhook:
+    image: node:18-bullseye-slim
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+        delay: 30s
+      labels:
+        # Habilitar Traefik
+        - "traefik.enable=true"
+
+        # Configurar rede
+        - "traefik.docker.network=Kryonix-NET"
+
+        # Configurar serviço e porta
+        - "traefik.http.services.kryonix-webhook.loadbalancer.server.port=8082"
+
+        # Router HTTP (redireciona para HTTPS)
+        - "traefik.http.routers.kryonix-webhook-http.rule=Host(`webhook.kryonix.com.br`)"
+        - "traefik.http.routers.kryonix-webhook-http.entrypoints=web"
+        - "traefik.http.routers.kryonix-webhook-http.middlewares=redirect-https@docker"
+        - "traefik.http.routers.kryonix-webhook-http.service=kryonix-webhook"
+
+        # Router HTTPS
+        - "traefik.http.routers.kryonix-webhook-https.rule=Host(`webhook.kryonix.com.br`)"
+        - "traefik.http.routers.kryonix-webhook-https.entrypoints=websecure"
+        - "traefik.http.routers.kryonix-webhook-https.tls=true"
+        - "traefik.http.routers.kryonix-webhook-https.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.kryonix-webhook-https.service=kryonix-webhook"
+    networks:
+      - Kryonix-NET
+    ports:
+      - "8082:8082"
+    environment:
+      - WEBHOOK_PORT=8082
+      - WEBHOOK_SECRET=auto-deploy
+      - PROJECT_DIR=/opt/kryonix-plataform
+    working_dir: /opt/kryonix-plataform
+    volumes:
+      - /opt/kryonix-plataform:/opt/kryonix-plataform
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker:ro
+      - /var/log:/var/log
+    command: >
+      sh -c "
+        apt-get update &&
+        apt-get install -y curl git procps &&
+        echo '🎣 Iniciando Webhook Deploy...' &&
+        node /opt/kryonix-plataform/webhook-deploy.js
+      "
+
 networks:
   Kryonix-NET:
     external: true
@@ -1211,7 +1263,7 @@ fi
 
 # Banner final
 echo -e "\n${BLUE}${BOLD}"
-echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
+echo "╔═══════════════════════════════════════════════════════════════════���═══════════╗"
 echo "║                                                                               ║"
 echo -e "║                    ${GREEN}${CHECKMARK} DEPLOY CONCLUIDO COM SUCESSO! ${CHECKMARK}${BLUE}                         ║"
 echo "║                                                                               ║"
