@@ -234,10 +234,86 @@ log_error() {
 # FUNÇÕES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
+# Função inteligente para detectar automaticamente a rede do Traefik
+detect_traefik_network_automatically() {
+    local detected_network=""
+
+    log_info "🔍 Detectando rede do Traefik automaticamente..."
+
+    # 1. PRIORIDADE MÁXIMA: Verificar se Kryonix-NET existe (rede padrão do projeto)
+    if docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
+        detected_network="Kryonix-NET"
+        log_success "✅ Rede principal detectada: $detected_network"
+        echo "$detected_network"
+        return 0
+    fi
+
+    # 2. Verificar se há serviços Traefik rodando e descobrir qual rede eles usam
+    local traefik_services=$(docker service ls --format "{{.Name}}" | grep -i traefik | head -3)
+
+    if [ ! -z "$traefik_services" ]; then
+        log_info "📋 Serviços Traefik encontrados, analisando redes..."
+
+        # Para cada serviço Traefik, verificar em qual rede está
+        for service in $traefik_services; do
+            # Obter informações da rede do serviço
+            local service_networks=$(docker service inspect "$service" --format '{{range .Spec.TaskTemplate.Networks}}{{.Target}} {{end}}' 2>/dev/null || true)
+
+            for network_id in $service_networks; do
+                # Converter ID da rede para nome
+                local network_name=$(docker network ls --format "{{.ID}} {{.Name}}" | grep "^$network_id" | awk '{print $2}' 2>/dev/null || true)
+
+                if [ ! -z "$network_name" ] && [ "$network_name" != "ingress" ]; then
+                    # Verificar se é uma rede overlay (mais provável para Traefik)
+                    local network_driver=$(docker network inspect "$network_name" --format '{{.Driver}}' 2>/dev/null || true)
+
+                    if [ "$network_driver" = "overlay" ]; then
+                        detected_network="$network_name"
+                        log_success "✅ Rede do Traefik detectada via serviço $service: $detected_network"
+                        echo "$detected_network"
+                        return 0
+                    fi
+                fi
+            done
+        done
+    fi
+
+    # 3. Buscar por padrões comuns de rede de proxy/traefik
+    log_info "🔍 Buscando por padrões comuns de rede..."
+    for pattern in "traefik" "proxy" "web" "public" "frontend"; do
+        local found_network=$(docker network ls --format "{{.Name}}" | grep -i "$pattern" | head -1)
+        if [ ! -z "$found_network" ]; then
+            # Verificar se é overlay
+            local network_driver=$(docker network inspect "$found_network" --format '{{.Driver}}' 2>/dev/null || true)
+            if [ "$network_driver" = "overlay" ]; then
+                detected_network="$found_network"
+                log_success "✅ Rede detectada por padrão ($pattern): $detected_network"
+                echo "$detected_network"
+                return 0
+            fi
+        fi
+    done
+
+    # 4. Verificar redes overlay existentes (excluindo ingress)
+    local overlay_networks=$(docker network ls --filter driver=overlay --format "{{.Name}}" | grep -v "^ingress$" | head -1)
+    if [ ! -z "$overlay_networks" ]; then
+        detected_network="$overlay_networks"
+        log_info "✅ Rede overlay encontrada: $detected_network"
+        echo "$detected_network"
+        return 0
+    fi
+
+    # 5. FALLBACK: Usar Kryonix-NET como padrão (será criada)
+    detected_network="Kryonix-NET"
+    log_warning "⚠️ Nenhuma rede específica detectada, usando padrão: $detected_network"
+    echo "$detected_network"
+    return 0
+}
+
 # Função centralizada para verificação de rede Docker
 ensure_docker_network() {
     local network_name="$1"
-    
+
     if ! docker network ls --format "{{.Name}}" | grep -q "^${network_name}$"; then
         log_info "Criando rede Docker: $network_name"
         if docker network create -d overlay --attachable "$network_name" 2>/dev/null; then
