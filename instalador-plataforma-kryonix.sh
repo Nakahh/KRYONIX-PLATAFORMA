@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔════════���════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -762,7 +762,7 @@ if [ ! -f "public/index.html" ]; then
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327
+            🌐 https://kryonix.com.br | �� +55 17 98180-5327
         </p>
     </div>
 
@@ -851,14 +851,40 @@ if ! ensure_docker_network "$DOCKER_NETWORK"; then
     exit 1
 fi
 
-# Salvar configuração detectada para próximas execuções
-cat > .kryonix-network-config << NET_CONFIG_EOF
-# Configuração de rede detectada automaticamente em $(date)
+# Salvar configuração completa para qualquer servidor
+cat > .kryonix-auto-config << CONFIG_EOF
+# ============================================================================
+# CONFIGURAÇÃO AUTOMÁTICA KRYONIX - Gerada em $(date)
+# ============================================================================
+# Esta configuração permite instalação automática em qualquer servidor
+
+# Informações do Servidor
+SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || echo "127.0.0.1")
+SERVER_HOSTNAME=$(hostname)
+SERVER_USER=$(whoami)
+INSTALL_DATE=$(date)
+
+# Configuração de Rede Docker
 DETECTED_NETWORK=$DOCKER_NETWORK
 DETECTION_METHOD=automatic
 DETECTION_DATE=$(date)
-SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || echo "127.0.0.1")
-NET_CONFIG_EOF
+
+# Credenciais GitHub (configuradas automaticamente)
+GITHUB_REPO=$GITHUB_REPO
+PAT_TOKEN_CONFIGURED=true
+WEBHOOK_URL=$WEBHOOK_URL
+WEBHOOK_SECRET_CONFIGURED=true
+
+# Status da Instalação
+KRYONIX_INSTALLED=true
+KRYONIX_VERSION=2025.01
+AUTO_DEPLOY_ENABLED=true
+
+# Comandos úteis para este servidor:
+# docker service logs Kryonix_web
+# curl http://localhost:8080/health
+# curl http://localhost:8080/api/github-webhook -X POST -d '{"test":true}'
+CONFIG_EOF
 
 log_success "✅ Rede Docker configurada automaticamente: $DOCKER_NETWORK"
 log_info "📋 Configuração salva em .kryonix-network-config"
@@ -1303,7 +1329,7 @@ echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker network ls${RESET} - Ver redes (rede: $DOCKER_NETWORK)"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}cat .kryonix-network-config${RESET} - Ver configuração de rede"
-echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - Deploy manual"
+echo -e "    ${BLUE}��${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - Deploy manual"
 echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada e funcionando!${RESET}"
 echo -e "${PURPLE}🚀 Push no GitHub = Deploy automático ativado!${RESET}"
