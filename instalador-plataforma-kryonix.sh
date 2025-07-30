@@ -84,7 +84,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "��     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -1220,34 +1220,123 @@ deploy() {
     info "🔑 Configurando credenciais GitHub..."
     git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 
+    # Backup do package.json atual para comparação
+    cp package.json package.json.old 2>/dev/null || true
+
     # Pull das mudanças
-    info "📥 Fazendo pull do repositório..."
+    info "📥 Fazendo pull do repositório (Builder.io)..."
     git fetch origin --force
     git reset --hard origin/main || git reset --hard origin/master
     git clean -fd
 
-    # Instalar dependências
-    info "📦 Instalando dependências..."
-    if [ -f "yarn.lock" ]; then
-        yarn install
-        info "🏗️ Executando yarn build (Builder.io)..."
-        yarn build 2>/dev/null || npm run build 2>/dev/null || info "ℹ️ Sem script de build"
+    # Detectar mudanças no package.json (novas dependências do Builder.io)
+    DEPENDENCIES_CHANGED=false
+    if [ -f "package.json.old" ]; then
+        if ! diff package.json package.json.old >/dev/null 2>&1; then
+            info "🔄 Mudanças detectadas no package.json - Builder.io pode ter adicionado dependências"
+            DEPENDENCIES_CHANGED=true
+        fi
     else
-        npm install --production
-        info "🏗️ Executando npm run build (Builder.io)..."
-        npm run build 2>/dev/null || info "ℹ️ Sem script de build"
+        DEPENDENCIES_CHANGED=true
     fi
 
-    # Verificar se existe pasta dist/build gerada
-    if [ -d "dist" ]; then
-        info "📁 Build gerado em ./dist/"
-        cp -r dist/* public/ 2>/dev/null || true
-    elif [ -d "build" ]; then
-        info "📁 Build gerado em ./build/"
-        cp -r build/* public/ 2>/dev/null || true
-    elif [ -d ".next" ]; then
-        info "📁 Build Next.js gerado"
+    # Sempre instalar dependências completas (Builder.io pode ter adicionado novas)
+    info "📦 Instalando/Atualizando TODAS as dependências (Builder.io)..."
+
+    # Limpar cache e node_modules para garantir instalação limpa
+    if [ "$DEPENDENCIES_CHANGED" = true ]; then
+        info "🧹 Limpando cache de dependências para instalação limpa..."
+        rm -rf node_modules 2>/dev/null || true
+        rm -f package-lock.json yarn.lock 2>/dev/null || true
     fi
+
+    # Detectar gerenciador de pacotes e instalar dependências completas
+    if [ -f "yarn.lock" ] || command -v yarn >/dev/null 2>&1; then
+        info "📦 Usando Yarn para dependências..."
+        yarn cache clean 2>/dev/null || true
+        yarn install --force --no-frozen-lockfile
+
+        # Verificar se Builder.io gerou script de build
+        if grep -q '"build"' package.json; then
+            info "🏗️ Executando build do Builder.io com Yarn..."
+            yarn build || {
+                warning "Build falhou, tentando scripts alternativos..."
+                yarn build:prod 2>/dev/null || yarn compile 2>/dev/null || info "ℹ️ Build personalizado não encontrado"
+            }
+        fi
+    else
+        info "📦 Usando NPM para dependências..."
+        npm cache clean --force 2>/dev/null || true
+        npm install --force --no-save
+
+        # Verificar se Builder.io gerou script de build
+        if grep -q '"build"' package.json; then
+            info "🏗️ Executando build do Builder.io com NPM..."
+            npm run build || {
+                warning "Build falhou, tentando scripts alternativos..."
+                npm run build:prod 2>/dev/null || npm run compile 2>/dev/null || info "ℹ️ Build personalizado não encontrado"
+            }
+        fi
+    fi
+
+    # Verificar e processar arquivos gerados pelo Builder.io
+    info "📁 Verificando arquivos gerados pelo Builder.io..."
+
+    # Criar public se não existir
+    mkdir -p public
+
+    # Processar diferentes tipos de build do Builder.io
+    if [ -d "dist" ]; then
+        info "📁 Builder.io gerou build em ./dist/"
+        cp -r dist/* public/ 2>/dev/null || true
+        # Verificar se há arquivos específicos do Builder.io
+        if [ -f "dist/index.html" ]; then
+            cp dist/index.html public/ 2>/dev/null || true
+        fi
+    elif [ -d "build" ]; then
+        info "📁 Builder.io gerou build em ./build/"
+        cp -r build/* public/ 2>/dev/null || true
+        if [ -f "build/index.html" ]; then
+            cp build/index.html public/ 2>/dev/null || true
+        fi
+    elif [ -d ".next" ]; then
+        info "📁 Builder.io gerou build Next.js"
+        # Para Next.js, não precisamos copiar para public
+    elif [ -d "out" ]; then
+        info "📁 Builder.io gerou export estático em ./out/"
+        cp -r out/* public/ 2>/dev/null || true
+    elif [ -d "_site" ]; then
+        info "📁 Builder.io gerou site estático em ./_site/"
+        cp -r _site/* public/ 2>/dev/null || true
+    fi
+
+    # Verificar se há arquivos CSS/JS específicos do Builder.io
+    for dir in "assets" "static" "css" "js"; do
+        if [ -d "$dir" ] && [ ! -d "public/$dir" ]; then
+            info "📁 Copiando $dir para public..."
+            cp -r "$dir" public/ 2>/dev/null || true
+        fi
+    done
+
+    # Verificar dependências de runtime necessárias
+    info "🔍 Verificando dependências de runtime do Builder.io..."
+
+    # Verificar se há dependências específicas do Builder.io
+    if grep -q "@builder.io" package.json; then
+        info "✅ Dependências do Builder.io detectadas"
+    fi
+
+    # Verificar se há React/Vue/Angular
+    if grep -q '"react"' package.json; then
+        info "✅ React detectado - compatível com Builder.io"
+    elif grep -q '"vue"' package.json; then
+        info "✅ Vue detectado - compatível com Builder.io"
+    elif grep -q '"@angular"' package.json; then
+        info "✅ Angular detectado - compatível com Builder.io"
+    fi
+
+    # Limpar arquivo de backup
+    rm -f package.json.old 2>/dev/null || true
 
     # Limpar imagem antiga para garantir rebuild completo
     info "🧹 Limpando imagem antiga..."
@@ -1399,9 +1488,9 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Portabilidade:${RESET} ✅ Funciona em qu
 echo ""
 echo -e "${CYAN}${BOLD}�� STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} $WEB_STATUS"
-echo -e "    ${BLUE}���${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK (detectada automaticamente)"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Traefik:${RESET} $([ "$TRAEFIK_FOUND" = true ] && echo "✅ ENCONTRADO ($TRAEFIK_SERVICE)" || echo "⚠️ NÃO ENCONTRADO")"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Traefik:${RESET} $([ "$TRAEFIK_FOUND" = true ] && echo "��� ENCONTRADO ($TRAEFIK_SERVICE)" || echo "⚠️ NÃO ENCONTRADO")"
 echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub CI/CD:${RESET} ✅ CONFIGURADO"
 echo ""
 echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
