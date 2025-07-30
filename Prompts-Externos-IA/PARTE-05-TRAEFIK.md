@@ -246,6 +246,264 @@ http:
         accessControlMaxAge: 3600
         addVaryHeader: true
 
+    # === MIDDLEWARES MULTI-TENANT E SDK ===
+
+    # Middleware para roteamento multi-tenant automático (ARQUITETURA SDK)
+    tenant-routing:
+      forwardAuth:
+        address: "http://kryonix-tenant-router:8080/validate-tenant"
+        trustForwardHeader: true
+        authRequestHeaders:
+          - "Host"
+          - "X-Forwarded-Host"
+          - "X-Real-IP"
+        authResponseHeaders:
+          - "X-Tenant-ID"
+          - "X-Client-Database"
+          - "X-Allowed-Modules"
+          - "X-Subdomain"
+          - "X-Plan-Type"
+          - "X-Payment-Status"
+          - "X-Rate-Limit"
+
+    # Middleware para criação automática de subdomínios (FLUXO COMPLETO)
+    auto-subdomain-creator:
+      forwardAuth:
+        address: "http://kryonix-provisioner:8080/auto-create"
+        trustForwardHeader: true
+        authRequestHeaders:
+          - "Host"
+          - "User-Agent"
+          - "X-Forwarded-For"
+        authResponseHeaders:
+          - "X-Auto-Created"
+          - "X-Tenant-Status"
+          - "X-Creation-Time"
+          - "X-Provisioning-Progress"
+          - "X-Database-Created"
+          - "X-Modules-Enabled"
+
+    # Middleware para validação de pagamento por cliente (ARQUITETURA SDK)
+    payment-validator:
+      forwardAuth:
+        address: "http://kryonix-payment-service:8080/validate-payment"
+        trustForwardHeader: true
+        authRequestHeaders:
+          - "X-Tenant-ID"
+          - "X-API-Key"
+        authResponseHeaders:
+          - "X-Payment-Valid"
+          - "X-Subscription-Status"
+          - "X-Plan-Limits"
+          - "X-Usage-Quota"
+
+    # Middleware para headers multi-tenant
+    multi-tenant-headers:
+      headers:
+        customRequestHeaders:
+          X-Tenant-Isolation: "enabled"
+          X-Data-Encryption: "active"
+        customResponseHeaders:
+          X-Tenant-Served: "{{.Request.Header.Get \"X-Tenant-ID\"}}"
+          X-API-Version: "v1.0"
+          X-Powered-By: "KRYONIX Multi-Tenant"
+          X-Instance-ID: "{{.Request.Header.Get \"X-Instance-ID\"}}"
+
+    # Middleware para SDK identification (SDK HOSPEDAGEM)
+    sdk-headers:
+      headers:
+        customRequestHeaders:
+          X-SDK-Platform: "auto-detect"
+          X-Client-Version: "{{.Request.Header.Get \"User-Agent\"}}"
+        customResponseHeaders:
+          X-SDK-Endpoints: "https://api.kryonix.com.br/v1/endpoints"
+          X-SDK-Documentation: "https://sdk.kryonix.com.br"
+          X-Rate-Limit-Remaining: "{{.Request.Header.Get \"X-Rate-Limit\"}}"
+          X-NPM-Package: "@kryonix/sdk@latest"
+
+    # Middleware para otimização mobile (APPS MOBILE)
+    mobile-optimization:
+      headers:
+        customResponseHeaders:
+          # PWA Support
+          X-UA-Compatible: "IE=edge"
+          # Performance mobile
+          Server-Timing: "processing;dur={{.Request.ProcessingTime}}"
+          # Caching otimizado mobile
+          Cache-Control: "public, max-age=31536000, immutable"
+          # Service Worker support
+          Service-Worker-Allowed: "/"
+          # App Cache
+          X-Mobile-Cache: "enabled"
+          X-PWA-Installable: "true"
+
+    # Middleware para detecção mobile automática (APPS MOBILE)
+    mobile-detector:
+      plugin:
+        mobile_user_agents:
+          - "Mobile"
+          - "Android"
+          - "iPhone"
+          - "iPad"
+          - "Opera Mini"
+        redirect_mobile: false
+        add_headers: true
+        mobile_subdomain: false
+
+    # Middleware para cache inteligente por tenant
+    tenant-cache:
+      plugin:
+        cache_key_template: "tenant:{{.Request.Header.Get \"X-Tenant-ID\"}}:path:{{.Request.URL.Path}}:query:{{.Request.URL.RawQuery}}"
+        ttl_by_path:
+          "/api/": "5m"
+          "/static/": "1h"
+          "/app/": "15m"
+          "/downloads/": "24h"
+        vary_headers: ["X-Tenant-ID", "User-Agent", "Accept-Language"]
+
+    # Middleware para métricas por tenant
+    tenant-metrics:
+      plugin:
+        metrics_prefix: "kryonix_tenant"
+        labels:
+          - "tenant_id"
+          - "api_module"
+          - "plan_type"
+          - "request_path"
+        export_to: "prometheus:9090"
+        custom_metrics:
+          - "tenant_requests_total"
+          - "tenant_response_time"
+          - "tenant_errors_total"
+
+  # Rotas específicas para multi-tenancy e APIs modulares
+  routers:
+    # Rota principal para subdomínios automáticos (FLUXO COMPLETO)
+    tenant-subdomain:
+      rule: "Host(`{tenant:[a-z0-9-]+}.kryonix.com.br`)"
+      service: "kryonix-tenant-app"
+      middlewares:
+        - "auto-subdomain-creator@file"
+        - "tenant-routing@file"
+        - "payment-validator@file"
+        - "multi-tenant-headers@file"
+        - "mobile-optimization@file"
+        - "tenant-cache@file"
+      tls:
+        certResolver: "letsencrypt-wildcard"
+      priority: 100
+
+    # Rotas para as 8 APIs modulares (ARQUITETURA SDK)
+    api-crm:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/crm`)"
+      service: "kryonix-api-crm"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-whatsapp:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/whatsapp`)"
+      service: "kryonix-api-whatsapp"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-agendamento:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/agendamento`)"
+      service: "kryonix-api-agendamento"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-financeiro:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/financeiro`)"
+      service: "kryonix-api-financeiro"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-marketing:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/marketing`)"
+      service: "kryonix-api-marketing"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-analytics:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/analytics`)"
+      service: "kryonix-api-analytics"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-portal:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/portal`)"
+      service: "kryonix-api-portal"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-whitelabel:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/whitelabel`)"
+      service: "kryonix-api-whitelabel"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    # Rota para SDK unificado (SDK HOSPEDAGEM)
+    sdk-unified:
+      rule: "Host(`sdk.kryonix.com.br`)"
+      service: "kryonix-sdk-server"
+      middlewares:
+        - "compression@file"
+        - "sdk-headers@file"
+        - "security-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    # Rota para downloads de apps mobile (APPS MOBILE)
+    app-downloads:
+      rule: "Host(`downloads.kryonix.com.br`)"
+      service: "kryonix-app-downloads"
+      middlewares:
+        - "mobile-optimization@file"
+        - "tenant-routing@file"
+        - "security-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
   # Serviços personalizados
   services:
     # Load balancer para múltiplas instâncias
