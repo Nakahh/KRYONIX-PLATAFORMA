@@ -85,8 +85,8 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║���█║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ��═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -366,7 +366,7 @@ echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
-echo -e "${GREEN}${BOLD}✅ Configuraç��o automática ativada - sem interação necessária!${RESET}\n"
+echo -e "${GREEN}${BOLD}✅ Configuraç����o automática ativada - sem interação necessária!${RESET}\n"
 
 # Inicializar primeira etapa
 next_step
@@ -1497,7 +1497,7 @@ DOCKERFILE_EMERGENCY_EOF
             info "✅ Build de emergência bem-sucedido"
             rm -f Dockerfile.emergency
         else
-            error "❌ Build de emergência falhou"
+            error "��� Build de emergência falhou"
             return 1
         fi
     else
@@ -1549,7 +1549,7 @@ WEBHOOK_DEPLOY_EOF
 
 chmod +x webhook-deploy.sh
 
-log_success "✅ Webhook deploy corrigido criado com rebuild automático completo"
+log_success "✅ Webhook deploy ultra-avançado criado com deploy automático completo"
 complete_step
 next_step
 
