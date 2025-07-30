@@ -38,7 +38,7 @@ PROJECT_DIR="/opt/kryonix-plataform"
 WEB_PORT="8080"
 WEBHOOK_PORT="8080"
 DOMAIN_NAME="kryonix.com.br"
-DOCKER_NETWORK="Kryonix-NET"  # Rede fixa para evitar problemas
+DOCKER_NETWORK=""  # Será detectado automaticamente
 STACK_NAME="Kryonix"
 
 # Configurações CI/CD - Usar variáveis de ambiente se disponíveis
