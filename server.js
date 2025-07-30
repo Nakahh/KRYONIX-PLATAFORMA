@@ -82,6 +82,23 @@ app.get('/api/logs', (req, res) => {
 });
 
 // Webhook GitHub para deploy automático
+const crypto = require('crypto');
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
+
+// Função para verificar assinatura do GitHub
+const verifyGitHubSignature = (payload, signature) => {
+  if (!signature) return false;
+
+  const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+  hmac.update(JSON.stringify(payload));
+  const calculatedSignature = 'sha256=' + hmac.digest('hex');
+
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(calculatedSignature)
+  );
+};
+
 app.post('/api/github-webhook', (req, res) => {
   console.log('🔔 Webhook GitHub recebido:', new Date().toISOString());
 
@@ -90,61 +107,103 @@ app.post('/api/github-webhook', (req, res) => {
   const signature = req.headers['x-hub-signature-256'];
 
   // Log do payload para debug
-  console.log('📋 Event:', event);
-  console.log('📦 Payload ref:', payload?.ref);
-  console.log('🏷️ Repository:', payload?.repository?.name);
+  console.log('📋 Event:', event || 'NONE');
+  console.log('📦 Payload ref:', payload?.ref || 'N/A');
+  console.log('🏷️ Repository:', payload?.repository?.name || 'N/A');
+  console.log('🔑 Signature:', signature ? 'PRESENT' : 'NONE');
 
-  // Verificar se é push na branch main
-  if (event === 'push' && payload?.ref === 'refs/heads/main') {
-    console.log('✅ Push detectado na branch main - iniciando deploy automático');
+  // Verificar assinatura se configurada
+  if (WEBHOOK_SECRET && signature) {
+    if (!verifyGitHubSignature(payload, signature)) {
+      console.log('❌ Assinatura inválida do webhook');
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+    console.log('✅ Assinatura do webhook verificada');
+  }
+
+  // Verificar se é push na branch main ou master
+  const isValidEvent = !event || event === 'push';
+  const isValidRef = payload?.ref === 'refs/heads/main' || payload?.ref === 'refs/heads/master';
+
+  if (isValidEvent && isValidRef) {
+    console.log('✅ Push detectado na branch principal - iniciando deploy automático');
 
     // Executar script de deploy
     const deployScript = '/opt/kryonix-plataform/webhook-deploy.sh';
 
     if (fs.existsSync(deployScript)) {
-      exec(`bash ${deployScript} auto`, (error, stdout, stderr) => {
-        if (error) {
-          console.error('❌ Erro no deploy automático:', error);
-          return;
-        }
-        console.log('📋 Deploy output:', stdout);
-        if (stderr) console.log('⚠️ Deploy stderr:', stderr);
+      console.log('🚀 Executando script de deploy webhook...');
+
+      // Usar spawn para melhor controle do processo
+      const spawn = require('child_process').spawn;
+      const deployProcess = spawn('bash', [deployScript, 'webhook', JSON.stringify(payload)], {
+        cwd: '/opt/kryonix-plataform',
+        stdio: 'pipe'
       });
 
+      deployProcess.stdout.on('data', (data) => {
+        console.log('📋 Deploy output:', data.toString());
+      });
+
+      deployProcess.stderr.on('data', (data) => {
+        console.log('⚠️ Deploy stderr:', data.toString());
+      });
+
+      deployProcess.on('close', (code) => {
+        console.log(`🔄 Deploy process finalizado com código: ${code}`);
+      });
+
+      // Responder imediatamente
       res.json({
         message: 'Deploy automático iniciado',
         status: 'accepted',
-        ref: payload.ref,
+        ref: payload?.ref,
+        sha: payload?.after || payload?.head_commit?.id,
         timestamp: new Date().toISOString(),
-        deploy_method: 'webhook_script'
+        deploy_method: 'webhook_script',
+        webhook_url: process.env.WEBHOOK_URL || 'https://kryonix.com.br/api/github-webhook'
       });
     } else {
-      // Fallback para rebuild interno
-      console.log('📋 Script não encontrado, usando rebuild interno');
+      // Fallback para rebuild interno mais robusto
+      console.log('📋 Script não encontrado, usando rebuild interno avançado');
 
-      exec('cd /opt/kryonix-plataform && docker build -t kryonix-plataforma:latest . && docker service update --image kryonix-plataforma:latest Kryonix_web', (error, stdout, stderr) => {
+      const rebuildCommand = `
+        cd /opt/kryonix-plataform &&
+        git config --global --add safe.directory /opt/kryonix-plataform &&
+        git fetch origin --force &&
+        git reset --hard origin/main &&
+        npm install --production &&
+        docker build --no-cache -t kryonix-plataforma:latest . &&
+        docker service update --force --image kryonix-plataforma:latest Kryonix_web
+      `;
+
+      exec(rebuildCommand, { timeout: 300000 }, (error, stdout, stderr) => {
         if (error) {
-          console.error('❌ Erro no rebuild:', error);
+          console.error('❌ Erro no rebuild interno:', error);
           return;
         }
-        console.log('✅ Rebuild completado');
+        console.log('✅ Rebuild interno completado');
+        console.log('📋 Stdout:', stdout);
+        if (stderr) console.log('⚠️ Stderr:', stderr);
       });
 
       res.json({
-        message: 'Deploy automático iniciado',
+        message: 'Deploy automático iniciado (rebuild interno)',
         status: 'accepted',
-        ref: payload.ref,
+        ref: payload?.ref,
+        sha: payload?.after || payload?.head_commit?.id,
         timestamp: new Date().toISOString(),
-        deploy_method: 'internal_docker_rebuild'
+        deploy_method: 'internal_docker_rebuild_advanced'
       });
     }
   } else {
-    console.log('ℹ️ Evento ignorado - não é push na main');
+    console.log('ℹ️ Evento ignorado:', { event, ref: payload?.ref });
     res.json({
       message: 'Evento recebido mas ignorado',
       status: 'ignored',
-      event: event,
-      ref: payload?.ref,
+      event: event || 'undefined',
+      ref: payload?.ref || 'undefined',
+      reason: !isValidEvent ? 'invalid_event' : 'invalid_ref',
       timestamp: new Date().toISOString()
     });
   }
