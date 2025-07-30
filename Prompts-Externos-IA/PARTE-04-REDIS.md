@@ -51,25 +51,35 @@ CONFIG SET client-output-buffer-limit "normal 0 0 0 slave 268435456 67108864 60 
 CONFIG REWRITE
 EOF
 
-# === ESTRUTURAR DATABASES ESPECIALIZADOS ===
-echo "🗂️ Estruturando 16 databases especializados..."
+# === ESTRUTURAR DATABASES ESPECIALIZADOS PARA SDK E MULTI-TENANCY ===
+echo "🗂️ Estruturando 16 databases especializados para SDK unificado e multi-tenancy..."
 
-# Database 0: Sessões mobile
+# Database 0: Sessões mobile multi-tenant
 docker exec redis-kryonix redis-cli -n 0 << 'EOF'
-# Templates para sessões mobile
-HSET mobile:session:template user_id "uuid" device_type "mobile" platform "android|ios" push_token "fcm_token" last_activity "timestamp" geolocation "lat,lng" app_version "1.0.0" language "pt-BR" timezone "America/Sao_Paulo"
+# Templates para sessões mobile isoladas por cliente
+HSET mobile:session:template user_id "uuid" device_type "mobile" platform "android|ios" push_token "fcm_token" last_activity "timestamp" geolocation "lat,lng" app_version "1.0.0" language "pt-BR" timezone "America/Sao_Paulo" client_id "tenant_uuid" tenant_namespace "cliente_isolado"
+
+# Sessões SDK por cliente isolado
+HSET sdk:session:template client_id "tenant_uuid" api_key "sk_cliente_abc123" sdk_version "1.0.0" modules_enabled '["crm","whatsapp","agendamento"]' last_api_call "timestamp" rate_limit_remaining "1000" subscription_status "active"
 
 # Configurar TTL padrão para sessões (30 minutos)
 CONFIG SET tcp-keepalive 1800
 EOF
 
-# Database 1: Cache de dados
+# Database 1: Cache de dados multi-tenant
 docker exec redis-kryonix redis-cli -n 1 << 'EOF'
-# Templates para cache de dados
-HSET cache:user:template profile_data '{"name":"","email":"","phone":""}' preferences '{"language":"pt-BR","theme":"light","notifications":true}' last_sync "timestamp" cache_version "1.0"
+# Templates para cache de dados isolados por cliente
+HSET cache:user:template profile_data '{"name":"","email":"","phone":""}' preferences '{"language":"pt-BR","theme":"light","notifications":true}' last_sync "timestamp" cache_version "1.0" client_id "tenant_uuid" tenant_isolation "true"
 
-# Cache de API responses
-HSET cache:api:template endpoint "/api/users" response '{"data":[],"meta":{}}' cached_at "timestamp" ttl "3600"
+# Cache de API responses do SDK modular (8 APIs)
+HSET cache:api:crm:template endpoint "/api/crm/leads" response '{"data":[],"meta":{}}' cached_at "timestamp" ttl "3600" client_id "tenant_uuid"
+HSET cache:api:whatsapp:template endpoint "/api/whatsapp/messages" response '{"data":[],"meta":{}}' cached_at "timestamp" ttl "1800" client_id "tenant_uuid"
+HSET cache:api:agendamento:template endpoint "/api/agendamento/slots" response '{"data":[],"meta":{}}' cached_at "timestamp" ttl "900" client_id "tenant_uuid"
+HSET cache:api:financeiro:template endpoint "/api/financeiro/cobrancas" response '{"data":[],"meta":{}}' cached_at "timestamp" ttl "3600" client_id "tenant_uuid"
+HSET cache:api:marketing:template endpoint "/api/marketing/campanhas" response '{"data":[],"meta":{}}' cached_at "timestamp" ttl "7200" client_id "tenant_uuid"
+HSET cache:api:analytics:template endpoint "/api/analytics/dashboard" response '{"data":[],"meta":{}}' cached_at "timestamp" ttl "1800" client_id "tenant_uuid"
+HSET cache:api:portal:template endpoint "/api/portal/configuracao" response '{"data":[],"meta":{}}' cached_at "timestamp" ttl "3600" client_id "tenant_uuid"
+HSET cache:api:whitelabel:template endpoint "/api/whitelabel/branding" response '{"data":[],"meta":{}}' cached_at "timestamp" ttl "86400" client_id "tenant_uuid"
 EOF
 
 # Database 2: Filas de trabalho
@@ -108,16 +118,26 @@ ZADD metrics:mobile:response_time $(date +%s) "145"
 HSET metrics:realtime mobile_users "245" api_calls_sec "12" cache_hit_rate "87.5" response_time_ms "145" cpu_usage "23.5" memory_usage "67.2"
 EOF
 
-# Database 4: Cache da IA
+# Database 4: Cache da IA para análise de clientes e criação automática
 docker exec redis-kryonix redis-cli -n 4 << 'EOF'
-# Cache de decisões IA
-HSET ai:decisions:template decision_id "uuid" user_id "uuid" context "mobile_login" decision "allow" confidence "0.95" timestamp "timestamp" reasoning "Normal login pattern"
+# Cache de decisões IA para multi-tenancy
+HSET ai:decisions:template decision_id "uuid" user_id "uuid" client_id "tenant_uuid" context "mobile_login" decision "allow" confidence "0.95" timestamp "timestamp" reasoning "Normal login pattern" tenant_isolation "true"
 
-# Cache de recomendações IA
-HSET ai:recommendations:template user_id "uuid" recommendations '["product1","product2"]' algorithm "collaborative_filtering" generated_at "timestamp" expires_at "timestamp"
+# Cache de análise de prompts de clientes (FLUXO COMPLETO)
+HSET ai:prompt_analysis:template client_request "Preciso de CRM + agenda para minha clínica" identified_modules '["crm","agendamento","whatsapp","financeiro"]' business_sector "medicina" custom_terminology '{"clientes":"pacientes","vendas":"consultas"}' estimated_price "557" confidence "0.92" analysis_time "2.3s"
+
+# Cache de configurações automáticas por setor
+HSET ai:sector_config:clinica modules '["crm","agendamento","whatsapp","financeiro"]' terminology '{"leads":"pacientes","sales":"consultas","products":"procedimentos"}' workflows '["agendamento_consulta","lembrete_whatsapp","cobranca_automatica"]' compliance '["lgpd_dados_medicos"]'
+
+HSET ai:sector_config:imobiliaria modules '["crm","whatsapp","agendamento","portal"]' terminology '{"leads":"interessados","products":"imoveis","meetings":"visitas"}' workflows '["qualificacao_leads","agendamento_visitas","follow_up"]' compliance '["lgpd_dados_pessoais"]'
+
+HSET ai:sector_config:salao modules '["agendamento","financeiro","whatsapp","crm"]' terminology '{"leads":"clientes","products":"servicos","staff":"profissionais"}' workflows '["agendamento_servico","lembrete_24h","programa_fidelidade"]' compliance '["lgpd_dados_pessoais"]'
+
+# Cache de criação automática de plataformas (FLUXO COMPLETO)
+HSET ai:platform_creation:template client_id "uuid" business_name "Clínica Exemplo" sector "medicina" modules_selected '["crm","agendamento","whatsapp"]' subdomain "clinica-exemplo.kryonix.com.br" database_name "kryonix_cliente_clinica_exemplo" creation_time "3min_12s" status "completed" automation_level "100%"
 
 # Padrões de comportamento analisados pela IA
-HSET ai:patterns:template user_id "uuid" device_type "mobile" usage_pattern "evening_user" frequency "daily" last_analysis "timestamp"
+HSET ai:patterns:template user_id "uuid" client_id "tenant_uuid" device_type "mobile" usage_pattern "evening_user" frequency "daily" last_analysis "timestamp" business_context "sector_specific"
 EOF
 
 # Database 5: Notificações push
@@ -144,18 +164,25 @@ SET api:/notifications/count '{"unread":5,"total":25}' EX 300
 SET query:user_analytics:uuid '{"total_sessions":150,"avg_duration":325,"last_login":"2025-01-27"}' EX 7200
 EOF
 
-# Database 7: Dados temporários
+# Database 7: Dados temporários para criação automática de clientes
 docker exec redis-kryonix redis-cli -n 7 << 'EOF'
-# Códigos de verificação (WhatsApp, SMS, Email)
+# Códigos de verificação (WhatsApp, SMS, Email) multi-tenant
 SET verify:whatsapp:5517981805327 "123456" EX 300
 SET verify:email:user@example.com "654321" EX 600
 
-# Tokens temporários
+# Tokens temporários para SDK
 SET temp:upload_token:uuid "upload_token_123" EX 1800
 SET temp:reset_password:uuid "reset_token_456" EX 3600
+SET temp:api_key_generation:uuid "temp_api_key_789" EX 900
 
-# Cache de formulários
-SET form:temp:uuid '{"field1":"value1","field2":"value2"}' EX 1800
+# Cache de formulários de criação de clientes (FLUXO COMPLETO)
+SET form:client_creation:uuid '{"business_name":"Clínica Exemplo","owner_name":"Dr. João","phone":"+5517981805327","email":"dr.joao@clinica.com","sector":"medicina","prompt":"Preciso de CRM + agenda para minha clínica"}' EX 1800
+
+# Cache de configurações durante criação automática
+SET config:auto_creation:uuid '{"step":"analyzing_prompt","progress":"25%","estimated_time":"2min","modules_identified":["crm","agendamento","whatsapp"],"next_action":"create_database"}' EX 3600
+
+# Cache de credentials durante entrega (FLUXO COMPLETO)
+SET credentials:delivery:uuid '{"subdomain":"clinica-exemplo.kryonix.com.br","api_key":"sk_clinica_exemplo_abc123","admin_user":"admin@clinica-exemplo.com","temp_password":"TempPass123!","qr_whatsapp":"https://api.kryonix.com.br/clinica-exemplo/whatsapp/qr"}' EX 7200
 EOF
 
 # Database 8: Geolocalização
