@@ -85,7 +85,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗█���║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -244,7 +244,7 @@ detect_traefik_network_automatically() {
     # 1. PRIORIDADE MÁXIMA: Verificar se Kryonix-NET existe (rede padrão do projeto)
     if docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
         detected_network="Kryonix-NET"
-        log_success "✅ Rede principal detectada: $detected_network"
+        log_success "�� Rede principal detectada: $detected_network"
         echo "$detected_network"
         return 0
     fi
@@ -526,13 +526,10 @@ sudo mkdir -p "$PROJECT_DIR"
 sudo chown -R $USER:$USER "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
-# Configurar repositório Git com credenciais
-if [ ! -z "$PAT_TOKEN" ]; then
-    REPO_WITH_TOKEN="https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-    sync_git_repository "$REPO_WITH_TOKEN"
-else
-    sync_git_repository "$GITHUB_REPO"
-fi
+# Configurar repositório Git com credenciais automáticas
+log_info "🔗 Configurando acesso ao GitHub com credenciais..."
+REPO_WITH_TOKEN="https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+sync_git_repository "$REPO_WITH_TOKEN"
 
 # Verificar arquivos essenciais
 if [ ! -f "package.json" ]; then
@@ -1222,7 +1219,7 @@ echo -e "${GREEN}${BOLD}                     🎉 INSTALAÇÃO CONCLUÍDA       
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${CYAN}${BOLD}📊 STATUS DO SISTEMA:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç��o Web:${RESET} $WEB_STATUS"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} $WEB_STATUS"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK (detectada automaticamente)"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Traefik:${RESET} $([ "$TRAEFIK_FOUND" = true ] && echo "✅ ENCONTRADO ($TRAEFIK_SERVICE)" || echo "⚠️ NÃO ENCONTRADO")"
