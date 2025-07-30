@@ -1004,6 +1004,7 @@ else
         docker stack deploy -c docker-stack.yml Kryonix || exit 1
     fi
 fi
+
 complete_step
 next_step
 
@@ -1398,7 +1399,7 @@ if sudo systemctl is-active kryonix-deploy.service >/dev/null 2>&1; then
             log_success "✅ Servidor de deploy respondendo na porta 9001"
             break
         elif curl -f -s "http://0.0.0.0:9001/" >/dev/null 2>&1; then
-            log_success "✅ Servidor de deploy respondendo na porta 9001 (0.0.0.0)"
+            log_success "�� Servidor de deploy respondendo na porta 9001 (0.0.0.0)"
             break
         fi
         sleep 2
@@ -1725,12 +1726,12 @@ complete_step
 # ============================================================================
 
 # Mostrar barra final de 100%
-echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[███████████████████████████████████████████��████████] 100%${RESET}"
+echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████████████████████████████████] 100%${RESET}"
 echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO!${RESET}\n"
 
 # Banner final épico
 echo -e "${BLUE}${BOLD}"
-echo "╔═════════════════════���════════════════════════════════════════════════════════════════╗"
+echo "╔═════���════════════════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                                    ║"
 echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCESSO! 🎉${BLUE}                       ║"
 echo "║                                                                                    ║"
