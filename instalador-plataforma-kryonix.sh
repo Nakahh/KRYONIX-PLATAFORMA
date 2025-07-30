@@ -70,13 +70,13 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═══════════���═════════════════════════════════════════════════════╗"
+    echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ��█╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     █���║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -203,7 +203,7 @@ echo -e "${PURPLE}${BOLD}🚀 Iniciando instalação completa da Plataforma KRYO
 next_step
 
 # ============================================================================
-# ETAPA 1: VERIFICAR DOCKER SWARM ⚙���
+# ETAPA 1: VERIFICAR DOCKER SWARM ⚙️
 # ============================================================================
 
 if ! docker info | grep -q "Swarm: active"; then
@@ -941,6 +941,21 @@ networks:
     external: true
 STACK_ADAPTATIVO_EOF
 
+log_info "Validando configuração do stack..."
+# Verificar se o YAML está válido
+if ! docker-compose -f docker-stack.yml config >/dev/null 2>&1; then
+    log_warning "YAML pode ter problemas, tentando deploy mesmo assim..."
+fi
+
+# Verificar se variáveis foram expandidas
+if grep -q '\$[A-Z_]*' docker-stack.yml; then
+    log_warning "Variáveis não expandidas detectadas no YAML"
+    log_info "Tentando corrigir automaticamente..."
+    # Substituir manualmente se necessário
+    sed -i "s/\$TRAEFIK_NETWORK/${TRAEFIK_NETWORK}/g" docker-stack.yml
+    sed -i "s/\${CERT_RESOLVER:-letsencryptresolver}/${CERT_RESOLVER:-letsencryptresolver}/g" docker-stack.yml
+fi
+
 log_info "Fazendo deploy do stack..."
 if docker stack deploy -c docker-stack.yml Kryonix 2>/dev/null; then
     log_info "Aguardando inicialização dos serviços..."
@@ -1001,7 +1016,7 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 11: CONFIGURAR GITHUB ACTIONS ���
+# ETAPA 11: CONFIGURAR GITHUB ACTIONS 🚀
 # ============================================================================
 
 processing_step
