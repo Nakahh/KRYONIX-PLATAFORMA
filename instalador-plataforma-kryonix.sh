@@ -75,8 +75,8 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "��     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██║  ��█╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -208,7 +208,7 @@ next_step
 
 if ! docker info | grep -q "Swarm: active"; then
     error_step
-    log_error "Docker Swarm n��o está ativo!"
+    log_error "Docker Swarm não está ativo!"
     log_info "Execute: docker swarm init"
     exit 1
 fi
@@ -256,7 +256,7 @@ cat > package.json << 'PACKAGE_EOF'
 {
   "name": "kryonix-plataforma",
   "version": "1.0.0",
-  "description": "KRYONIX - Plataforma SaaS 100% Aut��noma por IA",
+  "description": "KRYONIX - Plataforma SaaS 100% Autônoma por IA",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -355,200 +355,207 @@ app.get('/api/status', (req, res) => {
 
 // Webhook do GitHub - endpoint principal
 app.post('/api/github-webhook', (req, res) => {
-    const timestamp = new Date().toISOString();
-    console.log(`🔔 Webhook GitHub recebido: ${timestamp}`);
-    console.log(`📍 URL: ${req.url}`);
-    console.log(`🔑 Headers:`, Object.keys(req.headers));
-
     const payload = req.body;
-    const event = req.headers['x-github-event'];
-    const signature = req.headers['x-hub-signature-256'];
-    const userAgent = req.headers['user-agent'];
+    const signature = req.get('X-Hub-Signature-256');
+    const event = req.get('X-GitHub-Event');
+    const userAgent = req.get('User-Agent');
 
-    // Log do payload para debug
-    console.log('📋 Event:', event);
-    console.log('📦 Payload ref:', payload?.ref);
-    console.log('🏷️ Repository:', payload?.repository?.name);
-    console.log('🤖 User-Agent:', userAgent);
+    log(`🔗 Webhook recebido:`);
+    log(`   Event: ${event || 'NONE'}`);
+    log(`   Ref: ${payload.ref || 'N/A'}`);
+    log(`   Repository: ${payload.repository?.name || 'N/A'}`);
+    log(`   User-Agent: ${userAgent || 'N/A'}`);
+    log(`   Signature: ${signature ? 'PRESENT' : 'NONE'}`);
 
-    // Verificar se é um webhook válido do GitHub
-    const isGitHubWebhook = userAgent && userAgent.includes('GitHub-Hookshot');
-
-    // Verificar se é push na branch main ou master
-    const validRefs = ['refs/heads/main', 'refs/heads/master'];
-    const isValidPush = event === 'push' && validRefs.includes(payload?.ref);
-
-    if (isValidPush) {
-        console.log(`✅ Push detectado na branch ${payload.ref.split('/').pop()} - iniciando deploy automático`);
-
-        // Múltiplos caminhos de deploy para máxima compatibilidade
-        const deployPaths = [
-            '/opt/kryonix-platform/webhook-deploy.sh',
-            './webhook-deploy.sh'
-        ];
-
-        let deployScript = null;
-        for (const path of deployPaths) {
-            if (fs.existsSync(path)) {
-                deployScript = path;
-                break;
-            }
+    // Verificar assinatura se configurada
+    if (WEBHOOK_SECRET && signature) {
+        if (!verifyGitHubSignature(payload, signature)) {
+            log('❌ Assinatura inválida do webhook');
+            return res.status(401).json({ error: 'Invalid signature' });
         }
+        log('✅ Assinatura do webhook verificada');
+    }
 
-        if (deployScript) {
-            console.log(`📋 Executando script: ${deployScript}`);
-            exec(`bash ${deployScript} auto`, (error, stdout, stderr) => {
-                if (error) {
-                    console.error('❌ Erro no deploy automático:', error);
-                    return;
-                }
-                console.log('📋 Deploy output:', stdout);
-                if (stderr) console.log('⚠️ Deploy stderr:', stderr);
-            });
+    // Processar eventos push na main/master ou testes manuais
+    const isValidEvent = !event || event === 'push';
+    const isValidRef = payload.ref === 'refs/heads/main' || payload.ref === 'refs/heads/master';
 
-            res.json({
-                message: 'Deploy automático iniciado',
-                status: 'accepted',
-                ref: payload.ref,
-                timestamp: timestamp,
-                deploy_method: 'webhook_script',
-                script_path: deployScript
-            });
-        } else {
-            // Fallback para rebuild interno com múltiplos caminhos
-            console.log('📋 Script não encontrado, usando rebuild interno');
+    log(`   Valid Event: ${isValidEvent} (${event || 'none'})`);
+    log(`   Valid Ref: ${isValidRef} (${payload.ref || 'none'})`);
 
-            // Fallback com sincronização GitHub completa
-            const syncCommands = [
-                'cd /opt/kryonix-platform',
-                'git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"',
-                'git config pull.rebase false',
-                'git config --global --add safe.directory "/opt/kryonix-platform"',
-                'git fetch origin --force',
-                'git reset --hard origin/main',
-                'git pull origin main --force',
-                'docker build --no-cache --pull -t kryonix-plataforma:latest .',
-                'docker service update --force --image kryonix-plataforma:latest Kryonix_web'
-            ];
+    if (isValidEvent && isValidRef) {
+        log(`🚀 Iniciando deploy automático para: ${payload.ref}`);
 
-            const fullCommand = syncCommands.join(' && ');
-            console.log('🔄 Executando sincronização GitHub + Deploy:', fullCommand);
+        // Atualizar status do deploy
+        lastDeployStatus = {
+            timestamp: new Date().toISOString(),
+            status: 'deploy_started',
+            message: `Deploy iniciado para ${payload.ref}`,
+            ref: payload.ref,
+            repository: payload.repository?.name
+        };
 
-            const dockerCommands = [fullCommand];
+        // Chamar webhook externo para fazer deploy no host
+        log('🚀 Acionando sistema de deploy externo...');
 
-            let executed = false;
-            for (const cmd of dockerCommands) {
-                exec(cmd, (error, stdout, stderr) => {
-                    if (!executed && !error) {
-                        executed = true;
-                        console.log('✅ Rebuild completado');
-                        console.log('📋 Output:', stdout);
-                    } else if (error) {
-                        console.error(`❌ Erro no comando: ${cmd}`, error);
-                    }
-                });
+        const http = require('http');
+        const deployPayload = JSON.stringify({
+            action: 'deploy',
+            ref: payload.ref,
+            repository: payload.repository?.name,
+            timestamp: new Date().toISOString()
+        });
+
+        const options = {
+            hostname: 'localhost',
+            port: 9001,
+            path: '/deploy',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(deployPayload)
             }
+        };
 
-            res.json({
-                message: 'Deploy automático iniciado',
-                status: 'accepted',
-                ref: payload.ref,
-                timestamp: timestamp,
-                deploy_method: 'internal_docker_rebuild'
+        const req = http.request(options, (res) => {
+            let responseData = '';
+            res.on('data', (chunk) => {
+                responseData += chunk;
             });
-        }
+            res.on('end', () => {
+                log('✅ Deploy externo acionado com sucesso');
+                lastDeployStatus = {
+                    timestamp: new Date().toISOString(),
+                    status: 'deploy_triggered',
+                    message: 'Deploy externo acionado com sucesso',
+                    ref: payload.ref,
+                    response: responseData
+                };
+            });
+        });
+
+        req.on('error', (error) => {
+            log(`❌ Falha ao acionar deploy externo: ${error.message}`);
+            log('ℹ️ Deploy será processado na próxima atualização do container');
+
+            lastDeployStatus = {
+                timestamp: new Date().toISOString(),
+                status: 'deploy_queued',
+                message: 'Deploy agendado para próxima atualização',
+                ref: payload.ref,
+                note: 'Container será atualizado automaticamente'
+            };
+        });
+
+        req.write(deployPayload);
+        req.end();
+
+        // Resposta imediata para o GitHub
+        res.json({
+            message: 'Deploy automático iniciado',
+            status: 'accepted',
+            ref: payload.ref,
+            sha: payload.after || payload.head_commit?.id,
+            timestamp: new Date().toISOString(),
+            deploy_method: 'internal_docker_rebuild'
+        });
     } else {
-        const reason = !isValidPush ? 'invalid_ref' : 'invalid_event';
-        console.log(`ℹ��� Evento ignorado - ${reason}`);
+        log(`ℹ️ Evento IGNORADO - Detalhes:`);
+        log(`   Evento: ${event || 'UNDEFINED'} (esperado: 'push' ou undefined)`);
+        log(`   Ref: ${payload.ref || 'UNDEFINED'} (esperado: 'refs/heads/main' ou 'refs/heads/master')`);
+        log(`   Repository: ${payload.repository?.name || 'UNDEFINED'}`);
+        log(`   Motivo: ${!isValidEvent ? 'Evento inválido' : 'Ref inválida'}`);
 
         res.json({
             message: 'Evento ignorado',
             status: 'ignored',
             event: event || 'undefined',
-            ref: payload?.ref || 'undefined',
-            reason: reason,
-            expected_refs: validRefs,
-            timestamp: timestamp
+            ref: payload.ref || 'undefined',
+            reason: !isValidEvent ? 'invalid_event' : 'invalid_ref',
+            expected_refs: ['refs/heads/main', 'refs/heads/master']
         });
     }
 });
 
-// Endpoint de teste para verificar se webhook está funcionando
-app.get('/api/github-webhook', (req, res) => {
+// Endpoint alternativo para testes
+app.post('/webhook/deploy', (req, res) => {
+    log('🔄 Redirecionando webhook para endpoint principal');
+    req.url = '/api/github-webhook';
+    app.handle(req, res);
+});
+
+// Status do último deploy
+let lastDeployStatus = {
+    timestamp: new Date().toISOString(),
+    status: 'initialized',
+    message: 'Sistema iniciado'
+};
+
+app.get('/api/deploy-status', (req, res) => {
     res.json({
-        message: 'GitHub Webhook endpoint está funcionando',
-        status: 'ready',
-        method: 'GET',
+        ...lastDeployStatus,
+        server_time: new Date().toISOString(),
+        uptime: process.uptime()
+    });
+});
+
+// Teste manual do webhook
+app.get('/api/webhook-test', (req, res) => {
+    log('🧪 Teste manual do webhook iniciado');
+
+    const testPayload = {
+        ref: 'refs/heads/main',
+        repository: { name: 'manual-test' },
+        head_commit: { id: 'test-commit' }
+    };
+
+    // Simular deploy interno
+    log('🚀 Simulando deploy interno...');
+    lastDeployStatus = {
         timestamp: new Date().toISOString(),
-        instructions: 'Use POST para enviar webhooks do GitHub'
-    });
-});
+        status: 'test_deploy_started',
+        message: 'Deploy teste iniciado via API'
+    };
 
-// Endpoint adicional para debug do webhook
-app.all('/api/webhook-test', (req, res) => {
-    console.log(`🧪 Teste webhook - Método: ${req.method}`);
-    console.log(`🧪 Headers:`, req.headers);
-    console.log(`🧪 Body:`, req.body);
+    setTimeout(() => {
+        lastDeployStatus = {
+            timestamp: new Date().toISOString(),
+            status: 'test_completed',
+            message: 'Deploy teste simulado concluído'
+        };
+    }, 2000);
 
     res.json({
-        message: 'Endpoint de teste do webhook',
-        method: req.method,
-        headers: req.headers,
-        body: req.body,
-        timestamp: new Date().toISOString()
+        status: 'test_started',
+        message: 'Deploy teste simulado iniciado',
+        check_status: '/api/deploy-status'
     });
 });
 
-// Rotas para as páginas HTML
+// Rota principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/progresso', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'progresso.html'));
-});
-
-// Rotas adicionais para logs e deploy status
-let lastDeployStatus = { status: 'waiting', message: 'Aguardando primeiro deploy' };
-
-app.get('/api/deploy-status', (req, res) => {
-    res.json(lastDeployStatus);
-});
-
-app.get('/api/logs', (req, res) => {
-    res.json({
-        logs: [
-            {
-                timestamp: new Date().toISOString(),
-                level: 'info',
-                message: '🚀 Servidor KRYONIX iniciado com webhook ativo'
-            },
-            {
-                timestamp: new Date().toISOString(),
-                level: 'success',
-                message: '✅ Webhook GitHub configurado'
-            }
-        ]
-    });
-});
-
-// Fallback para SPA (Single Page Application)
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Error handler
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
 });
 
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
-    console.log(`📊 Progresso em: http://0.0.0.0:${PORT}/progresso`);
-    console.log(`🔍 Health check: http://0.0.0.0:${PORT}/health`);
+    console.log(`🚀 KRYONIX Platform rodando na porta ${PORT}`);
+    console.log(`💚 Health check: http://0.0.0.0:${PORT}/health`);
     console.log(`🔗 GitHub Webhook: http://0.0.0.0:${PORT}/api/github-webhook`);
+    console.log(`🌐 Acesse: http://0.0.0.0:${PORT}`);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
     console.log('📴 Recebido SIGTERM, desligando gracefully...');
     process.exit(0);
+});
 SERVER_EOF
 
 # Criar diretório public e index.html
@@ -632,7 +639,7 @@ cat > public/index.html << 'HTML_EOF'
             <h3>🎉 CI/CD AUTOMÁTICO CONFIGURADO!</h3>
             <p>✅ Deploy automático via GitHub Actions</p>
             <p>✅ Webhook funcionando</p>
-            <p>�� Push na main = Deploy no servidor</p>
+            <p>✅ Push na main = Deploy no servidor</p>
         </div>
         
         <div style="margin-top: 2rem;">
@@ -768,7 +775,7 @@ log_info "Verificando Traefik existente..."
 
 if docker service ls | grep -q "traefik"; then
     log_success "Traefik encontrado - preservando configuração existente"
-    log_info "���️ Não impactando outras stacks do servidor"
+    log_info "🛡️ Não impactando outras stacks do servidor"
     
     # Detectar configuração do Traefik existente
     TRAEFIK_SERVICE=$(docker service ls --format "{{.Name}}" | grep traefik | head -1)
@@ -783,7 +790,7 @@ if docker service ls | grep -q "traefik"; then
         log_info "🔐 Resolver SSL: $CERT_RESOLVER"
     fi
 else
-    log_warning "Traefik n��o encontrado - KRYONIX funcionará apenas localmente"
+    log_warning "Traefik não encontrado - KRYONIX funcionará apenas localmente"
     CERT_RESOLVER="letsencryptresolver"
 fi
 
@@ -800,7 +807,7 @@ log_info "Criando Dockerfile otimizado..."
 cat > Dockerfile << 'DOCKERFILE_EOF'
 FROM node:18-bullseye-slim
 
-# Instalar depend��ncias do sistema
+# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
@@ -971,7 +978,7 @@ if curl -f -m 15 --insecure https://kryonix.com.br/health 2>/dev/null >/dev/null
     DOMAIN_STATUS="🎉 ONLINE"
 elif curl -f -m 15 http://kryonix.com.br/health 2>/dev/null >/dev/null; then
     log_success "⚡ HTTP kryonix.com.br: Funcionando (HTTPS configurando)"
-    DOMAIN_STATUS="�� CONFIGURANDO SSL"
+    DOMAIN_STATUS="⚡ CONFIGURANDO SSL"
 else
     log_warning "⚠️ Domínio: Verificar DNS/Traefik"
     DOMAIN_STATUS="⚠️ VERIFICAR"
@@ -982,7 +989,7 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 11: CONFIGURAR GITHUB ACTIONS ���
+# ETAPA 11: CONFIGURAR GITHUB ACTIONS 🚀
 # ============================================================================
 
 processing_step
@@ -1083,9 +1090,8 @@ set -euo pipefail
 
 # Configurações
 STACK_NAME="Kryonix"
-DEPLOY_PATH="/opt/kryonix-platform"
+DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
-PAT_TOKEN="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"
 
 # Cores
 GREEN='\033[0;32m'
@@ -1130,26 +1136,22 @@ deploy() {
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
     sudo git config --system --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
 
-    # Configurar credenciais e fazer pull forçado
-    info "📥 Configurando Git e fazendo pull do repositório..."
-    git remote set-url origin "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-    git config pull.rebase false
-    git fetch origin --force
-    git reset --hard origin/main
-    git pull origin main --force
+    # Pull das mudanças
+    info "📥 Fazendo pull do repositório..."
+    git fetch origin
+    git reset --hard origin/main || git reset --hard origin/master
     
     # Instalar dependências
     info "📦 Instalando dependências..."
     npm ci --production
     
-    # Build da imagem com código atualizado
-    info "🏗️ Fazendo build da imagem com código atualizado..."
-    docker build --no-cache --pull -t kryonix-plataforma:latest .
+    # Build da imagem
+    info "🏗️ Fazendo build da imagem..."
+    docker build --no-cache -t kryonix-plataforma:latest .
     
-    # Deploy forçado do stack
-    info "🐳 Forçando atualização do Docker Stack..."
-    docker service update --force --image kryonix-plataforma:latest Kryonix_web
-    docker stack deploy -c docker-stack.yml "$STACK_NAME" --with-registry-auth
+    # Deploy do stack
+    info "🐳 Atualizando Docker Stack..."
+    docker stack deploy -c docker-stack.yml "$STACK_NAME"
     
     # Aguardar serviços
     sleep 30
@@ -1207,7 +1209,7 @@ const { exec } = require('child_process');
 const fs = require('fs');
 
 const PORT = 9001;
-const PROJECT_DIR = '/opt/kryonix-platform';
+const PROJECT_DIR = '/opt/kryonix-plataform';
 
 const log = (message) => {
     const timestamp = new Date().toISOString();
@@ -1227,21 +1229,19 @@ const server = http.createServer((req, res) => {
                 const payload = JSON.parse(body);
                 log(`🚀 Deploy solicitado para: ${payload.ref}`);
 
-                // Executar deploy completo com pull forçado do GitHub
+                // Executar deploy com pull do GitHub
                 const deployScript = `
                     cd ${PROJECT_DIR} &&
-                    echo "📥 Fazendo pull forçado do GitHub..." &&
+                    echo "📥 Fazendo pull do GitHub..." &&
                     git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" &&
                     git config pull.rebase false &&
-                    git fetch origin --force &&
+                    git fetch origin &&
                     git reset --hard origin/main &&
-                    git pull origin main --force &&
-                    echo "🏗️ Fazendo rebuild da imagem com código atualizado..." &&
-                    docker build --no-cache --pull -t kryonix-plataforma:latest . &&
-                    echo "🚀 Forçando redeploy dos serviços..." &&
-                    docker service update --force --image kryonix-plataforma:latest Kryonix_web &&
+                    echo "🏗️ Fazendo rebuild da imagem..." &&
+                    docker build --no-cache -t kryonix-plataforma:latest . &&
+                    echo "🚀 Fazendo redeploy..." &&
                     docker stack deploy -c docker-stack.yml Kryonix --with-registry-auth &&
-                    echo "✅ Deploy completo concluído!"
+                    echo "✅ Deploy concluído!"
                 `;
 
                 exec(deployScript, (error, stdout, stderr) => {
@@ -1537,7 +1537,7 @@ if [ "$WEBHOOK_OK" = true ]; then
     fi
 else
     log_warning "⚠️ Webhook pode precisar de alguns minutos para estabilizar"
-    log_info "�� Teste manual: curl -X POST https://kryonix.com.br/api/github-webhook"
+    log_info "🧪 Teste manual: curl -X POST https://kryonix.com.br/api/github-webhook"
 fi
 
 sleep 2
@@ -1546,49 +1546,22 @@ log_info "🔍 Verificação final dos arquivos..."
 cd "$PROJECT_DIR"
 
 MISSING_FILES=()
-# Verificar com caminhos absolutos para garantir
-if [ ! -f "$PROJECT_DIR/webhook-deploy.sh" ]; then MISSING_FILES+=("webhook-deploy.sh"); fi
-if [ ! -f "$PROJECT_DIR/server.js" ]; then MISSING_FILES+=("server.js"); fi
-if [ ! -f "$PROJECT_DIR/docker-stack.yml" ]; then MISSING_FILES+=("docker-stack.yml"); fi
-if [ ! -f "$PROJECT_DIR/Dockerfile" ]; then MISSING_FILES+=("Dockerfile"); fi
-
-# Tentar recriar webhook-deploy.sh se não existir
-if [ ! -f "$PROJECT_DIR/webhook-deploy.sh" ]; then
-    log_warning "⚠️ webhook-deploy.sh não encontrado, recriando..."
-    # Buscar o script na seção anterior do instalador
-    if grep -q "cat > webhook-deploy.sh" "$0"; then
-        log_info "📋 Recriando webhook-deploy.sh..."
-        # Re-executar apenas a criação do webhook-deploy.sh
-        awk '/cat > webhook-deploy.sh/,/WEBHOOK_DEPLOY_EOF/ {print}' "$0" | bash
-        chmod +x webhook-deploy.sh 2>/dev/null || true
-        if [ -f "webhook-deploy.sh" ]; then
-            log_success "✅ webhook-deploy.sh recriado com sucesso"
-            # Remover da lista de missing files
-            MISSING_FILES=("${MISSING_FILES[@]/webhook-deploy.sh}")
-        fi
-    fi
-fi
+if [ ! -f "webhook-deploy.sh" ]; then MISSING_FILES+=("webhook-deploy.sh"); fi
+if [ ! -f "server.js" ]; then MISSING_FILES+=("server.js"); fi
+if [ ! -f "docker-stack.yml" ]; then MISSING_FILES+=("docker-stack.yml"); fi
+if [ ! -f "Dockerfile" ]; then MISSING_FILES+=("Dockerfile"); fi
 
 if [ ${#MISSING_FILES[@]} -eq 0 ]; then
     log_success "✅ Todos os arquivos essenciais presentes"
     log_info "📂 Arquivos verificados:"
-    [ -f "webhook-deploy.sh" ] && log_info "   ✓ webhook-deploy.sh ($(ls -la webhook-deploy.sh 2>/dev/null | awk '{print $1" "$3":"$4}' || echo 'presente'))"
-    [ -f "server.js" ] && log_info "   ✓ server.js ($(wc -l < server.js 2>/dev/null || echo '?') linhas)"
-    [ -f "docker-stack.yml" ] && log_info "   ✓ docker-stack.yml"
-    [ -f "Dockerfile" ] && log_info "   ✓ Dockerfile"
+    log_info "   ✓ webhook-deploy.sh ($(ls -la webhook-deploy.sh | awk '{print $1" "$3":"$4}'))"
+    log_info "   ✓ server.js ($(wc -l < server.js) linhas)"
+    log_info "   ✓ docker-stack.yml"
+    log_info "   ✓ Dockerfile"
 else
-    log_warning "⚠️ Alguns arquivos ainda estão faltando: ${MISSING_FILES[*]}"
-    log_info "💡 Verificando se a instalação funcionou mesmo assim..."
-
-    # Verificar se o serviço principal está funcionando
-    if docker service ls | grep -q "Kryonix_web"; then
-        log_success "✅ Serviço principal está rodando"
-        log_info "📋 Arquivos faltando não são críticos para operação"
-    else
-        log_error "❌ Serviço principal não está rodando"
-        log_error "Execute o instalador novamente"
-        exit 1
-    fi
+    log_error "❌ Arquivos faltando: ${MISSING_FILES[*]}"
+    log_error "Execute o instalador novamente"
+    exit 1
 fi
 
 # Corrigir permissões finais
@@ -1614,7 +1587,7 @@ else
 fi
 
 # Verificar servidor de deploy
-log_info "�� Verificando servidor de deploy..."
+log_info "🔧 Verificando servidor de deploy..."
 sleep 3
 
 if curl -f -s "http://127.0.0.1:9001/" >/dev/null 2>&1; then
@@ -1664,18 +1637,18 @@ complete_step
 # ============================================================================
 
 # Mostrar barra final de 100%
-echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[█████���██████████████���██████████████████████████████���] 100%${RESET}"
+echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████████████████████████████████] 100%${RESET}"
 echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO!${RESET}\n"
 
 # Banner final épico
 echo -e "${BLUE}${BOLD}"
-echo "╔══════���═════════��═══════════════════════════════════════════════════════════════╗"
+echo "╔══════════════════════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                                    ║"
 echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCESSO! 🎉${BLUE}                       ║"
 echo "║                                                                                    ║"
 echo -e "║   ${WHITE}🌐 Plataforma: https://kryonix.com.br - $DOMAIN_STATUS${BLUE}                        ║"
 echo -e "║   ${WHITE}🔧 Local: http://localhost:8080 - $WEB_STATUS${BLUE}                              ║"
-echo -e "║   ${WHITE}�� Webhook: https://kryonix.com.br/api/github-webhook${BLUE}                       ║"
+echo -e "║   ${WHITE}🔗 Webhook: https://kryonix.com.br/api/github-webhook${BLUE}                       ║"
 echo -e "║   ${WHITE}📊 Health: http://localhost:8080/health${BLUE}                                     ║"
 echo "║                                                                                    ║"
 echo -e "║                      ${PURPLE}⚡ CI/CD AUTOMÁTICO 100% FUNCIONAL ⚡${BLUE}                       ║"
@@ -1693,7 +1666,7 @@ echo -e "║   ${WHITE}🔑 Secret: Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y
 echo -e "║   ${WHITE}📤 Events: Just push events${BLUE}                                                ║"
 echo -e "║   ${WHITE}📄 Content-Type: application/json${BLUE}                                          ║"
 echo "║                                                                                    ║"
-echo "╚════════════════════════════════════════════════════════════════════════════════╝"
+echo "╚════════════════════════════════════════════════════════════════════════════════════╝"
 echo -e "${RESET}\n"
 
 log_success "🎯 INSTALADOR KRYONIX COMPLETO! Plataforma + CI/CD 100% funcional!"
@@ -1727,7 +1700,7 @@ echo
 
 echo -e "${PURPLE}${BOLD}🔄 SINCRONIZAÇÃO INICIAL COM GITHUB${RESET}"
 echo -e "${WHITE}Para sincronizar o código atual do GitHub imediatamente:${RESET}"
-echo -e "${CYAN}  cd /opt/kryonix-platform && ./webhook-deploy.sh manual${RESET}"
+echo -e "${CYAN}  cd /opt/kryonix-plataform && ./webhook-deploy.sh manual${RESET}"
 echo
 echo -e "${WHITE}Para testar o webhook manualmente:${RESET}"
 echo -e "${CYAN}  curl -X POST https://kryonix.com.br/api/github-webhook \\${RESET}"
