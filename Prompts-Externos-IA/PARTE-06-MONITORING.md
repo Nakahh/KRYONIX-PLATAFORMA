@@ -389,8 +389,258 @@ inhibit_rules:
     equal: ['tenant_id']
 EOF
 
-# === REGRAS DE ALERTAS MOBILE ===
-echo "📱 Configurando alertas mobile..."
+# === SCRIPT IA PARA ANÁLISE DE MÉTRICAS MULTI-TENANT ===
+echo "🤖 Criando script IA para análise de métricas..."
+cat > monitoring/scripts/multi-tenant-metrics-ai.py << 'EOF'
+#!/usr/bin/env python3
+import requests
+import json
+import redis
+import psycopg2
+from datetime import datetime, timedelta
+import numpy as np
+import logging
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+class MultiTenantMetricsAI:
+    def __init__(self):
+        self.prometheus_url = "http://prometheus-kryonix:9090"
+        self.redis_client = redis.Redis(host='redis-kryonix', port=6379, decode_responses=True)
+
+    def collect_tenant_metrics(self):
+        """IA coleta métricas específicas por tenant"""
+        try:
+            # Métricas de requests por tenant e API
+            queries = {
+                'api_requests': 'sum(rate(kryonix_api_requests_total[5m])) by (tenant_id, api_module)',
+                'api_latency': 'histogram_quantile(0.95, rate(kryonix_request_duration_seconds_bucket[5m])) by (tenant_id)',
+                'api_errors': 'sum(rate(kryonix_api_errors_total[5m])) by (tenant_id, api_module)',
+                'payment_status': 'kryonix_tenant_payment_status',
+                'creation_success': 'kryonix_client_creation_success_total',
+                'creation_failures': 'kryonix_client_creation_failures_total'
+            }
+
+            metrics_data = {}
+            for name, query in queries.items():
+                metrics_data[name] = self.query_prometheus(query)
+
+            # Análise IA dos dados coletados
+            analysis = self.analyze_tenant_patterns(metrics_data)
+
+            # Salvar análise no Redis
+            self.redis_client.setex(
+                'ai_analysis:tenant_metrics',
+                3600,
+                json.dumps(analysis)
+            )
+
+            logger.info(f"Métricas coletadas para {len(analysis.get('tenants', {}))} tenants")
+            return analysis
+
+        except Exception as e:
+            logger.error(f"Erro ao coletar métricas: {e}")
+            return {}
+
+    def query_prometheus(self, query):
+        """Query Prometheus API"""
+        try:
+            response = requests.get(
+                f"{self.prometheus_url}/api/v1/query",
+                params={'query': query},
+                timeout=10
+            )
+
+            if response.status_code == 200:
+                return response.json()['data']['result']
+            else:
+                logger.error(f"Erro Prometheus: {response.status_code}")
+                return []
+
+        except Exception as e:
+            logger.error(f"Erro na query Prometheus: {e}")
+            return []
+
+    def analyze_tenant_patterns(self, metrics_data):
+        """IA analisa padrões de uso por tenant"""
+        analysis = {
+            'timestamp': datetime.now().isoformat(),
+            'tenants': {},
+            'api_modules_health': {},
+            'platform_summary': {},
+            'insights': [],
+            'recommendations': [],
+            'alerts': []
+        }
+
+        try:
+            # Analisar métricas de API por tenant
+            for metric in metrics_data.get('api_requests', []):
+                tenant_id = metric['metric'].get('tenant_id')
+                api_module = metric['metric'].get('api_module')
+                value = float(metric['value'][1])
+
+                if tenant_id not in analysis['tenants']:
+                    analysis['tenants'][tenant_id] = {
+                        'api_usage': {},
+                        'total_requests': 0,
+                        'active_modules': [],
+                        'health_score': 100,
+                        'status': 'healthy'
+                    }
+
+                analysis['tenants'][tenant_id]['api_usage'][api_module] = value
+                analysis['tenants'][tenant_id]['total_requests'] += value
+
+                if api_module not in analysis['tenants'][tenant_id]['active_modules']:
+                    analysis['tenants'][tenant_id]['active_modules'].append(api_module)
+
+            # Analisar saúde das APIs modulares
+            api_modules = ['crm', 'whatsapp', 'agendamento', 'financeiro', 'marketing', 'analytics', 'portal', 'whitelabel']
+            for module in api_modules:
+                analysis['api_modules_health'][module] = {
+                    'status': 'healthy',
+                    'total_requests': 0,
+                    'avg_latency': 0,
+                    'error_rate': 0
+                }
+
+                # Somar requests por módulo
+                for tenant_data in analysis['tenants'].values():
+                    module_requests = tenant_data.get('api_usage', {}).get(module, 0)
+                    analysis['api_modules_health'][module]['total_requests'] += module_requests
+
+            # Gerar insights da IA
+            analysis['insights'] = self.generate_ai_insights(analysis['tenants'], analysis['api_modules_health'])
+
+            # Gerar recomendações da IA
+            analysis['recommendations'] = self.generate_ai_recommendations(analysis['tenants'])
+
+            # Resumo da plataforma
+            analysis['platform_summary'] = {
+                'total_tenants': len(analysis['tenants']),
+                'active_tenants': len([t for t in analysis['tenants'].values() if t['total_requests'] > 0]),
+                'most_used_api': max(analysis['api_modules_health'].items(), key=lambda x: x[1]['total_requests'])[0] if analysis['api_modules_health'] else 'none',
+                'avg_health_score': round(sum(t['health_score'] for t in analysis['tenants'].values()) / len(analysis['tenants']), 2) if analysis['tenants'] else 100
+            }
+
+            return analysis
+
+        except Exception as e:
+            logger.error(f"Erro na análise: {e}")
+            return analysis
+
+    def generate_ai_insights(self, tenants_data, api_health):
+        """IA gera insights baseados nos dados"""
+        insights = []
+
+        try:
+            # Insight: Tenants mais ativos
+            most_active = sorted(
+                tenants_data.items(),
+                key=lambda x: x[1].get('total_requests', 0),
+                reverse=True
+            )[:3]
+
+            if most_active:
+                insights.append({
+                    'type': 'most_active_tenants',
+                    'data': [{'tenant_id': t[0], 'requests': t[1].get('total_requests', 0)} for t in most_active],
+                    'description': 'Top 3 tenants mais ativos por volume de requests'
+                })
+
+            # Insight: APIs mais utilizadas
+            most_used_apis = sorted(api_health.items(), key=lambda x: x[1]['total_requests'], reverse=True)[:3]
+
+            if most_used_apis:
+                insights.append({
+                    'type': 'most_used_apis',
+                    'data': [{'api': api, 'requests': data['total_requests']} for api, data in most_used_apis],
+                    'description': 'APIs com maior volume de uso na plataforma'
+                })
+
+            return insights
+
+        except Exception as e:
+            logger.error(f"Erro ao gerar insights: {e}")
+            return insights
+
+    def generate_ai_recommendations(self, tenants_data):
+        """IA gera recomendações de otimização"""
+        recommendations = []
+
+        try:
+            for tenant_id, data in tenants_data.items():
+                # Recomendação: Tenant inativo
+                if data.get('total_requests', 0) == 0:
+                    recommendations.append({
+                        'tenant_id': tenant_id,
+                        'type': 'tenant_inactive',
+                        'description': f'Tenant {tenant_id} sem atividade - verificar status',
+                        'priority': 'medium'
+                    })
+
+                # Recomendação: Poucos módulos ativos
+                active_modules = len(data.get('active_modules', []))
+                if 0 < active_modules < 3:
+                    recommendations.append({
+                        'tenant_id': tenant_id,
+                        'type': 'low_module_adoption',
+                        'description': f'Tenant {tenant_id} usa apenas {active_modules} módulos - oportunidade de upselling',
+                        'priority': 'low'
+                    })
+
+                # Recomendação: Alto volume de requests
+                if data.get('total_requests', 0) > 100:
+                    recommendations.append({
+                        'tenant_id': tenant_id,
+                        'type': 'high_usage',
+                        'description': f'Tenant {tenant_id} com alto volume - considerar upgrade de plano',
+                        'priority': 'high'
+                    })
+
+            return recommendations
+
+        except Exception as e:
+            logger.error(f"Erro ao gerar recomendações: {e}")
+            return recommendations
+
+def main():
+    ai_metrics = MultiTenantMetricsAI()
+
+    try:
+        logger.info("🤖 IA Multi-Tenant Metrics iniciando...")
+
+        # Coletar e analisar métricas
+        analysis = ai_metrics.collect_tenant_metrics()
+
+        if analysis:
+            # Salvar relatório
+            with open('/opt/kryonix/logs/multi-tenant-metrics-ai.json', 'w') as f:
+                json.dump(analysis, f, indent=2)
+
+            # Log summary
+            summary = analysis.get('platform_summary', {})
+            logger.info(f"📊 Tenants: {summary.get('total_tenants', 0)}, Ativos: {summary.get('active_tenants', 0)}, API mais usada: {summary.get('most_used_api', 'N/A')}")
+
+        logger.info("✅ IA Multi-Tenant Metrics executada com sucesso")
+
+    except Exception as e:
+        logger.error(f"❌ Erro na execução da IA: {e}")
+
+if __name__ == "__main__":
+    main()
+EOF
+
+chmod +x monitoring/scripts/multi-tenant-metrics-ai.py
+
+# Instalar dependências Python
+pip3 install requests psycopg2-binary numpy
+
+# === CONFIGURAR DASHBOARDS GRAFANA MULTI-TENANT ===
+echo "📊 Configurando dashboards Grafana por tenant..."
 cat > monitoring/prometheus/rules/mobile-alerts.yml << 'EOF'
 groups:
   - name: mobile_performance
