@@ -772,20 +772,34 @@ def main():
         # Monitorar performance
         metrics, alerts = cache_ai.monitor_performance()
         
-        # Relatório final
+        # Relatório final completo
         report = {
             'timestamp': datetime.now().isoformat(),
-            'patterns_analyzed': len(patterns),
+            'mobile_patterns_analyzed': len(patterns),
+            'sdk_clients_analyzed': len(sdk_patterns),
             'predictions_generated': len(predictions),
             'optimizations_made': len(optimizations),
             'performance_metrics': metrics,
-            'alerts': alerts
+            'creation_analytics': creation_analytics,
+            'tenant_health': tenant_health,
+            'alerts': alerts,
+            'multi_tenant_insights': {
+                'total_tenants': tenant_health.get('total_tenants', 0),
+                'active_tenants': tenant_health.get('active_tenants', 0),
+                'health_score': tenant_health.get('health_score', 0),
+                'avg_creation_time': f"{creation_analytics.get('average_creation_time', 0):.1f} min"
+            },
+            'sdk_insights': {
+                'total_api_calls': sum(data.get('api_calls_today', 0) for data in sdk_patterns.values()),
+                'active_sdk_clients': len([c for c in sdk_patterns.values() if c.get('subscription_status') == 'active']),
+                'most_popular_module': max([data.get('most_used_module', 'unknown') for data in sdk_patterns.values()], key=lambda x: list(sdk_patterns.values()).count(x)) if sdk_patterns else 'N/A'
+            }
         }
         
-        logger.info(f"Relatório IA Cache: {json.dumps(report, indent=2)}")
+        logger.info(f"Relatório IA Multi-Tenant: {json.dumps(report, indent=2)}")
         
         # Salvar relatório
-        with open('/opt/kryonix/logs/redis-ai-report.json', 'w') as f:
+        with open('/opt/kryonix/logs/redis-multitenant-ai-report.json', 'w') as f:
             json.dump(report, f, indent=2)
         
         # Enviar alertas via WhatsApp se necessário
@@ -794,10 +808,10 @@ def main():
             # Aqui seria implementado envio WhatsApp
             logger.warning(f"Alertas gerados: {alerts}")
         
-        logger.info("✅ IA Redis Cache executada com sucesso")
+        logger.info("✅ IA Redis Multi-Tenant executada com sucesso")
         
     except Exception as e:
-        logger.error(f"❌ Erro na execução da IA: {e}")
+        logger.error(f"❌ Erro na execução da IA Multi-Tenant: {e}")
 
 if __name__ == "__main__":
     main()
@@ -889,7 +903,7 @@ while true; do
     curl -X POST "https://evolution.kryonix.com.br/message/sendText" \
       -H "apikey: sua_chave_evolution_api_aqui" \
       -H "Content-Type: application/json" \
-      -d "{\"number\": \"5517981805327\", \"text\": \"���� ALERTA: Redis fora do ar!\\nTentando restart automático...\"}"
+      -d "{\"number\": \"5517981805327\", \"text\": \"🚨 ALERTA: Redis fora do ar!\\nTentando restart automático...\"}"
   fi
   
   # Verificar uso de memória
