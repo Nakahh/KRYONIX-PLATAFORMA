@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ��█████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -985,7 +985,7 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=$DOCKER_NETWORK"
 
-        # Configuração do servi��o
+        # Configuração do serviço
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
         # Router HTTP
@@ -1343,7 +1343,7 @@ deploy() {
             info "🏗️ Executando build com Yarn..."
             yarn build || {
                 warning "Build falhou, tentando scripts alternativos..."
-                yarn build:prod 2>/dev/null || yarn compile 2>/dev/null || info "ℹ��� Build personalizado não encontrado"
+                yarn build:prod 2>/dev/null || yarn compile 2>/dev/null || info "ℹ️ Build personalizado não encontrado"
             }
         fi
     else
@@ -1362,7 +1362,7 @@ deploy() {
     fi
 
     # Verificar e processar arquivos gerados
-    info "📁 Verificando arquivos de build gerados..."
+    info "�� Verificando arquivos de build gerados..."
 
     # Criar public se não existir
     mkdir -p public
@@ -1384,7 +1384,7 @@ deploy() {
         info "�� Build Next.js gerado"
         # Para Next.js, não precisamos copiar para public
     elif [ -d "out" ]; then
-        info "���� Export estático gerado em ./out/"
+        info "📁 Export estático gerado em ./out/"
         cp -r out/* public/ 2>/dev/null || true
     elif [ -d "_site" ]; then
         info "📁 Site estático gerado em ./_site/"
@@ -1635,7 +1635,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -1707,4 +1707,10 @@ echo ""
 echo -e "${WHITE}${BOLD}3. FLUXO COMPLETO DESENVOLVIMENTO → PRODUÇÃO:${RESET}"
 echo -e "   ${WHITE}📝 Edita código → 💾 Commit GitHub → 🔗 Webhook ativa${RESET}"
 echo -e "   ${WHITE}📥 Pull código → 📦 Install deps → 🏗️ Build → 🐳 Deploy${RESET}"
+echo ""
+echo -e "${WHITE}${BOLD}4. TEMPO DE DEPLOY AUTOMÁTICO:${RESET}"
+echo -e "   ${WHITE}• Webhook responde: ${CYAN}~2-5 segundos${RESET}"
+echo -e "   ${WHITE}• Deploy completo: ${CYAN}~60-90 segundos${RESET}"
+echo -e "   ${WHITE}• Site atualizado: ${CYAN}~30 segundos após deploy${RESET}"
+echo -e "   ${WHITE}• Total aproximado: ${CYAN}2-3 minutos${RESET}"
 echo ""
