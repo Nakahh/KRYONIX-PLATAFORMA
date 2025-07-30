@@ -82,9 +82,6 @@ networks:
   kryonix-net:
     external: true
     name: Kryonix-NET
-  traefik-public:
-    external: true
-    name: traefik-public
 
 configs:
   kryonix_monitor_config:
