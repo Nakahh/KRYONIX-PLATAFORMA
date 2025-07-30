@@ -65,7 +65,7 @@ app.get('/api/logs', (req, res) => {
       {
         timestamp: new Date().toISOString(),
         level: 'info',
-        message: '🚀 Servidor KRYONIX iniciado'
+        message: 'Servidor KRYONIX iniciado'
       },
       {
         timestamp: new Date().toISOString(),
@@ -99,7 +99,7 @@ app.post('/api/github-webhook', (req, res) => {
     console.log('✅ Push detectado na branch main - iniciando deploy automático');
 
     // Executar script de deploy
-    const deployScript = '/opt/kryonix-platform/webhook-deploy.sh';
+    const deployScript = '/opt/kryonix-plataform/webhook-deploy.sh';
 
     if (fs.existsSync(deployScript)) {
       exec(`bash ${deployScript} auto`, (error, stdout, stderr) => {
@@ -122,7 +122,7 @@ app.post('/api/github-webhook', (req, res) => {
       // Fallback para rebuild interno
       console.log('📋 Script não encontrado, usando rebuild interno');
 
-      exec('cd /opt/kryonix-platform && docker build -t kryonix-plataforma:latest . && docker service update --image kryonix-plataforma:latest Kryonix_web', (error, stdout, stderr) => {
+      exec('cd /opt/kryonix-plataform && docker build -t kryonix-plataforma:latest . && docker service update --image kryonix-plataforma:latest Kryonix_web', (error, stdout, stderr) => {
         if (error) {
           console.error('❌ Erro no rebuild:', error);
           return;
@@ -156,7 +156,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
+  console.log(`KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
   console.log(`📊 Progresso em: http://0.0.0.0:${PORT}/progresso`);
   console.log(`🔍 Health check: http://0.0.0.0:${PORT}/health`);
   console.log(`📱 Mobile-first otimizado para 80% usuários mobile`);
