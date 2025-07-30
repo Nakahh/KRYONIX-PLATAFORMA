@@ -79,14 +79,14 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔═════════════════════════════════════════════════════════���═══════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝���═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -342,7 +342,7 @@ validate_credentials() {
     if [ ! -z "$WEBHOOK_URL" ] && [[ "$WEBHOOK_URL" == https://* ]]; then
         log_success "✅ Webhook URL configurado: $WEBHOOK_URL"
     else
-        log_error "❌ Webhook URL inválido"
+        log_error "�� Webhook URL inválido"
         return 1
     fi
 
@@ -1367,32 +1367,31 @@ deploy() {
     # Criar public se não existir
     mkdir -p public
 
-    # Processar diferentes tipos de build do Builder.io
+    # Processar diferentes tipos de build
     if [ -d "dist" ]; then
-        info "📁 Builder.io gerou build em ./dist/"
+        info "📁 Build gerado em ./dist/"
         cp -r dist/* public/ 2>/dev/null || true
-        # Verificar se há arquivos específicos do Builder.io
         if [ -f "dist/index.html" ]; then
             cp dist/index.html public/ 2>/dev/null || true
         fi
     elif [ -d "build" ]; then
-        info "📁 Builder.io gerou build em ./build/"
+        info "📁 Build gerado em ./build/"
         cp -r build/* public/ 2>/dev/null || true
         if [ -f "build/index.html" ]; then
             cp build/index.html public/ 2>/dev/null || true
         fi
     elif [ -d ".next" ]; then
-        info "📁 Builder.io gerou build Next.js"
+        info "📁 Build Next.js gerado"
         # Para Next.js, não precisamos copiar para public
     elif [ -d "out" ]; then
-        info "📁 Builder.io gerou export estático em ./out/"
+        info "📁 Export estático gerado em ./out/"
         cp -r out/* public/ 2>/dev/null || true
     elif [ -d "_site" ]; then
-        info "📁 Builder.io gerou site estático em ./_site/"
+        info "📁 Site estático gerado em ./_site/"
         cp -r _site/* public/ 2>/dev/null || true
     fi
 
-    # Verificar se há arquivos CSS/JS específicos do Builder.io
+    # Verificar se há arquivos CSS/JS adicionais
     for dir in "assets" "static" "css" "js"; do
         if [ -d "$dir" ] && [ ! -d "public/$dir" ]; then
             info "📁 Copiando $dir para public..."
@@ -1637,7 +1636,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════��═════���═════════��══════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
