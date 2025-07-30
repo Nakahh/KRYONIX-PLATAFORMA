@@ -241,7 +241,322 @@ cat > messaging/rabbitmq/definitions/multi-tenant-definitions.json << 'EOF'
 }
 EOF
 
-# === DOCKER COMPOSE RABBITMQ ===
+# === SCRIPT CRIAÇÃO AUTOMÁTICA DE CLIENTES ===
+echo "🤖 Criando script para criação automática de clientes..."
+cat > messaging/scripts/client-creation/create-client-queues.py << 'EOF'
+#!/usr/bin/env python3
+import pika
+import requests
+import json
+import sys
+from typing import List, Dict
+import time
+
+class KryonixRabbitMQClientManager:
+    def __init__(self):
+        self.connection = None
+        self.channel = None
+
+        # Filas por módulo contratado
+        self.filas_por_modulo = {
+            'crm': ['leads.create', 'leads.update', 'contatos.sync', 'campanhas.execute'],
+            'whatsapp': ['messages.send', 'messages.receive', 'automacao.trigger', 'evolution.webhook'],
+            'agendamento': ['agenda.create', 'agenda.update', 'lembretes.send', 'confirmacao.request'],
+            'financeiro': ['cobranca.create', 'pagamento.process', 'fatura.send', 'relatorio.generate'],
+            'marketing': ['campanhas.create', 'emails.send', 'automacao.execute', 'leads.qualify'],
+            'analytics': ['dados.collect', 'relatorios.generate', 'insights.process', 'dashboards.update'],
+            'portal': ['clientes.access', 'documentos.share', 'notificacoes.send', 'suporte.create'],
+            'whitelabel': ['branding.update', 'tema.apply', 'apps.rebuild', 'dominios.configure']
+        }
+
+    def connect(self):
+        """Conecta ao RabbitMQ master"""
+        try:
+            connection_params = pika.ConnectionParameters(
+                host='localhost',
+                port=5672,
+                virtual_host='/kryonix-master',
+                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456'),
+                heartbeat=300,
+                connection_attempts=5,
+                retry_delay=2
+            )
+
+            self.connection = pika.BlockingConnection(connection_params)
+            self.channel = self.connection.channel()
+
+            print("✅ Conectado ao RabbitMQ master")
+            return True
+
+        except Exception as e:
+            print(f"❌ Erro ao conectar: {e}")
+            return False
+
+    def create_client_vhost(self, cliente_id: str) -> bool:
+        """Cria VHost exclusivo para o cliente"""
+        try:
+            # Criar VHost via API Management
+            import requests
+            import base64
+
+            auth = base64.b64encode(b'kryonix:Vitor@123456').decode('ascii')
+            headers = {'Authorization': f'Basic {auth}'}
+
+            vhost_name = f'/cliente_{cliente_id}'
+
+            # Criar VHost
+            response = requests.put(
+                f'http://localhost:15672/api/vhosts/{vhost_name.replace("/", "%2F")}',
+                headers=headers
+            )
+
+            if response.status_code in [201, 204]:
+                print(f"✅ VHost criado: {vhost_name}")
+
+                # Dar permissões para o usuário kryonix
+                permissions = {
+                    "configure": ".*",
+                    "write": ".*",
+                    "read": ".*"
+                }
+
+                response = requests.put(
+                    f'http://localhost:15672/api/permissions/{vhost_name.replace("/", "%2F")}/kryonix',
+                    headers=headers,
+                    json=permissions
+                )
+
+                if response.status_code in [201, 204]:
+                    print(f"✅ Permissões configuradas para {vhost_name}")
+                    return True
+
+            return False
+
+        except Exception as e:
+            print(f"❌ Erro ao criar VHost: {e}")
+            return False
+
+    def create_complete_client(self, cliente_id: str, modulos_contratados: List[str]) -> bool:
+        """Cria infraestrutura completa de mensageria para o cliente"""
+        print(f"🚀 Criando infraestrutura RabbitMQ para cliente: {cliente_id}")
+        print(f"📦 Módulos contratados: {', '.join(modulos_contratados)}")
+
+        steps = [
+            ("Criando VHost exclusivo", lambda: self.create_client_vhost(cliente_id)),
+            ("Criando exchanges", lambda: self.create_client_exchanges(cliente_id)),
+            ("Criando filas por módulo", lambda: self.create_client_queues(cliente_id, modulos_contratados)),
+            ("Configurando roteamento", lambda: self.setup_client_routing(cliente_id))
+        ]
+
+        for step_name, step_func in steps:
+            print(f"⚙️ {step_name}...")
+            if not step_func():
+                print(f"❌ Falhou: {step_name}")
+                return False
+
+        print(f"🎉 Infraestrutura criada com sucesso para cliente: {cliente_id}")
+        return True
+
+    def create_client_exchanges(self, cliente_id: str) -> bool:
+        """Cria exchanges específicos do cliente"""
+        try:
+            vhost_name = f'/cliente_{cliente_id}'
+
+            # Conectar ao VHost do cliente
+            client_params = pika.ConnectionParameters(
+                host='localhost',
+                port=5672,
+                virtual_host=vhost_name,
+                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456')
+            )
+
+            client_connection = pika.BlockingConnection(client_params)
+            client_channel = client_connection.channel()
+
+            # Exchanges principais
+            exchanges = [
+                ('cliente.direct', 'direct'),
+                ('cliente.topic', 'topic'),
+                ('cliente.fanout', 'fanout'),
+                ('mobile.priority', 'direct'),
+                ('sdk.integration', 'topic'),
+                ('offline.sync', 'topic'),
+                ('webhook.events', 'topic')
+            ]
+
+            for exchange_name, exchange_type in exchanges:
+                client_channel.exchange_declare(
+                    exchange=f"{cliente_id}.{exchange_name}",
+                    exchange_type=exchange_type,
+                    durable=True
+                )
+                print(f"✅ Exchange criado: {cliente_id}.{exchange_name}")
+
+            client_connection.close()
+            return True
+
+        except Exception as e:
+            print(f"❌ Erro ao criar exchanges: {e}")
+            return False
+
+    def create_client_queues(self, cliente_id: str, modulos_contratados: List[str]) -> bool:
+        """Cria filas específicas do cliente conforme módulos contratados"""
+        try:
+            vhost_name = f'/cliente_{cliente_id}'
+
+            # Conectar ao VHost do cliente
+            client_params = pika.ConnectionParameters(
+                host='localhost',
+                port=5672,
+                virtual_host=vhost_name,
+                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456')
+            )
+
+            client_connection = pika.BlockingConnection(client_params)
+            client_channel = client_connection.channel()
+
+            # Filas para cada módulo contratado
+            for modulo in modulos_contratados:
+                if modulo in self.filas_por_modulo:
+                    for fila_acao in self.filas_por_modulo[modulo]:
+                        queue_name = f"cliente_{cliente_id}.{modulo}.{fila_acao}"
+
+                        # Argumentos da fila baseados no tipo
+                        queue_args = {
+                            'x-message-ttl': 3600000,  # 1 hora
+                            'x-max-priority': 10,
+                            'x-queue-type': 'quorum'
+                        }
+
+                        # Filas específicas para mobile têm prioridade alta
+                        if any(keyword in fila_acao for keyword in ['send', 'notification', 'alert']):
+                            queue_args['x-max-priority'] = 10
+                            queue_args['x-message-ttl'] = 300000  # 5 minutos
+
+                        client_channel.queue_declare(
+                            queue=queue_name,
+                            durable=True,
+                            arguments=queue_args
+                        )
+
+                        # Bind da fila ao exchange apropriado
+                        routing_key = f"{modulo}.{fila_acao}"
+                        client_channel.queue_bind(
+                            exchange=f"{cliente_id}.cliente.topic",
+                            queue=queue_name,
+                            routing_key=routing_key
+                        )
+
+                        print(f"✅ Fila criada: {queue_name}")
+
+            # Filas especiais para mobile/PWA
+            mobile_queues = [
+                f"cliente_{cliente_id}.mobile.notifications.priority",
+                f"cliente_{cliente_id}.mobile.sync.offline",
+                f"cliente_{cliente_id}.mobile.pwa.updates",
+                f"cliente_{cliente_id}.sdk.method.calls",
+                f"cliente_{cliente_id}.webhook.evolution.api"
+            ]
+
+            for queue_name in mobile_queues:
+                mobile_args = {
+                    'x-message-ttl': 300000,  # 5 minutos
+                    'x-max-priority': 10,
+                    'x-queue-type': 'quorum'
+                }
+
+                if 'offline' in queue_name:
+                    mobile_args['x-queue-type'] = 'stream'
+                    mobile_args['x-message-ttl'] = 86400000  # 24 horas
+
+                client_channel.queue_declare(
+                    queue=queue_name,
+                    durable=True,
+                    arguments=mobile_args
+                )
+                print(f"✅ Fila mobile criada: {queue_name}")
+
+            client_connection.close()
+            return True
+
+        except Exception as e:
+            print(f"❌ Erro ao criar filas: {e}")
+            return False
+
+    def setup_client_routing(self, cliente_id: str) -> bool:
+        """Configura roteamento inteligente para o cliente"""
+        try:
+            vhost_name = f'/cliente_{cliente_id}'
+
+            client_params = pika.ConnectionParameters(
+                host='localhost',
+                port=5672,
+                virtual_host=vhost_name,
+                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456')
+            )
+
+            client_connection = pika.BlockingConnection(client_params)
+            client_channel = client_connection.channel()
+
+            # Bindings para routing inteligente
+            routing_patterns = [
+                # Mobile priority
+                (f"{cliente_id}.mobile.priority", f"cliente_{cliente_id}.mobile.notifications.priority", "notification.*"),
+                (f"{cliente_id}.mobile.priority", f"cliente_{cliente_id}.mobile.pwa.updates", "pwa.*"),
+
+                # SDK integration
+                (f"{cliente_id}.sdk.integration", f"cliente_{cliente_id}.sdk.method.calls", "sdk.call.*"),
+
+                # Webhook routing
+                (f"{cliente_id}.webhook.events", f"cliente_{cliente_id}.webhook.evolution.api", "evolution.*"),
+
+                # Offline sync
+                (f"{cliente_id}.offline.sync", f"cliente_{cliente_id}.mobile.sync.offline", "sync.*")
+            ]
+
+            for exchange, queue, routing_key in routing_patterns:
+                client_channel.queue_bind(
+                    exchange=exchange,
+                    queue=queue,
+                    routing_key=routing_key
+                )
+                print(f"✅ Routing configurado: {exchange} -> {queue} ({routing_key})")
+
+            client_connection.close()
+            return True
+
+        except Exception as e:
+            print(f"❌ Erro ao configurar routing: {e}")
+            return False
+
+def main():
+    if len(sys.argv) < 3:
+        print("Uso: python create-client-queues.py <cliente_id> <modulos_separados_por_virgula>")
+        print("Exemplo: python create-client-queues.py siqueiracampos crm,whatsapp,agendamento")
+        sys.exit(1)
+
+    cliente_id = sys.argv[1]
+    modulos = sys.argv[2].split(',')
+
+    manager = KryonixRabbitMQClientManager()
+
+    if not manager.connect():
+        sys.exit(1)
+
+    success = manager.create_complete_client(cliente_id, modulos)
+
+    if manager.connection:
+        manager.connection.close()
+
+    sys.exit(0 if success else 1)
+
+if __name__ == "__main__":
+    main()
+EOF
+
+chmod +x messaging/scripts/client-creation/create-client-queues.py
+
+# === DOCKER COMPOSE MULTI-TENANT ===
 echo "🐳 Configurando Docker Compose..."
 cat > messaging/docker-compose.yml << 'EOF'
 version: '3.8'
@@ -453,7 +768,7 @@ class AIConsumer {
 
     async processNLP(data) {
         try {
-            console.log('���� Processing NLP:', data.text);
+            console.log('🧠 Processing NLP:', data.text);
             const response = await axios.post(`${OLLAMA_URL}/api/generate`, {
                 model: 'llama2',
                 prompt: data.text,
