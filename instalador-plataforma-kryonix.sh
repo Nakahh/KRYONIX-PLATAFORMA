@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚═���═══════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -718,7 +718,7 @@ if [ ! -f "public/index.html" ]; then
     <script>
         fetch('/api/status')
             .then(response => response.json())
-            .then(data => console.log('✅ Plataforma KRYONIX funcionando:', data))
+            .then(data => console.log('��� Plataforma KRYONIX funcionando:', data))
             .catch(err => console.log('⚠️ API carregando...'));
     </script>
 </body>
@@ -1338,13 +1338,93 @@ deploy() {
     # Limpar arquivo de backup
     rm -f package.json.old 2>/dev/null || true
 
+    # Verificações finais antes do build Docker
+    info "🔍 Verificações finais antes do build..."
+
+    # Verificar se package.json existe e é válido
+    if [ ! -f "package.json" ]; then
+        error "❌ package.json não encontrado!"
+        return 1
+    fi
+
+    # Verificar se node_modules foi instalado corretamente
+    if [ ! -d "node_modules" ]; then
+        warning "⚠️ node_modules não encontrado, tentando instalação de emergência..."
+        npm install --force || yarn install --force || {
+            error "❌ Falha na instalação de emergência das dependências"
+            return 1
+        }
+    fi
+
+    # Verificar se há arquivo principal (server.js, index.js, app.js)
+    MAIN_FILE=""
+    if [ -f "server.js" ]; then
+        MAIN_FILE="server.js"
+    elif [ -f "index.js" ]; then
+        MAIN_FILE="index.js"
+    elif [ -f "app.js" ]; then
+        MAIN_FILE="app.js"
+    else
+        warning "⚠️ Arquivo principal não detectado, usando server.js como padrão"
+        MAIN_FILE="server.js"
+    fi
+    info "📄 Arquivo principal detectado: $MAIN_FILE"
+
+    # Verificar se public/index.html existe
+    if [ ! -f "public/index.html" ]; then
+        warning "⚠️ public/index.html não encontrado, criando versão mínima..."
+        mkdir -p public
+        cat > public/index.html << 'HTML_EOF'
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRYONIX Platform - Builder.io</title>
+</head>
+<body>
+    <h1>🚀 KRYONIX Platform</h1>
+    <p>Plataforma Builder.io carregando...</p>
+    <script>
+        console.log('KRYONIX Platform - Builder.io Ready');
+    </script>
+</body>
+</html>
+HTML_EOF
+        info "✅ Arquivo index.html mínimo criado"
+    fi
+
     # Limpar imagem antiga para garantir rebuild completo
-    info "🧹 Limpando imagem antiga..."
+    info "🧹 Limpando imagem Docker antiga..."
     docker rmi kryonix-plataforma:latest 2>/dev/null || true
 
-    # Build da imagem
-    info "🏗️ Fazendo build da nova imagem..."
-    docker build --no-cache -t kryonix-plataforma:latest .
+    # Build da imagem com verificação
+    info "🏗️ Fazendo build da nova imagem Docker..."
+    if ! docker build --no-cache -t kryonix-plataforma:latest . ; then
+        error "❌ Falha no build da imagem Docker"
+
+        # Tentar build de emergência com Dockerfile mínimo
+        warning "🔄 Tentando build de emergência..."
+        cat > Dockerfile.emergency << 'DOCKERFILE_EMERGENCY_EOF'
+FROM node:18-bullseye-slim
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --production || yarn install --production
+COPY . .
+EXPOSE 8080
+CMD ["node", "server.js"]
+DOCKERFILE_EMERGENCY_EOF
+
+        if docker build -f Dockerfile.emergency -t kryonix-plataforma:latest . ; then
+            info "✅ Build de emergência bem-sucedido"
+            rm -f Dockerfile.emergency
+        else
+            error "❌ Build de emergência falhou"
+            return 1
+        fi
+    else
+        info "✅ Build da imagem concluído com sucesso"
+    fi
 
     # Tentar update primeiro (mais rápido)
     info "🔄 Tentando update do serviço..."
@@ -1490,7 +1570,7 @@ echo -e "${CYAN}${BOLD}�� STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} $WEB_STATUS"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK (detectada automaticamente)"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Traefik:${RESET} $([ "$TRAEFIK_FOUND" = true ] && echo "��� ENCONTRADO ($TRAEFIK_SERVICE)" || echo "⚠️ NÃO ENCONTRADO")"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Traefik:${RESET} $([ "$TRAEFIK_FOUND" = true ] && echo "✅ ENCONTRADO ($TRAEFIK_SERVICE)" || echo "⚠️ NÃO ENCONTRADO")"
 echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub CI/CD:${RESET} ✅ CONFIGURADO"
 echo ""
 echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
