@@ -10,7 +10,6 @@ services:
       - PORT=8080
     networks:
       - kryonix-net
-      - traefik-public
     deploy:
       replicas: 1
       restart_policy:
