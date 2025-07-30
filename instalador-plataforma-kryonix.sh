@@ -1322,8 +1322,8 @@ deploy() {
         DEPENDENCIES_CHANGED=true
     fi
 
-    # Sempre instalar dependências completas (Builder.io pode ter adicionado novas)
-    info "📦 Instalando/Atualizando TODAS as dependências (Builder.io)..."
+    # Sempre instalar dependências completas (podem ter sido adicionadas novas)
+    info "📦 Instalando/Atualizando TODAS as dependências..."
 
     # Limpar cache e node_modules para garantir instalação limpa
     if [ "$DEPENDENCIES_CHANGED" = true ]; then
