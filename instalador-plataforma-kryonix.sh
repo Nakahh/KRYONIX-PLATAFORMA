@@ -81,8 +81,8 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔════���════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ��█╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══��█╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -772,7 +772,7 @@ if [ ! -f "public/index.html" ]; then
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327
+            ��� https://kryonix.com.br | 📱 +55 17 98180-5327
         </p>
     </div>
 
@@ -1316,7 +1316,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════��═══════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -1350,4 +1350,12 @@ echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - De
 echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada e funcionando!${RESET}"
 echo -e "${PURPLE}🚀 Push no GitHub = Deploy automático ativado!${RESET}"
+echo ""
+echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO DO WEBHOOK GITHUB (se necessário):${RESET}"
+echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
+echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
+echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
+echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
+echo ""
+echo -e "${BLUE}${BOLD}🔗 Configurar em: GitHub → Settings → Webhooks → Add webhook${RESET}"
 echo ""
