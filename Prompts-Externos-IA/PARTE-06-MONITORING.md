@@ -822,8 +822,10 @@ sleep 30
 curl -s http://localhost:9090/-/healthy && echo "✅ Prometheus OK" || echo "❌ Prometheus ERRO"
 curl -s http://localhost:3000/api/health && echo "✅ Grafana OK" || echo "❌ Grafana ERRO"
 
-# === CONFIGURAR DATASOURCE GRAFANA ===
-echo "🔌 Configurando datasource..."
+# === CONFIGURAÇÕES FINAIS DE DATASOURCES GRAFANA ===
+echo "🔌 Configurando todos os datasources Grafana..."
+
+# Prometheus Datasource Principal
 curl -X POST \
   http://kryonix:Vitor@123456@localhost:3000/api/datasources \
   -H 'Content-Type: application/json' \
@@ -835,30 +837,283 @@ curl -X POST \
     "isDefault": true
   }'
 
-# === DASHBOARD MOBILE ===
-echo "📱 Criando dashboard mobile..."
+# PostgreSQL Datasource
+curl -X POST \
+  http://kryonix:Vitor@123456@localhost:3000/api/datasources \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "PostgreSQL-KRYONIX",
+    "type": "postgres",
+    "url": "postgresql-kryonix:5432",
+    "access": "proxy",
+    "database": "kryonix_master",
+    "user": "kryonix",
+    "secureJsonData": {
+      "password": "Vitor@123456"
+    }
+  }'
+
+# Redis Datasource
+curl -X POST \
+  http://kryonix:Vitor@123456@localhost:3000/api/datasources \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "Redis-KRYONIX",
+    "type": "redis-datasource",
+    "url": "redis://redis-kryonix:6379",
+    "access": "proxy"
+  }'
+
+# === CRIAR DASHBOARDS COMPLETOS ===
+echo "📊 Criando dashboards multi-tenant completos..."
+
+# Dashboard Principal Multi-Tenant Overview
+cat > monitoring/dashboards/kryonix-overview.json << 'EOF'
+{
+  "dashboard": {
+    "id": null,
+    "title": "KRYONIX Multi-Tenant Overview",
+    "tags": ["kryonix", "multi-tenant", "overview"],
+    "style": "dark",
+    "timezone": "America/Sao_Paulo",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Tenants Ativos",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(count by (tenant_id) (kryonix_tenant_payment_status{status=\"paid\"}))",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 10},
+                {"color": "green", "value": 20}
+              ]
+            },
+            "unit": "short"
+          }
+        },
+        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Status das 8 APIs",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "up{job=~\"kryonix-api.*\"}",
+            "refId": "A",
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {"displayMode": "color-background"},
+            "mappings": [
+              {
+                "options": {
+                  "0": {"color": "red", "text": "OFFLINE"},
+                  "1": {"color": "green", "text": "ONLINE"}
+                },
+                "type": "value"
+              }
+            ]
+          }
+        },
+        "gridPos": {"h": 12, "w": 12, "x": 6, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Performance Mobile (FPS)",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "avg(mobile_fps_average) by (tenant_id)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "pointSize": 3,
+              "fillOpacity": 20
+            },
+            "min": 0,
+            "max": 60,
+            "unit": "fps"
+          }
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      }
+    ],
+    "time": {"from": "now-1h", "to": "now"},
+    "refresh": "30s"
+  }
+}
+EOF
+
+# Importar dashboard
 curl -X POST \
   http://kryonix:Vitor@123456@localhost:3000/api/dashboards/db \
   -H 'Content-Type: application/json' \
-  -d '{
-    "dashboard": {
-      "title": "KRYONIX Mobile Overview",
-      "panels": [
-        {
-          "title": "Usuários Mobile Online",
-          "type": "stat",
-          "targets": [{"expr": "mobile_users_active_total"}],
-          "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0}
+  -d @monitoring/dashboards/kryonix-overview.json
+
+# Dashboard APIs Health
+cat > monitoring/dashboards/apis-health.json << 'EOF'
+{
+  "dashboard": {
+    "id": null,
+    "title": "KRYONIX APIs Health Dashboard",
+    "tags": ["kryonix", "apis", "health"],
+    "style": "dark",
+    "panels": [
+      {
+        "id": 1,
+        "title": "CRM API",
+        "type": "stat",
+        "targets": [{"expr": "up{job=\"kryonix-api-crm\"}", "refId": "A"}],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {
+                "options": {
+                  "0": {"text": "OFFLINE"},
+                  "1": {"text": "ONLINE"}
+                },
+                "type": "value"
+              }
+            ]
+          }
         },
-        {
-          "title": "Performance Mobile (FPS)",
-          "type": "graph", 
-          "targets": [{"expr": "mobile_fps_average"}],
-          "gridPos": {"h": 8, "w": 12, "x": 6, "y": 0}
-        }
-      ]
+        "gridPos": {"h": 4, "w": 3, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "WhatsApp API",
+        "type": "stat",
+        "targets": [{"expr": "up{job=\"kryonix-api-whatsapp\"}", "refId": "A"}],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {
+                "options": {
+                  "0": {"text": "OFFLINE"},
+                  "1": {"text": "ONLINE"}
+                },
+                "type": "value"
+              }
+            ]
+          }
+        },
+        "gridPos": {"h": 4, "w": 3, "x": 3, "y": 0}
+      }
+    ],
+    "time": {"from": "now-1h", "to": "now"},
+    "refresh": "30s"
+  }
+}
+EOF
+
+# Importar dashboard APIs
+curl -X POST \
+  http://kryonix:Vitor@123456@localhost:3000/api/dashboards/db \
+  -H 'Content-Type: application/json' \
+  -d @monitoring/dashboards/apis-health.json
+
+# === SCRIPTS DE AUTOMAÇÃO ===
+echo "🤖 Criando scripts de automação..."
+
+# Script de health checks automatizados
+cat > monitoring/scripts/health-checks.py << 'EOF'
+#!/usr/bin/env python3
+import requests
+import logging
+import json
+from datetime import datetime
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def check_all_apis():
+    apis = {
+        'prometheus': 'http://localhost:9090/-/healthy',
+        'grafana': 'http://localhost:3000/api/health',
+        'alertmanager': 'http://localhost:9093/-/healthy'
     }
-  }'
+
+    results = {}
+    for name, url in apis.items():
+        try:
+            response = requests.get(url, timeout=5)
+            results[name] = {
+                'status': 'healthy' if response.status_code == 200 else 'unhealthy',
+                'response_time': response.elapsed.total_seconds(),
+                'timestamp': datetime.now().isoformat()
+            }
+            logger.info(f"✅ {name}: OK ({response.elapsed.total_seconds():.2f}s)")
+        except Exception as e:
+            results[name] = {
+                'status': 'error',
+                'error': str(e),
+                'timestamp': datetime.now().isoformat()
+            }
+            logger.error(f"❌ {name}: {e}")
+
+    # Salvar resultados
+    with open('/opt/kryonix/logs/health-check.json', 'w') as f:
+        json.dump(results, f, indent=2)
+
+    return results
+
+if __name__ == "__main__":
+    check_all_apis()
+EOF
+
+chmod +x monitoring/scripts/health-checks.py
+
+# Script de backup automático
+cat > monitoring/scripts/backup-configs.sh << 'EOF'
+#!/bin/bash
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR="/opt/kryonix/backups/monitoring"
+
+echo "💾 Iniciando backup do monitoramento..."
+mkdir -p ${BACKUP_DIR}
+
+# Backup configurações
+tar -czf ${BACKUP_DIR}/monitoring_configs_${TIMESTAMP}.tar.gz \
+  monitoring/prometheus/ \
+  monitoring/grafana/ \
+  monitoring/alertmanager/ \
+  monitoring/scripts/
+
+# Backup banco Grafana
+docker exec postgresql-kryonix pg_dump -U grafana grafana_mobile > ${BACKUP_DIR}/grafana_db_${TIMESTAMP}.sql
+
+echo "✅ Backup concluído: ${BACKUP_DIR}/monitoring_configs_${TIMESTAMP}.tar.gz"
+EOF
+
+chmod +x monitoring/scripts/backup-configs.sh
+
+# === CONFIGURAR CRON JOBS ===
+echo "⏰ Configurando automação..."
+(crontab -l 2>/dev/null; cat << 'EOF'
+# KRYONIX Monitoring Automation
+*/5 * * * * /usr/bin/python3 /opt/kryonix/monitoring/scripts/health-checks.py >> /opt/kryonix/logs/health.log 2>&1
+*/15 * * * * /usr/bin/python3 /opt/kryonix/monitoring/scripts/multi-tenant-metrics-ai.py >> /opt/kryonix/logs/ai-metrics.log 2>&1
+0 3 * * 0 /bin/bash /opt/kryonix/monitoring/scripts/backup-configs.sh >> /opt/kryonix/logs/backup.log 2>&1
+EOF
+) | crontab -
 
 # === INTEGRAÇÃO WHATSAPP ALERTS ===
 echo "📱 Configurando alertas WhatsApp..."
@@ -868,6 +1123,24 @@ curl -X POST http://evolution:8080/webhook/setup \
     "webhook": "http://alertmanager:9093/webhook",
     "phone": "+5517981805327"
   }'
+
+# === VALIDAÇÃO FINAL ===
+echo "🔍 Executando validação final..."
+sleep 15
+
+# Testar health checks
+python3 monitoring/scripts/health-checks.py
+
+# Testar análise IA
+python3 monitoring/scripts/multi-tenant-metrics-ai.py
+
+# Verificar dashboards
+DASHBOARDS_COUNT=$(curl -s -u kryonix:Vitor@123456 http://localhost:3000/api/search | jq length)
+echo "📊 Dashboards configurados: ${DASHBOARDS_COUNT}"
+
+# Verificar datasources
+DATASOURCES_COUNT=$(curl -s -u kryonix:Vitor@123456 http://localhost:3000/api/datasources | jq length)
+echo "🔌 Datasources configurados: ${DATASOURCES_COUNT}"
 
 # === COMMIT CHANGES ===
 echo "💾 Commitando mudanças..."
