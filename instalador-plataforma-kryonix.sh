@@ -84,7 +84,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚══════════════════════���══════════════════════════════════════════╝"
+    echo    "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1321,7 +1321,7 @@ const server = http.createServer((req, res) => {
                     git reset --hard origin/main &&
                     git clean -fd &&
 
-                    echo "📦 [Dependencies] Instalando dependências..." &&
+                    echo "�� [Dependencies] Instalando dependências..." &&
                     if [ -f yarn.lock ]; then
                         yarn install --frozen-lockfile 2>/dev/null || yarn install
                         echo "🏗️ [Build] Executando yarn build (Builder.io)..."
@@ -1542,7 +1542,7 @@ sleep 60
 log_info "Testando endpoint webhook após redeploy..."
 for i in {1..20}; do
     if curl -f -s "http://localhost:8080/health" > /dev/null; then
-        log_success "��� Servidor respondendo na porta 8080"
+        log_success "✅ Servidor respondendo na porta 8080"
 
         # Testar especificamente o webhook
         if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
@@ -1841,3 +1841,18 @@ echo -e "${WHITE}• Container Docker não pode acessar localhost do host${RESET
 echo -e "${WHITE}• Era necessário usar host.docker.internal ou gateway${RESET}"
 echo -e "${WHITE}• Deploy server precisava escutar em todas interfaces${RESET}"
 echo -e "${WHITE}• Faltava configuração de extra_hosts no stack${RESET}"
+
+echo
+echo -e "${BLUE}${BOLD}🎯 FLUXO BUILDER.IO → GITHUB → SEU DOMÍNIO:${RESET}"
+echo -e "${WHITE}1. Builder.io salva → GitHub main branch automaticamente${RESET}"
+echo -e "${WHITE}2. GitHub webhook → kryonix.com.br/api/github-webhook${RESET}"
+echo -e "${WHITE}3. Servidor puxa código → instala deps → executa build${RESET}"
+echo -e "${WHITE}4. Docker rebuild → redeploy → kryonix.com.br atualizado!${RESET}"
+echo
+echo -e "${GREEN}${BOLD}✅ SEU DOMÍNIO AGORA SINCRONIZA IGUAL AO BUILDER.IO!${RESET}"
+echo -e "${WHITE}Qualquer mudança no Builder.io aparece automaticamente em kryonix.com.br${RESET}"
+echo
+echo -e "${CYAN}${BOLD}🧪 TESTE O FLUXO COMPLETO:${RESET}"
+echo -e "${WHITE}1. Edite algo no Builder.io${RESET}"
+echo -e "${WHITE}2. Aguarde 1-2 minutos${RESET}"
+echo -e "${WHITE}3. Acesse https://kryonix.com.br e veja a mudança!${RESET}"
