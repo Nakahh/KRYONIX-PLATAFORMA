@@ -1,13 +1,42 @@
-# 🐰 PARTE-07: MENSAGERIA RABBITMQ
-*Prompt para IA executar via terminal no servidor*
+# 🐰 PARTE-07: MENSAGERIA RABBITMQ MULTI-TENANT KRYONIX
+*Sistema de Mensageria Multi-Tenant com Isolamento por Cliente, SDK Unificado e Apps Mobile*
 
 ---
 
-## 🎯 **CONTEXTO**
+## 🎯 **CONTEXTO MULTI-TENANT KRYONIX**
 - **Servidor**: 144.202.90.55
-- **Objetivo**: Configurar RabbitMQ filas mobile-first com IA
+- **Arquitetura**: Multi-tenant com isolamento completo por cliente
+- **SDK**: @kryonix/sdk unificado para todos os módulos
+- **Mobile Priority**: 80% usuários mobile - filas prioritárias PWA/apps
+- **Auto-Creation**: Criação automática de filas quando novo cliente é criado
+- **8 APIs Modulares**: CRM, WhatsApp, Agendamento, Financeiro, Marketing, Analytics, Portal, Whitelabel
 - **URL**: https://rabbitmq.kryonix.com.br
 - **Login Master**: kryonix / Vitor@123456
+
+---
+
+## 🏗️ **ARQUITETURA MULTI-TENANT MESSAGING**
+
+```yaml
+RABBITMQ_MULTI_TENANT_ARCHITECTURE:
+  estrategia: "VHost por cliente + exchanges/queues isoladas"
+
+  VHOSTS_PATTERN:
+    master: "/kryonix-master"  # Controle geral
+    cliente: "/cliente_{cliente_id}"  # Um vhost por cliente
+    mobile: "/mobile-priority"  # Filas prioritárias mobile
+
+  QUEUES_PATTERN:
+    cliente_especifica: "cliente_{id}.{modulo}.{acao}"
+    mobile_priority: "mobile.{cliente_id}.{tipo}.{priority}"
+    sdk_integration: "sdk.{cliente_id}.{modulo}.{method}"
+
+  ISOLAMENTO_COMPLETO:
+    - Mensagens nunca se misturam entre clientes
+    - Cada cliente tem filas exclusivas
+    - Routing keys específicos por cliente
+    - TTL e prioridades personalizáveis
+```
 
 ---
 
