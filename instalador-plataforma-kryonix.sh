@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔════════���════════════════════════════════════════════════════════╗"
+    echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -92,7 +92,7 @@ show_banner() {
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
-    echo    "║                                                                 ║"
+    echo    "║                                                                 ��"
     echo    "╚═══════════════════════════════════════════════════════════════��═╝"
     echo -e "${RESET}\n"
 }
@@ -425,8 +425,18 @@ validate_credentials() {
 # Mostrar banner
 show_banner
 
+# Detecção automática do ambiente
+echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX 100% AUTOMÁTICO${RESET}"
+echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
+echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
+echo -e "${BLUE}├─ IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost')${RESET}"
+echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
+echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
+echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
+echo ""
+echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação necessária!${RESET}\n"
+
 # Inicializar primeira etapa
-echo -e "${PURPLE}${BOLD}🚀 Iniciando instalação completa da Plataforma KRYONIX...${RESET}\n"
 next_step
 
 # ============================================================================
@@ -762,7 +772,7 @@ if [ ! -f "public/index.html" ]; then
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            🌐 https://kryonix.com.br | �� +55 17 98180-5327
+            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327
         </p>
     </div>
 
@@ -1308,7 +1318,7 @@ echo -e "${GREEN}${BOLD}════════��════════�
 echo -e "${GREEN}${BOLD}                     🎉 INSTALAÇÃO CONCLUÍDA                        ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
-echo -e "${CYAN}${BOLD}📊 STATUS DO SISTEMA:${RESET}"
+echo -e "${CYAN}${BOLD}�� STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} $WEB_STATUS"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK (detectada automaticamente)"
@@ -1329,7 +1339,7 @@ echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker network ls${RESET} - Ver redes (rede: $DOCKER_NETWORK)"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}cat .kryonix-network-config${RESET} - Ver configuração de rede"
-echo -e "    ${BLUE}��${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - Deploy manual"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - Deploy manual"
 echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada e funcionando!${RESET}"
 echo -e "${PURPLE}🚀 Push no GitHub = Deploy automático ativado!${RESET}"
