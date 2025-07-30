@@ -1,0 +1,42 @@
+name: 🚀 Deploy KRYONIX Platform
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: 🚀 Deploy to Production
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🚀 Deploy via webhook (Manual fallback)
+        run: |
+          echo "ℹ️ GitHub webhook automatico ja esta configurado"
+          echo "🔗 Webhook URL: https://kryonix.com.br/api/github-webhook"
+          echo "🎯 Este job serve como fallback manual se necessario"
+
+          # Verificar se o webhook esta respondendo
+          curl -f "https://kryonix.com.br/health" || exit 1
+
+      - name: 🏗️ Verify deployment
+        run: |
+          echo "🔍 Aguardando deployment automatico..."
+          sleep 60
+
+          # Verificar multiplas vezes
+          for i in {1..10}; do
+            if curl -f "https://kryonix.com.br/health"; then
+              echo "✅ Deployment verificado com sucesso!"
+              exit 0
+            fi
+            echo "⏳ Tentativa $i/10 - aguardando..."
+            sleep 30
+          done
+
+          echo "⚠️ Verificacao manual necessaria"
+          exit 1
