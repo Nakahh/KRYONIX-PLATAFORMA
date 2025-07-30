@@ -560,14 +560,208 @@ class RedisMultiTenantCachePredictive:
             logger.error(f"Erro no monitoramento: {e}")
             return {}, []
 
+    def analyze_sdk_usage_patterns(self):
+        """IA analisa padrões de uso do SDK por cliente"""
+        try:
+            self.r.select(self.sdk_db)
+            sdk_configs = self.r.keys('sdk:config:*')
+
+            patterns = {}
+
+            for config_key in sdk_configs:
+                client_id = config_key.split(':')[2]
+                sdk_data = self.r.hgetall(config_key)
+
+                if sdk_data:
+                    # Analisar uso do SDK por cliente
+                    usage_key = f'sdk:usage:{client_id}'
+                    usage_data = self.r.hgetall(usage_key)
+
+                    patterns[client_id] = {
+                        'modules_enabled': sdk_data.get('modules_enabled', '[]'),
+                        'api_calls_today': int(usage_data.get('api_calls_today', 0)),
+                        'most_used_module': usage_data.get('most_used_module', 'unknown'),
+                        'rate_limit': sdk_data.get('rate_limit', '1000/min'),
+                        'subscription_status': sdk_data.get('subscription_status', 'unknown'),
+                        'active_sessions': int(usage_data.get('active_sessions', 0))
+                    }
+
+            # Salvar análise para IA
+            self.r.select(self.patterns_db)
+            self.r.setex('sdk:usage_analysis', 86400, json.dumps({
+                'timestamp': datetime.now().isoformat(),
+                'total_clients': len(patterns),
+                'patterns': patterns,
+                'recommendations': self.generate_sdk_recommendations(patterns)
+            }))
+
+            logger.info(f"Padrões SDK analisados para {len(patterns)} clientes")
+            return patterns
+
+        except Exception as e:
+            logger.error(f"Erro na análise SDK: {e}")
+            return {}
+
+    def generate_sdk_recommendations(self, patterns):
+        """IA gera recomendações baseadas no uso do SDK"""
+        recommendations = []
+
+        for client_id, data in patterns.items():
+            # Cliente com muitas chamadas API
+            if data['api_calls_today'] > 5000:
+                recommendations.append(f"Cliente {client_id}: Considerar upgrade de plano")
+
+            # Cliente com poucas sessões ativas
+            if data['active_sessions'] < 5:
+                recommendations.append(f"Cliente {client_id}: Baixo engajamento - revisar onboarding")
+
+            # Módulo mais usado
+            if data['most_used_module'] == 'whatsapp':
+                recommendations.append(f"Cliente {client_id}: Focar otimizações WhatsApp")
+
+        return recommendations
+
+    def analyze_automatic_client_creation(self):
+        """IA analisa criações automáticas de clientes (FLUXO COMPLETO)"""
+        try:
+            self.r.select(self.patterns_db)
+            creation_keys = self.r.keys('ai:platform_creation:*')
+
+            creation_analytics = {
+                'total_created_today': 0,
+                'average_creation_time': 0,
+                'success_rate': 0,
+                'popular_sectors': {},
+                'popular_modules': {}
+            }
+
+            today = datetime.now().date()
+            successful_creations = []
+
+            for key in creation_keys:
+                creation_data = self.r.hgetall(key)
+                if creation_data:
+                    # Verificar se foi criado hoje
+                    if creation_data.get('status') == 'completed':
+                        creation_time = creation_data.get('creation_time', '0min')
+                        # Extrair tempo em minutos
+                        minutes = float(creation_time.replace('min', '').replace('s', '').split('_')[0])
+                        successful_creations.append(minutes)
+
+                        # Analisar setor
+                        sector = creation_data.get('sector', 'unknown')
+                        creation_analytics['popular_sectors'][sector] = creation_analytics['popular_sectors'].get(sector, 0) + 1
+
+                        # Analisar módulos
+                        modules = json.loads(creation_data.get('modules_selected', '[]'))
+                        for module in modules:
+                            creation_analytics['popular_modules'][module] = creation_analytics['popular_modules'].get(module, 0) + 1
+
+            if successful_creations:
+                creation_analytics['total_created_today'] = len(successful_creations)
+                creation_analytics['average_creation_time'] = sum(successful_creations) / len(successful_creations)
+                creation_analytics['success_rate'] = len(successful_creations) / len(creation_keys) * 100
+
+            # Salvar análise
+            self.r.setex('ai:creation_analytics', 86400, json.dumps({
+                'timestamp': datetime.now().isoformat(),
+                'analytics': creation_analytics,
+                'insights': [
+                    f"Tempo médio de criação: {creation_analytics['average_creation_time']:.1f} minutos",
+                    f"Taxa de sucesso: {creation_analytics['success_rate']:.1f}%",
+                    f"Setor mais popular: {max(creation_analytics['popular_sectors'], key=creation_analytics['popular_sectors'].get) if creation_analytics['popular_sectors'] else 'N/A'}",
+                    f"Módulo mais solicitado: {max(creation_analytics['popular_modules'], key=creation_analytics['popular_modules'].get) if creation_analytics['popular_modules'] else 'N/A'}"
+                ]
+            }))
+
+            logger.info(f"Análise de criação automática: {creation_analytics['total_created_today']} clientes criados")
+            return creation_analytics
+
+        except Exception as e:
+            logger.error(f"Erro na análise de criação automática: {e}")
+            return {}
+
+    def monitor_multi_tenant_health(self):
+        """IA monitora saúde do sistema multi-tenant"""
+        try:
+            self.r.select(self.tenant_db)
+            tenant_keys = self.r.keys('tenant:*')
+
+            health_report = {
+                'total_tenants': len(tenant_keys),
+                'active_tenants': 0,
+                'payment_issues': 0,
+                'resource_usage': {},
+                'isolation_status': 'healthy'
+            }
+
+            for tenant_key in tenant_keys:
+                tenant_data = self.r.hgetall(tenant_key)
+                client_id = tenant_key.split(':')[1]
+
+                if tenant_data.get('status') == 'active':
+                    health_report['active_tenants'] += 1
+
+                # Verificar status de pagamento
+                payment_key = f'payment:{client_id}'
+                payment_data = self.r.hgetall(payment_key)
+
+                if payment_data.get('status') != 'paid':
+                    health_report['payment_issues'] += 1
+
+                # Verificar uso de recursos
+                self.r.select(self.sdk_db)
+                usage_key = f'sdk:usage:{client_id}'
+                usage_data = self.r.hgetall(usage_key)
+
+                if usage_data:
+                    api_calls = int(usage_data.get('api_calls_today', 0))
+                    health_report['resource_usage'][client_id] = api_calls
+
+            # Calcular scores
+            if health_report['total_tenants'] > 0:
+                health_report['health_score'] = (
+                    (health_report['active_tenants'] / health_report['total_tenants']) * 50 +
+                    ((health_report['total_tenants'] - health_report['payment_issues']) / health_report['total_tenants']) * 50
+                )
+            else:
+                health_report['health_score'] = 100
+
+            # Salvar relatório
+            self.r.select(self.patterns_db)
+            self.r.setex('multi_tenant:health', 3600, json.dumps({
+                'timestamp': datetime.now().isoformat(),
+                'health_report': health_report,
+                'alerts': [
+                    f"Problemas de pagamento: {health_report['payment_issues']} clientes" if health_report['payment_issues'] > 0 else None,
+                    f"Score de saúde: {health_report['health_score']:.1f}%"
+                ]
+            }))
+
+            logger.info(f"Health check multi-tenant: {health_report['active_tenants']}/{health_report['total_tenants']} ativos")
+            return health_report
+
+        except Exception as e:
+            logger.error(f"Erro no monitoramento multi-tenant: {e}")
+            return {}
+
 def main():
-    cache_ai = RedisMobileCachePredictive()
+    cache_ai = RedisMultiTenantCachePredictive()
     
     try:
-        logger.info("🤖 IA Redis Cache iniciando...")
-        
-        # Analisar padrões
-        patterns = cache_ai.analyze_mobile_patterns()
+        logger.info("🤖 IA Redis Multi-Tenant iniciando...")
+
+        # Analisar padrões mobile
+        patterns = cache_ai.analyze_tenant_patterns()
+
+        # Analisar uso do SDK
+        sdk_patterns = cache_ai.analyze_sdk_usage_patterns()
+
+        # Analisar criações automáticas
+        creation_analytics = cache_ai.analyze_automatic_client_creation()
+
+        # Monitorar saúde multi-tenant
+        tenant_health = cache_ai.monitor_multi_tenant_health()
         
         # Gerar predições
         predictions = cache_ai.predict_cache_needs()
@@ -695,7 +889,7 @@ while true; do
     curl -X POST "https://evolution.kryonix.com.br/message/sendText" \
       -H "apikey: sua_chave_evolution_api_aqui" \
       -H "Content-Type: application/json" \
-      -d "{\"number\": \"5517981805327\", \"text\": \"🚨 ALERTA: Redis fora do ar!\\nTentando restart automático...\"}"
+      -d "{\"number\": \"5517981805327\", \"text\": \"���� ALERTA: Redis fora do ar!\\nTentando restart automático...\"}"
   fi
   
   # Verificar uso de memória
