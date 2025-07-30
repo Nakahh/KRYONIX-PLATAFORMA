@@ -236,7 +236,7 @@ log_error() {
 # FUNÇÕES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
-# Função simplificada e robusta para detectar rede do Traefik (sem logs internos)
+# Funç��o simplificada e robusta para detectar rede do Traefik (sem logs internos)
 detect_traefik_network_automatically() {
     local detected_network=""
 
@@ -1639,6 +1639,18 @@ esac
 WEBHOOK_DEPLOY_EOF
 
 chmod +x webhook-deploy.sh
+
+# CORRIGIDO: Garantir que webhook-deploy.sh está acessível e executable para o container
+sudo chmod 755 webhook-deploy.sh
+sudo chown $USER:$USER webhook-deploy.sh
+
+# CORRIGIDO: Verificar se o script de deploy está funcionando
+log_info "🧪 Testando script de deploy..."
+if ./webhook-deploy.sh manual &>/dev/null; then
+    log_success "✅ Script de deploy testado e funcionando"
+else
+    log_warning "⚠️ Script de deploy pode precisar de ajustes, mas está criado"
+fi
 
 log_success "✅ Webhook deploy ultra-avançado criado com deploy automático completo"
 complete_step
