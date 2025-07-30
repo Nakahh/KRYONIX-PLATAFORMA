@@ -29,7 +29,7 @@ ROCKET='🚀'
 WRENCH='🔧'
 
 # Configurações do projeto
-PROJECT_DIR="/opt/kryonix-platform"
+PROJECT_DIR="/opt/kryonix-plataform"
 WEB_PORT="8080"
 WEBHOOK_PORT="8080"
 
@@ -1669,7 +1669,7 @@ echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO
 
 # Banner final épico
 echo -e "${BLUE}${BOLD}"
-echo "╔══════���═════════��═══════════════════════════════════════════════════════════════╗"
+echo "╔══════���═════════��══════════════════════════════════════════════════════════���════╗"
 echo "║                                                                                    ║"
 echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCESSO! 🎉${BLUE}                       ║"
 echo "║                                                                                    ║"
@@ -1696,7 +1696,7 @@ echo "║                                                                       
 echo "╚════════════════════════════════════════════════════════════════════════════════╝"
 echo -e "${RESET}\n"
 
-log_success "🎯 INSTALADOR KRYONIX COMPLETO! Plataforma + CI/CD 100% funcional!"
+log_success "��� INSTALADOR KRYONIX COMPLETO! Plataforma + CI/CD 100% funcional!"
 echo
 log_info "📋 URLs importantes:"
 log_info "   🌐 Plataforma: https://kryonix.com.br"
