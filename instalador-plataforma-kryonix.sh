@@ -1110,20 +1110,31 @@ log_info "Criando webhook deploy..."
 cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 #!/bin/bash
 
+# ==============================================================================
+# WEBHOOK DE DEPLOY AUTOMÁTICO ULTRA-AVANÇADO E ROBUSTO
+# Versão: 2.0.0 - Compatível com qualquer stack de desenvolvimento moderno
+# ==============================================================================
+
 set -euo pipefail
 
-# Configurações
+# ===== CONFIGURAÇÕES GLOBAIS =====
 STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
-MAX_RETRIES=3
-HEALTH_CHECK_TIMEOUT=120
+BACKUP_DIR="/tmp/deploy-backups"
+MAX_RETRIES=5
+HEALTH_CHECK_TIMEOUT=180
+DEPENDENCY_CHECK_TIMEOUT=300
+BUILD_TIMEOUT=600
+DOCKER_TIMEOUT=300
 
-# Cores
+# ===== CORES =====
+RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
-RED='\033[0;31m'
 YELLOW='\033[1;33m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
 NC='\033[0m'
 
 log() {
