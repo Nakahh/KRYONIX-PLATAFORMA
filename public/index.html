@@ -702,6 +702,27 @@
                 }
             });
         });
+
+        // Atualizar meta tags dinamicamente baseado no status
+        function updateMetaTags() {
+            const currentProgress = document.getElementById('progress-percentage').textContent;
+            const description = `KRYONIX está ${currentProgress} implementado. Acompanhe o desenvolvimento da plataforma SaaS mais avançada do Brasil com 15 agentes de IA.`;
+
+            // Atualizar meta description
+            const metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc) {
+                metaDesc.setAttribute('content', description);
+            }
+
+            // Atualizar Open Graph description
+            const ogDesc = document.querySelector('meta[property="og:description"]');
+            if (ogDesc) {
+                ogDesc.setAttribute('content', description);
+            }
+        }
+
+        // Atualizar meta tags a cada mudança de status
+        setTimeout(updateMetaTags, 2000);
     </script>
 </body>
 </html>
