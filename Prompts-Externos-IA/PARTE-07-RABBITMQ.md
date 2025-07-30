@@ -1080,6 +1080,10 @@ services:
       - rabbitmq
 EOF
 
+# === INSTALAR DEPENDÊNCIAS PYTHON ===
+echo "🐍 Instalando dependências Python para scripts..."
+pip3 install pika requests
+
 # === CONSUMER MOBILE ===
 echo "📱 Criando consumer mobile..."
 cat > messaging/consumers/mobile-consumer.js << 'EOF'
