@@ -557,7 +557,7 @@ app.post('/api/github-webhook', (req, res) => {
     const isValidRef = payload.ref === 'refs/heads/main' || payload.ref === 'refs/heads/master';
 
     if (isValidEvent && isValidRef) {
-        console.log('���� Deploy automático iniciado para:', payload.ref);
+        console.log('🚀 Deploy automático iniciado para:', payload.ref);
 
         res.json({
             message: 'Deploy automático iniciado',
@@ -809,7 +809,7 @@ cat > .kryonix-auto-config << CONFIG_EOF
 # ============================================================================
 # CONFIGURAÇÃO AUTOMÁTICA KRYONIX - Gerada em $(date)
 # ============================================================================
-# Esta configuração permite instalação automática em qualquer servidor
+# Esta configuração permite instalação autom��tica em qualquer servidor
 
 # Informações do Servidor
 SERVER_IP=$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo "127.0.0.1")
@@ -1381,7 +1381,7 @@ deploy() {
             cp build/index.html public/ 2>/dev/null || true
         fi
     elif [ -d ".next" ]; then
-        info "📁 Build Next.js gerado"
+        info "�� Build Next.js gerado"
         # Para Next.js, não precisamos copiar para public
     elif [ -d "out" ]; then
         info "📁 Export estático gerado em ./out/"
@@ -1633,7 +1633,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}══════���═��═══════════════��══════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
