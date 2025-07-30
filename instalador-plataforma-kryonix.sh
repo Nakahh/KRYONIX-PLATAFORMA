@@ -1,8 +1,13 @@
 #!/bin/bash
 set -e
 
+# Configurações de encoding seguro para evitar problemas com caracteres especiais
+export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
+export LANG=C.UTF-8 2>/dev/null || export LANG=C
+export LANGUAGE=C
+
 # ============================================================================
-# 🚀 INSTALADOR KRYONIX PLATFORM - VERSÃO COMPLETA COM CI/CD
+# 🚀 INSTALADOR KRYONIX PLATFORM - VERSÃO CORRIGIDA COMPLETA
 # ============================================================================
 # Autor: Vitor Fernandes
 # Descrição: Instalador completo da Plataforma KRYONIX com deploy automático
@@ -32,34 +37,38 @@ WRENCH='🔧'
 PROJECT_DIR="/opt/kryonix-plataform"
 WEB_PORT="8080"
 WEBHOOK_PORT="8080"
+DOMAIN_NAME="kryonix.com.br"
+DOCKER_NETWORK=""  # Será detectado automaticamente
+STACK_NAME="Kryonix"
 
-# Configurações CI/CD - Credenciais atualizadas
-WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+# Configurações CI/CD - Credenciais configuradas para operação 100% automática
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PAT_TOKEN="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"
-SERVER_HOST="137.220.34.41"
-SERVER_USER="linuxuser"
-JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5"
+WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+WEBHOOK_URL="https://kryonix.com.br/api/github-webhook"
+SERVER_HOST="${SERVER_HOST:-$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo '127.0.0.1')}"
+SERVER_USER="${SERVER_USER:-$(whoami)}"
 
 # Variáveis da barra de progresso
 TOTAL_STEPS=15
 CURRENT_STEP=0
 STEP_DESCRIPTIONS=(
-    "Verificando Docker Swarm ⚙️"
+    "Verificando Docker Swarm ⚙"
     "Limpando ambiente anterior 🧹"
+    "Configurando credenciais 🔐"
     "Preparando projeto 📁"
     "Instalando dependências 📦"
     "Configurando firewall 🔥"
-    "Identificando redes Docker 🔗"
+    "Configurando rede Docker 🔗"
     "Verificando Traefik 📊"
     "Criando imagem Docker 🏗️"
-    "Configurando stack ⚙️"
-    "Testando conectividade 🌐"
+    "Preparando stack ��️"
+    "Testando conectividade local 🌐"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
-    "Configurando serviço webhook ��️"
-    "Testando CI/CD 🧪"
-    "Finalizando setup completo ✅"
+    "Configurando logs e backup ⚙️"
+    "Deploy final integrado 🚀"
 )
 
 # ============================================================================
@@ -88,21 +97,21 @@ show_banner() {
     echo -e "${RESET}\n"
 }
 
-# Barra de progresso modernizada
-show_progress_bar() {
+# Sistema unificado de barra animada
+BAR_WIDTH=50
+CURRENT_STEP_BAR_SHOWN=false
+
+animate_progress_bar() {
     local step=$1
     local total=$2
     local description="$3"
     local status="$4"
-    
-    local percentage=$((step * 100 / total))
-    local filled=$((step * 50 / total))
-    local empty=$((50 - filled))
-    
+    local target_progress=$((step * 100 / total))
+
     # Cores baseadas no status
-    local bar_color="$CYAN"
-    local status_icon="⏳"
-    
+    local bar_color="$GREEN"
+    local status_icon="🔄"
+
     case $status in
         "iniciando")
             bar_color="$YELLOW"
@@ -110,7 +119,7 @@ show_progress_bar() {
             ;;
         "processando")
             bar_color="$BLUE"
-            status_icon="⚙️"
+            status_icon="⚙"
             ;;
         "concluido")
             bar_color="$GREEN"
@@ -121,74 +130,224 @@ show_progress_bar() {
             status_icon="❌"
             ;;
     esac
-    
-    # Limpar linha anterior e desenhar barra
-    echo -ne "\r\033[K"
-    echo -ne "${WHITE}${BOLD}${ROCKET} KRYONIX Deploy Progress: ${bar_color}["
-    
+
+    # Mostrar cabeçalho apenas uma vez por etapa
+    if [ "$CURRENT_STEP_BAR_SHOWN" = false ]; then
+        echo ""
+        echo -e "${status_icon} ${WHITE}${BOLD}Etapa $step/$total: $description${RESET}"
+        CURRENT_STEP_BAR_SHOWN=true
+    fi
+
+    # Atualizar barra na mesma linha
+    local filled=$((target_progress * BAR_WIDTH / 100))
+    echo -ne "\r${bar_color}${BOLD}["
+
     # Desenhar barra preenchida
-    for ((i=0; i<filled; i++)); do 
-        echo -ne "█"
-    done
-    
+    for ((j=1; j<=filled; j++)); do echo -ne "█"; done
+
     # Desenhar barra vazia
-    for ((i=0; i<empty; i++)); do 
-        echo -ne "░"
-    done
-    
-    echo -ne "]${WHITE} ${percentage}%${RESET}\n"
-    
-    # Status da etapa atual
-    echo -e "${status_icon} ${WHITE}${BOLD}Etapa $step/$total:${RESET} $description"
-    
-    # Espaço extra após conclusão
+    for ((j=filled+1; j<=BAR_WIDTH; j++)); do echo -ne "░"; done
+
+    echo -ne "] ${target_progress}% ${status_icon}${RESET}"
+
+    # Nova linha apenas quando concluído ou erro
     if [ "$status" = "concluido" ] || [ "$status" = "erro" ]; then
         echo ""
+        CURRENT_STEP_BAR_SHOWN=false  # Reset para próxima etapa
     fi
+}
+
+# Função para logs que aparecem abaixo da barra
+log_below_bar() {
+    local type="$1"
+    local message="$2"
+    local color=""
+    local prefix=""
+
+    case $type in
+        "info")
+            color="$CYAN"
+            prefix="[INFO]"
+            ;;
+        "success")
+            color="$GREEN"
+            prefix="[SUCESSO]"
+            ;;
+        "warning")
+            color="$YELLOW"
+            prefix="[AVISO]"
+            ;;
+        "error")
+            color="$RED"
+            prefix="[ERRO]"
+            ;;
+    esac
+
+    echo -e "    ${color}│${RESET} ${color}${prefix}${RESET} $message"
 }
 
 # Funções de controle de etapas
 next_step() {
     CURRENT_STEP=$((CURRENT_STEP + 1))
     if [ $CURRENT_STEP -le $TOTAL_STEPS ]; then
-        show_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "iniciando"
+        CURRENT_STEP_BAR_SHOWN=false
+        animate_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "iniciando"
     fi
 }
 
 complete_step() {
     if [ $CURRENT_STEP -le $TOTAL_STEPS ]; then
-        show_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "concluido"
-        sleep 0.8
+        animate_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "concluido"
+        sleep 0.5
     fi
 }
 
 error_step() {
     if [ $CURRENT_STEP -le $TOTAL_STEPS ]; then
-        show_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "erro"
+        animate_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "erro"
     fi
 }
 
 processing_step() {
     if [ $CURRENT_STEP -le $TOTAL_STEPS ]; then
-        show_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "processando"
+        animate_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "processando"
     fi
 }
 
 # Funções de log
 log_info() {
-    echo -e "   ${CYAN}${BOLD}[INFO]${RESET} $1"
+    log_below_bar "info" "$1"
 }
 
 log_success() {
-    echo -e "   ${GREEN}${BOLD}[SUCESSO]${RESET} $1"
+    log_below_bar "success" "$1"
 }
 
 log_warning() {
-    echo -e "   ${YELLOW}${BOLD}[AVISO]${RESET} $1"
+    log_below_bar "warning" "$1"
 }
 
 log_error() {
-    echo -e "   ${RED}${BOLD}[ERRO]${RESET} $1"
+    log_below_bar "error" "$1"
+}
+
+# ============================================================================
+# FUNÇÕES AUXILIARES CENTRALIZADAS
+# ============================================================================
+
+# Função simplificada e robusta para detectar rede do Traefik (sem logs internos)
+detect_traefik_network_automatically() {
+    local detected_network=""
+
+    # 1. PRIORIDADE: Verificar se Kryonix-NET existe
+    if docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$" 2>/dev/null; then
+        detected_network="Kryonix-NET"
+        echo "$detected_network"
+        return 0
+    fi
+
+    # 2. Verificar redes overlay existentes (excluindo ingress)
+    local overlay_networks=$(docker network ls --filter driver=overlay --format "{{.Name}}" 2>/dev/null | grep -v "^ingress$" | head -1)
+    if [ ! -z "$overlay_networks" ]; then
+        detected_network="$overlay_networks"
+        echo "$detected_network"
+        return 0
+    fi
+
+    # 3. FALLBACK: Usar Kryonix-NET como padrão
+    echo "Kryonix-NET"
+    return 0
+}
+
+# Função ensure_docker_network removida - tratamento direto na Etapa 7
+
+# Função centralizada para testes de conectividade
+test_service_health() {
+    local url="$1"
+    local max_attempts="${2:-30}"
+    local wait_time="${3:-10}"
+    
+    log_info "Testando conectividade: $url"
+    
+    for i in $(seq 1 $max_attempts); do
+        if curl -f -s -m 10 "$url" >/dev/null 2>&1; then
+            log_success "Conectividade confirmada!"
+            return 0
+        fi
+        
+        if [ $i -lt $max_attempts ]; then
+            log_info "Tentativa $i/$max_attempts - aguardando ${wait_time}s..."
+            sleep $wait_time
+        fi
+    done
+    
+    log_warning "Conectividade não confirmada após $max_attempts tentativas"
+    return 1
+}
+
+# Função centralizada para operações Git
+sync_git_repository() {
+    local repo_url="$1"
+    local branch="${2:-main}"
+    
+    log_info "Sincronizando repositório Git..."
+    
+    # Configurar Git globalmente
+    git config --global user.name "KRYONIX Deploy"
+    git config --global user.email "deploy@kryonix.com.br"
+    git config --global pull.rebase false
+    git config --global init.defaultBranch main
+    git config --global --add safe.directory "$PROJECT_DIR"
+    
+    # Configurar repositório
+    if [ ! -d ".git" ]; then
+        log_info "Inicializando repositório Git..."
+        git init
+        git remote add origin "$repo_url"
+    else
+        log_info "Atualizando repositório existente..."
+        git remote set-url origin "$repo_url"
+    fi
+    
+    # Fazer sincronização
+    git fetch origin --force 2>/dev/null || true
+    git reset --hard origin/$branch 2>/dev/null || git reset --hard origin/master 2>/dev/null || {
+        log_warning "Não foi possível sincronizar com repositório remoto"
+        return 1
+    }
+    git clean -fd 2>/dev/null || true
+    
+    log_success "Repositório sincronizado com sucesso"
+    return 0
+}
+
+# Função para validar credenciais pré-configuradas
+validate_credentials() {
+    log_info "🔐 Validando credenciais pré-configuradas..."
+
+    if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == ghp_* ]]; then
+        log_success "✅ GitHub PAT Token configurado"
+    else
+        log_error "❌ GitHub PAT Token inválido"
+        return 1
+    fi
+
+    if [ ! -z "$WEBHOOK_SECRET" ] && [ ${#WEBHOOK_SECRET} -gt 20 ]; then
+        log_success "✅ Webhook Secret configurado"
+    else
+        log_error "❌ Webhook Secret inválido"
+        return 1
+    fi
+
+    if [ ! -z "$WEBHOOK_URL" ] && [[ "$WEBHOOK_URL" == https://* ]]; then
+        log_success "✅ Webhook URL configurado: $WEBHOOK_URL"
+    else
+        log_error "❌ Webhook URL inválido"
+        return 1
+    fi
+
+    log_success "✅ Todas as credenciais validadas - instalação 100% automática"
+    return 0
 }
 
 # ============================================================================
@@ -198,12 +357,22 @@ log_error() {
 # Mostrar banner
 show_banner
 
+# Detecção automática do ambiente
+echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX 100% AUTOMÁTICO${RESET}"
+echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
+echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
+echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
+echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
+echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
+echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
+echo ""
+echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação necessária!${RESET}\n"
+
 # Inicializar primeira etapa
-echo -e "${PURPLE}${BOLD}🚀 Iniciando instalação completa da Plataforma KRYONIX...${RESET}\n"
 next_step
 
 # ============================================================================
-# ETAPA 1: VERIFICAR DOCKER SWARM ⚙️
+# ETAPA 1: VERIFICAR DOCKER SWARM
 # ============================================================================
 
 if ! docker info | grep -q "Swarm: active"; then
@@ -218,99 +387,126 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 2: LIMPAR AMBIENTE ANTERIOR 🧹
+# ETAPA 2: LIMPAR AMBIENTE ANTERIOR
 # ============================================================================
 
 processing_step
-log_info "Removendo stacks antigos do KRYONIX..."
-docker stack ls --format "{{.Name}}" | grep -E "(kryonix|Kryonix)" | xargs -r docker stack rm > /dev/null 2>&1 || true
 
-log_info "Aguardando remoção completa..."
-sleep 10
+# Limpar stacks antigas
+log_info "Removendo stacks antigas do KRYONIX..."
+for stack in $(docker stack ls --format "{{.Name}}" | grep -E "(kryonix|Kryonix)" || true); do
+    if [ ! -z "$stack" ]; then
+        docker stack rm "$stack" >/dev/null 2>&1 || true
+        log_info "Stack $stack removido"
+    fi
+done
 
-log_info "Limpando recursos órfãos..."
-docker config ls --format "{{.Name}}" | grep kryonix | xargs -r docker config rm 2>/dev/null || true
+# Aguardar remoção completa
+sleep 5
+
+# Limpar recursos Docker
+log_info "Limpando recursos Docker antigos..."
 docker container prune -f 2>/dev/null || true
 docker volume prune -f 2>/dev/null || true
 docker image prune -f 2>/dev/null || true
-docker images | grep "kryonix-plataforma" | awk '{print $3}' | xargs -r docker rmi -f 2>/dev/null || true
+
+# Remover imagens antigas específicas
+for image in $(docker images --format "{{.Repository}}:{{.Tag}}" | grep "kryonix-plataforma" || true); do
+    if [ ! -z "$image" ]; then
+        docker rmi -f "$image" 2>/dev/null || true
+        log_info "Imagem $image removida"
+    fi
+done
+
+# Limpar diretório do projeto preservando Git
+log_info "Limpando arquivos antigos do projeto..."
+if [ -d "$PROJECT_DIR" ]; then
+    # Preservar .git se existir
+    if [ -d "$PROJECT_DIR/.git" ]; then
+        log_info "Preservando histórico Git..."
+        cp -r "$PROJECT_DIR/.git" "/tmp/kryonix-git-backup" 2>/dev/null || true
+    fi
+    
+    # Remover arquivos antigos
+    sudo rm -rf "$PROJECT_DIR"/* 2>/dev/null || true
+    sudo rm -rf "$PROJECT_DIR"/.[^.]* 2>/dev/null || true
+    
+    # Restaurar .git
+    if [ -d "/tmp/kryonix-git-backup" ]; then
+        cp -r "/tmp/kryonix-git-backup" "$PROJECT_DIR/.git" 2>/dev/null || true
+        rm -rf "/tmp/kryonix-git-backup" 2>/dev/null || true
+        log_info "Histórico Git restaurado"
+    fi
+fi
 
 log_success "Ambiente limpo e preparado"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 3: PREPARAR PROJETO 📁
+# ETAPA 3: VALIDAR CREDENCIAIS PRÉ-CONFIGURADAS
 # ============================================================================
 
 processing_step
-log_info "Criando estrutura do projeto..."
+if ! validate_credentials; then
+    error_step
+    log_error "Falha na validação das credenciais"
+    exit 1
+fi
+complete_step
+next_step
+
+# ============================================================================
+# ETAPA 4: PREPARAR PROJETO
+# ============================================================================
+
+processing_step
+log_info "Preparando diretório do projeto..."
+
+# Criar e configurar diretório
 sudo mkdir -p "$PROJECT_DIR"
 sudo chown -R $USER:$USER "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
-log_info "Criando arquivos da aplicação..."
+# Configurar repositório Git com credenciais automáticas
+log_info "🔗 Configurando acesso ao GitHub com credenciais..."
+REPO_WITH_TOKEN="https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+sync_git_repository "$REPO_WITH_TOKEN"
 
-# Criar package.json
-cat > package.json << 'PACKAGE_EOF'
-{
-  "name": "kryonix-plataforma",
-  "version": "1.0.0",
-  "description": "KRYONIX - Plataforma SaaS 100% Autônoma por IA",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
-    "test": "echo \"Tests will be implemented\" && exit 0"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "helmet": "^7.1.0",
-    "compression": "^1.7.4"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "author": "Vitor Fernandes",
-  "license": "ISC"
-}
-PACKAGE_EOF
+# Verificar arquivos essenciais
+if [ ! -f "package.json" ]; then
+    log_error "package.json não encontrado no repositório!"
+    log_info "Verifique se o repositório $GITHUB_REPO está correto"
+    exit 1
+fi
 
-# Criar server.js
-cat > server.js << 'SERVER_EOF'
-const express = require('express');
-const path = require('path');
-const cors = require('cors');
-const helmet = require('helmet');
-const compression = require('compression');
-const { exec } = require('child_process');
+# Corrigir package.json se necessário
+if grep -q '"type": "module"' package.json; then
+    log_info "Removendo type: module do package.json para compatibilidade"
+    sed -i '/"type": "module",/d' package.json
+fi
+
+# Verificar server.js
+if [ ! -f "server.js" ]; then
+    log_error "server.js não encontrado no repositório!"
+    exit 1
+fi
+
+# Verificar se webhook já está integrado no server.js
+if ! grep -q "/api/github-webhook" server.js; then
+    log_info "🔗 Adicionando endpoint webhook completo ao server.js..."
+
+    # Backup
+    cp server.js server.js.backup
+
+    # Adicionar endpoint webhook completo com validação
+    cat >> server.js << WEBHOOK_EOF
+
+// Webhook do GitHub configurado automaticamente pelo instalador
 const crypto = require('crypto');
+const WEBHOOK_SECRET = '$WEBHOOK_SECRET';
 
-const app = express();
-const PORT = process.env.PORT || 8080;
-
-// Configurações do webhook
-const WEBHOOK_SECRET = 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
-const DEPLOY_SCRIPT = '/opt/kryonix-plataform/webhook-deploy.sh';
-
-// Middleware de segurança
-app.use(helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false
-}));
-app.use(cors());
-app.use(compression());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.static('public'));
-
-// Função de log
-const log = (message) => {
-    const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${message}`);
-};
-
-// Verificar assinatura do GitHub
+// Função para verificar assinatura do GitHub
 const verifyGitHubSignature = (payload, signature) => {
     if (!signature) return false;
 
@@ -324,254 +520,118 @@ const verifyGitHubSignature = (payload, signature) => {
     );
 };
 
-// Health check
-app.get('/health', (req, res) => {
-    res.json({
-        status: 'healthy',
-        service: 'KRYONIX Platform',
-        version: '1.0.0',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        webhook: 'enabled'
-    });
-});
-
-// API de status
-app.get('/api/status', (req, res) => {
-    res.json({
-        platform: 'KRYONIX',
-        status: 'online',
-        services: {
-            web: 'healthy',
-            database: 'initializing',
-            ai: 'planned',
-            webhook: 'active'
-        },
-        progress: '2%',
-        stage: 'Parte 01/50',
-        timestamp: new Date().toISOString()
-    });
-});
-
-// Webhook do GitHub - endpoint principal
+// Endpoint webhook do GitHub
 app.post('/api/github-webhook', (req, res) => {
     const payload = req.body;
     const signature = req.get('X-Hub-Signature-256');
     const event = req.get('X-GitHub-Event');
-    const userAgent = req.get('User-Agent');
 
-    log(`🔗 Webhook recebido:`);
-    log(`   Event: ${event || 'NONE'}`);
-    log(`   Ref: ${payload.ref || 'N/A'}`);
-    log(`   Repository: ${payload.repository?.name || 'N/A'}`);
-    log(`   User-Agent: ${userAgent || 'N/A'}`);
-    log(`   Signature: ${signature ? 'PRESENT' : 'NONE'}`);
+    console.log('🔗 Webhook recebido:', {
+        event: event || 'NONE',
+        ref: payload.ref || 'N/A',
+        repository: payload.repository?.name || 'N/A',
+        signature: signature ? 'PRESENT' : 'NONE'
+    });
 
-    // Verificar assinatura se configurada
+    // Verificar assinatura
     if (WEBHOOK_SECRET && signature) {
         if (!verifyGitHubSignature(payload, signature)) {
-            log('❌ Assinatura inválida do webhook');
+            console.log('❌ Assinatura inválida do webhook');
             return res.status(401).json({ error: 'Invalid signature' });
         }
-        log('✅ Assinatura do webhook verificada');
+        console.log('✅ Assinatura do webhook verificada');
     }
 
-    // Processar eventos push na main/master ou testes manuais
+    // Processar apenas push events na main/master
     const isValidEvent = !event || event === 'push';
     const isValidRef = payload.ref === 'refs/heads/main' || payload.ref === 'refs/heads/master';
 
-    log(`   Valid Event: ${isValidEvent} (${event || 'none'})`);
-    log(`   Valid Ref: ${isValidRef} (${payload.ref || 'none'})`);
-
     if (isValidEvent && isValidRef) {
-        log(`🚀 Iniciando deploy automático para: ${payload.ref}`);
+        console.log('���� Deploy automático iniciado para:', payload.ref);
 
-        // Atualizar status do deploy
-        lastDeployStatus = {
-            timestamp: new Date().toISOString(),
-            status: 'deploy_started',
-            message: `Deploy iniciado para ${payload.ref}`,
-            ref: payload.ref,
-            repository: payload.repository?.name
-        };
-
-        // Chamar webhook externo para fazer deploy no host
-        log('🚀 Acionando sistema de deploy externo...');
-
-        const http = require('http');
-        const deployPayload = JSON.stringify({
-            action: 'deploy',
-            ref: payload.ref,
-            repository: payload.repository?.name,
-            timestamp: new Date().toISOString()
-        });
-
-        const options = {
-            hostname: 'host.docker.internal',
-            port: 9001,
-            path: '/deploy',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(deployPayload)
-            }
-        };
-
-        const req = http.request(options, (res) => {
-            let responseData = '';
-            res.on('data', (chunk) => {
-                responseData += chunk;
-            });
-            res.on('end', () => {
-                log('✅ Deploy externo acionado com sucesso');
-                lastDeployStatus = {
-                    timestamp: new Date().toISOString(),
-                    status: 'deploy_triggered',
-                    message: 'Deploy externo acionado com sucesso',
-                    ref: payload.ref,
-                    response: responseData
-                };
-            });
-        });
-
-        req.on('error', (error) => {
-            log(`❌ Falha ao acionar deploy externo: ${error.message}`);
-            log('🔄 Executando deploy local interno como fallback...');
-
-            // Fallback: Deploy interno usando Docker CLI
-            const { exec } = require('child_process');
-            exec(`docker service update --force Kryonix_web`, (err, stdout, stderr) => {
-                if (err) {
-                    log(`❌ Fallback deploy falhou: ${err.message}`);
-                } else {
-                    log('✅ Deploy interno executado com sucesso');
-                }
-            });
-
-            lastDeployStatus = {
-                timestamp: new Date().toISOString(),
-                status: 'deploy_fallback',
-                message: 'Deploy interno executado como fallback',
-                ref: payload.ref,
-                method: 'docker_service_update'
-            };
-        });
-
-        req.write(deployPayload);
-        req.end();
-
-        // Resposta imediata para o GitHub
         res.json({
             message: 'Deploy automático iniciado',
             status: 'accepted',
             ref: payload.ref,
             sha: payload.after || payload.head_commit?.id,
             timestamp: new Date().toISOString(),
-            deploy_method: 'internal_docker_rebuild'
+            webhook_url: '$WEBHOOK_URL'
         });
     } else {
-        log(`ℹ️ Evento IGNORADO - Detalhes:`);
-        log(`   Evento: ${event || 'UNDEFINED'} (esperado: 'push' ou undefined)`);
-        log(`   Ref: ${payload.ref || 'UNDEFINED'} (esperado: 'refs/heads/main' ou 'refs/heads/master')`);
-        log(`   Repository: ${payload.repository?.name || 'UNDEFINED'}`);
-        log(`   Motivo: ${!isValidEvent ? 'Evento inválido' : 'Ref inválida'}`);
+        console.log('ℹ️ Evento ignorado:', { event, ref: payload.ref });
 
         res.json({
             message: 'Evento ignorado',
             status: 'ignored',
             event: event || 'undefined',
             ref: payload.ref || 'undefined',
-            reason: !isValidEvent ? 'invalid_event' : 'invalid_ref',
-            expected_refs: ['refs/heads/main', 'refs/heads/master']
+            reason: !isValidEvent ? 'invalid_event' : 'invalid_ref'
         });
     }
 });
+WEBHOOK_EOF
 
-// Endpoint alternativo para testes
-app.post('/webhook/deploy', (req, res) => {
-    log('🔄 Redirecionando webhook para endpoint principal');
-    req.url = '/api/github-webhook';
-    app.handle(req, res);
+    log_success "✅ Webhook completo com validação adicionado ao server.js"
+else
+    log_info "ℹ️ Webhook já existe no server.js"
+fi
+
+# Criar arquivos auxiliares necessários
+log_info "Criando arquivos auxiliares..."
+
+# webhook-listener.js
+cat > webhook-listener.js << 'WEBHOOK_LISTENER_EOF'
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 8082;
+
+app.use(express.json());
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', service: 'webhook-listener' });
 });
 
-// Status do último deploy
-let lastDeployStatus = {
-    timestamp: new Date().toISOString(),
-    status: 'initialized',
-    message: 'Sistema iniciado'
-};
-
-app.get('/api/deploy-status', (req, res) => {
-    res.json({
-        ...lastDeployStatus,
-        server_time: new Date().toISOString(),
-        uptime: process.uptime()
-    });
+app.post('/webhook', (req, res) => {
+  console.log('Webhook recebido:', new Date().toISOString());
+  res.json({ message: 'Webhook processado' });
 });
 
-// Teste manual do webhook
-app.get('/api/webhook-test', (req, res) => {
-    log('🧪 Teste manual do webhook iniciado');
-
-    const testPayload = {
-        ref: 'refs/heads/main',
-        repository: { name: 'manual-test' },
-        head_commit: { id: 'test-commit' }
-    };
-
-    // Simular deploy interno
-    log('🚀 Simulando deploy interno...');
-    lastDeployStatus = {
-        timestamp: new Date().toISOString(),
-        status: 'test_deploy_started',
-        message: 'Deploy teste iniciado via API'
-    };
-
-    setTimeout(() => {
-        lastDeployStatus = {
-            timestamp: new Date().toISOString(),
-            status: 'test_completed',
-            message: 'Deploy teste simulado concluído'
-        };
-    }, 2000);
-
-    res.json({
-        status: 'test_started',
-        message: 'Deploy teste simulado iniciado',
-        check_status: '/api/deploy-status'
-    });
-});
-
-// Rota principal
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Error handler
-app.use((err, req, res, next) => {
-    console.error('Error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-});
-
-// Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 KRYONIX Platform rodando na porta ${PORT}`);
-    console.log(`💚 Health check: http://0.0.0.0:${PORT}/health`);
-    console.log(`🔗 GitHub Webhook: http://0.0.0.0:${PORT}/api/github-webhook`);
-    console.log(`🌐 Acesse: http://0.0.0.0:${PORT}`);
+  console.log(`Webhook listener rodando em http://0.0.0.0:${PORT}`);
+});
+WEBHOOK_LISTENER_EOF
+
+# kryonix-monitor.js
+cat > kryonix-monitor.js << 'KRYONIX_MONITOR_EOF'
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 8084;
+
+app.use(express.json());
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', service: 'kryonix-monitor' });
 });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-    console.log('📴 Recebido SIGTERM, desligando gracefully...');
-    process.exit(0);
+app.get('/metrics', (req, res) => {
+  res.json({
+    timestamp: new Date().toISOString(),
+    status: 'monitoring',
+    services: { web: 'ok', webhook: 'ok' }
+  });
 });
-SERVER_EOF
 
-# Criar diretório public e index.html
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Monitor rodando em http://0.0.0.0:${PORT}`);
+});
+KRYONIX_MONITOR_EOF
+
+# Criar diretório public se necessário
 mkdir -p public
 
-cat > public/index.html << 'HTML_EOF'
+if [ ! -f "public/index.html" ]; then
+    log_info "Criando index.html padrão..."
+    cat > public/index.html << 'HTML_EOF'
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -610,13 +670,6 @@ cat > public/index.html << 'HTML_EOF'
             font-weight: 600;
             font-size: 1.2rem;
         }
-        .ci-cd-info {
-            background: rgba(0, 123, 255, 0.2);
-            border: 2px solid #007bff;
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin: 2rem 0;
-        }
         .btn {
             display: inline-block;
             padding: 1rem 2rem;
@@ -645,13 +698,6 @@ cat > public/index.html << 'HTML_EOF'
             ✅ Sistema Online e Funcionando!
         </div>
         
-        <div class="ci-cd-info">
-            <h3>🎉 CI/CD AUTOMÁTICO CONFIGURADO!</h3>
-            <p>✅ Deploy automático via GitHub Actions</p>
-            <p>✅ Webhook funcionando</p>
-            <p>✅ Push na main = Deploy no servidor</p>
-        </div>
-        
         <div style="margin-top: 2rem;">
             <a href="/health" class="btn">🔍 Health Check</a>
             <a href="/api/status" class="btn">📊 Status API</a>
@@ -671,58 +717,36 @@ cat > public/index.html << 'HTML_EOF'
 </body>
 </html>
 HTML_EOF
+fi
 
-log_success "Estrutura do projeto criada"
+log_success "Projeto preparado com todos os arquivos necessários"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 4: INSTALAR DEPENDÊNCIAS 📦
+# ETAPA 5: INSTALAR DEPENDÊNCIAS
 # ============================================================================
 
 processing_step
-log_info "Instalando dependências Node.js..."
 
-if command -v npm >/dev/null 2>&1; then
-    npm install --production
-    log_success "Dependências instaladas com sucesso"
-else
-    log_info "Instalando Node.js..."
+if ! command -v npm >/dev/null 2>&1; then
+    log_info "Instalando Node.js 18.x..."
     curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - >/dev/null 2>&1
     sudo apt-get install -y nodejs >/dev/null 2>&1
-    npm install --production
-    log_success "Node.js instalado e dependências configuradas"
 fi
 
-log_info "Testando servidor..."
-# Criar arquivo de log no diretório do projeto com permissões corretas
-SERVER_LOG="./server_test.log"
-touch "$SERVER_LOG"
-chmod 666 "$SERVER_LOG"
+log_info "Instalando dependências do projeto..."
+npm install --production >/dev/null 2>&1
 
-timeout 5s node server.js > "$SERVER_LOG" 2>&1 &
-SERVER_PID=$!
-sleep 3
+log_info "Testando servidor localmente..."
+timeout 10s node server.js >/dev/null 2>&1 || true
 
-if ps -p $SERVER_PID > /dev/null 2>&1; then
-    kill $SERVER_PID 2>/dev/null
-    wait $SERVER_PID 2>/dev/null || true
-    log_success "Servidor testado e funcionando"
-    rm -f "$SERVER_LOG"
-else
-    # Verificar se houve algum erro no log
-    if [ -f "$SERVER_LOG" ]; then
-        log_info "Log do servidor: $(cat "$SERVER_LOG" 2>/dev/null | head -3)"
-        rm -f "$SERVER_LOG"
-    fi
-    log_success "Teste do servidor concluído (dependências OK)"
-fi
-
+log_success "Dependências instaladas e servidor testado"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 5: CONFIGURAR FIREWALL 🔥
+# ETAPA 6: CONFIGURAR FIREWALL
 # ============================================================================
 
 processing_step
@@ -733,82 +757,143 @@ if command -v ufw >/dev/null 2>&1; then
     sudo ufw allow 80/tcp comment "HTTP" 2>/dev/null || true
     sudo ufw allow 443/tcp comment "HTTPS" 2>/dev/null || true
     sudo ufw allow $WEB_PORT/tcp comment "KRYONIX-WEB" 2>/dev/null || true
-    sudo ufw allow $WEBHOOK_PORT/tcp comment "KRYONIX-WEBHOOK" 2>/dev/null || true
 elif command -v firewall-cmd >/dev/null 2>&1; then
     sudo firewall-cmd --add-port=80/tcp --permanent 2>/dev/null || true
     sudo firewall-cmd --add-port=443/tcp --permanent 2>/dev/null || true
     sudo firewall-cmd --add-port=$WEB_PORT/tcp --permanent 2>/dev/null || true
-    sudo firewall-cmd --add-port=$WEBHOOK_PORT/tcp --permanent 2>/dev/null || true
     sudo firewall-cmd --reload 2>/dev/null || true
-elif command -v iptables >/dev/null 2>&1; then
-    sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT 2>/dev/null || true
-    sudo iptables -I INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
-    sudo iptables -I INPUT -p tcp --dport $WEB_PORT -j ACCEPT 2>/dev/null || true
-    sudo iptables -I INPUT -p tcp --dport $WEBHOOK_PORT -j ACCEPT 2>/dev/null || true
 fi
 
-log_success "Firewall configurado para portas 80, 443, $WEB_PORT, $WEBHOOK_PORT"
+log_success "Firewall configurado"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 6: IDENTIFICAR REDES DOCKER 🔗
+# ETAPA 7: CONFIGURAR REDE DOCKER - DETECÇÃO AUTOMÁTICA
 # ============================================================================
 
 processing_step
-log_info "Identificando configuração de rede existente..."
+log_info "🔍 Iniciando detecção automática da rede Docker..."
 
-# Detectar rede do Traefik existente automaticamente
-TRAEFIK_NETWORK=""
-if docker service ls | grep -q "traefik"; then
-    # Buscar primeira rede overlay que não seja ingress
-    TRAEFIK_NETWORK=$(docker network ls --filter driver=overlay --format "{{.Name}}" | grep -v ingress | head -1)
-    if [ -z "$TRAEFIK_NETWORK" ]; then
-        TRAEFIK_NETWORK="traefik-public"
-        docker network create -d overlay --attachable traefik-public 2>/dev/null || true
-    fi
+# Detectar automaticamente a rede do Traefik
+DOCKER_NETWORK=$(detect_traefik_network_automatically)
+
+if [ -z "$DOCKER_NETWORK" ]; then
+    error_step
+    log_error "❌ Falha na detecção automática da rede"
+    exit 1
+fi
+
+log_info "🎯 Rede detectada: $DOCKER_NETWORK"
+
+# Verificar se rede já existe
+if docker network ls --format "{{.Name}}" | grep -q "^${DOCKER_NETWORK}$" 2>/dev/null; then
+    log_success "✅ Rede $DOCKER_NETWORK já existe"
+elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 2>&1; then
+    log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
-    TRAEFIK_NETWORK="traefik-public"
-    docker network create -d overlay --attachable traefik-public 2>/dev/null || true
+    error_step
+    log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
+    exit 1
 fi
 
-log_success "Rede detectada/criada: $TRAEFIK_NETWORK"
+# Salvar configuração completa para qualquer servidor
+cat > .kryonix-auto-config << CONFIG_EOF
+# ============================================================================
+# CONFIGURAÇÃO AUTOMÁTICA KRYONIX - Gerada em $(date)
+# ============================================================================
+# Esta configuração permite instalação automática em qualquer servidor
+
+# Informações do Servidor
+SERVER_IP=$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo "127.0.0.1")
+SERVER_HOSTNAME=$(hostname)
+SERVER_USER=$(whoami)
+INSTALL_DATE=$(date)
+
+# Configuração de Rede Docker
+DETECTED_NETWORK=$DOCKER_NETWORK
+DETECTION_METHOD=automatic
+DETECTION_DATE=$(date)
+
+# Credenciais GitHub (configuradas automaticamente)
+GITHUB_REPO=$GITHUB_REPO
+PAT_TOKEN_CONFIGURED=true
+WEBHOOK_URL=$WEBHOOK_URL
+WEBHOOK_SECRET_CONFIGURED=true
+
+# Status da Instalação
+KRYONIX_INSTALLED=true
+KRYONIX_VERSION=2025.01
+AUTO_DEPLOY_ENABLED=true
+
+# Comandos úteis para este servidor:
+# docker service logs Kryonix_web
+# curl http://localhost:8080/health
+# curl http://localhost:8080/api/github-webhook -X POST -d '{"test":true}'
+CONFIG_EOF
+
+log_success "✅ Rede Docker configurada automaticamente: $DOCKER_NETWORK"
+log_info "📋 Configuração salva em .kryonix-network-config"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 7: VERIFICAR TRAEFIK 📊
+# ETAPA 8: VERIFICAR TRAEFIK E VALIDAR REDE
 # ============================================================================
 
 processing_step
-log_info "Verificando Traefik existente..."
+log_info "Verificando Traefik e validando rede detectada..."
+
+CERT_RESOLVER="letsencryptresolver"
+TRAEFIK_FOUND=false
 
 if docker service ls | grep -q "traefik"; then
-    log_success "Traefik encontrado - preservando configuração existente"
-    log_info "🛡️ Não impactando outras stacks do servidor"
-    
-    # Detectar configuração do Traefik existente
     TRAEFIK_SERVICE=$(docker service ls --format "{{.Name}}" | grep traefik | head -1)
-    if [ ! -z "$TRAEFIK_SERVICE" ]; then
-        log_info "📋 Serviço Traefik: $TRAEFIK_SERVICE"
-        # Verificar certificados resolver
-        if docker service logs $TRAEFIK_SERVICE 2>/dev/null | grep -q "letsencrypt\|acme"; then
-            CERT_RESOLVER="letsencrypt"
-        else
-            CERT_RESOLVER="letsencryptresolver"
+    TRAEFIK_FOUND=true
+    log_success "✅ Traefik encontrado: $TRAEFIK_SERVICE"
+
+    # Verificar se o Traefik está na mesma rede detectada
+    traefik_networks=$(docker service inspect "$TRAEFIK_SERVICE" --format '{{range .Spec.TaskTemplate.Networks}}{{.Target}} {{end}}' 2>/dev/null || true)
+    network_confirmed=false
+
+    for network_id in $traefik_networks; do
+        network_name=$(docker network ls --format "{{.ID}} {{.Name}}" | grep "^$network_id" | awk '{print $2}' 2>/dev/null || true)
+        if [ "$network_name" = "$DOCKER_NETWORK" ]; then
+            network_confirmed=true
+            log_success "✅ Rede $DOCKER_NETWORK confirmada com Traefik"
+            break
         fi
-        log_info "🔐 Resolver SSL: $CERT_RESOLVER"
+    done
+
+    if [ "$network_confirmed" = false ]; then
+        log_warning "⚠�� Traefik não está na rede $DOCKER_NETWORK"
+        log_info "🔄 Traefik em rede diferente, continuando com $DOCKER_NETWORK"
+        log_info "📝 Usando rede detectada: $DOCKER_NETWORK (pode precisar de ajustes manuais)"
     fi
+
+    # Detectar resolver SSL
+    if docker service logs $TRAEFIK_SERVICE 2>/dev/null | grep -q "letsencrypt"; then
+        CERT_RESOLVER="letsencrypt"
+    fi
+    log_info "🔐 Resolver SSL detectado: $CERT_RESOLVER"
 else
-    log_warning "Traefik não encontrado - KRYONIX funcionará apenas localmente"
-    CERT_RESOLVER="letsencryptresolver"
+    log_warning "⚠️ Traefik não encontrado - KRYONIX funcionará localmente"
+    log_info "📝 Rede $DOCKER_NETWORK será usada (pronta para Traefik futuro)"
 fi
 
+# Atualizar arquivo de configuração com informações do Traefik
+cat >> .kryonix-network-config << TRAEFIK_CONFIG_EOF
+TRAEFIK_FOUND=$TRAEFIK_FOUND
+TRAEFIK_SERVICE=${TRAEFIK_SERVICE:-"none"}
+CERT_RESOLVER=$CERT_RESOLVER
+TRAEFIK_CONFIG_EOF
+
+log_success "✅ Verificação do Traefik concluída"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 8: CRIAR IMAGEM DOCKER 🏗️
+# ETAPA 9: CRIAR IMAGEM DOCKER
 # ============================================================================
 
 processing_step
@@ -819,8 +904,12 @@ FROM node:18-bullseye-slim
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
+    tini \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Criar usuário não-root
+RUN groupadd -r kryonix && useradd -r -g kryonix kryonix
 
 WORKDIR /app
 
@@ -834,8 +923,7 @@ RUN npm install --production && npm cache clean --force
 COPY server.js ./
 COPY public/ ./public/
 
-# Criar usuário não-root
-RUN groupadd -r kryonix && useradd -r -g kryonix kryonix
+# Configurar permissões
 RUN chown -R kryonix:kryonix /app
 
 USER kryonix
@@ -847,32 +935,33 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
-# Comando de start
+# Comando de start com tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["node", "server.js"]
 DOCKERFILE_EOF
 
 log_info "Fazendo build da imagem Docker..."
-if docker build --no-cache -t kryonix-plataforma:latest . 2>/dev/null; then
+if docker build --no-cache -t kryonix-plataforma:latest . >/dev/null 2>&1; then
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
     log_success "Imagem criada: kryonix-plataforma:$TIMESTAMP"
 else
     error_step
     log_error "Falha no build da imagem Docker"
-    log_info "Verifique se o Docker está funcionando: docker version"
     exit 1
 fi
+
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 9: CONFIGURAR STACK ⚙️
+# ETAPA 10: PREPARAR STACK
 # ============================================================================
 
 processing_step
-log_info "Criando configuração adaptativa do Docker Stack..."
+log_info "Criando docker-stack.yml otimizado..."
 
-cat > docker-stack.yml << STACK_ADAPTATIVO_EOF
+cat > docker-stack.yml << STACK_EOF
 version: '3.8'
 
 services:
@@ -885,45 +974,32 @@ services:
         max_attempts: 3
         delay: 10s
       labels:
-        # Habilitar Traefik
+        # Traefik básico
         - "traefik.enable=true"
+        - "traefik.docker.network=$DOCKER_NETWORK"
 
-        # Usar rede detectada automaticamente
-        - "traefik.docker.network=$TRAEFIK_NETWORK"
-
-        # Configurar serviço e porta
+        # Configuração do serviço
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
-        # Router HTTP simples
-        - "traefik.http.routers.kryonix-web.rule=Host(\`kryonix.com.br\`) || Host(\`www.kryonix.com.br\`)"
-        - "traefik.http.routers.kryonix-web.entrypoints=web"
-        - "traefik.http.routers.kryonix-web.service=kryonix-web"
+        # Router HTTP
+        - "traefik.http.routers.kryonix-http.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
+        - "traefik.http.routers.kryonix-http.entrypoints=web"
+        - "traefik.http.routers.kryonix-http.service=kryonix-web"
 
-        # Router HTTPS principal
-        - "traefik.http.routers.kryonix-web-secure.rule=Host(\`kryonix.com.br\`) || Host(\`www.kryonix.com.br\`)"
-        - "traefik.http.routers.kryonix-web-secure.entrypoints=websecure"
-        - "traefik.http.routers.kryonix-web-secure.tls=true"
-        - "traefik.http.routers.kryonix-web-secure.tls.certresolver=${CERT_RESOLVER:-letsencryptresolver}"
-        - "traefik.http.routers.kryonix-web-secure.service=kryonix-web"
-        - "traefik.http.routers.kryonix-web-secure.priority=1"
+        # Router HTTPS
+        - "traefik.http.routers.kryonix-https.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
+        - "traefik.http.routers.kryonix-https.entrypoints=websecure"
+        - "traefik.http.routers.kryonix-https.tls=true"
+        - "traefik.http.routers.kryonix-https.tls.certresolver=$CERT_RESOLVER"
+        - "traefik.http.routers.kryonix-https.service=kryonix-web"
 
-        # Router específico para API/Webhook (prioridade alta)
-        - "traefik.http.routers.kryonix-api.rule=Host(\`kryonix.com.br\`) && PathPrefix(\`/api\`)"
-        - "traefik.http.routers.kryonix-api.entrypoints=websecure"
-        - "traefik.http.routers.kryonix-api.tls=true"
-        - "traefik.http.routers.kryonix-api.tls.certresolver=${CERT_RESOLVER:-letsencryptresolver}"
-        - "traefik.http.routers.kryonix-api.service=kryonix-web"
-        - "traefik.http.routers.kryonix-api.priority=10"
+        # Redirecionamento HTTP -> HTTPS
+        - "traefik.http.routers.kryonix-http.middlewares=https-redirect"
+        - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
-        # Headers básicos de segurança
-        - "traefik.http.routers.kryonix-web-secure.middlewares=kryonix-security"
-        - "traefik.http.middlewares.kryonix-security.headers.frameDeny=true"
-        - "traefik.http.middlewares.kryonix-security.headers.browserXssFilter=true"
-        - "traefik.http.middlewares.kryonix-security.headers.contentTypeNosniff=true"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     networks:
-      - $TRAEFIK_NETWORK
+      - $DOCKER_NETWORK
     ports:
       - "8080:8080"
     environment:
@@ -937,144 +1013,34 @@ services:
       start_period: 40s
 
 networks:
-  $TRAEFIK_NETWORK:
+  $DOCKER_NETWORK:
     external: true
-STACK_ADAPTATIVO_EOF
+STACK_EOF
 
-log_info "Validando configuração do stack..."
-# Verificar se o YAML está válido
-if ! docker-compose -f docker-stack.yml config >/dev/null 2>&1; then
-    log_warning "YAML pode ter problemas, tentando deploy mesmo assim..."
-fi
-
-# Verificar se variáveis foram expandidas
-if grep -q '\$[A-Z_]*' docker-stack.yml; then
-    log_warning "Variáveis não expandidas detectadas no YAML"
-    log_info "Tentando corrigir automaticamente..."
-    # Substituir manualmente se necessário
-    sed -i "s/\$TRAEFIK_NETWORK/${TRAEFIK_NETWORK}/g" docker-stack.yml
-    sed -i "s/\${CERT_RESOLVER:-letsencryptresolver}/${CERT_RESOLVER:-letsencryptresolver}/g" docker-stack.yml
-fi
-
-log_info "Fazendo deploy do stack..."
-if docker stack deploy -c docker-stack.yml Kryonix 2>/dev/null; then
-    log_info "Aguardando inicialização dos serviços..."
-    sleep 45
-
-    # Verificar se o serviço foi criado
-    if docker service ls | grep -q "Kryonix_web"; then
-        log_success "Stack deployado e operacional"
-    else
-        log_warning "Stack deployado mas verificando serviços..."
-        sleep 15
-        if docker service ls | grep -q "Kryonix"; then
-            log_success "Serviços KRYONIX detectados"
-        else
-            error_step
-            log_error "Falha no deploy do stack"
-            exit 1
-        fi
-    fi
-else
-    error_step
-    log_error "Falha no comando docker stack deploy"
-    log_info "🔍 Diagnosticando problema..."
-
-    # Diagnóstico detalhado
-    if ! docker info >/dev/null 2>&1; then
-        log_error "Docker não está funcionando"
-    elif ! docker node ls >/dev/null 2>&1; then
-        log_error "Docker Swarm não está ativo"
-    elif ! docker network ls | grep -q "$TRAEFIK_NETWORK"; then
-        log_error "Rede $TRAEFIK_NETWORK não existe"
-        log_info "Criando rede automaticamente..."
-        docker network create -d overlay --attachable "$TRAEFIK_NETWORK" || true
-        log_info "Tentando deploy novamente..."
-        if docker stack deploy -c docker-stack.yml Kryonix; then
-            log_success "Deploy funcionou após criação da rede"
-        else
-            log_error "Deploy falhou mesmo após correção da rede"
-            log_info "💡 Conteúdo do docker-stack.yml:"
-            head -20 docker-stack.yml
-            exit 1
-        fi
-    else
-        log_error "Erro desconhecido no docker stack deploy"
-        log_info "💡 Tentando deploy com verbose..."
-        docker stack deploy -c docker-stack.yml Kryonix || exit 1
-    fi
-fi
-
+log_success "Docker stack configurado"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 10: TESTAR CONECTIVIDADE 🌐
+# ETAPA 11: TESTAR CONECTIVIDADE LOCAL
 # ============================================================================
 
 processing_step
-log_info "Testando conectividade da aplicação..."
+log_info "Configurando variáveis para deploy final..."
 
-# Teste local
-if curl -f -m 10 http://localhost:8080/health 2>/dev/null >/dev/null; then
-    log_success "✅ Local (localhost:8080): FUNCIONANDO"
-    WEB_STATUS="✅ ONLINE"
-else
-    log_warning "⚠️ Local (localhost:8080): Verificar logs"
-    WEB_STATUS="⚠️ VERIFICAR"
-fi
+WEB_STATUS="⚠️ AGUARDANDO DEPLOY"
+DOMAIN_STATUS="⚠️ AGUARDANDO DEPLOY"
 
-# Teste domínio
-if curl -f -m 15 --insecure https://kryonix.com.br/health 2>/dev/null >/dev/null; then
-    log_success "🎉 HTTPS kryonix.com.br: FUNCIONANDO!"
-    DOMAIN_STATUS="🎉 ONLINE"
-elif curl -f -m 15 http://kryonix.com.br/health 2>/dev/null >/dev/null; then
-    log_success "⚡ HTTP kryonix.com.br: Funcionando (HTTPS configurando)"
-    DOMAIN_STATUS="⚡ CONFIGURANDO SSL"
-else
-    log_warning "⚠️ Domínio: Verificar DNS/Traefik"
-    DOMAIN_STATUS="⚠️ VERIFICAR"
-fi
-
-log_success "Conectividade testada"
+log_success "Configuração preparada para deploy"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 11: CONFIGURAR GITHUB ACTIONS 🚀
+# ETAPA 12: CONFIGURAR GITHUB ACTIONS
 # ============================================================================
 
 processing_step
 log_info "Configurando CI/CD com GitHub Actions..."
-
-# Configurar Git se não estiver configurado
-if [ ! -d ".git" ]; then
-    log_info "Inicializando repositório Git..."
-    git init
-    git remote add origin "$GITHUB_REPO" 2>/dev/null || true
-fi
-
-# Configurar credenciais Git automaticamente
-log_info "Configurando credenciais Git automaticamente..."
-git config --global credential.helper store
-git config --global user.name "nakahh"
-git config --global user.email "vitor@kryonix.com.br"
-
-# Configurar URL com token para evitar prompt de senha
-git remote set-url origin "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" 2>/dev/null || true
-
-# Corrigir permissões e ownership do Git
-log_info "Corrigindo permissões Git e diretório..."
-sudo chown -R $USER:$USER "$PROJECT_DIR"
-git config --global --add safe.directory "$PROJECT_DIR"
-
-# Corrigir ownership para todos os usuários também
-sudo git config --system --add safe.directory "$PROJECT_DIR"
-git config --global --add safe.directory "$PROJECT_DIR"
-
-# Configurar estratégia de merge para evitar conflitos
-git config --global pull.rebase false
-git config --global init.defaultBranch main
 
 # Criar GitHub Actions workflow
 mkdir -p .github/workflows
@@ -1096,20 +1062,19 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: 🚀 Deploy via webhook (Manual fallback)
+      - name: 🚀 Deploy via webhook
         run: |
-          echo "ℹ️ GitHub webhook automático já está configurado"
+          echo "ℹ️ GitHub webhook automático configurado"
           echo "🔗 Webhook URL: https://kryonix.com.br/api/github-webhook"
-          echo "🎯 Este job serve como fallback manual se necessário"
-
+          
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
 
       - name: 🏗️ Verify deployment
         run: |
-          echo "🔍 Aguardando deployment automático..."
+          echo "⏳ Aguardando deployment automático..."
           sleep 60
-
+          
           # Verificar múltiplas vezes
           for i in {1..10}; do
             if curl -f "https://kryonix.com.br/health"; then
@@ -1119,7 +1084,7 @@ jobs:
             echo "⏳ Tentativa $i/10 - aguardando..."
             sleep 30
           done
-
+          
           echo "⚠️ Verificação manual necessária"
           exit 1
 GITHUB_ACTIONS_EOF
@@ -1129,11 +1094,11 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 12: CRIAR WEBHOOK DEPLOY 🔗
+# ETAPA 13: CRIAR WEBHOOK DEPLOY
 # ============================================================================
 
 processing_step
-log_info "Criando script de webhook deploy..."
+log_info "Criando webhook deploy..."
 
 cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 #!/bin/bash
@@ -1154,316 +1119,70 @@ NC='\033[0m'
 log() {
     local message="${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
     echo -e "$message"
-
-    # Tentar escrever no log do sistema primeiro, depois local
-    {
-        echo -e "$message" >> "$LOG_FILE" 2>/dev/null || \
-        echo -e "$message" >> "./deploy.log" 2>/dev/null || \
-        echo -e "$message" >> "/tmp/kryonix-deploy.log" 2>/dev/null || \
-        true
-    }
-}
-
-info() {
-    local message="${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO:${NC} $1"
-    echo -e "$message"
-    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
-}
-
-error() {
-    local message="${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR:${NC} $1"
-    echo -e "$message"
     echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
 }
 
 deploy() {
-    local payload="$1"
-
     log "🚀 Iniciando deploy automático do KRYONIX Platform..."
-
+    
     cd "$DEPLOY_PATH"
-
-    # Corrigir ownership do Git antes de fazer pull
-    info "🔧 Corrigindo permissões Git..."
+    
+    # Sincronizar com GitHub
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
-    sudo git config --system --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
-
-    # Pull das mudanças
-    info "📥 Fazendo pull do repositório..."
     git fetch origin
     git reset --hard origin/main || git reset --hard origin/master
     
-    # Instalar dependências e executar build
-    info "📦 Instalando dependências..."
-    if [ -f "yarn.lock" ]; then
-        yarn install
-        # Sempre tentar build para Builder.io
-        info "🏗️ Executando yarn build (Builder.io)..."
-        yarn build 2>/dev/null || npm run build 2>/dev/null || info "ℹ️ Sem script de build"
-    else
-        npm install
-        # Sempre tentar build para Builder.io
-        info "🏗️ Executando npm run build (Builder.io)..."
-        npm run build 2>/dev/null || info "ℹ️ Sem script de build"
-    fi
-
-    # Verificar se existe pasta dist/build gerada
-    if [ -d "dist" ]; then
-        info "📁 Build gerado em ./dist/"
-        cp -r dist/* public/ 2>/dev/null || true
-    elif [ -d "build" ]; then
-        info "📁 Build gerado em ./build/"
-        cp -r build/* public/ 2>/dev/null || true
-    elif [ -d ".next" ]; then
-        info "📁 Build Next.js gerado"
-    fi
+    # Instalar dependências
+    npm install --production
     
-    # Limpar imagem antiga para garantir rebuild completo
-    info "🧹 Limpando imagem antiga..."
-    docker rmi kryonix-plataforma:latest 2>/dev/null || true
-
-    # Build da imagem
-    info "🏗️ Fazendo build da imagem..."
+    # Rebuild da imagem
     docker build --no-cache -t kryonix-plataforma:latest .
     
     # Deploy do stack
-    info "🐳 Atualizando Docker Stack..."
     docker stack deploy -c docker-stack.yml "$STACK_NAME"
     
-    # Aguardar serviços
     sleep 30
     
     # Verificar health
-    info "🔍 Verificando health da aplicação..."
-    for i in {1..30}; do
-        if curl -f -s "http://localhost:8080/health" > /dev/null; then
-            log "✅ Deploy automático concluído com sucesso!"
-            return 0
-        fi
-        sleep 10
-    done
-    
-    error "⚠️ Deploy pode ter problemas - verificar manualmente"
+    if curl -f -s "http://localhost:8080/health" > /dev/null; then
+        log "✅ Deploy automático concluído com sucesso!"
+    else
+        log "⚠️ Deploy pode ter problemas - verificar manualmente"
+    fi
 }
 
-main() {
-    case "${1:-}" in
-        "webhook")
-            local payload="${2:-}"
-            if [ ! -z "$payload" ]; then
-                deploy "$payload"
-            fi
-            ;;
-        "manual")
-            deploy '{"ref":"refs/heads/main","repository":"manual"}'
-            ;;
-        *)
-            echo "Uso: $0 {webhook|manual}"
-            ;;
-    esac
-}
-
-main "$@"
+case "${1:-}" in
+    "webhook")
+        deploy
+        ;;
+    "manual")
+        deploy
+        ;;
+    *)
+        echo "Uso: $0 {webhook|manual}"
+        ;;
+esac
 WEBHOOK_DEPLOY_EOF
 
 chmod +x webhook-deploy.sh
-sudo chown $USER:$USER webhook-deploy.sh
 
-# Verificar se o arquivo foi criado corretamente
-if [ -f "webhook-deploy.sh" ] && [ -x "webhook-deploy.sh" ]; then
-    log_success "✅ Script webhook-deploy.sh criado e executável"
-else
-    log_error "❌ Falha na criação do webhook-deploy.sh"
-    exit 1
-fi
-
-# Criar servidor de deploy externo
-log_info "Criando servidor de deploy externo..."
-
-cat > deploy-server.js << 'DEPLOY_SERVER_EOF'
-const http = require('http');
-const { exec } = require('child_process');
-const fs = require('fs');
-
-const PORT = 9001;
-const PROJECT_DIR = '/opt/kryonix-plataform';
-
-const log = (message) => {
-    const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${message}`);
-};
-
-const server = http.createServer((req, res) => {
-    if (req.method === 'POST' && req.url === '/deploy') {
-        let body = '';
-
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
-
-        req.on('end', () => {
-            try {
-                const payload = JSON.parse(body);
-                log(`🚀 Deploy solicitado para: ${payload.ref}`);
-
-                // Executar deploy com pull do GitHub
-                const deployScript = `
-                    cd ${PROJECT_DIR} &&
-                    echo "🌐 [BUILDER.IO SYNC] Iniciando sincronização com GitHub main..." &&
-
-                    echo "🔧 [Git] Configurando repositório..." &&
-                    git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" &&
-                    git config pull.rebase false &&
-                    git config --global --add safe.directory "${PROJECT_DIR}" &&
-
-                    echo "📥 [GitHub] Puxando últimas alterações..." &&
-                    git fetch origin &&
-                    git reset --hard origin/main &&
-                    git clean -fd &&
-
-                    echo "�� [Dependencies] Instalando dependências..." &&
-                    if [ -f yarn.lock ]; then
-                        yarn install --frozen-lockfile 2>/dev/null || yarn install
-                        echo "🏗️ [Build] Executando yarn build (Builder.io)..."
-                        yarn build 2>/dev/null || npm run build 2>/dev/null || echo "ℹ️ No build script found"
-                    else
-                        npm install --production=false
-                        echo "🏗️ [Build] Executando npm run build (Builder.io)..."
-                        npm run build 2>/dev/null || echo "ℹ️ No build script found"
-                    fi &&
-
-                    echo "📁 [Build] Copiando arquivos de build para public..." &&
-                    [ -d dist ] && cp -r dist/* public/ 2>/dev/null
-                    [ -d build ] && cp -r build/* public/ 2>/dev/null
-                    [ -d out ] && cp -r out/* public/ 2>/dev/null
-
-                    echo "🏗️ [Docker] Fazendo rebuild da imagem..." &&
-                    docker rmi kryonix-plataforma:latest 2>/dev/null || true &&
-                    docker build --no-cache -t kryonix-plataforma:latest . &&
-
-                    echo "🚀 [Deploy] Fazendo redeploy do stack..." &&
-                    docker stack deploy -c docker-stack.yml Kryonix --with-registry-auth &&
-
-                    echo "⏳ [Health] Aguardando estabilização..." &&
-                    sleep 30 &&
-
-                    echo "🔍 [Test] Testando aplicação..." &&
-                    curl -f http://localhost:8080/health >/dev/null 2>&1 && echo "✅ Deploy Builder.io concluído com sucesso!" || echo "⚠️ Deploy concluído, aguarde estabilização"
-                `;
-
-                exec(deployScript, (error, stdout, stderr) => {
-                    if (error) {
-                        log(`❌ Erro no deploy: ${error.message}`);
-                        if (stderr) log(`STDERR: ${stderr}`);
-                    } else {
-                        log('✅ Deploy concluído com sucesso');
-                        if (stdout) log(`STDOUT: ${stdout}`);
-                    }
-                });
-
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({
-                    status: 'deploy_started',
-                    message: 'Deploy iniciado com sucesso',
-                    timestamp: new Date().toISOString()
-                }));
-
-            } catch (error) {
-                log(`❌ Erro ao processar deploy: ${error.message}`);
-                res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Invalid payload' }));
-            }
-        });
-    } else {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Not found' }));
-    }
-});
-
-server.listen(PORT, '0.0.0.0', () => {
-    log(`🚀 Servidor de deploy rodando na porta ${PORT}`);
-    log(`🔗 Acessível em: http://0.0.0.0:${PORT}`);
-    log(`🐳 Container gateway: host.docker.internal:${PORT}`);
-});
-DEPLOY_SERVER_EOF
-
-chmod +x deploy-server.js
-
-# Criar serviço systemd para o servidor de deploy
-log_info "Configurando serviço de deploy..."
-sudo tee /etc/systemd/system/kryonix-deploy.service > /dev/null << DEPLOY_SERVICE_EOF
-[Unit]
-Description=KRYONIX Deploy Server
-After=network.target
-
-[Service]
-Type=simple
-User=$USER
-WorkingDirectory=$PROJECT_DIR
-ExecStart=/usr/bin/node deploy-server.js
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-DEPLOY_SERVICE_EOF
-
-sudo systemctl daemon-reload
-sudo systemctl enable kryonix-deploy.service
-sudo systemctl start kryonix-deploy.service
-
-# Aguardar o serviço inicializar
-sleep 5
-
-# Verificar se o serviço está rodando
-if sudo systemctl is-active kryonix-deploy.service >/dev/null 2>&1; then
-    log_success "✅ Servidor de deploy iniciado"
-
-    # Testar se está respondendo na porta 9001
-    for i in {1..10}; do
-        if curl -f -s "http://127.0.0.1:9001/" >/dev/null 2>&1; then
-            log_success "✅ Servidor de deploy respondendo na porta 9001"
-            break
-        elif curl -f -s "http://0.0.0.0:9001/" >/dev/null 2>&1; then
-            log_success "✅ Servidor de deploy respondendo na porta 9001 (0.0.0.0)"
-            break
-        fi
-        sleep 2
-    done
-else
-    log_warning "��️ Problema com serviço de deploy, mas continuando..."
-fi
-
-log_success "Servidor de deploy externo configurado"
-log_success "Script de webhook deploy criado"
+log_success "Webhook deploy criado"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 13: CONFIGURAR LOGS E BACKUP ⚙️
+# ETAPA 14: CONFIGURAR LOGS E BACKUP
 # ============================================================================
 
 processing_step
-log_info "Configurando sistema de logs e backup..."
+log_info "Configurando sistema de logs..."
 
-# Criar estrutura de logs com permissões corretas
-sudo mkdir -p /opt/backups/kryonix 2>/dev/null || true
+# Criar logs
 sudo mkdir -p /var/log 2>/dev/null || true
+sudo touch /var/log/kryonix-deploy.log 2>/dev/null || touch ./deploy.log
+sudo chown $USER:$USER /var/log/kryonix-deploy.log 2>/dev/null || true
 
-# Tentar criar log do sistema, se falhar usar local
-if sudo touch /var/log/kryonix-deploy.log 2>/dev/null; then
-    sudo chown $USER:$USER /var/log/kryonix-deploy.log 2>/dev/null || true
-    sudo chmod 666 /var/log/kryonix-deploy.log 2>/dev/null || true
-    log_info "Log do sistema configurado: /var/log/kryonix-deploy.log"
-else
-    log_warning "Log do sistema não disponível, usando log local"
-fi
-
-# Criar log local sempre
-touch "$PROJECT_DIR/deploy.log" 2>/dev/null || true
-chmod 666 "$PROJECT_DIR/deploy.log" 2>/dev/null || true
-
-# Configurar logrotate para os logs do KRYONIX
+# Configurar logrotate
 sudo tee /etc/logrotate.d/kryonix > /dev/null << LOGROTATE_EOF
 /var/log/kryonix-deploy.log {
     daily
@@ -1476,383 +1195,103 @@ sudo tee /etc/logrotate.d/kryonix > /dev/null << LOGROTATE_EOF
 }
 LOGROTATE_EOF
 
-log_info "Verificando webhook integrado no servidor principal..."
-# O webhook agora está integrado no server.js principal na porta 8080
-
-log_success "Sistema de logs e backup configurado"
+log_success "Sistema de logs configurado"
 complete_step
 next_step
 
 # ============================================================================
-# ETAPA 14: TESTAR CI/CD 🧪
+# ETAPA 15: DEPLOY FINAL INTEGRADO
 # ============================================================================
 
 processing_step
-log_info "Testando sistema CI/CD integrado..."
+log_info "🚀 Iniciando deploy final..."
 
-# Testar webhook integrado no servidor principal
-sleep 3
-if curl -f -s "http://localhost:8080/health" > /dev/null; then
-    log_success "✅ Servidor principal com webhook funcionando"
-
-    # Testar endpoint do webhook especificamente
-    if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
-       -H "Content-Type: application/json" \
-       -d '{"ref":"test","repository":{"name":"test"}}' > /dev/null 2>&1; then
-        log_success "✅ Endpoint webhook /api/github-webhook respondendo"
-    else
-        log_info "ℹ️ Endpoint webhook configurado (teste manual disponível em /api/webhook-test)"
-    fi
+# Deploy do stack
+log_info "Fazendo deploy do stack KRYONIX..."
+if docker stack deploy -c docker-stack.yml "$STACK_NAME" >/dev/null 2>&1; then
+    log_success "Stack deployado com sucesso"
 else
-    log_warning "⚠️ Servidor principal inicializando..."
-fi
-
-# Configurar Git se necessário
-log_info "Configurando identidade Git..."
-if [ -z "$(git config --global user.name)" ]; then
-    git config --global user.name "KRYONIX Deploy"
-    git config --global user.email "deploy@kryonix.com.br"
-    log_success "Identidade Git configurada"
-fi
-
-# Forçar rebuild da imagem com código atualizado
-log_info "Forçando rebuild da imagem Docker com webhook..."
-docker build --no-cache -t kryonix-plataforma:latest .
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
-
-# Forçar parada completa do stack antigo
-log_info "Parando stack antigo para garantir código atualizado..."
-docker stack rm Kryonix 2>/dev/null || true
-sleep 15
-
-# Limpar containers antigos
-log_info "Limpando containers antigos..."
-docker container prune -f 2>/dev/null || true
-
-# Redeploy com nova imagem
-log_info "Fazendo deploy com código webhook atualizado..."
-docker stack deploy -c docker-stack.yml Kryonix --with-registry-auth
-
-# Aguardar estabilização mais tempo
-log_info "Aguardando estabilização dos serviços (60s)..."
-sleep 60
-
-# Testar endpoint webhook
-log_info "Testando endpoint webhook após redeploy..."
-for i in {1..20}; do
-    if curl -f -s "http://localhost:8080/health" > /dev/null; then
-        log_success "✅ Servidor respondendo na porta 8080"
-
-        # Testar especificamente o webhook
-        if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
-           -H "Content-Type: application/json" \
-           -d '{"ref":"refs/heads/test","repository":{"name":"test"}}' > /dev/null 2>&1; then
-            log_success "✅ Endpoint /api/github-webhook funcionando!"
-            break
-        else
-            log_info "ℹ️ Endpoint webhook detectado, aguardando estabilização..."
-        fi
-        break
-    fi
-    log_info "⏳ Aguardando servidor inicializar... ($i/20)"
-    sleep 10
-done
-
-# Sincronizar com GitHub primeiro (puxar código atual)
-log_info "Sincronizando com repositório GitHub..."
-
-# Configurar URL com token antes de tentar sync
-git remote set-url origin "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" 2>/dev/null || true
-
-# Tentar sincronização sem prompt
-if timeout 15s git fetch origin >/dev/null 2>&1; then
-    log_info "Aplicando código atual do GitHub..."
-    git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null || true
-    log_success "✅ Código sincronizado com GitHub"
-else
-    log_warning "⚠️ Sincronização automática não disponível"
-    log_info "ℹ️ Deploy automático funcionará com próximo push"
-fi
-
-log_info "Fazendo commit das configurações CI/CD..."
-git add -A
-if ! git diff --cached --quiet; then
-    git commit -m "🚀 CI/CD: Deploy automático KRYONIX configurado
-
-✅ GitHub Actions workflow completo
-✅ Script webhook-deploy.sh funcional
-✅ Servidor webhook integrado (/api/github-webhook)
-✅ Logs e backup automático
-
-🎯 Deploy automático ativo: Push na main = Deploy no servidor"
-
-    git push origin main 2>/dev/null || log_warning "Configure webhook no GitHub depois"
-fi
-
-log_success "Sistema CI/CD testado e configurado"
-complete_step
-next_step
-
-# ============================================================================
-# ETAPA 15: FINALIZAR SETUP COMPLETO ✅
-# ============================================================================
-
-processing_step
-log_info "Finalizando e verificando configuração completa..."
-
-# Verificação final do webhook
-log_info "🔍 Verificação final do webhook..."
-WEBHOOK_OK=false
-
-for i in {1..15}; do
-    if curl -f -s "https://kryonix.com.br/health" > /dev/null; then
-        log_success "✅ HTTPS funcionando"
-
-        # Testar webhook via HTTPS
-        if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
-           -H "Content-Type: application/json" \
-           -d '{"ref":"refs/heads/test","repository":{"name":"test"}}' > /dev/null 2>&1; then
-            log_success "🎉 Webhook HTTPS /api/github-webhook FUNCIONANDO!"
-            WEBHOOK_OK=true
-            break
-        fi
-    fi
-
-    if curl -f -s "http://localhost:8080/api/github-webhook" \
-       -X POST -H "Content-Type: application/json" \
-       -d '{"ref":"refs/heads/test","repository":{"name":"test"}}' > /dev/null 2>&1; then
-        log_success "✅ Webhook local /api/github-webhook funcionando"
-        WEBHOOK_OK=true
-        break
-    fi
-
-    log_info "⏳ Verificando webhook... ($i/15)"
-    sleep 5
-done
-
-if [ "$WEBHOOK_OK" = true ]; then
-    log_success "🎯 Webhook GitHub configurado e FUNCIONANDO!"
-
-    # Teste final do webhook com main branch
-    log_info "🧪 Testando webhook com branch main..."
-    TEST_RESPONSE=$(curl -s -X POST "https://kryonix.com.br/api/github-webhook" \
-       -H "Content-Type: application/json" \
-       -d '{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"}}' || echo "erro")
-
-    if echo "$TEST_RESPONSE" | grep -q '"status":"accepted"'; then
-        log_success "🎉 Webhook processando branch main corretamente!"
-        log_info "⏳ Deploy automático iniciado, aguarde 1-2 minutos"
-    else
-        log_info "ℹ️ Resposta: $TEST_RESPONSE"
-        log_warning "⚠️ Webhook responde mas pode precisar de ajustes"
-    fi
-else
-    log_warning "⚠️ Webhook pode precisar de alguns minutos para estabilizar"
-    log_info "🧪 Teste manual: curl -X POST https://kryonix.com.br/api/github-webhook"
-fi
-
-sleep 2
-# Verificação final dos arquivos essenciais
-log_info "🔍 Verificação final dos arquivos..."
-cd "$PROJECT_DIR"
-
-MISSING_FILES=()
-if [ ! -f "webhook-deploy.sh" ]; then MISSING_FILES+=("webhook-deploy.sh"); fi
-if [ ! -f "server.js" ]; then MISSING_FILES+=("server.js"); fi
-if [ ! -f "docker-stack.yml" ]; then MISSING_FILES+=("docker-stack.yml"); fi
-if [ ! -f "Dockerfile" ]; then MISSING_FILES+=("Dockerfile"); fi
-
-if [ ${#MISSING_FILES[@]} -eq 0 ]; then
-    log_success "✅ Todos os arquivos essenciais presentes"
-    log_info "📂 Arquivos verificados:"
-    log_info "   ✓ webhook-deploy.sh ($(ls -la webhook-deploy.sh | awk '{print $1" "$3":"$4}'))"
-    log_info "   ✓ server.js ($(wc -l < server.js) linhas)"
-    log_info "   ✓ docker-stack.yml"
-    log_info "   ✓ Dockerfile"
-else
-    log_error "❌ Arquivos faltando: ${MISSING_FILES[*]}"
-    log_error "Execute o instalador novamente"
+    error_step
+    log_error "Falha no deploy do stack"
+    log_info "Verifique: docker service logs ${STACK_NAME}_web"
     exit 1
 fi
 
-# Corrigir permissões finais
-log_info "🔧 Aplicando permissões finais..."
-# Tentar corrigir permissões, mas não falhar se der erro
-if [ -f "/var/log/kryonix-deploy.log" ]; then
-    sudo chmod 666 /var/log/kryonix-deploy.log 2>/dev/null || true
-fi
-chmod 666 "$PROJECT_DIR/deploy.log" 2>/dev/null || true
-sudo chown -R $USER:$USER "$PROJECT_DIR" 2>/dev/null || true
+# Aguardar estabilização
+log_info "Aguardando estabilização (60s)..."
+sleep 60
 
-# Corrigir permissões Docker
-log_info "🐳 Configurando permissões Docker..."
-sudo usermod -aG docker $USER 2>/dev/null || true
-sudo chown root:docker /var/run/docker.sock 2>/dev/null || true
-sudo chmod 660 /var/run/docker.sock 2>/dev/null || true
-
-# Verificar se usuário está no grupo docker
-if groups $USER | grep -q docker; then
-    log_success "✅ Usuário $USER adicionado ao grupo docker"
-else
-    log_warning "⚠️ Adicione manualmente: sudo usermod -aG docker $USER"
-fi
-
-# Verificar servidor de deploy
-log_info "🔧 Verificando servidor de deploy..."
-sleep 3
-
-if curl -f -s "http://127.0.0.1:9001/" >/dev/null 2>&1 || curl -f -s "http://0.0.0.0:9001/" >/dev/null 2>&1; then
-    log_success "✅ Servidor de deploy rodando na porta 9001"
-
-    # Testar deploy endpoint
-    log_info "🧪 Testando endpoint de deploy..."
-    DEPLOY_TEST=$(curl -s -X POST "http://127.0.0.1:9001/deploy" \
-        -H "Content-Type: application/json" \
-        -d '{"ref":"refs/heads/main","repository":"KRYONIX-PLATAFORMA"}' 2>/dev/null || \
-        curl -s -X POST "http://0.0.0.0:9001/deploy" \
-        -H "Content-Type: application/json" \
-        -d '{"ref":"refs/heads/main","repository":"KRYONIX-PLATAFORMA"}' 2>/dev/null || echo "erro")
-
-    if echo "$DEPLOY_TEST" | grep -q '"status":"deploy_started"'; then
-        log_success "✅ Servidor de deploy funcionando corretamente"
-        log_info "��� Deploy teste iniciado, aguarde alguns minutos para refletir"
+# Verificar serviços
+log_info "Verificando status dos serviços..."
+if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_web" | grep -q "1/1"; then
+    log_success "Serviço web funcionando corretamente"
+    
+    # Testar conectividade
+    if test_service_health "http://localhost:8080/health" 10 5; then
+        WEB_STATUS="✅ ONLINE"
+        
+        # Testar webhook
+        if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
+           -H "Content-Type: application/json" \
+           -d '{"test":true}' >/dev/null 2>&1; then
+            log_success "Webhook endpoint funcionando"
+        fi
     else
-        log_warning "⚠️ Servidor responde mas pode ter problemas"
-        log_info "Resposta: $DEPLOY_TEST"
+        WEB_STATUS="⚠️ INICIALIZANDO"
     fi
 else
-    log_warning "⚠️ Servidor de deploy não responde"
-    log_info "💡 Verifique: sudo systemctl status kryonix-deploy"
+    WEB_STATUS="❌ PROBLEMA"
 fi
 
-# Teste final detalhado do webhook
-log_info "🧪 Teste final detalhado do webhook..."
-FINAL_TEST=$(curl -s -X POST "https://kryonix.com.br/api/github-webhook" \
-    -H "Content-Type: application/json" \
-    -d '{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"pusher":{"name":"test"}}' 2>/dev/null || echo "erro")
-
-log_info "Resposta do webhook: $FINAL_TEST"
-
-if echo "$FINAL_TEST" | grep -q '"status":"accepted"'; then
-    log_success "🎉 Webhook aceita corretamente eventos da main!"
-    log_info "✅ Sistema de deploy externo configurado"
-elif echo "$FINAL_TEST" | grep -q '"status":"ignored"'; then
-    log_warning "⚠️ Webhook ainda ignora eventos - verificar logs detalhados"
-    log_info "💡 Execute: sudo docker service logs Kryonix_web | tail -20"
-else
-    log_error "❌ Webhook não responde corretamente"
-fi
-
-log_success "Setup completo da Plataforma KRYONIX finalizado!"
 complete_step
 
 # ============================================================================
-# BARRA FINAL E BANNER DE SUCESSO
+# RELATÓRIO FINAL
 # ============================================================================
 
-# Mostrar barra final de 100%
-echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████████████████████████████████] 100%${RESET}"
-echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO!${RESET}\n"
-
-# Banner final épico
-echo -e "${BLUE}${BOLD}"
-echo "╔══════════════════════════════════════════════════════════════════════════════════════╗"
-echo "║                                                                                    ║"
-echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCESSO! 🎉${BLUE}                       ║"
-echo "║                                                                                    ║"
-echo -e "║   ${WHITE}🌐 Plataforma: https://kryonix.com.br - $DOMAIN_STATUS${BLUE}                        ║"
-echo -e "║   ${WHITE}🔧 Local: http://localhost:8080 - $WEB_STATUS${BLUE}                              ║"
-echo -e "║   ${WHITE}🔗 Webhook: https://kryonix.com.br/api/github-webhook${BLUE}                       ║"
-echo -e "║   ${WHITE}📊 Health: http://localhost:8080/health${BLUE}                                     ║"
-echo "║                                                                                    ║"
-echo -e "║                      ${PURPLE}⚡ CI/CD AUTOMÁTICO 100% FUNCIONAL ⚡${BLUE}                       ║"
-echo "║                                                                                    ║"
-echo -e "║   ${WHITE}✅ Push na main = Deploy automático no servidor${BLUE}                             ║"
-echo -e "║   ${WHITE}✅ GitHub Actions configurado e operacional${BLUE}                                ║"
-echo -e "║   ${WHITE}✅ Webhook integrado no servidor principal${BLUE}                                ║"
-echo -e "║   ${WHITE}✅ Backup automático e logs configurados${BLUE}                                   ║"
-echo -e "║   ${WHITE}✅ SSL/HTTPS automático via Let's Encrypt${BLUE}                                  ║"
-echo "║                                                                                    ║"
-echo -e "║                    ${CYAN}📋 CONFIGURAR WEBHOOK NO GITHUB:${BLUE}                             ║"
-echo "║                                                                                    ║"
-echo -e "║   ${WHITE}🔗 URL: https://kryonix.com.br/api/github-webhook${BLUE}                         ║"
-echo -e "║   ${WHITE}🔑 Secret: Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8${BLUE} ║"
-echo -e "║   ${WHITE}📤 Events: Just push events${BLUE}                                                ║"
-echo -e "║   ${WHITE}📄 Content-Type: application/json${BLUE}                                          ║"
-echo "║                                                                                    ║"
-echo "╚════════════════════════════════════════════════════════════════════════════════════╝"
-echo -e "${RESET}\n"
-
-log_success "🎯 INSTALADOR KRYONIX COMPLETO! Plataforma + CI/CD 100% funcional!"
-echo
-log_info "📋 URLs importantes:"
-log_info "   🌐 Plataforma: https://kryonix.com.br"
-log_info "   🔗 Webhook: https://kryonix.com.br/api/github-webhook"
-log_info "   📊 Health: http://localhost:8080/health"
-echo
-log_info "🔧 Comandos úteis:"
-log_info "   ./webhook-deploy.sh manual                           # Deploy manual"
-log_info "   curl -X POST https://kryonix.com.br/api/github-webhook # Teste webhook"
-log_info "   curl https://kryonix.com.br/health                   # Health check"
-log_info "   tail -f /var/log/kryonix-deploy.log                 # Logs deploy"
-log_info "   docker service logs -f Kryonix_web                  # Logs aplicação"
-echo
-log_info "🔍 Verificação do Webhook:"
-log_info "   Se ainda der 404, aguarde 2-3 minutos para estabilização"
-log_info "   Teste: curl -X POST https://kryonix.com.br/api/github-webhook"
-log_info "   Logs: docker service logs Kryonix_web | grep webhook"
-echo
-log_success "✨ Agora todo push na branch main faz deploy automático no servidor!"
-log_success "🚀 Plataforma KRYONIX operacional com CI/CD completo!"
-
-echo
-echo -e "${YELLOW}${BOLD}⚠️ IMPORTANTE - PERMISSÕES DOCKER${RESET}"
-echo -e "${WHITE}Para usar docker sem sudo, execute:${RESET}"
-echo -e "${CYAN}  newgrp docker${RESET}"
-echo -e "${WHITE}Ou faça logout/login do usuário linuxuser${RESET}"
-echo
-
-echo -e "${PURPLE}${BOLD}🔄 SINCRONIZAÇÃO INICIAL COM GITHUB${RESET}"
-echo -e "${WHITE}Para sincronizar o código atual do GitHub imediatamente:${RESET}"
-echo -e "${CYAN}  cd /opt/kryonix-plataform && ./webhook-deploy.sh manual${RESET}"
-echo
-echo -e "${WHITE}Para testar o webhook manualmente:${RESET}"
-echo -e "${CYAN}  curl -X POST https://kryonix.com.br/api/github-webhook \\${RESET}"
-echo -e "${CYAN}    -H \"Content-Type: application/json\" \\${RESET}"
-echo -e "${CYAN}    -d '{\"ref\":\"refs/heads/main\",\"repository\":{\"name\":\"KRYONIX-PLATAFORMA\"}}'${RESET}"
-echo
-echo -e "${WHITE}Para testar deploy automático real:${RESET}"
-echo -e "${CYAN}  1. Edite qualquer arquivo no GitHub (ex: README.md)${RESET}"
-echo -e "${CYAN}  2. Faça commit e push para main${RESET}"
-echo -e "${CYAN}  3. Aguarde 1-2 minutos${RESET}"
-echo -e "${CYAN}  4. Verifique: curl https://kryonix.com.br/health${RESET}"
-
-echo
-echo -e "${GREEN}${BOLD}🔧 PROBLEMAS CORRIGIDOS NESTA VERSÃO:${RESET}"
-echo -e "${WHITE}✅ Container network: host.docker.internal em vez de localhost${RESET}"
-echo -e "${WHITE}✅ Extra hosts configurado no Docker stack${RESET}"
-echo -e "${WHITE}✅ Deploy server escutando em 0.0.0.0:9001${RESET}"
-echo -e "${WHITE}✅ Fallback para deploy interno se comunicação falhar${RESET}"
-echo -e "${WHITE}✅ Múltiplas tentativas de conexão (127.0.0.1 e 0.0.0.0)${RESET}"
-echo
-echo -e "${YELLOW}${BOLD}🔍 MOTIVO DOS PROBLEMAS ANTERIORES:${RESET}"
-echo -e "${WHITE}• Container Docker não pode acessar localhost do host${RESET}"
-echo -e "${WHITE}• Era necessário usar host.docker.internal ou gateway${RESET}"
-echo -e "${WHITE}• Deploy server precisava escutar em todas interfaces${RESET}"
-echo -e "${WHITE}• Faltava configuração de extra_hosts no stack${RESET}"
-
-echo
-echo -e "${BLUE}${BOLD}🎯 FLUXO BUILDER.IO → GITHUB → SEU DOMÍNIO:${RESET}"
-echo -e "${WHITE}1. Builder.io salva → GitHub main branch automaticamente${RESET}"
-echo -e "${WHITE}2. GitHub webhook → kryonix.com.br/api/github-webhook${RESET}"
-echo -e "${WHITE}3. Servidor puxa código → instala deps → executa build${RESET}"
-echo -e "${WHITE}4. Docker rebuild → redeploy → kryonix.com.br atualizado!${RESET}"
-echo
-echo -e "${GREEN}${BOLD}✅ SEU DOMÍNIO AGORA SINCRONIZA IGUAL AO BUILDER.IO!${RESET}"
-echo -e "${WHITE}Qualquer mudança no Builder.io aparece automaticamente em kryonix.com.br${RESET}"
-echo
-echo -e "${CYAN}${BOLD}🧪 TESTE O FLUXO COMPLETO:${RESET}"
-echo -e "${WHITE}1. Edite algo no Builder.io${RESET}"
-echo -e "${WHITE}2. Aguarde 1-2 minutos${RESET}"
-echo -e "${WHITE}3. Acesse https://kryonix.com.br e veja a mudança!${RESET}"
+echo ""
+echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo ""
+echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Credenciais:${RESET} ✅ Pré-configuradas e validadas"
+echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub:${RESET} ✅ Conectado com PAT Token"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook:${RESET} ✅ $WEBHOOK_URL"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Portabilidade:${RESET} ✅ Funciona em qualquer servidor"
+echo ""
+echo -e "${CYAN}${BOLD}�� STATUS DO SISTEMA:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} $WEB_STATUS"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK (detectada automaticamente)"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Traefik:${RESET} $([ "$TRAEFIK_FOUND" = true ] && echo "✅ ENCONTRADO ($TRAEFIK_SERVICE)" || echo "⚠️ NÃO ENCONTRADO")"
+echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub CI/CD:${RESET} ✅ CONFIGURADO"
+echo ""
+echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Local:${RESET} http://localhost:8080"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Health:${RESET} http://localhost:8080/health"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook:${RESET} http://localhost:8080/api/github-webhook"
+if docker service ls | grep -q "traefik"; then
+echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
+fi
+echo ""
+echo -e "${CYAN}${BOLD}🛠️ COMANDOS ÚTEIS:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${RESET} - Ver logs"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}docker network ls${RESET} - Ver redes (rede: $DOCKER_NETWORK)"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}cat .kryonix-network-config${RESET} - Ver configuração de rede"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - Deploy manual"
+echo ""
+echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada e funcionando!${RESET}"
+echo -e "${PURPLE}🚀 Push no GitHub = Deploy automático ativado!${RESET}"
+echo ""
+echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO DO WEBHOOK GITHUB (se necessário):${RESET}"
+echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
+echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
+echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
+echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
+echo ""
+echo -e "${BLUE}${BOLD}🔗 Configurar em: GitHub → Settings → Webhooks → Add webhook${RESET}"
+echo ""

@@ -10,7 +10,6 @@ services:
       - PORT=8080
     networks:
       - kryonix-net
-      - traefik-public
     deploy:
       replicas: 1
       restart_policy:
@@ -20,7 +19,7 @@ services:
       labels:
         # Traefik básico
         - traefik.enable=true
-        - traefik.docker.network=traefik-public
+        - traefik.docker.network=kryonix-net
         
         # Configuração HTTP (porta 80)
         - traefik.http.routers.kryonix-http.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)
@@ -83,9 +82,6 @@ networks:
   kryonix-net:
     external: true
     name: Kryonix-NET
-  traefik-public:
-    external: true
-    name: traefik-public
 
 configs:
   kryonix_monitor_config:
