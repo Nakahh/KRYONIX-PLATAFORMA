@@ -366,7 +366,7 @@ echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
-echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação necessária!${RESET}\n"
+echo -e "${GREEN}${BOLD}✅ Configuraç��o automática ativada - sem interação necessária!${RESET}\n"
 
 # Inicializar primeira etapa
 next_step
@@ -1265,7 +1265,7 @@ deploy() {
 
         # Verificar se o update funcionou
         if check_service_health 6 10; then
-            log "��� Deploy automático concluído com sucesso via update!"
+            log "✅ Deploy automático concluído com sucesso via update!"
             return 0
         else
             warning "⚠️ Update não funcionou, forçando restart completo..."
@@ -1302,7 +1302,7 @@ WEBHOOK_DEPLOY_EOF
 
 chmod +x webhook-deploy.sh
 
-log_success "Webhook deploy criado"
+log_success "✅ Webhook deploy corrigido criado com rebuild automático completo"
 complete_step
 next_step
 
@@ -1388,7 +1388,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═════════════════════════════════════════════════════════════���═════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
