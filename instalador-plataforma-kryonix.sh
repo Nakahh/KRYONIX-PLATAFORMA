@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════���═══════╗"
+    echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -342,7 +342,7 @@ validate_credentials() {
     if [ ! -z "$WEBHOOK_URL" ] && [[ "$WEBHOOK_URL" == https://* ]]; then
         log_success "✅ Webhook URL configurado: $WEBHOOK_URL"
     else
-        log_error "�� Webhook URL inválido"
+        log_error "❌ Webhook URL inválido"
         return 1
     fi
 
@@ -1077,7 +1077,7 @@ jobs:
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
 
-      - name: 🏗️ Verify deployment
+      - name: ��️ Verify deployment
         run: |
           echo "⏳ Aguardando deployment automático..."
           sleep 60
@@ -1400,20 +1400,17 @@ deploy() {
     done
 
     # Verificar dependências de runtime necessárias
-    info "🔍 Verificando dependências de runtime do Builder.io..."
+    info "🔍 Verificando dependências de runtime..."
 
-    # Verificar se há dependências específicas do Builder.io
-    if grep -q "@builder.io" package.json; then
-        info "✅ Dependências do Builder.io detectadas"
-    fi
-
-    # Verificar se há React/Vue/Angular
+    # Verificar frameworks comuns
     if grep -q '"react"' package.json; then
-        info "✅ React detectado - compatível com Builder.io"
+        info "✅ React detectado"
     elif grep -q '"vue"' package.json; then
-        info "✅ Vue detectado - compatível com Builder.io"
+        info "✅ Vue detectado"
     elif grep -q '"@angular"' package.json; then
-        info "✅ Angular detectado - compatível com Builder.io"
+        info "✅ Angular detectado"
+    elif grep -q '"next"' package.json; then
+        info "✅ Next.js detectado"
     fi
 
     # Limpar arquivo de backup
@@ -1636,7 +1633,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}════════��═════���═════════��══════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
@@ -1685,7 +1682,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Dependências Inteligentes:${RESET} ✅ D
 echo -e "    ${BLUE}│${RESET} ${BOLD}Build Automático:${RESET} ✅ Suporte a dist/, build/, out/, _site/, .next/"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Gerenciadores:${RESET} ✅ NPM e Yarn com limpeza de cache"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Fallbacks Seguros:${RESET} ✅ Build de emergência se algo falhar"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Frameworks:${RESET} ✅ React, Vue, Angular, Next.js compatíveis"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Frameworks:${RESET} �� React, Vue, Angular, Next.js compatíveis"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO DO WEBHOOK GITHUB (se necessário):${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
