@@ -418,10 +418,23 @@ app.post('/api/github-webhook', (req, res) => {
             // Fallback para rebuild interno com múltiplos caminhos
             console.log('📋 Script não encontrado, usando rebuild interno');
 
-            const dockerCommands = [
-                'cd /opt/kryonix-platform && git fetch origin && git reset --hard origin/main && docker build --no-cache -t kryonix-plataforma:latest . && docker service update --force --image kryonix-plataforma:latest Kryonix_web',
-                'docker build --no-cache -t kryonix-plataforma:latest . && docker service update --force --image kryonix-plataforma:latest Kryonix_web'
+            // Fallback com sincronização GitHub completa
+            const syncCommands = [
+                'cd /opt/kryonix-platform',
+                'git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"',
+                'git config pull.rebase false',
+                'git config --global --add safe.directory "/opt/kryonix-platform"',
+                'git fetch origin --force',
+                'git reset --hard origin/main',
+                'git pull origin main --force',
+                'docker build --no-cache --pull -t kryonix-plataforma:latest .',
+                'docker service update --force --image kryonix-plataforma:latest Kryonix_web'
             ];
+
+            const fullCommand = syncCommands.join(' && ');
+            console.log('🔄 Executando sincronização GitHub + Deploy:', fullCommand);
+
+            const dockerCommands = [fullCommand];
 
             let executed = false;
             for (const cmd of dockerCommands) {
@@ -787,7 +800,7 @@ log_info "Criando Dockerfile otimizado..."
 cat > Dockerfile << 'DOCKERFILE_EOF'
 FROM node:18-bullseye-slim
 
-# Instalar dependências do sistema
+# Instalar depend��ncias do sistema
 RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
