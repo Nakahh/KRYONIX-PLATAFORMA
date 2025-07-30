@@ -84,7 +84,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║█���║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██���╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -252,6 +252,7 @@ detect_traefik_network_automatically() {
     if docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
         detected_network="Kryonix-NET"
         log_success "✅ Rede principal detectada: $detected_network"
+        unset DETECTION_IN_PROGRESS
         echo "$detected_network"
         return 0
     fi
@@ -295,7 +296,7 @@ detect_traefik_network_automatically() {
             local network_driver=$(docker network inspect "$found_network" --format '{{.Driver}}' 2>/dev/null || true)
             if [ "$network_driver" = "overlay" ]; then
                 detected_network="$found_network"
-                log_success "✅ Rede detectada por padrão ($pattern): $detected_network"
+                log_success "�� Rede detectada por padrão ($pattern): $detected_network"
                 echo "$detected_network"
                 return 0
             fi
@@ -421,7 +422,7 @@ validate_credentials() {
     if [ ! -z "$WEBHOOK_URL" ] && [[ "$WEBHOOK_URL" == https://* ]]; then
         log_success "✅ Webhook URL configurado: $WEBHOOK_URL"
     else
-        log_error "❌ Webhook URL inv��lido"
+        log_error "❌ Webhook URL inválido"
         return 1
     fi
 
@@ -1333,7 +1334,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════════���══════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
