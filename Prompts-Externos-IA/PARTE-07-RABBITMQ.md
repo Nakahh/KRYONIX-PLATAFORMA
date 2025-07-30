@@ -109,7 +109,7 @@ cat > messaging/rabbitmq/enabled_plugins << 'EOF'
 EOF
 
 # === DEFINIÇÕES MULTI-TENANT BASE ===
-echo "📋 Criando definições multi-tenant base..."
+echo "��� Criando definições multi-tenant base..."
 cat > messaging/rabbitmq/definitions/multi-tenant-definitions.json << 'EOF'
 {
   "users": [
@@ -557,7 +557,398 @@ EOF
 chmod +x messaging/scripts/client-creation/create-client-queues.py
 
 # === DOCKER COMPOSE MULTI-TENANT ===
-echo "🐳 Configurando Docker Compose..."
+echo "⚙️ Criando consumer SDK integration..."
+cat > messaging/consumers/sdk-integration-consumer.js << 'EOF'
+const amqp = require('amqplib');
+const axios = require('axios');
+
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:Vitor@123456@localhost:5672';
+const KRYONIX_SDK_URL = process.env.KRYONIX_SDK_URL || 'http://localhost:8000';
+
+class SDKIntegrationConsumer {
+    constructor() {
+        this.connection = null;
+        this.channel = null;
+        this.supportedModules = ['crm', 'whatsapp', 'agendamento', 'financeiro', 'marketing', 'analytics', 'portal', 'whitelabel'];
+    }
+
+    async connect() {
+        console.log('⚙️ Connecting to RabbitMQ for SDK integration...');
+        this.connection = await amqp.connect(RABBITMQ_URL);
+        this.channel = await this.connection.createChannel();
+        await this.channel.prefetch(5);
+        console.log('✅ Connected to SDK integration messaging');
+    }
+
+    async setupConsumers() {
+        // General SDK method calls
+        await this.channel.consume('sdk.method.calls', async (msg) => {
+            if (msg) {
+                const data = JSON.parse(msg.content.toString());
+                await this.processSDKCall(data);
+                this.channel.ack(msg);
+            }
+        });
+
+        // Client-specific SDK consumers
+        await this.setupClientSpecificConsumers();
+
+        console.log('🔧 SDK integration consumers started');
+    }
+
+    async setupClientSpecificConsumers() {
+        // Dynamic pattern: cliente_{id}.sdk.{module}.{method}
+        const pattern = /^cliente_(.+)\.sdk\.(.+)\.(.+)$/;
+
+        await this.channel.consume('*.sdk.*.*', async (msg) => {
+            if (msg) {
+                const queueName = msg.fields.routingKey;
+                const match = queueName.match(pattern);
+
+                if (match) {
+                    const [, clientId, module, method] = match;
+                    const data = JSON.parse(msg.content.toString());
+                    await this.processClientSDKCall(clientId, module, method, data);
+                }
+
+                this.channel.ack(msg);
+            }
+        });
+    }
+
+    async processSDKCall(data) {
+        try {
+            const { clientId, module, method, params, priority = 5 } = data;
+
+            console.log(`⚙️ Processing SDK call: ${clientId}.${module}.${method}`);
+
+            if (!this.supportedModules.includes(module)) {
+                throw new Error(`Unsupported module: ${module}`);
+            }
+
+            // Route to appropriate API based on module
+            const apiUrl = this.getModuleAPIUrl(module);
+
+            const response = await axios.post(`${apiUrl}/${method}`, {
+                ...params,
+                clientId,
+                source: 'sdk'
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${data.token}`,
+                    'X-Client-ID': clientId,
+                    'X-Priority': priority
+                }
+            });
+
+            // Send response back to client queue if needed
+            if (data.replyTo) {
+                await this.sendResponse(data.replyTo, response.data);
+            }
+
+            console.log(`✅ SDK call completed: ${clientId}.${module}.${method}`);
+
+        } catch (error) {
+            console.error('❌ SDK call failed:', error.message);
+        }
+    }
+
+    getModuleAPIUrl(module) {
+        const moduleUrls = {
+            'crm': 'http://crm-api:3001',
+            'whatsapp': 'http://whatsapp-api:3002',
+            'agendamento': 'http://agendamento-api:3003',
+            'financeiro': 'http://financeiro-api:3004',
+            'marketing': 'http://marketing-api:3005',
+            'analytics': 'http://analytics-api:3006',
+            'portal': 'http://portal-api:3007',
+            'whitelabel': 'http://whitelabel-api:3008'
+        };
+
+        return moduleUrls[module] || KRYONIX_SDK_URL;
+    }
+
+    async sendResponse(replyTo, data) {
+        await this.channel.sendToQueue(replyTo, Buffer.from(JSON.stringify({
+            success: true,
+            data,
+            timestamp: new Date().toISOString()
+        })));
+    }
+}
+
+const consumer = new SDKIntegrationConsumer();
+consumer.connect().then(() => consumer.setupConsumers());
+EOF
+
+# === CONSUMER MOBILE PRIORITY ===
+echo "📱 Criando consumer mobile priority..."
+cat > messaging/consumers/mobile-priority-consumer.js << 'EOF'
+const amqp = require('amqplib');
+const axios = require('axios');
+
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:Vitor@123456@localhost:5672/mobile';
+
+class MobilePriorityConsumer {
+    async connect() {
+        console.log('📱 Connecting to RabbitMQ mobile priority...');
+        this.connection = await amqp.connect(RABBITMQ_URL);
+        this.channel = await this.connection.createChannel();
+        await this.channel.prefetch(15);
+        console.log('✅ Connected to mobile priority messaging');
+    }
+
+    async setupConsumers() {
+        // Priority notifications
+        await this.channel.consume('mobile.notifications.priority', async (msg) => {
+            if (msg) {
+                const data = JSON.parse(msg.content.toString());
+                const priority = msg.properties.priority || 5;
+                await this.processPriorityNotification(data, priority);
+                this.channel.ack(msg);
+            }
+        });
+
+        // PWA updates
+        await this.channel.consume('mobile.pwa.updates', async (msg) => {
+            if (msg) {
+                const data = JSON.parse(msg.content.toString());
+                await this.processPWAUpdate(data);
+                this.channel.ack(msg);
+            }
+        });
+
+        // Offline sync
+        await this.channel.consume('mobile.sync.offline', async (msg) => {
+            if (msg) {
+                const data = JSON.parse(msg.content.toString());
+                await this.processOfflineSync(data);
+                this.channel.ack(msg);
+            }
+        });
+
+        console.log('📱 Mobile priority consumers started');
+    }
+
+    async processPriorityNotification(data, priority) {
+        try {
+            console.log(`📱 Processing priority ${priority} notification:`, data.userId);
+
+            const { userId, clientId, type, title, message, data: payload } = data;
+
+            if (priority >= 8) {
+                await this.sendImmediateNotification(userId, clientId, { type, title, message, payload });
+            } else {
+                await this.batchNotification(userId, clientId, { type, title, message, payload });
+            }
+
+            console.log(`✅ Priority notification processed: ${userId}`);
+
+        } catch (error) {
+            console.error('❌ Priority notification failed:', error.message);
+        }
+    }
+
+    async processPWAUpdate(data) {
+        try {
+            console.log('📱 Processing PWA update:', data.clientId);
+
+            const { clientId, version, updateType, manifestUrl, serviceWorkerUrl } = data;
+
+            await this.broadcastPWAUpdate(clientId, {
+                version,
+                updateType,
+                manifestUrl,
+                serviceWorkerUrl,
+                timestamp: new Date().toISOString()
+            });
+
+            console.log(`✅ PWA update processed: ${clientId} v${version}`);
+
+        } catch (error) {
+            console.error('❌ PWA update failed:', error.message);
+        }
+    }
+
+    async processOfflineSync(data) {
+        try {
+            console.log('📱 Processing offline sync:', data.userId);
+
+            const { userId, clientId, syncData, lastSyncTimestamp } = data;
+
+            await this.syncOfflineData(userId, clientId, syncData, lastSyncTimestamp);
+
+            console.log(`✅ Offline sync completed: ${userId}`);
+
+        } catch (error) {
+            console.error('❌ Offline sync failed:', error.message);
+        }
+    }
+
+    async sendImmediateNotification(userId, clientId, notification) {
+        console.log(`🚨 Immediate notification for ${userId}:`, notification.title);
+    }
+
+    async batchNotification(userId, clientId, notification) {
+        console.log(`📦 Batched notification for ${userId}:`, notification.title);
+    }
+
+    async broadcastPWAUpdate(clientId, update) {
+        console.log(`📢 Broadcasting PWA update for ${clientId}:`, update.version);
+    }
+
+    async syncOfflineData(userId, clientId, syncData, lastSyncTimestamp) {
+        console.log(`🔄 Syncing offline data for ${userId} since ${lastSyncTimestamp}`);
+    }
+}
+
+const consumer = new MobilePriorityConsumer();
+consumer.connect().then(() => consumer.setupConsumers());
+EOF
+
+# === EVOLUTION WEBHOOK CONSUMER ===
+echo "🔗 Criando Evolution API webhook consumer..."
+cat > messaging/consumers/evolution-webhook-consumer.js << 'EOF'
+const amqp = require('amqplib');
+const axios = require('axios');
+
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:Vitor@123456@localhost:5672';
+
+class EvolutionWebhookConsumer {
+    async connect() {
+        console.log('🔗 Connecting to RabbitMQ Evolution webhook...');
+        this.connection = await amqp.connect(RABBITMQ_URL);
+        this.channel = await this.connection.createChannel();
+        await this.channel.prefetch(10);
+        console.log('✅ Connected to Evolution webhook messaging');
+    }
+
+    async setupConsumers() {
+        // General Evolution webhook events
+        await this.channel.consume('webhook.evolution.api', async (msg) => {
+            if (msg) {
+                const data = JSON.parse(msg.content.toString());
+                await this.processEvolutionWebhook(data);
+                this.channel.ack(msg);
+            }
+        });
+
+        console.log('🔗 Evolution API webhook consumers started');
+    }
+
+    async processEvolutionWebhook(data) {
+        try {
+            const { event, instanceName, data: webhookData } = data;
+
+            console.log(`🔗 Processing Evolution webhook: ${event} from ${instanceName}`);
+
+            switch (event) {
+                case 'messages.upsert':
+                    await this.handleMessageReceived(instanceName, webhookData);
+                    break;
+                case 'messages.update':
+                    await this.handleMessageUpdate(instanceName, webhookData);
+                    break;
+                case 'presence.update':
+                    await this.handlePresenceUpdate(instanceName, webhookData);
+                    break;
+                default:
+                    console.log(`⚠️ Unhandled webhook event: ${event}`);
+            }
+
+            console.log(`✅ Evolution webhook processed: ${event}`);
+
+        } catch (error) {
+            console.error('❌ Evolution webhook failed:', error.message);
+        }
+    }
+
+    async handleMessageReceived(instanceName, data) {
+        console.log(`📩 Message received on ${instanceName}`);
+
+        await this.routeToCRM(instanceName, 'message_received', data);
+        await this.routeToWhatsApp(instanceName, 'message_received', data);
+    }
+
+    async handleMessageUpdate(instanceName, data) {
+        console.log(`📝 Message updated on ${instanceName}`);
+        await this.routeToWhatsApp(instanceName, 'message_update', data);
+    }
+
+    async handlePresenceUpdate(instanceName, data) {
+        console.log(`👤 Presence update on ${instanceName}`);
+        await this.routeToCRM(instanceName, 'presence_update', data);
+    }
+
+    async routeToCRM(instanceName, eventType, data) {
+        try {
+            await this.channel.sendToQueue('crm.webhook.events',
+                Buffer.from(JSON.stringify({
+                    instanceName,
+                    eventType,
+                    data,
+                    timestamp: new Date().toISOString()
+                })),
+                { priority: 7 }
+            );
+        } catch (error) {
+            console.error('❌ Route to CRM failed:', error.message);
+        }
+    }
+
+    async routeToWhatsApp(instanceName, eventType, data) {
+        try {
+            await this.channel.sendToQueue('whatsapp.webhook.events',
+                Buffer.from(JSON.stringify({
+                    instanceName,
+                    eventType,
+                    data,
+                    timestamp: new Date().toISOString()
+                })),
+                { priority: 8 }
+            );
+        } catch (error) {
+            console.error('❌ Route to WhatsApp failed:', error.message);
+        }
+    }
+}
+
+const consumer = new EvolutionWebhookConsumer();
+consumer.connect().then(() => consumer.setupConsumers());
+EOF
+
+# === PACKAGE.JSON ===
+echo "📦 Criando package.json para consumers..."
+cat > messaging/consumers/package.json << 'EOF'
+{
+  "name": "kryonix-multi-tenant-messaging",
+  "version": "2.0.0",
+  "description": "KRYONIX Multi-Tenant Mobile-First Messaging with SDK Integration",
+  "main": "index.js",
+  "scripts": {
+    "start": "node mobile-consumer.js",
+    "start:sdk": "node sdk-integration-consumer.js",
+    "start:mobile": "node mobile-priority-consumer.js",
+    "start:evolution": "node evolution-webhook-consumer.js",
+    "start:ai": "node ai-consumer.js",
+    "test": "node test-all-consumers.js"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "axios": "^1.6.2",
+    "pika": "^1.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+EOF
+
+# === DOCKER COMPOSE MULTI-TENANT ===
+echo "🐳 Configurando Docker Compose multi-tenant..."
 cat > messaging/docker-compose.yml << 'EOF'
 version: '3.8'
 
