@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔════════════���════════════════════════════════════════════════════╗"
+    echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -985,7 +985,7 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=$DOCKER_NETWORK"
 
-        # Configuração do serviço
+        # Configuração do servi��o
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
         # Router HTTP
@@ -1343,7 +1343,7 @@ deploy() {
             info "🏗️ Executando build com Yarn..."
             yarn build || {
                 warning "Build falhou, tentando scripts alternativos..."
-                yarn build:prod 2>/dev/null || yarn compile 2>/dev/null || info "ℹ️ Build personalizado não encontrado"
+                yarn build:prod 2>/dev/null || yarn compile 2>/dev/null || info "ℹ��� Build personalizado não encontrado"
             }
         fi
     else
@@ -1384,7 +1384,7 @@ deploy() {
         info "�� Build Next.js gerado"
         # Para Next.js, não precisamos copiar para public
     elif [ -d "out" ]; then
-        info "📁 Export estático gerado em ./out/"
+        info "���� Export estático gerado em ./out/"
         cp -r out/* public/ 2>/dev/null || true
     elif [ -d "_site" ]; then
         info "📁 Site estático gerado em ./_site/"
@@ -1549,7 +1549,7 @@ WEBHOOK_DEPLOY_EOF
 
 chmod +x webhook-deploy.sh
 
-log_success "✅ Webhook deploy corrigido criado com rebuild automático completo"
+log_success "✅ Webhook deploy ultra-avançado criado com deploy automático completo"
 complete_step
 next_step
 
