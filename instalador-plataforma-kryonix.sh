@@ -82,7 +82,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗██���█╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -1077,7 +1077,7 @@ jobs:
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
 
-      - name: ��️ Verify deployment
+      - name: 🏗️ Verify deployment
         run: |
           echo "⏳ Aguardando deployment automático..."
           sleep 60
@@ -1458,13 +1458,13 @@ deploy() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYONIX Platform - Builder.io</title>
+    <title>KRYONIX Platform</title>
 </head>
 <body>
     <h1>🚀 KRYONIX Platform</h1>
-    <p>Plataforma Builder.io carregando...</p>
+    <p>Plataforma carregando...</p>
     <script>
-        console.log('KRYONIX Platform - Builder.io Ready');
+        console.log('KRYONIX Platform Ready');
     </script>
 </body>
 </html>
@@ -1682,7 +1682,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Dependências Inteligentes:${RESET} ✅ D
 echo -e "    ${BLUE}│${RESET} ${BOLD}Build Automático:${RESET} ✅ Suporte a dist/, build/, out/, _site/, .next/"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Gerenciadores:${RESET} ✅ NPM e Yarn com limpeza de cache"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Fallbacks Seguros:${RESET} ✅ Build de emergência se algo falhar"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Frameworks:${RESET} �� React, Vue, Angular, Next.js compatíveis"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Frameworks:${RESET} ✅ React, Vue, Angular, Next.js compatíveis"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO DO WEBHOOK GITHUB (se necessário):${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
