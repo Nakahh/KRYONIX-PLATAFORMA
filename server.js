@@ -65,7 +65,7 @@ app.get('/api/logs', (req, res) => {
       {
         timestamp: new Date().toISOString(),
         level: 'info',
-        message: '🚀 Servidor KRYONIX iniciado'
+        message: 'Servidor KRYONIX iniciado'
       },
       {
         timestamp: new Date().toISOString(),
@@ -156,7 +156,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
+  console.log(`KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
   console.log(`📊 Progresso em: http://0.0.0.0:${PORT}/progresso`);
   console.log(`🔍 Health check: http://0.0.0.0:${PORT}/health`);
   console.log(`📱 Mobile-first otimizado para 80% usuários mobile`);
