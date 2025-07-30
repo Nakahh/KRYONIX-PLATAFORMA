@@ -50,10 +50,15 @@ deploy() {
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
     sudo git config --system --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
 
+    # Configurar credenciais do GitHub
+    info "🔑 Configurando credenciais GitHub..."
+    git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+
     # Pull das mudancas
     info "📥 Fazendo pull do repositorio..."
-    git fetch origin
+    git fetch origin --force
     git reset --hard origin/main || git reset --hard origin/master
+    git clean -fd
     
     # Instalar dependencias e executar build
     info "📦 Instalando dependencias..."
