@@ -82,7 +82,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗██���█╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -1288,7 +1288,7 @@ force_restart_stack() {
 deploy() {
     local payload="$1"
 
-    log "🚀 Iniciando deploy automático do KRYONIX Platform..."
+    log "��� Iniciando deploy automático do KRYONIX Platform..."
     info "📋 Payload recebido: $payload"
 
     cd "$DEPLOY_PATH"
@@ -1633,7 +1633,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════��═══════════════��════════════════════��═════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
@@ -1677,10 +1677,10 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Validação GitHub:${RESET} ✅ Verifica�
 echo -e "    ${BLUE}│${RESET} ${BOLD}Logs Melhorados:${RESET} ✅ Deploy trackado em tempo real"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Restart Inteligente:${RESET} ✅ Update rápido ou restart completo se necessário"
 echo ""
-echo -e "${PURPLE}${BOLD}🎨 SUPORTE BUILDER.IO INTEGRADO:${RESET}"
+echo -e "${PURPLE}${BOLD}🎨 DEPLOY INTELIGENTE AVANÇADO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Dependências Inteligentes:${RESET} ✅ Detecta e instala novas dependências automaticamente"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Build Automático:${RESET} ✅ Suporte a dist/, build/, out/, _site/, .next/"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Gerenciadores:${RESET} ✅ NPM e Yarn com limpeza de cache"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Gerenciadores:${RESET} ✅ NPM, Yarn e PNPM com limpeza de cache"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Fallbacks Seguros:${RESET} ✅ Build de emergência se algo falhar"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Frameworks:${RESET} ✅ React, Vue, Angular, Next.js compatíveis"
 echo ""
