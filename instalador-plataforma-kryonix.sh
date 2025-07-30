@@ -58,7 +58,7 @@ STEP_DESCRIPTIONS=(
     "Limpando ambiente anterior 🧹"
     "Configurando credenciais 🔐"
     "Preparando projeto 📁"
-    "Instalando dependências 📦"
+    "Instalando dependências ��"
     "Configurando firewall 🔥"
     "Configurando rede Docker 🔗"
     "Verificando Traefik 📊"
@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚══���══════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1119,11 +1119,14 @@ set -euo pipefail
 STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
+MAX_RETRIES=3
+HEALTH_CHECK_TIMEOUT=120
 
 # Cores
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 RED='\033[0;31m'
+YELLOW='\033[1;33m'
 NC='\033[0m'
 
 log() {
@@ -1132,32 +1135,158 @@ log() {
     echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
 }
 
-deploy() {
-    log "🚀 Iniciando deploy automático do KRYONIX Platform..."
-    
-    cd "$DEPLOY_PATH"
-    
-    # Sincronizar com GitHub
-    git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
-    git fetch origin
-    git reset --hard origin/main || git reset --hard origin/master
-    
-    # Instalar dependências
-    npm install --production
-    
-    # Rebuild da imagem
-    docker build --no-cache -t kryonix-plataforma:latest .
-    
-    # Deploy do stack
-    docker stack deploy -c docker-stack.yml "$STACK_NAME"
-    
+info() {
+    local message="${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO:${NC} $1"
+    echo -e "$message"
+    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
+}
+
+error() {
+    local message="${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR:${NC} $1"
+    echo -e "$message"
+    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
+}
+
+warning() {
+    local message="${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING:${NC} $1"
+    echo -e "$message"
+    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
+}
+
+# Função para verificar se o serviço está saudável
+check_service_health() {
+    local max_attempts=${1:-12}
+    local wait_time=${2:-10}
+
+    info "🔍 Verificando saúde do serviço..."
+
+    for i in $(seq 1 $max_attempts); do
+        if curl -f -s -m 10 "http://localhost:8080/health" >/dev/null 2>&1; then
+            log "✅ Serviço está saudável!"
+            return 0
+        fi
+
+        if [ $i -lt $max_attempts ]; then
+            info "Tentativa $i/$max_attempts - aguardando ${wait_time}s..."
+            sleep $wait_time
+        fi
+    done
+
+    warning "⚠️ Serviço pode não estar totalmente saudável após $max_attempts tentativas"
+    return 1
+}
+
+# Função para restart forçado do stack
+force_restart_stack() {
+    info "🔄 Forçando restart completo do stack..."
+
+    # Parar o stack
+    docker stack rm "$STACK_NAME" 2>/dev/null || true
+
+    # Aguardar remoção completa
+    info "⏳ Aguardando remoção completa do stack..."
     sleep 30
-    
-    # Verificar health
-    if curl -f -s "http://localhost:8080/health" > /dev/null; then
-        log "✅ Deploy automático concluído com sucesso!"
+
+    # Verificar se todos os serviços foram removidos
+    for i in {1..10}; do
+        if ! docker service ls --format "{{.Name}}" | grep -q "${STACK_NAME}_"; then
+            break
+        fi
+        info "Aguardando remoção dos serviços... (tentativa $i/10)"
+        sleep 10
+    done
+
+    # Redeployar o stack
+    info "🚀 Redesployando stack..."
+    docker stack deploy -c docker-stack.yml "$STACK_NAME"
+
+    # Aguardar estabilização
+    sleep 45
+
+    return 0
+}
+
+deploy() {
+    local payload="$1"
+
+    log "🚀 Iniciando deploy automático do KRYONIX Platform..."
+    info "📋 Payload recebido: $payload"
+
+    cd "$DEPLOY_PATH"
+
+    # Corrigir ownership do Git antes de fazer pull
+    info "🔧 Corrigindo permissões Git..."
+    git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
+    sudo git config --system --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
+
+    # Configurar credenciais do GitHub
+    info "🔑 Configurando credenciais GitHub..."
+    git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+
+    # Pull das mudanças
+    info "📥 Fazendo pull do repositório..."
+    git fetch origin --force
+    git reset --hard origin/main || git reset --hard origin/master
+    git clean -fd
+
+    # Instalar dependências
+    info "📦 Instalando dependências..."
+    if [ -f "yarn.lock" ]; then
+        yarn install
+        info "🏗️ Executando yarn build (Builder.io)..."
+        yarn build 2>/dev/null || npm run build 2>/dev/null || info "ℹ️ Sem script de build"
     else
-        log "⚠️ Deploy pode ter problemas - verificar manualmente"
+        npm install --production
+        info "🏗️ Executando npm run build (Builder.io)..."
+        npm run build 2>/dev/null || info "ℹ️ Sem script de build"
+    fi
+
+    # Verificar se existe pasta dist/build gerada
+    if [ -d "dist" ]; then
+        info "📁 Build gerado em ./dist/"
+        cp -r dist/* public/ 2>/dev/null || true
+    elif [ -d "build" ]; then
+        info "📁 Build gerado em ./build/"
+        cp -r build/* public/ 2>/dev/null || true
+    elif [ -d ".next" ]; then
+        info "📁 Build Next.js gerado"
+    fi
+
+    # Limpar imagem antiga para garantir rebuild completo
+    info "🧹 Limpando imagem antiga..."
+    docker rmi kryonix-plataforma:latest 2>/dev/null || true
+
+    # Build da imagem
+    info "🏗️ Fazendo build da nova imagem..."
+    docker build --no-cache -t kryonix-plataforma:latest .
+
+    # Tentar update primeiro (mais rápido)
+    info "🔄 Tentando update do serviço..."
+    if docker service update --force --image kryonix-plataforma:latest "${STACK_NAME}_web" 2>/dev/null; then
+        info "✅ Update do serviço executado"
+        sleep 30
+
+        # Verificar se o update funcionou
+        if check_service_health 6 10; then
+            log "✅ Deploy automático concluído com sucesso via update!"
+            return 0
+        else
+            warning "⚠️ Update não funcionou, forçando restart completo..."
+            force_restart_stack
+        fi
+    else
+        info "🔄 Update falhou, fazendo deploy completo do stack..."
+        docker stack deploy -c docker-stack.yml "$STACK_NAME"
+        sleep 45
+    fi
+
+    # Verificação final de saúde
+    if check_service_health 12 10; then
+        log "✅ Deploy automático concluído com sucesso!"
+        return 0
+    else
+        error "❌ Deploy pode ter problemas - verificar manualmente"
+        return 1
     fi
 }
 
