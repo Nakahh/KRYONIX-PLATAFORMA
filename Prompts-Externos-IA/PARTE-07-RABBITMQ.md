@@ -108,9 +108,9 @@ cat > messaging/rabbitmq/enabled_plugins << 'EOF'
  rabbitmq_stream].
 EOF
 
-# === DEFINIÇÕES FILAS MOBILE ===
-echo "📋 Criando filas mobile-first..."
-cat > messaging/rabbitmq/definitions/mobile-queues.json << 'EOF'
+# === DEFINIÇÕES MULTI-TENANT BASE ===
+echo "📋 Criando definições multi-tenant base..."
+cat > messaging/rabbitmq/definitions/multi-tenant-definitions.json << 'EOF'
 {
   "users": [
     {
@@ -453,7 +453,7 @@ class AIConsumer {
 
     async processNLP(data) {
         try {
-            console.log('🧠 Processing NLP:', data.text);
+            console.log('���� Processing NLP:', data.text);
             const response = await axios.post(`${OLLAMA_URL}/api/generate`, {
                 model: 'llama2',
                 prompt: data.text,
