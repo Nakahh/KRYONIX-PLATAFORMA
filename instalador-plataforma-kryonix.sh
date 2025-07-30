@@ -72,7 +72,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ��█╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -777,7 +777,7 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 7: VERIFICAR TRAEFIK ����
+# ETAPA 7: VERIFICAR TRAEFIK 📊
 # ============================================================================
 
 processing_step
@@ -1336,7 +1336,7 @@ if sudo systemctl is-active kryonix-deploy.service >/dev/null 2>&1; then
         sleep 2
     done
 else
-    log_warning "⚠️ Problema com serviço de deploy, mas continuando..."
+    log_warning "��️ Problema com serviço de deploy, mas continuando..."
 fi
 
 log_success "Servidor de deploy externo configurado"
@@ -1732,3 +1732,17 @@ echo -e "${CYAN}  1. Edite qualquer arquivo no GitHub (ex: README.md)${RESET}"
 echo -e "${CYAN}  2. Faça commit e push para main${RESET}"
 echo -e "${CYAN}  3. Aguarde 1-2 minutos${RESET}"
 echo -e "${CYAN}  4. Verifique: curl https://kryonix.com.br/health${RESET}"
+
+echo
+echo -e "${GREEN}${BOLD}🔧 PROBLEMAS CORRIGIDOS NESTA VERSÃO:${RESET}"
+echo -e "${WHITE}✅ Container network: host.docker.internal em vez de localhost${RESET}"
+echo -e "${WHITE}✅ Extra hosts configurado no Docker stack${RESET}"
+echo -e "${WHITE}✅ Deploy server escutando em 0.0.0.0:9001${RESET}"
+echo -e "${WHITE}✅ Fallback para deploy interno se comunicação falhar${RESET}"
+echo -e "${WHITE}✅ Múltiplas tentativas de conexão (127.0.0.1 e 0.0.0.0)${RESET}"
+echo
+echo -e "${YELLOW}${BOLD}🔍 MOTIVO DOS PROBLEMAS ANTERIORES:${RESET}"
+echo -e "${WHITE}• Container Docker não pode acessar localhost do host${RESET}"
+echo -e "${WHITE}• Era necessário usar host.docker.internal ou gateway${RESET}"
+echo -e "${WHITE}• Deploy server precisava escutar em todas interfaces${RESET}"
+echo -e "${WHITE}• Faltava configuração de extra_hosts no stack${RESET}"
