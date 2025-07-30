@@ -94,12 +94,18 @@ queue_index_embed_msgs_below = 4096
 EOF
 
 # === ENABLED PLUGINS ===
-echo "🔌 Configurando plugins..."
+echo "🔌 Configurando plugins multi-tenant..."
 cat > messaging/rabbitmq/enabled_plugins << 'EOF'
 [rabbitmq_management,
  rabbitmq_management_agent,
  rabbitmq_prometheus,
- rabbitmq_delayed_message_exchange].
+ rabbitmq_delayed_message_exchange,
+ rabbitmq_consistent_hash_exchange,
+ rabbitmq_federation,
+ rabbitmq_federation_management,
+ rabbitmq_shovel,
+ rabbitmq_shovel_management,
+ rabbitmq_stream].
 EOF
 
 # === DEFINIÇÕES FILAS MOBILE ===
