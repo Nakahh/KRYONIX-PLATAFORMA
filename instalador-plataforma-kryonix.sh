@@ -75,7 +75,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "��     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -286,13 +286,13 @@ const helmet = require('helmet');
 const compression = require('compression');
 const { exec } = require('child_process');
 const crypto = require('crypto');
-const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Configurações do webhook
 const WEBHOOK_SECRET = 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
+const DEPLOY_SCRIPT = '/opt/kryonix-plataform/webhook-deploy.sh';
 
 // Middleware de segurança
 app.use(helmet({
@@ -632,7 +632,7 @@ cat > public/index.html << 'HTML_EOF'
             <h3>🎉 CI/CD AUTOMÁTICO CONFIGURADO!</h3>
             <p>✅ Deploy automático via GitHub Actions</p>
             <p>✅ Webhook funcionando</p>
-            <p>✅ Push na main = Deploy no servidor</p>
+            <p>�� Push na main = Deploy no servidor</p>
         </div>
         
         <div style="margin-top: 2rem;">
@@ -971,7 +971,7 @@ if curl -f -m 15 --insecure https://kryonix.com.br/health 2>/dev/null >/dev/null
     DOMAIN_STATUS="🎉 ONLINE"
 elif curl -f -m 15 http://kryonix.com.br/health 2>/dev/null >/dev/null; then
     log_success "⚡ HTTP kryonix.com.br: Funcionando (HTTPS configurando)"
-    DOMAIN_STATUS="⚡ CONFIGURANDO SSL"
+    DOMAIN_STATUS="�� CONFIGURANDO SSL"
 else
     log_warning "⚠️ Domínio: Verificar DNS/Traefik"
     DOMAIN_STATUS="⚠️ VERIFICAR"
@@ -1669,13 +1669,13 @@ echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO
 
 # Banner final épico
 echo -e "${BLUE}${BOLD}"
-echo "╔══════���═════════��══════════════════════════════════════════════════════════���════╗"
+echo "╔══════���═════════��═══════════════════════════════════════════════════════════════╗"
 echo "║                                                                                    ║"
 echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCESSO! 🎉${BLUE}                       ║"
 echo "║                                                                                    ║"
 echo -e "║   ${WHITE}🌐 Plataforma: https://kryonix.com.br - $DOMAIN_STATUS${BLUE}                        ║"
 echo -e "║   ${WHITE}🔧 Local: http://localhost:8080 - $WEB_STATUS${BLUE}                              ║"
-echo -e "║   ${WHITE}🔗 Webhook: https://kryonix.com.br/api/github-webhook${BLUE}                       ║"
+echo -e "║   ${WHITE}�� Webhook: https://kryonix.com.br/api/github-webhook${BLUE}                       ║"
 echo -e "║   ${WHITE}📊 Health: http://localhost:8080/health${BLUE}                                     ║"
 echo "║                                                                                    ║"
 echo -e "║                      ${PURPLE}⚡ CI/CD AUTOMÁTICO 100% FUNCIONAL ⚡${BLUE}                       ║"
@@ -1696,7 +1696,7 @@ echo "║                                                                       
 echo "╚════════════════════════════════════════════════════════════════════════════════╝"
 echo -e "${RESET}\n"
 
-log_success "��� INSTALADOR KRYONIX COMPLETO! Plataforma + CI/CD 100% funcional!"
+log_success "🎯 INSTALADOR KRYONIX COMPLETO! Plataforma + CI/CD 100% funcional!"
 echo
 log_info "📋 URLs importantes:"
 log_info "   🌐 Plataforma: https://kryonix.com.br"
