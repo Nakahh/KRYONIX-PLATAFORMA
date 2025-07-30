@@ -658,7 +658,7 @@ cat > public/index.html << 'HTML_EOF'
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            ���� https://kryonix.com.br | 📱 +55 17 98180-5327
+            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327
         </p>
     </div>
 
@@ -1169,6 +1169,10 @@ deploy() {
         fi
     fi
     
+    # Limpar imagem antiga para garantir rebuild completo
+    info "🧹 Limpando imagem antiga..."
+    docker rmi kryonix-plataforma:latest 2>/dev/null || true
+
     # Build da imagem
     info "🏗️ Fazendo build da imagem..."
     docker build --no-cache -t kryonix-plataforma:latest .
@@ -1637,7 +1641,7 @@ if curl -f -s "http://127.0.0.1:9001/" >/dev/null 2>&1 || curl -f -s "http://0.0
 
     if echo "$DEPLOY_TEST" | grep -q '"status":"deploy_started"'; then
         log_success "✅ Servidor de deploy funcionando corretamente"
-        log_info "⏳ Deploy teste iniciado, aguarde alguns minutos para refletir"
+        log_info "��� Deploy teste iniciado, aguarde alguns minutos para refletir"
     else
         log_warning "⚠️ Servidor responde mas pode ter problemas"
         log_info "Resposta: $DEPLOY_TEST"
