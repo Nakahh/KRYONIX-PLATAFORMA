@@ -407,7 +407,7 @@ app.post('/api/github-webhook', (req, res) => {
         });
 
         const options = {
-            hostname: 'localhost',
+            hostname: 'host.docker.internal',
             port: 9001,
             path: '/deploy',
             method: 'POST',
@@ -436,14 +436,24 @@ app.post('/api/github-webhook', (req, res) => {
 
         req.on('error', (error) => {
             log(`❌ Falha ao acionar deploy externo: ${error.message}`);
-            log('ℹ️ Deploy será processado na próxima atualização do container');
+            log('🔄 Executando deploy local interno como fallback...');
+
+            // Fallback: Deploy interno usando Docker CLI
+            const { exec } = require('child_process');
+            exec(`docker service update --force Kryonix_web`, (err, stdout, stderr) => {
+                if (err) {
+                    log(`❌ Fallback deploy falhou: ${err.message}`);
+                } else {
+                    log('✅ Deploy interno executado com sucesso');
+                }
+            });
 
             lastDeployStatus = {
                 timestamp: new Date().toISOString(),
-                status: 'deploy_queued',
-                message: 'Deploy agendado para próxima atualização',
+                status: 'deploy_fallback',
+                message: 'Deploy interno executado como fallback',
                 ref: payload.ref,
-                note: 'Container será atualizado automaticamente'
+                method: 'docker_service_update'
             };
         });
 
@@ -767,7 +777,7 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 7: VERIFICAR TRAEFIK 📊
+# ETAPA 7: VERIFICAR TRAEFIK ����
 # ============================================================================
 
 processing_step
@@ -874,6 +884,8 @@ services:
         condition: on-failure
         max_attempts: 3
         delay: 10s
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
       labels:
         # Habilitar Traefik
         - "traefik.enable=true"
@@ -1273,8 +1285,10 @@ const server = http.createServer((req, res) => {
     }
 });
 
-server.listen(PORT, '127.0.0.1', () => {
+server.listen(PORT, '0.0.0.0', () => {
     log(`🚀 Servidor de deploy rodando na porta ${PORT}`);
+    log(`🔗 Acessível em: http://0.0.0.0:${PORT}`);
+    log(`🐳 Container gateway: host.docker.internal:${PORT}`);
 });
 DEPLOY_SERVER_EOF
 
@@ -1314,6 +1328,9 @@ if sudo systemctl is-active kryonix-deploy.service >/dev/null 2>&1; then
     for i in {1..10}; do
         if curl -f -s "http://127.0.0.1:9001/" >/dev/null 2>&1; then
             log_success "✅ Servidor de deploy respondendo na porta 9001"
+            break
+        elif curl -f -s "http://0.0.0.0:9001/" >/dev/null 2>&1; then
+            log_success "✅ Servidor de deploy respondendo na porta 9001 (0.0.0.0)"
             break
         fi
         sleep 2
@@ -1590,12 +1607,15 @@ fi
 log_info "🔧 Verificando servidor de deploy..."
 sleep 3
 
-if curl -f -s "http://127.0.0.1:9001/" >/dev/null 2>&1; then
+if curl -f -s "http://127.0.0.1:9001/" >/dev/null 2>&1 || curl -f -s "http://0.0.0.0:9001/" >/dev/null 2>&1; then
     log_success "✅ Servidor de deploy rodando na porta 9001"
 
     # Testar deploy endpoint
     log_info "🧪 Testando endpoint de deploy..."
     DEPLOY_TEST=$(curl -s -X POST "http://127.0.0.1:9001/deploy" \
+        -H "Content-Type: application/json" \
+        -d '{"ref":"refs/heads/main","repository":"KRYONIX-PLATAFORMA"}' 2>/dev/null || \
+        curl -s -X POST "http://0.0.0.0:9001/deploy" \
         -H "Content-Type: application/json" \
         -d '{"ref":"refs/heads/main","repository":"KRYONIX-PLATAFORMA"}' 2>/dev/null || echo "erro")
 
