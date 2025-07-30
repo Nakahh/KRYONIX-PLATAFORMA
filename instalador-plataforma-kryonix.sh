@@ -86,7 +86,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "��     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -1137,28 +1137,99 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+# ===== SISTEMA DE LOGS AVANÇADO =====
 log() {
-    local message="${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
-    echo -e "$message"
-    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
+    local level="${1:-INFO}"
+    local message="$2"
+    local timestamp=$(date +'%Y-%m-%d %H:%M:%S')
+    local formatted="[${timestamp}] ${level}: $message"
+
+    echo -e "${GREEN}$formatted${NC}"
+
+    # Múltiplos fallbacks para logging
+    {
+        echo "$formatted" >> "$LOG_FILE" 2>/dev/null || \
+        echo "$formatted" >> "./deploy.log" 2>/dev/null || \
+        echo "$formatted" >> "/tmp/webhook-deploy.log" 2>/dev/null || \
+        echo "$formatted" >> "${HOME}/.webhook-deploy.log" 2>/dev/null || \
+        logger -t webhook-deploy "$formatted" 2>/dev/null || \
+        true
+    }
 }
 
-info() {
-    local message="${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO:${NC} $1"
-    echo -e "$message"
-    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
+info() { log "INFO" "$1"; }
+warning() { echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING: $1${NC}"; log "WARNING" "$1"; }
+error() { echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $1${NC}"; log "ERROR" "$1"; }
+success() { echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] SUCCESS: $1${NC}"; log "SUCCESS" "$1"; }
+debug() { [ "${DEBUG:-0}" = "1" ] && echo -e "${PURPLE}[DEBUG] $1${NC}" && log "DEBUG" "$1" || true; }
+
+# ===== DETECÇÃO INTELIGENTE DE GERENCIADOR DE PACOTES =====
+detect_package_manager() {
+    local pm=""
+    local lock_file=""
+
+    if [ -f "pnpm-lock.yaml" ]; then
+        pm="pnpm"
+        lock_file="pnpm-lock.yaml"
+    elif [ -f "yarn.lock" ]; then
+        pm="yarn"
+        lock_file="yarn.lock"
+    elif [ -f "package-lock.json" ]; then
+        pm="npm"
+        lock_file="package-lock.json"
+    else
+        pm="npm"
+        lock_file="package.json"
+    fi
+
+    debug "Gerenciador detectado: $pm (arquivo: $lock_file)"
+    echo "$pm"
 }
 
-error() {
-    local message="${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR:${NC} $1"
-    echo -e "$message"
-    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
+# ===== VERIFICAÇÃO DE MUDANÇAS EM DEPENDÊNCIAS =====
+check_dependency_changes() {
+    local backup_file="${BACKUP_DIR}/package.json.bak"
+    local current_hash=""
+    local backup_hash=""
+
+    # Criar diretório de backup se não existir
+    mkdir -p "$BACKUP_DIR" 2>/dev/null || true
+
+    if [ -f "package.json" ]; then
+        current_hash=$(sha256sum package.json | cut -d' ' -f1)
+        debug "Hash atual package.json: $current_hash"
+    else
+        warning "package.json não encontrado"
+        return 1
+    fi
+
+    if [ -f "$backup_file" ]; then
+        backup_hash=$(sha256sum "$backup_file" | cut -d' ' -f1)
+        debug "Hash backup package.json: $backup_hash"
+
+        if [ "$current_hash" != "$backup_hash" ]; then
+            info "🔄 Mudanças detectadas em dependências"
+            return 0
+        else
+            info "✅ Nenhuma mudança em dependências"
+            return 1
+        fi
+    else
+        info "📦 Primeira execução - backup será criado"
+        return 0
+    fi
 }
 
-warning() {
-    local message="${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING:${NC} $1"
-    echo -e "$message"
-    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
+# ===== BACKUP DE DEPENDÊNCIAS =====
+backup_dependencies() {
+    local backup_file="${BACKUP_DIR}/package.json.bak"
+
+    if [ -f "package.json" ]; then
+        cp "package.json" "$backup_file" 2>/dev/null || {
+            warning "Não foi possível criar backup de package.json"
+        }
+        debug "Backup criado: $backup_file"
+    fi
 }
 
 # Função para verificar se o serviço está saudável
