@@ -83,7 +83,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "��     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "��     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═���═══════════════════════════════════════════════════════════════╝"
+    echo    "╚═══════════════════��═════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -718,7 +718,7 @@ if [ ! -f "public/index.html" ]; then
     <script>
         fetch('/api/status')
             .then(response => response.json())
-            .then(data => console.log('��� Plataforma KRYONIX funcionando:', data))
+            .then(data => console.log('✅ Plataforma KRYONIX funcionando:', data))
             .catch(err => console.log('⚠️ API carregando...'));
     </script>
 </body>
@@ -1598,6 +1598,13 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Rebuild Automático:${RESET} ✅ Pull + I
 echo -e "    ${BLUE}│${RESET} ${BOLD}Validação GitHub:${RESET} ✅ Verificação de assinatura implementada"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Logs Melhorados:${RESET} ✅ Deploy trackado em tempo real"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Restart Inteligente:${RESET} ✅ Update rápido ou restart completo se necessário"
+echo ""
+echo -e "${PURPLE}${BOLD}🎨 SUPORTE BUILDER.IO INTEGRADO:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Dependências Inteligentes:${RESET} ✅ Detecta e instala novas dependências automaticamente"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Build Automático:${RESET} ✅ Suporte a dist/, build/, out/, _site/, .next/"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Gerenciadores:${RESET} ✅ NPM e Yarn com limpeza de cache"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Fallbacks Seguros:${RESET} ✅ Build de emergência se algo falhar"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Frameworks:${RESET} ✅ React, Vue, Angular, Next.js compatíveis"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO DO WEBHOOK GITHUB (se necessário):${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
