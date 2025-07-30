@@ -86,7 +86,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══��╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚���╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -376,7 +376,7 @@ show_banner
 # Detecção automática do ambiente
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX 100% AUTOMÁTICO${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
-echo -e "${BLUE}├�� Servidor: $(hostname)${RESET}"
+echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
@@ -821,7 +821,7 @@ cat > .kryonix-auto-config << CONFIG_EOF
 # Esta configuração permite instalação automática em qualquer servidor
 
 # Informações do Servidor
-SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || echo "127.0.0.1")
+SERVER_IP=$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo "127.0.0.1")
 SERVER_HOSTNAME=$(hostname)
 SERVER_USER=$(whoami)
 INSTALL_DATE=$(date)
