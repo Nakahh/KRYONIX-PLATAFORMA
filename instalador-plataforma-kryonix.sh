@@ -1315,7 +1315,7 @@ deploy() {
     DEPENDENCIES_CHANGED=false
     if [ -f "package.json.old" ]; then
         if ! diff package.json package.json.old >/dev/null 2>&1; then
-            info "🔄 Mudanças detectadas no package.json - Builder.io pode ter adicionado dependências"
+            info "🔄 Mudanças detectadas no package.json - novas dependências podem ter sido adicionadas"
             DEPENDENCIES_CHANGED=true
         fi
     else
