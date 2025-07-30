@@ -82,9 +82,9 @@ show_banner() {
     echo    "╔════���════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══��█╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  █���║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -772,7 +772,7 @@ if [ ! -f "public/index.html" ]; then
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            ��� https://kryonix.com.br | 📱 +55 17 98180-5327
+            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327
         </p>
     </div>
 
@@ -917,8 +917,8 @@ if docker service ls | grep -q "traefik"; then
     log_success "✅ Traefik encontrado: $TRAEFIK_SERVICE"
 
     # Verificar se o Traefik está na mesma rede detectada
-    local traefik_networks=$(docker service inspect "$TRAEFIK_SERVICE" --format '{{range .Spec.TaskTemplate.Networks}}{{.Target}} {{end}}' 2>/dev/null || true)
-    local network_confirmed=false
+    traefik_networks=$(docker service inspect "$TRAEFIK_SERVICE" --format '{{range .Spec.TaskTemplate.Networks}}{{.Target}} {{end}}' 2>/dev/null || true)
+    network_confirmed=false
 
     for network_id in $traefik_networks; do
         local network_name=$(docker network ls --format "{{.ID}} {{.Name}}" | grep "^$network_id" | awk '{print $2}' 2>/dev/null || true)
