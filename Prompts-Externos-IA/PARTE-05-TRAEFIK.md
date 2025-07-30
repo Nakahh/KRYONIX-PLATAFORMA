@@ -82,7 +82,7 @@ providers:
     filename: /etc/traefik/dynamic.yml
     watch: true
 
-# Certificados SSL automáticos
+# Certificados SSL automáticos para multi-tenancy
 certificatesResolvers:
   letsencrypt:
     acme:
@@ -90,12 +90,18 @@ certificatesResolvers:
       storage: /data/acme.json
       httpChallenge:
         entryPoint: web
-      # Usar DNS challenge para wildcards
+
+  # Wildcard para subdomínios automáticos (FLUXO COMPLETO)
+  letsencrypt-wildcard:
+    acme:
+      email: admin@kryonix.com.br
+      storage: /data/acme-wildcard.json
       dnsChallenge:
         provider: cloudflare
         resolvers:
           - "1.1.1.1:53"
           - "8.8.8.8:53"
+        delayBeforeCheck: 60
 
 # API e Dashboard
 api:
@@ -909,7 +915,7 @@ echo ""
 echo "✅ PARTE-05 CONCLUÍDA COM SUCESSO!"
 echo "🌐 Traefik otimizado para mobile-first"
 echo "📱 HTTP/2 e HTTP/3 ativos"
-echo "���� SSL automático funcionando"
+echo "🔒 SSL automático funcionando"
 echo "🤖 IA otimizando performance"
 echo "📊 Monitoramento ativo"
 echo "🌐 Dashboard: https://traefik.kryonix.com.br"
