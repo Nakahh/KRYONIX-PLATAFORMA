@@ -41,13 +41,14 @@ DOMAIN_NAME="kryonix.com.br"
 DOCKER_NETWORK=""  # Será detectado automaticamente
 STACK_NAME="Kryonix"
 
-# Configurações CI/CD - Usar variáveis de ambiente se disponíveis
-GITHUB_REPO="${GITHUB_REPO:-https://github.com/Nakahh/KRYONIX-PLATAFORMA.git}"
-PAT_TOKEN="${PAT_TOKEN:-}"  # Deixar vazio para solicitar ao usuário
-WEBHOOK_SECRET="${WEBHOOK_SECRET:-Kr7n0x-V1t0r-2025-Jwt3cr3t-P0w3rfu1-K3y}"
-JWT_SECRET="${JWT_SECRET:-Kr7n0x-V1t0r-2025-Jwt3cr3t-P0w3rfu1-K3y}"
-SERVER_HOST="${SERVER_HOST:-137.220.34.41}"
-SERVER_USER="${SERVER_USER:-linuxuser}"
+# Configurações CI/CD - Credenciais configuradas para operação 100% automática
+GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+PAT_TOKEN="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"
+WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+WEBHOOK_URL="https://kryonix.com.br/api/github-webhook"
+SERVER_HOST="${SERVER_HOST:-$(curl -s ifconfig.me 2>/dev/null || echo '127.0.0.1')}"
+SERVER_USER="${SERVER_USER:-$(whoami)}"
 
 # Variáveis da barra de progresso
 TOTAL_STEPS=15
@@ -81,7 +82,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚█���╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -1204,7 +1205,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}════════��══════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                     🎉 INSTALAÇÃO CONCLUÍDA                        ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════��═══════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${CYAN}${BOLD}📊 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} $WEB_STATUS"
