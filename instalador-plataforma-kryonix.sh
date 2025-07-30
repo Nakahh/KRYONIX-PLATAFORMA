@@ -70,7 +70,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔═══════════���═════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ��█╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -203,7 +203,7 @@ echo -e "${PURPLE}${BOLD}🚀 Iniciando instalação completa da Plataforma KRYO
 next_step
 
 # ============================================================================
-# ETAPA 1: VERIFICAR DOCKER SWARM ⚙️
+# ETAPA 1: VERIFICAR DOCKER SWARM ⚙���
 # ============================================================================
 
 if ! docker info | grep -q "Swarm: active"; then
@@ -884,12 +884,10 @@ services:
         condition: on-failure
         max_attempts: 3
         delay: 10s
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
       labels:
         # Habilitar Traefik
         - "traefik.enable=true"
-        
+
         # Usar rede detectada automaticamente
         - "traefik.docker.network=$TRAEFIK_NETWORK"
 
@@ -916,12 +914,14 @@ services:
         - "traefik.http.routers.kryonix-api.tls.certresolver=${CERT_RESOLVER:-letsencryptresolver}"
         - "traefik.http.routers.kryonix-api.service=kryonix-web"
         - "traefik.http.routers.kryonix-api.priority=10"
-        
+
         # Headers básicos de segurança
         - "traefik.http.routers.kryonix-web-secure.middlewares=kryonix-security"
         - "traefik.http.middlewares.kryonix-security.headers.frameDeny=true"
         - "traefik.http.middlewares.kryonix-security.headers.browserXssFilter=true"
         - "traefik.http.middlewares.kryonix-security.headers.contentTypeNosniff=true"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - $TRAEFIK_NETWORK
     ports:
@@ -1001,7 +1001,7 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 11: CONFIGURAR GITHUB ACTIONS 🚀
+# ETAPA 11: CONFIGURAR GITHUB ACTIONS ���
 # ============================================================================
 
 processing_step
