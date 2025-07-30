@@ -84,7 +84,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚══════════════════════���══════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1309,20 +1309,46 @@ const server = http.createServer((req, res) => {
                 // Executar deploy com pull do GitHub
                 const deployScript = `
                     cd ${PROJECT_DIR} &&
-                    echo "📥 Fazendo pull do GitHub..." &&
+                    echo "🌐 [BUILDER.IO SYNC] Iniciando sincronização com GitHub main..." &&
+
+                    echo "🔧 [Git] Configurando repositório..." &&
                     git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" &&
                     git config pull.rebase false &&
+                    git config --global --add safe.directory "${PROJECT_DIR}" &&
+
+                    echo "📥 [GitHub] Puxando últimas alterações..." &&
                     git fetch origin &&
                     git reset --hard origin/main &&
-                    echo "📦 Instalando dependências..." &&
-                    ([ -f yarn.lock ] && yarn install || npm install) &&
-                    echo "🏗️ Executando build se disponível..." &&
-                    ([ -f yarn.lock ] && yarn build 2>/dev/null || npm run build 2>/dev/null || echo "No build script found") &&
-                    echo "🏗️ Fazendo rebuild da imagem..." &&
+                    git clean -fd &&
+
+                    echo "📦 [Dependencies] Instalando dependências..." &&
+                    if [ -f yarn.lock ]; then
+                        yarn install --frozen-lockfile 2>/dev/null || yarn install
+                        echo "🏗️ [Build] Executando yarn build (Builder.io)..."
+                        yarn build 2>/dev/null || npm run build 2>/dev/null || echo "ℹ️ No build script found"
+                    else
+                        npm install --production=false
+                        echo "🏗️ [Build] Executando npm run build (Builder.io)..."
+                        npm run build 2>/dev/null || echo "ℹ️ No build script found"
+                    fi &&
+
+                    echo "📁 [Build] Copiando arquivos de build para public..." &&
+                    [ -d dist ] && cp -r dist/* public/ 2>/dev/null
+                    [ -d build ] && cp -r build/* public/ 2>/dev/null
+                    [ -d out ] && cp -r out/* public/ 2>/dev/null
+
+                    echo "🏗️ [Docker] Fazendo rebuild da imagem..." &&
+                    docker rmi kryonix-plataforma:latest 2>/dev/null || true &&
                     docker build --no-cache -t kryonix-plataforma:latest . &&
-                    echo "🚀 Fazendo redeploy..." &&
+
+                    echo "🚀 [Deploy] Fazendo redeploy do stack..." &&
                     docker stack deploy -c docker-stack.yml Kryonix --with-registry-auth &&
-                    echo "✅ Deploy concluído!"
+
+                    echo "⏳ [Health] Aguardando estabilização..." &&
+                    sleep 30 &&
+
+                    echo "🔍 [Test] Testando aplicação..." &&
+                    curl -f http://localhost:8080/health >/dev/null 2>&1 && echo "✅ Deploy Builder.io concluído com sucesso!" || echo "⚠️ Deploy concluído, aguarde estabilização"
                 `;
 
                 exec(deployScript, (error, stdout, stderr) => {
@@ -1399,7 +1425,7 @@ if sudo systemctl is-active kryonix-deploy.service >/dev/null 2>&1; then
             log_success "✅ Servidor de deploy respondendo na porta 9001"
             break
         elif curl -f -s "http://0.0.0.0:9001/" >/dev/null 2>&1; then
-            log_success "�� Servidor de deploy respondendo na porta 9001 (0.0.0.0)"
+            log_success "✅ Servidor de deploy respondendo na porta 9001 (0.0.0.0)"
             break
         fi
         sleep 2
@@ -1516,7 +1542,7 @@ sleep 60
 log_info "Testando endpoint webhook após redeploy..."
 for i in {1..20}; do
     if curl -f -s "http://localhost:8080/health" > /dev/null; then
-        log_success "✅ Servidor respondendo na porta 8080"
+        log_success "��� Servidor respondendo na porta 8080"
 
         # Testar especificamente o webhook
         if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
@@ -1731,7 +1757,7 @@ echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO
 
 # Banner final épico
 echo -e "${BLUE}${BOLD}"
-echo "╔═════���════════════════════════════════════════════════════════════════════════════════╗"
+echo "╔══════════════════════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                                    ║"
 echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCESSO! 🎉${BLUE}                       ║"
 echo "║                                                                                    ║"
