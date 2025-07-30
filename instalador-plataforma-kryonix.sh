@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚═══════���═════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -493,11 +493,21 @@ if [ ! -f "server.js" ]; then
 fi
 
 # Verificar se webhook já está integrado no server.js
-if ! grep -q "/api/github-webhook" server.js; then
-    log_info "🔗 Adicionando endpoint webhook completo ao server.js..."
+# Sempre atualizar o webhook para a versão corrigida
+log_info "🔗 Atualizando endpoint webhook para versão corrigida com deploy automático..."
 
-    # Backup
-    cp server.js server.js.backup
+# Backup do server.js
+cp server.js server.js.backup.$(date +%Y%m%d_%H%M%S)
+
+# Remover webhook antigo se existir
+if grep -q "/api/github-webhook" server.js; then
+    log_info "🔄 Removendo webhook antigo para atualização..."
+    sed -i '/\/\/ Webhook.*GitHub/,/^});$/d' server.js
+    sed -i '/^const crypto.*$/,/^});$/d' server.js
+fi
+
+# Sempre adicionar webhook corrigido
+log_info "✅ Adicionando webhook corrigido..."
 
     # Adicionar endpoint webhook completo com validação
     cat >> server.js << WEBHOOK_EOF
