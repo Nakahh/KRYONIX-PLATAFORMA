@@ -19,7 +19,7 @@ services:
       labels:
         # Traefik básico
         - traefik.enable=true
-        - traefik.docker.network=traefik-public
+        - traefik.docker.network=kryonix-net
         
         # Configuração HTTP (porta 80)
         - traefik.http.routers.kryonix-http.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)
