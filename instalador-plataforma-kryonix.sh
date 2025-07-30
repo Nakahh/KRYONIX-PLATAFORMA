@@ -82,7 +82,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗███���╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -235,33 +235,27 @@ log_error() {
 # FUNÇÕES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
-# Função simplificada e robusta para detectar rede do Traefik
+# Função simplificada e robusta para detectar rede do Traefik (sem logs internos)
 detect_traefik_network_automatically() {
     local detected_network=""
 
-    log_info "🔍 Detectando rede do Traefik automaticamente..."
-
     # 1. PRIORIDADE: Verificar se Kryonix-NET existe
-    if docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
+    if docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$" 2>/dev/null; then
         detected_network="Kryonix-NET"
-        log_success "✅ Rede principal detectada: $detected_network"
         echo "$detected_network"
         return 0
     fi
 
     # 2. Verificar redes overlay existentes (excluindo ingress)
-    local overlay_networks=$(docker network ls --filter driver=overlay --format "{{.Name}}" | grep -v "^ingress$" | head -1)
+    local overlay_networks=$(docker network ls --filter driver=overlay --format "{{.Name}}" 2>/dev/null | grep -v "^ingress$" | head -1)
     if [ ! -z "$overlay_networks" ]; then
         detected_network="$overlay_networks"
-        log_success "✅ Rede overlay encontrada: $detected_network"
         echo "$detected_network"
         return 0
     fi
 
     # 3. FALLBACK: Usar Kryonix-NET como padrão
-    detected_network="Kryonix-NET"
-    log_info "ℹ️ Usando rede padrão: $detected_network"
-    echo "$detected_network"
+    echo "Kryonix-NET"
     return 0
 }
 
@@ -1276,7 +1270,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════���═══════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
