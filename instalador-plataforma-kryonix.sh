@@ -96,6 +96,7 @@ show_banner() {
     echo    "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
+
 }
 
 # Sistema unificado de barra animada
