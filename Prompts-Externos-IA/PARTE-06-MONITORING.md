@@ -242,26 +242,151 @@ scrape_configs:
         target_label: business_sector
 EOF
 
-# === CONFIGURAR ALERTMANAGER ===
-echo "🚨 Configurando alertas WhatsApp..."
+# === CONFIGURAR REGRAS DE ALERTA MULTI-TENANT ===
+echo "🚨 Configurando alertas por tenant e API..."
+cat > monitoring/prometheus/rules/multi-tenant-alerts.yml << 'EOF'
+groups:
+  # === ALERTAS POR TENANT ===
+  - name: tenant.alerts
+    rules:
+      # Alerta para tenant inativo por inadimplência
+      - alert: TenantPaymentOverdue
+        expr: kryonix_tenant_payment_status{status!="paid"} == 1
+        for: 1h
+        labels:
+          severity: critical
+          tenant_id: "{{ $labels.tenant_id }}"
+        annotations:
+          summary: "Tenant {{ $labels.tenant_id }} com pagamento em atraso"
+          description: "Tenant {{ $labels.tenant_id }} não efetuou pagamento há mais de 1 hora"
+
+      # Alerta para criação automática de cliente falhando (FLUXO COMPLETO)
+      - alert: ClientCreationFailed
+        expr: kryonix_client_creation_failures_total > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Falha na criação automática de cliente"
+          description: "{{ $value }} falhas na criação automática nas últimas 5 min"
+
+  # === ALERTAS DAS 8 APIS MODULARES (ARQUITETURA SDK) ===
+  - name: api.modules.alerts
+    rules:
+      # WhatsApp API (crítica)
+      - alert: WhatsAppAPIDown
+        expr: up{job="kryonix-api-whatsapp"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          api_module: "whatsapp"
+        annotations:
+          summary: "WhatsApp API está fora do ar"
+          description: "API WhatsApp não está respondendo - impacto crítico"
+
+      # CRM API
+      - alert: CRMAPIDown
+        expr: up{job="kryonix-api-crm"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          api_module: "crm"
+        annotations:
+          summary: "CRM API está fora do ar"
+          description: "API CRM não está respondendo"
+
+      # Financeiro API
+      - alert: FinanceiroAPIDown
+        expr: up{job="kryonix-api-financeiro"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          api_module: "financeiro"
+        annotations:
+          summary: "Financeiro API está fora do ar"
+          description: "API Financeiro não está respondendo"
+EOF
+
+# === CONFIGURAR ALERTMANAGER MULTI-TENANT ===
+echo "🚨 Configurando alertmanager multi-tenant..."
 cat > monitoring/alertmanager/alertmanager.yml << 'EOF'
 global:
   smtp_smarthost: 'localhost:587'
   smtp_from: 'alerts@kryonix.com.br'
 
+# Roteamento de alertas por tenant
 route:
-  group_by: ['alertname', 'severity']
+  group_by: ['tenant_id', 'alertname', 'severity']
   group_wait: 10s
   group_interval: 10s
   repeat_interval: 1h
   receiver: 'whatsapp-alerts'
+  routes:
+    # Alertas críticos - notificação imediata
+    - match:
+        severity: critical
+      receiver: 'critical-whatsapp'
+      group_wait: 5s
+      repeat_interval: 30m
+
+    # Alertas por tenant específico
+    - match_re:
+        tenant_id: .+
+      receiver: 'tenant-specific-alerts'
+      group_by: ['tenant_id']
+
+    # Alertas de APIs
+    - match_re:
+        api_module: .+
+      receiver: 'api-alerts'
+      group_by: ['api_module']
 
 receivers:
+  # Alertas críticos para WhatsApp administrativo
+  - name: 'critical-whatsapp'
+    webhook_configs:
+      - url: 'http://evolution-api:8080/webhook/admin-alerts'
+        title: '🚨 ALERTA CRÍTICO KRYONIX'
+        send_resolved: true
+        http_config:
+          bearer_token: 'admin_webhook_token'
+
+  # Alertas gerais WhatsApp
   - name: 'whatsapp-alerts'
     webhook_configs:
-      - url: 'http://evolution:8080/webhook/alerts'
-        title: '🚨 KRYONIX Alert: {{ .GroupLabels.alertname }}'
-        text: 'Mobile Alert: {{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+      - url: 'http://evolution-api:8080/webhook/alerts'
+        title: '⚠️ KRYONIX Alert: {{ .GroupLabels.alertname }}'
+        send_resolved: true
+
+  # Alertas específicos por tenant
+  - name: 'tenant-specific-alerts'
+    webhook_configs:
+      - url: 'http://kryonix-tenant-alerts:8080/notify'
+        title: '📊 Alert Tenant {{ .GroupLabels.tenant_id }}'
+        send_resolved: true
+
+  # Alertas de APIs
+  - name: 'api-alerts'
+    webhook_configs:
+      - url: 'http://kryonix-api-monitor:8080/api-alert'
+        title: '🔧 API {{ .GroupLabels.api_module }} Alert'
+        send_resolved: true
+
+# Inibição de alertas redundantes
+inhibit_rules:
+  # Se API está down, não alertar sobre latência
+  - source_match:
+      alertname: '.*APIDown'
+    target_match:
+      alertname: '.*HighLatency'
+    equal: ['api_module']
+
+  # Se tenant com pagamento atrasado, não alertar sobre inatividade
+  - source_match:
+      alertname: 'TenantPaymentOverdue'
+    target_match:
+      alertname: 'TenantInactive'
+    equal: ['tenant_id']
 EOF
 
 # === REGRAS DE ALERTAS MOBILE ===
