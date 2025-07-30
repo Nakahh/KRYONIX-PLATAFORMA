@@ -884,7 +884,7 @@ if docker service ls | grep -q "traefik"; then
     fi
     log_info "🔐 Resolver SSL detectado: $CERT_RESOLVER"
 else
-    log_warning "⚠️ Traefik não encontrado - KRYONIX funcionará localmente"
+    log_warning "⚠️ Traefik n��o encontrado - KRYONIX funcionará localmente"
     log_info "📝 Rede $DOCKER_NETWORK será usada (pronta para Traefik futuro)"
 fi
 
@@ -1232,7 +1232,7 @@ backup_dependencies() {
     fi
 }
 
-# Função para verificar se o serviço está saudável
+# Funç��o para verificar se o serviço está saudável
 check_service_health() {
     local max_attempts=${1:-12}
     local wait_time=${2:-10}
@@ -1338,9 +1338,9 @@ deploy() {
         yarn cache clean 2>/dev/null || true
         yarn install --force --no-frozen-lockfile
 
-        # Verificar se Builder.io gerou script de build
+        # Verificar se existe script de build
         if grep -q '"build"' package.json; then
-            info "🏗️ Executando build do Builder.io com Yarn..."
+            info "🏗️ Executando build com Yarn..."
             yarn build || {
                 warning "Build falhou, tentando scripts alternativos..."
                 yarn build:prod 2>/dev/null || yarn compile 2>/dev/null || info "ℹ️ Build personalizado não encontrado"
