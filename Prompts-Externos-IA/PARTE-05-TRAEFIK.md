@@ -504,14 +504,57 @@ http:
       tls:
         certResolver: "letsencrypt"
 
-  # Serviços personalizados
+  # Serviços personalizados multi-tenant e APIs modulares
   services:
-    # Load balancer para múltiplas instâncias
-    kryonix-app-lb:
+    # === SERVIÇOS CORE MULTI-TENANT ===
+
+    # Tenant Router - Roteamento automático por cliente (ARQUITETURA SDK)
+    kryonix-tenant-router:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-tenant-router-1:8080"
+          - url: "http://kryonix-tenant-router-2:8080"
+        healthCheck:
+          path: "/health"
+          interval: "15s"
+          timeout: "5s"
+        sticky:
+          cookie:
+            name: "tenant-session"
+            secure: true
+            httpOnly: true
+
+    # Provisioner - Criação automática de subdomínios (FLUXO COMPLETO)
+    kryonix-provisioner:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-provisioner:8080"
+        healthCheck:
+          path: "/provisioner/health"
+          interval: "30s"
+          timeout: "10s"
+        circuitBreaker:
+          expression: "LatencyAtQuantileMS(50.0) > 1000"
+
+    # Payment Service - Validação de pagamentos (ARQUITETURA SDK)
+    kryonix-payment-service:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-payment-service:8080"
+        healthCheck:
+          path: "/payment/health"
+          interval: "20s"
+          timeout: "5s"
+
+    # === APLICAÇÃO TENANT (APPS MOBILE) ===
+
+    # Aplicação principal multi-tenant
+    kryonix-tenant-app:
       loadBalancer:
         servers:
           - url: "http://kryonix-app-1:3000"
           - url: "http://kryonix-app-2:3000"
+          - url: "http://kryonix-app-3:3000"
         healthCheck:
           path: "/health"
           interval: "30s"
@@ -523,19 +566,120 @@ http:
             name: "kryonix-server"
             secure: true
             httpOnly: true
-    
-    # API Gateway com circuit breaker
-    kryonix-api-lb:
+
+    # === 8 APIS MODULARES (ARQUITETURA SDK) ===
+
+    # API CRM - Gestão de leads e vendas
+    kryonix-api-crm:
       loadBalancer:
         servers:
-          - url: "http://kryonix-api-1:8000"
-          - url: "http://kryonix-api-2:8000"
+          - url: "http://kryonix-api-crm-1:8000"
+          - url: "http://kryonix-api-crm-2:8000"
         healthCheck:
-          path: "/api/health"
+          path: "/api/crm/health"
           interval: "15s"
           timeout: "5s"
-        # Circuit breaker para resiliência
-        passHostHeader: true
+          headers:
+            X-Health-Check: "traefik"
+        circuitBreaker:
+          expression: "NetworkErrorRatio() > 0.30"
+          recoveryDuration: "30s"
+
+    # API WhatsApp - Integração Evolution + N8N
+    kryonix-api-whatsapp:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-whatsapp-1:8000"
+          - url: "http://kryonix-api-whatsapp-2:8000"
+        healthCheck:
+          path: "/api/whatsapp/status"
+          interval: "10s"
+          timeout: "5s"
+        circuitBreaker:
+          expression: "NetworkErrorRatio() > 0.20"
+          recoveryDuration: "20s"
+
+    # API Agendamento - Sistema de agendas
+    kryonix-api-agendamento:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-agendamento-1:8000"
+        healthCheck:
+          path: "/api/agendamento/health"
+          interval: "20s"
+          timeout: "5s"
+
+    # API Financeiro - Cobrança e pagamentos
+    kryonix-api-financeiro:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-financeiro-1:8000"
+        healthCheck:
+          path: "/api/financeiro/health"
+          interval: "15s"
+          timeout: "5s"
+
+    # API Marketing - Campanhas e email
+    kryonix-api-marketing:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-marketing-1:8000"
+        healthCheck:
+          path: "/api/marketing/health"
+          interval: "30s"
+          timeout: "10s"
+
+    # API Analytics - Relatórios e BI
+    kryonix-api-analytics:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-analytics-1:8000"
+        healthCheck:
+          path: "/api/analytics/health"
+          interval: "20s"
+          timeout: "5s"
+
+    # API Portal - Portal do cliente
+    kryonix-api-portal:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-portal-1:8000"
+        healthCheck:
+          path: "/api/portal/health"
+          interval: "25s"
+          timeout: "5s"
+
+    # API Whitelabel - Customização branding
+    kryonix-api-whitelabel:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-whitelabel-1:8000"
+        healthCheck:
+          path: "/api/whitelabel/health"
+          interval: "30s"
+          timeout: "10s"
+
+    # === SERVIÇOS SDK E APPS (SDK HOSPEDAGEM + APPS MOBILE) ===
+
+    # SDK Server - Hospedagem do SDK unificado
+    kryonix-sdk-server:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-sdk-server:8080"
+        healthCheck:
+          path: "/sdk/health"
+          interval: "30s"
+          timeout: "5s"
+
+    # App Downloads - Download de apps mobile
+    kryonix-app-downloads:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-downloads:8080"
+        healthCheck:
+          path: "/downloads/health"
+          interval: "60s"
+          timeout: "10s"
 
 # TLS otimizado para mobile
 tls:
