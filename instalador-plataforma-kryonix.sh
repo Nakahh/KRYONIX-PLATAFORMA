@@ -1155,7 +1155,19 @@ deploy() {
     
     # Instalar dependências
     info "📦 Instalando dependências..."
-    npm ci --production
+    if [ -f "yarn.lock" ]; then
+        yarn install --production
+        if [ -f "package.json" ] && grep -q '"build"' package.json; then
+            info "🏗️ Executando yarn build..."
+            yarn build
+        fi
+    else
+        npm ci --production
+        if [ -f "package.json" ] && grep -q '"build"' package.json; then
+            info "🏗️ Executando npm run build..."
+            npm run build
+        fi
+    fi
     
     # Build da imagem
     info "🏗️ Fazendo build da imagem..."
