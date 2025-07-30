@@ -73,10 +73,10 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ��█╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║���██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     █���║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -84,7 +84,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚═══��═════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -978,7 +978,31 @@ if docker stack deploy -c docker-stack.yml Kryonix 2>/dev/null; then
 else
     error_step
     log_error "Falha no comando docker stack deploy"
-    exit 1
+    log_info "🔍 Diagnosticando problema..."
+
+    # Diagnóstico detalhado
+    if ! docker info >/dev/null 2>&1; then
+        log_error "Docker não está funcionando"
+    elif ! docker node ls >/dev/null 2>&1; then
+        log_error "Docker Swarm não está ativo"
+    elif ! docker network ls | grep -q "$TRAEFIK_NETWORK"; then
+        log_error "Rede $TRAEFIK_NETWORK não existe"
+        log_info "Criando rede automaticamente..."
+        docker network create -d overlay --attachable "$TRAEFIK_NETWORK" || true
+        log_info "Tentando deploy novamente..."
+        if docker stack deploy -c docker-stack.yml Kryonix; then
+            log_success "Deploy funcionou após criação da rede"
+        else
+            log_error "Deploy falhou mesmo após correção da rede"
+            log_info "💡 Conteúdo do docker-stack.yml:"
+            head -20 docker-stack.yml
+            exit 1
+        fi
+    else
+        log_error "Erro desconhecido no docker stack deploy"
+        log_info "💡 Tentando deploy com verbose..."
+        docker stack deploy -c docker-stack.yml Kryonix || exit 1
+    fi
 fi
 complete_step
 next_step
