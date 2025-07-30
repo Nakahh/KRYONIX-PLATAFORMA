@@ -119,6 +119,39 @@ sudo ./instalador-plataforma-kryonix.sh
 # ✅ Completar instalação com sucesso
 ```
 
+## 🔧 **CORREÇÕES FINAIS ADICIONAIS:**
+
+### **4. Remoção de Logs Misturados**
+**PROBLEMA:** Função `detect_traefik_network_automatically()` usava `log_info` internamente, causando saída misturada.
+
+**SOLUÇÃO:** Função simplificada sem logs internos:
+```bash
+detect_traefik_network_automatically() {
+    # Função limpa que só retorna o nome da rede via echo
+    # Logs movidos para fora da função
+}
+```
+
+### **5. Correção da Detecção IPv4**
+**PROBLEMA:** `curl -s ifconfig.me` retornava IPv6.
+
+**SOLUÇÃO:** Forçar IPv4 com fallbacks:
+```bash
+curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost'
+```
+
+### **6. Simplificação da Etapa 8**
+**PROBLEMA:** Comando grep complexo na verificação de rede do Traefik.
+
+**SOLUÇÃO:** Comando simplificado sem loops problemáticos.
+
+### **7. Remoção de Função Não Utilizada**
+**PROBLEMA:** `ensure_docker_network()` conflitando com tratamento direto.
+
+**SOLUÇÃO:** Função removida, tratamento direto na Etapa 7.
+
 ## 📋 **ARQUIVOS MODIFICADOS:**
-- `instalador-plataforma-kryonix.sh` - Correções principais aplicadas
+- `instalador-plataforma-kryonix.sh` - Correções principais e finais aplicadas
+- `CORRECOES-APLICADAS.md` - Documentação das correções
+- `teste-final.sh` - Script de teste das correções
 - Backup mantido em: `instalador-plataforma-kryonix-original-backup.sh`
