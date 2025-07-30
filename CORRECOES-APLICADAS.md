@@ -1,4 +1,12 @@
-# 🔧 CORREÇÕES APLICADAS NO INSTALADOR KRYONIX
+# 🔧 CORREÇÕES FINAIS APLICADAS NO INSTALADOR KRYONIX
+
+## ❌ **PROBLEMAS CRÍTICOS IDENTIFICADOS:**
+
+### **ERRO PERSISTENTE APÓS PRIMEIRA CORREÇÃO:**
+- Loop infinito na detecção de rede
+- Logs misturados com output da função
+- IPv6 sendo detectado em vez de IPv4
+- Comando grep ainda problemático na Etapa 8
 
 ## ❌ **PROBLEMAS IDENTIFICADOS:**
 
