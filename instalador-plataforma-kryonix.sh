@@ -83,9 +83,9 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗█���║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚═══════════════════════════════════════════════════════════════��═╝"
     echo -e "${RESET}\n"
 }
 
@@ -502,11 +502,15 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 3: CONFIGURAR CREDENCIAIS
+# ETAPA 3: VALIDAR CREDENCIAIS PRÉ-CONFIGURADAS
 # ============================================================================
 
 processing_step
-request_credentials
+if ! validate_credentials; then
+    error_step
+    log_error "Falha na validação das credenciais"
+    exit 1
+fi
 complete_step
 next_step
 
@@ -1218,7 +1222,7 @@ echo -e "${GREEN}${BOLD}                     🎉 INSTALAÇÃO CONCLUÍDA       
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${CYAN}${BOLD}📊 STATUS DO SISTEMA:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} $WEB_STATUS"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç��o Web:${RESET} $WEB_STATUS"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK (detectada automaticamente)"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Traefik:${RESET} $([ "$TRAEFIK_FOUND" = true ] && echo "✅ ENCONTRADO ($TRAEFIK_SERVICE)" || echo "⚠️ NÃO ENCONTRADO")"
