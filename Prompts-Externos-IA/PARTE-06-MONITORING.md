@@ -1,13 +1,14 @@
-# 📊 PARTE-06: MONITORAMENTO BASE
+# 📊 PARTE-06: MONITORAMENTO MULTI-TENANT
 *Prompt para IA executar via terminal no servidor*
 
 ---
 
 ## 🎯 **CONTEXTO**
 - **Servidor**: 144.202.90.55
-- **Objetivo**: Configurar Grafana + Prometheus mobile-first
+- **Objetivo**: Configurar monitoramento isolado por cliente com 8 APIs modulares
 - **URLs**: https://grafana.kryonix.com.br | https://prometheus.kryonix.com.br
 - **Login Master**: kryonix / Vitor@123456
+- **Novo foco**: Métricas isoladas por tenant e APIs modulares (ARQUITETURA SDK)
 
 ---
 
@@ -18,18 +19,24 @@
 ssh root@144.202.90.55
 cd /opt/kryonix
 
-# === CRIAR ESTRUTURA MONITORAMENTO ===
-echo "📊 Criando estrutura monitoramento..."
-mkdir -p monitoring/{prometheus,grafana,alertmanager}
-mkdir -p monitoring/prometheus/{data,rules}
-mkdir -p monitoring/grafana/{data,dashboards}
+# === CRIAR ESTRUTURA MONITORAMENTO MULTI-TENANT ===
+echo "📊 Criando estrutura monitoramento multi-tenant..."
+mkdir -p monitoring/{prometheus,grafana,alertmanager,tenant-dashboards,api-modules}
+mkdir -p monitoring/prometheus/{data,rules,tenant-configs}
+mkdir -p monitoring/grafana/{data,dashboards,tenant-dashboards}
+mkdir -p monitoring/tenant-dashboards/{clinica,imobiliaria,salao,consultoria}
+mkdir -p monitoring/api-modules/{crm,whatsapp,agendamento,financeiro,marketing,analytics,portal,whitelabel}
+mkdir -p monitoring/scripts
 
-# === CONFIGURAR PROMETHEUS ===
-echo "⚙️ Configurando Prometheus mobile-first..."
+# === CONFIGURAR PROMETHEUS MULTI-TENANT ===
+echo "⚙️ Configurando Prometheus para multi-tenancy..."
 cat > monitoring/prometheus/prometheus.yml << 'EOF'
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
+  external_labels:
+    cluster: 'kryonix-production'
+    environment: 'multi-tenant'
 
 alerting:
   alertmanagers:
@@ -38,15 +45,164 @@ alerting:
 
 rule_files:
   - "rules/*.yml"
+  - "tenant-configs/*.yml"
 
 scrape_configs:
+  # === INFRAESTRUTURA BASE ===
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
-  
+
   - job_name: 'node-exporter'
     static_configs:
       - targets: ['node-exporter:9100']
+
+  # === MÉTRICAS PERSONALIZADAS POR TENANT ===
+  - job_name: 'tenant-metrics'
+    http_sd_configs:
+      - url: 'http://kryonix-tenant-discovery:8080/metrics/tenants'
+        refresh_interval: 30s
+    relabel_configs:
+      - source_labels: [__meta_tenant_id]
+        target_label: tenant_id
+      - source_labels: [__meta_tenant_plan]
+        target_label: plan_type
+      - source_labels: [__meta_tenant_sector]
+        target_label: business_sector
+  - job_name: 'redis-multi-tenant'
+    static_configs:
+      - targets: ['redis-kryonix:9121']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'redis-multi-tenant'
+
+  - job_name: 'postgresql-multi-tenant'
+    static_configs:
+      - targets: ['postgresql-kryonix:9187']
+    metrics_path: '/metrics'
+
+  - job_name: 'traefik-multi-tenant'
+    static_configs:
+      - targets: ['traefik-kryonix:8080']
+    metrics_path: '/metrics'
+
+  # === 8 APIS MODULARES (ARQUITETURA SDK) ===
+  - job_name: 'kryonix-api-crm'
+    static_configs:
+      - targets: ['kryonix-api-crm-1:8000', 'kryonix-api-crm-2:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: api_module
+        replacement: 'crm'
+      - source_labels: [__meta_tenant_id]
+        target_label: tenant_id
+
+  - job_name: 'kryonix-api-whatsapp'
+    static_configs:
+      - targets: ['kryonix-api-whatsapp-1:8000', 'kryonix-api-whatsapp-2:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: api_module
+        replacement: 'whatsapp'
+
+  - job_name: 'kryonix-api-agendamento'
+    static_configs:
+      - targets: ['kryonix-api-agendamento-1:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: api_module
+        replacement: 'agendamento'
+
+  - job_name: 'kryonix-api-financeiro'
+    static_configs:
+      - targets: ['kryonix-api-financeiro-1:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: api_module
+        replacement: 'financeiro'
+
+  - job_name: 'kryonix-api-marketing'
+    static_configs:
+      - targets: ['kryonix-api-marketing-1:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: api_module
+        replacement: 'marketing'
+
+  - job_name: 'kryonix-api-analytics'
+    static_configs:
+      - targets: ['kryonix-api-analytics-1:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: api_module
+        replacement: 'analytics'
+
+  - job_name: 'kryonix-api-portal'
+    static_configs:
+      - targets: ['kryonix-api-portal-1:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 20s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: api_module
+        replacement: 'portal'
+
+  - job_name: 'kryonix-api-whitelabel'
+    static_configs:
+      - targets: ['kryonix-api-whitelabel-1:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: api_module
+        replacement: 'whitelabel'
+
+  # === SERVIÇOS MULTI-TENANT ===
+  - job_name: 'tenant-router'
+    static_configs:
+      - targets: ['kryonix-tenant-router-1:8080', 'kryonix-tenant-router-2:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+
+  - job_name: 'provisioner' # FLUXO COMPLETO
+    static_configs:
+      - targets: ['kryonix-provisioner:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'payment-service'
+    static_configs:
+      - targets: ['kryonix-payment-service:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # === EVOLUTION API (WHATSAPP) ===
+  - job_name: 'evolution-api'
+    static_configs:
+      - targets: ['evolution-api:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # === N8N AUTOMATION ===
+  - job_name: 'n8n-automation'
+    static_configs:
+      - targets: ['n8n:5678']
+    metrics_path: '/webhook/metrics'
+    scrape_interval: 20s
       
   - job_name: 'keycloak'
     static_configs:
