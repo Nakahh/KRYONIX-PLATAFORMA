@@ -83,8 +83,8 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██���╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██�� ██║█��║ ╚███╔╝      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ��"
-    echo    "╚═══════════════════════════════════════════════════════════════��═╝"
+    echo    "╚═══════════════════════════════════════════════════════���═══════��═╝"
     echo -e "${RESET}\n"
 }
 
@@ -279,6 +279,7 @@ detect_traefik_network_automatically() {
                     if [ "$network_driver" = "overlay" ]; then
                         detected_network="$network_name"
                         log_success "✅ Rede do Traefik detectada via serviço $service: $detected_network"
+                        unset DETECTION_IN_PROGRESS
                         echo "$detected_network"
                         return 0
                     fi
@@ -296,7 +297,7 @@ detect_traefik_network_automatically() {
             local network_driver=$(docker network inspect "$found_network" --format '{{.Driver}}' 2>/dev/null || true)
             if [ "$network_driver" = "overlay" ]; then
                 detected_network="$found_network"
-                log_success "�� Rede detectada por padrão ($pattern): $detected_network"
+                log_success "✅ Rede detectada por padrão ($pattern): $detected_network"
                 echo "$detected_network"
                 return 0
             fi
