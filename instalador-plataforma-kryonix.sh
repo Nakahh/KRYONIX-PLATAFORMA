@@ -84,7 +84,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
-    echo    "║     ██╔═█���╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║█���║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -314,6 +314,10 @@ detect_traefik_network_automatically() {
     # 5. FALLBACK: Usar Kryonix-NET como padrão (será criada)
     detected_network="Kryonix-NET"
     log_warning "⚠️ Nenhuma rede específica detectada, usando padrão: $detected_network"
+
+    # Limpar proteção contra loop
+    unset DETECTION_IN_PROGRESS
+
     echo "$detected_network"
     return 0
 }
@@ -417,7 +421,7 @@ validate_credentials() {
     if [ ! -z "$WEBHOOK_URL" ] && [[ "$WEBHOOK_URL" == https://* ]]; then
         log_success "✅ Webhook URL configurado: $WEBHOOK_URL"
     else
-        log_error "❌ Webhook URL inválido"
+        log_error "❌ Webhook URL inv��lido"
         return 1
     fi
 
