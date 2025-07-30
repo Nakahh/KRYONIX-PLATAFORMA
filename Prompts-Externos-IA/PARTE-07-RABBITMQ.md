@@ -47,31 +47,50 @@ RABBITMQ_MULTI_TENANT_ARCHITECTURE:
 ssh root@144.202.90.55
 cd /opt/kryonix
 
-# === CRIAR ESTRUTURA RABBITMQ ===
-echo "🐰 Criando estrutura mensageria..."
-mkdir -p messaging/{rabbitmq,consumers}
-mkdir -p messaging/rabbitmq/{config,data,logs,definitions}
+# === CRIAR ESTRUTURA RABBITMQ MULTI-TENANT ===
+echo "🐰 Criando estrutura mensageria multi-tenant..."
+mkdir -p messaging/{rabbitmq,consumers,scripts,templates}
+mkdir -p messaging/rabbitmq/{config,data,logs,definitions,vhosts}
+mkdir -p messaging/consumers/{crm,whatsapp,agendamento,financeiro,marketing,analytics,portal,whitelabel}
+mkdir -p messaging/scripts/{client-creation,queue-management,monitoring}
 
-# === CONFIGURAR RABBITMQ ===
-echo "⚙️ Configurando RabbitMQ mobile-optimized..."
+# === CONFIGURAR RABBITMQ MULTI-TENANT ===
+echo "⚙️ Configurando RabbitMQ multi-tenant mobile-optimized..."
 cat > messaging/rabbitmq/config/rabbitmq.conf << 'EOF'
-# RabbitMQ Mobile-First Configuration
+# RabbitMQ Multi-Tenant Mobile-First Configuration
 listeners.tcp.default = 5672
 management.tcp.port = 15672
 
-# Mobile optimizations
-vm_memory_high_watermark.relative = 0.6
-default_consumer_timeout = 900000
-heartbeat = 60
+# Multi-tenant optimizations
+vm_memory_high_watermark.relative = 0.7
+vm_memory_high_watermark_paging_ratio = 0.5
+default_consumer_timeout = 3600000
+heartbeat = 300
+channel_max = 2000
+connection_max = 1000
 
-# Mobile user
+# Multi-tenant security
 default_user = kryonix
 default_pass = Vitor@123456
-default_vhost = /
+default_vhost = /kryonix-master
 
 # SSL for mobile security
 ssl_options.verify = verify_peer
 ssl_options.fail_if_no_peer_cert = false
+
+# Clustering for scale
+cluster_formation.peer_discovery_backend = rabbit_peer_discovery_classic_config
+
+# Prometheus metrics
+prometheus.tcp.port = 15692
+
+# Mobile-specific timeouts
+consumer_timeout = 900000
+collect_statistics_interval = 10000
+
+# Queue performance
+lazy_queue_explicit_gc_run_operation_threshold = 1000
+queue_index_embed_msgs_below = 4096
 EOF
 
 # === ENABLED PLUGINS ===
