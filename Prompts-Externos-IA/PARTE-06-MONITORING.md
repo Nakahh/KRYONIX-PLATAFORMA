@@ -227,6 +227,19 @@ scrape_configs:
       - targets: ['frontend:3000']
     metrics_path: '/api/metrics'
     scrape_interval: 10s
+
+  # === MÉTRICAS PERSONALIZADAS POR TENANT ===
+  - job_name: 'tenant-metrics'
+    http_sd_configs:
+      - url: 'http://kryonix-tenant-discovery:8080/metrics/tenants'
+        refresh_interval: 30s
+    relabel_configs:
+      - source_labels: [__meta_tenant_id]
+        target_label: tenant_id
+      - source_labels: [__meta_tenant_plan]
+        target_label: plan_type
+      - source_labels: [__meta_tenant_sector]
+        target_label: business_sector
 EOF
 
 # === CONFIGURAR ALERTMANAGER ===
