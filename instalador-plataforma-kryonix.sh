@@ -751,19 +751,41 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 7: CONFIGURAR REDE DOCKER
+# ETAPA 7: CONFIGURAR REDE DOCKER - DETECÇÃO AUTOMÁTICA
 # ============================================================================
 
 processing_step
-log_info "Configurando rede Docker: $DOCKER_NETWORK"
+log_info "🔍 Iniciando detecção automática da rede Docker..."
 
-if ! ensure_docker_network "$DOCKER_NETWORK"; then
+# Detectar automaticamente a rede do Traefik
+DOCKER_NETWORK=$(detect_traefik_network_automatically)
+
+if [ -z "$DOCKER_NETWORK" ]; then
     error_step
-    log_error "Falha ao configurar rede Docker"
+    log_error "❌ Falha na detecção automática da rede"
     exit 1
 fi
 
-log_success "Rede Docker configurada: $DOCKER_NETWORK"
+log_info "🎯 Rede detectada/selecionada: $DOCKER_NETWORK"
+
+# Garantir que a rede existe
+if ! ensure_docker_network "$DOCKER_NETWORK"; then
+    error_step
+    log_error "Falha ao configurar rede Docker: $DOCKER_NETWORK"
+    exit 1
+fi
+
+# Salvar configuração detectada para próximas execuções
+cat > .kryonix-network-config << NET_CONFIG_EOF
+# Configuração de rede detectada automaticamente em $(date)
+DETECTED_NETWORK=$DOCKER_NETWORK
+DETECTION_METHOD=automatic
+DETECTION_DATE=$(date)
+SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || echo "127.0.0.1")
+NET_CONFIG_EOF
+
+log_success "✅ Rede Docker configurada automaticamente: $DOCKER_NETWORK"
+log_info "📋 Configuração salva em .kryonix-network-config"
 complete_step
 next_step
 
@@ -1136,7 +1158,7 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
             log_success "Webhook endpoint funcionando"
         fi
     else
-        WEB_STATUS="⚠️ INICIALIZANDO"
+        WEB_STATUS="���️ INICIALIZANDO"
     fi
 else
     WEB_STATUS="❌ PROBLEMA"
