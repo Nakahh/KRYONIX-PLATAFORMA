@@ -109,7 +109,7 @@ cat > messaging/rabbitmq/enabled_plugins << 'EOF'
 EOF
 
 # === DEFINIÇÕES MULTI-TENANT BASE ===
-echo "��� Criando definições multi-tenant base..."
+echo "📋 Criando definições multi-tenant base..."
 cat > messaging/rabbitmq/definitions/multi-tenant-definitions.json << 'EOF'
 {
   "users": [
@@ -969,7 +969,7 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=kryonix
       - RABBITMQ_DEFAULT_PASS=Vitor@123456
-      - RABBITMQ_DEFAULT_VHOST=/
+      - RABBITMQ_DEFAULT_VHOST=/kryonix-master
       - RABBITMQ_CONFIG_FILE=/etc/rabbitmq/rabbitmq
     volumes:
       - ./rabbitmq/config:/etc/rabbitmq
@@ -1023,6 +1023,56 @@ services:
     environment:
       - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/ai
       - OLLAMA_URL=http://ollama:11434
+      - NODE_ENV=production
+    networks:
+      - kryonix-network
+    depends_on:
+      - rabbitmq
+
+  sdk-integration-consumer:
+    image: node:18-alpine
+    container_name: sdk-integration-consumer-kryonix
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./consumers:/app
+    command: node sdk-integration-consumer.js
+    environment:
+      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/kryonix-master
+      - KRYONIX_SDK_URL=http://localhost:8000
+      - NODE_ENV=production
+    networks:
+      - kryonix-network
+    depends_on:
+      - rabbitmq
+
+  mobile-priority-consumer:
+    image: node:18-alpine
+    container_name: mobile-priority-consumer-kryonix
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./consumers:/app
+    command: node mobile-priority-consumer.js
+    environment:
+      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/mobile
+      - NODE_ENV=production
+    networks:
+      - kryonix-network
+    depends_on:
+      - rabbitmq
+
+  evolution-webhook-consumer:
+    image: node:18-alpine
+    container_name: evolution-webhook-consumer-kryonix
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./consumers:/app
+    command: node evolution-webhook-consumer.js
+    environment:
+      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/kryonix-master
+      - EVOLUTION_API_URL=http://evolution:8080
       - NODE_ENV=production
     networks:
       - kryonix-network
