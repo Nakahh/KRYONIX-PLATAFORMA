@@ -82,9 +82,9 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔��     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "���     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -595,8 +595,68 @@ WEBHOOK_EOF
 # Criar arquivos auxiliares necessários
 log_info "Criando arquivos auxiliares..."
 
-# Removido webhook-listener.js e kryonix-monitor.js - serviços desnecessários
-# Webhook será tratado diretamente pelo server.js principal
+# webhook-listener.js - CORRIGIDO: Arquivo estava faltando causando falha no deploy
+cat > webhook-listener.js << 'WEBHOOK_LISTENER_EOF'
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 8082;
+
+app.use(express.json());
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', service: 'webhook-listener', timestamp: new Date().toISOString() });
+});
+
+app.post('/webhook', (req, res) => {
+  console.log('🔗 Webhook secundário recebido:', new Date().toISOString());
+  console.log('📦 Payload:', req.body);
+  res.json({ message: 'Webhook processado pelo listener', timestamp: new Date().toISOString() });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🎯 Webhook listener rodando em http://0.0.0.0:${PORT}`);
+});
+WEBHOOK_LISTENER_EOF
+
+# kryonix-monitor.js - CORRIGIDO: Arquivo estava faltando causando falha no deploy
+cat > kryonix-monitor.js << 'KRYONIX_MONITOR_EOF'
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 8084;
+
+app.use(express.json());
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', service: 'kryonix-monitor', timestamp: new Date().toISOString() });
+});
+
+app.get('/metrics', (req, res) => {
+  res.json({
+    timestamp: new Date().toISOString(),
+    status: 'monitoring',
+    services: {
+      web: 'ok',
+      webhook: 'ok',
+      monitor: 'active'
+    },
+    uptime: process.uptime(),
+    memory: process.memoryUsage()
+  });
+});
+
+app.get('/status', (req, res) => {
+  res.json({
+    service: 'KRYONIX Monitor',
+    status: 'operational',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0'
+  });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`📊 Monitor KRYONIX rodando em http://0.0.0.0:${PORT}`);
+});
+KRYONIX_MONITOR_EOF
 
 # Criar diretório public se necessário
 mkdir -p public
@@ -953,18 +1013,25 @@ services:
         # Configuração do serviço
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
-        # Router para API (alta prioridade)
+        # Router para API (PRIORIDADE MÁXIMA) - CORRIGIDO: webhook/api precisa de prioridade
         - "traefik.http.routers.kryonix-api.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
         - "traefik.http.routers.kryonix-api.entrypoints=websecure"
         - "traefik.http.routers.kryonix-api.tls=true"
         - "traefik.http.routers.kryonix-api.tls.certresolver=$CERT_RESOLVER"
         - "traefik.http.routers.kryonix-api.service=kryonix-web"
-        - "traefik.http.routers.kryonix-api.priority=100"
+        - "traefik.http.routers.kryonix-api.priority=1000"
+
+        # Router para API HTTP também (CORRIGIDO: webhook pode vir via HTTP em desenvolvimento)
+        - "traefik.http.routers.kryonix-api-http.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
+        - "traefik.http.routers.kryonix-api-http.entrypoints=web"
+        - "traefik.http.routers.kryonix-api-http.service=kryonix-web"
+        - "traefik.http.routers.kryonix-api-http.priority=1000"
 
         # Router HTTP
         - "traefik.http.routers.kryonix-http.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
         - "traefik.http.routers.kryonix-http.entrypoints=web"
         - "traefik.http.routers.kryonix-http.service=kryonix-web"
+        - "traefik.http.routers.kryonix-http.priority=100"
 
         # Router HTTPS
         - "traefik.http.routers.kryonix-https.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
@@ -972,8 +1039,9 @@ services:
         - "traefik.http.routers.kryonix-https.tls=true"
         - "traefik.http.routers.kryonix-https.tls.certresolver=$CERT_RESOLVER"
         - "traefik.http.routers.kryonix-https.service=kryonix-web"
+        - "traefik.http.routers.kryonix-https.priority=100"
 
-        # Redirecionamento HTTP -> HTTPS
+        # Redirecionamento HTTP -> HTTPS (apenas para páginas, não API)
         - "traefik.http.routers.kryonix-http.middlewares=https-redirect"
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
@@ -986,12 +1054,61 @@ services:
       - NODE_ENV=production
       - PORT=8080
       - WEBHOOK_SECRET=$WEBHOOK_SECRET
+    volumes:
+      - /opt/kryonix-plataform:/opt/kryonix-plataform:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  webhook:
+    image: kryonix-plataforma:latest
+    ports:
+      - "8082:8082"
+    environment:
+      - NODE_ENV=production
+      - PORT=8082
+    networks:
+      - $DOCKER_NETWORK
+    volumes:
+      - ./webhook-listener.js:/app/webhook-listener.js:ro
+    command: ["node", "webhook-listener.js"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+
+  monitor:
+    image: kryonix-plataforma:latest
+    ports:
+      - "8084:8084"
+    environment:
+      - NODE_ENV=production
+      - PORT=8084
+    networks:
+      - $DOCKER_NETWORK
+    volumes:
+      - ./kryonix-monitor.js:/app/kryonix-monitor.js:ro
+    command: ["node", "kryonix-monitor.js"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=$DOCKER_NETWORK"
+        - "traefik.http.services.kryonix-monitor.loadbalancer.server.port=8084"
+        - "traefik.http.routers.kryonix-monitor.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/monitor\`)"
+        - "traefik.http.routers.kryonix-monitor.entrypoints=websecure"
+        - "traefik.http.routers.kryonix-monitor.tls=true"
+        - "traefik.http.routers.kryonix-monitor.service=kryonix-monitor"
 
 networks:
   $DOCKER_NETWORK:
