@@ -84,7 +84,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  █���║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  █��║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -931,7 +931,13 @@ if docker service ls | grep -q "traefik"; then
 
     if [ "$network_confirmed" = false ]; then
         log_warning "⚠️ Traefik não está na rede $DOCKER_NETWORK"
-        log_info "🔄 Rede do Traefik: $(echo $traefik_networks | xargs -I {} docker network ls --format '{{.Name}}' --filter id={} 2>/dev/null | head -1)"
+        # Detectar nome da rede do Traefik
+        traefik_network_name=""
+        for net_id in $traefik_networks; do
+            traefik_network_name=$(docker network ls --format "{{.ID}} {{.Name}}" | grep "^$net_id" | awk '{print $2}' 2>/dev/null | head -1)
+            [ ! -z "$traefik_network_name" ] && break
+        done
+        log_info "🔄 Rede do Traefik: ${traefik_network_name:-'não detectada'}"
         log_info "📝 Usando rede detectada: $DOCKER_NETWORK (pode precisar de ajustes manuais)"
     fi
 
