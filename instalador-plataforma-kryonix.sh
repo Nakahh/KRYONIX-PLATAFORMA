@@ -658,7 +658,7 @@ cat > public/index.html << 'HTML_EOF'
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327
+            ���� https://kryonix.com.br | 📱 +55 17 98180-5327
         </p>
     </div>
 
@@ -1261,6 +1261,10 @@ const server = http.createServer((req, res) => {
                     git config pull.rebase false &&
                     git fetch origin &&
                     git reset --hard origin/main &&
+                    echo "📦 Instalando dependências..." &&
+                    ([ -f yarn.lock ] && yarn install || npm install) &&
+                    echo "🏗️ Executando build se disponível..." &&
+                    ([ -f yarn.lock ] && yarn build 2>/dev/null || npm run build 2>/dev/null || echo "No build script found") &&
                     echo "🏗️ Fazendo rebuild da imagem..." &&
                     docker build --no-cache -t kryonix-plataforma:latest . &&
                     echo "🚀 Fazendo redeploy..." &&
