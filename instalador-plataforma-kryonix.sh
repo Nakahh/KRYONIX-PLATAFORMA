@@ -82,9 +82,9 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔��     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "���     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -560,6 +560,14 @@ app.post('/api/github-webhook', (req, res) => {
     if (isValidEvent && isValidRef) {
         console.log('🚀 Deploy automático iniciado para:', payload.ref);
 
+        // Executar deploy automático em background
+        const deployScript = spawn('./webhook-deploy.sh', ['webhook'], {
+            cwd: '/opt/kryonix-plataform',
+            detached: true,
+            stdio: 'ignore'
+        });
+        deployScript.unref();
+
         res.json({
             message: 'Deploy automático iniciado',
             status: 'accepted',
@@ -587,52 +595,8 @@ WEBHOOK_EOF
 # Criar arquivos auxiliares necessários
 log_info "Criando arquivos auxiliares..."
 
-# webhook-listener.js
-cat > webhook-listener.js << 'WEBHOOK_LISTENER_EOF'
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 8082;
-
-app.use(express.json());
-
-app.get('/health', (req, res) => {
-  res.json({ status: 'healthy', service: 'webhook-listener' });
-});
-
-app.post('/webhook', (req, res) => {
-  console.log('Webhook recebido:', new Date().toISOString());
-  res.json({ message: 'Webhook processado' });
-});
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Webhook listener rodando em http://0.0.0.0:${PORT}`);
-});
-WEBHOOK_LISTENER_EOF
-
-# kryonix-monitor.js
-cat > kryonix-monitor.js << 'KRYONIX_MONITOR_EOF'
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 8084;
-
-app.use(express.json());
-
-app.get('/health', (req, res) => {
-  res.json({ status: 'healthy', service: 'kryonix-monitor' });
-});
-
-app.get('/metrics', (req, res) => {
-  res.json({
-    timestamp: new Date().toISOString(),
-    status: 'monitoring',
-    services: { web: 'ok', webhook: 'ok' }
-  });
-});
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Monitor rodando em http://0.0.0.0:${PORT}`);
-});
-KRYONIX_MONITOR_EOF
+# Removido webhook-listener.js e kryonix-monitor.js - serviços desnecessários
+# Webhook será tratado diretamente pelo server.js principal
 
 # Criar diretório public se necessário
 mkdir -p public
@@ -989,6 +953,14 @@ services:
         # Configuração do serviço
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
+        # Router para API (alta prioridade)
+        - "traefik.http.routers.kryonix-api.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
+        - "traefik.http.routers.kryonix-api.entrypoints=websecure"
+        - "traefik.http.routers.kryonix-api.tls=true"
+        - "traefik.http.routers.kryonix-api.tls.certresolver=$CERT_RESOLVER"
+        - "traefik.http.routers.kryonix-api.service=kryonix-web"
+        - "traefik.http.routers.kryonix-api.priority=100"
+
         # Router HTTP
         - "traefik.http.routers.kryonix-http.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
         - "traefik.http.routers.kryonix-http.entrypoints=web"
@@ -1013,6 +985,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=8080
+      - WEBHOOK_SECRET=$WEBHOOK_SECRET
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
