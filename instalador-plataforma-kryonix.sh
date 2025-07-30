@@ -82,9 +82,9 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗█���╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║█���║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚════════��════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -259,23 +259,7 @@ detect_traefik_network_automatically() {
     return 0
 }
 
-# Função centralizada para verificação de rede Docker
-ensure_docker_network() {
-    local network_name="$1"
-
-    if ! docker network ls --format "{{.Name}}" | grep -q "^${network_name}$"; then
-        log_info "Criando rede Docker: $network_name"
-        if docker network create -d overlay --attachable "$network_name" 2>/dev/null; then
-            log_success "Rede $network_name criada com sucesso"
-        else
-            log_error "Falha ao criar rede $network_name"
-            return 1
-        fi
-    else
-        log_info "Rede $network_name já existe"
-    fi
-    return 0
-}
+# Função ensure_docker_network removida - tratamento direto na Etapa 7
 
 # Função centralizada para testes de conectividade
 test_service_health() {
@@ -563,7 +547,7 @@ app.post('/api/github-webhook', (req, res) => {
     const isValidRef = payload.ref === 'refs/heads/main' || payload.ref === 'refs/heads/master';
 
     if (isValidEvent && isValidRef) {
-        console.log('🚀 Deploy automático iniciado para:', payload.ref);
+        console.log('���� Deploy automático iniciado para:', payload.ref);
 
         res.json({
             message: 'Deploy automático iniciado',
