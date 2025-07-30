@@ -29,7 +29,7 @@ ROCKET='🚀'
 WRENCH='🔧'
 
 # Configurações do projeto
-PROJECT_DIR="/opt/kryonix-plataform"
+PROJECT_DIR="/opt/kryonix-platform"
 WEB_PORT="8080"
 WEBHOOK_PORT="8080"
 
@@ -384,7 +384,6 @@ app.post('/api/github-webhook', (req, res) => {
         // Múltiplos caminhos de deploy para máxima compatibilidade
         const deployPaths = [
             '/opt/kryonix-platform/webhook-deploy.sh',
-            '/opt/kryonix-plataform/webhook-deploy.sh',
             './webhook-deploy.sh'
         ];
 
@@ -420,9 +419,8 @@ app.post('/api/github-webhook', (req, res) => {
             console.log('📋 Script não encontrado, usando rebuild interno');
 
             const dockerCommands = [
-                'cd /opt/kryonix-platform && docker build -t kryonix-plataforma:latest . && docker service update --image kryonix-plataforma:latest Kryonix_web',
-                'cd /opt/kryonix-plataform && docker build -t kryonix-plataforma:latest . && docker service update --image kryonix-plataforma:latest Kryonix_web',
-                'docker build -t kryonix-plataforma:latest . && docker service update --image kryonix-plataforma:latest Kryonix_web'
+                'cd /opt/kryonix-platform && git fetch origin && git reset --hard origin/main && docker build --no-cache -t kryonix-plataforma:latest . && docker service update --force --image kryonix-plataforma:latest Kryonix_web',
+                'docker build --no-cache -t kryonix-plataforma:latest . && docker service update --force --image kryonix-plataforma:latest Kryonix_web'
             ];
 
             let executed = false;
@@ -1072,8 +1070,9 @@ set -euo pipefail
 
 # Configurações
 STACK_NAME="Kryonix"
-DEPLOY_PATH="/opt/kryonix-plataform"
+DEPLOY_PATH="/opt/kryonix-platform"
 LOG_FILE="/var/log/kryonix-deploy.log"
+PAT_TOKEN="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"
 
 # Cores
 GREEN='\033[0;32m'
@@ -1118,22 +1117,26 @@ deploy() {
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
     sudo git config --system --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
 
-    # Pull das mudanças
-    info "📥 Fazendo pull do repositório..."
-    git fetch origin
-    git reset --hard origin/main || git reset --hard origin/master
+    # Configurar credenciais e fazer pull forçado
+    info "📥 Configurando Git e fazendo pull do repositório..."
+    git remote set-url origin "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+    git config pull.rebase false
+    git fetch origin --force
+    git reset --hard origin/main
+    git pull origin main --force
     
     # Instalar dependências
     info "📦 Instalando dependências..."
     npm ci --production
     
-    # Build da imagem
-    info "🏗️ Fazendo build da imagem..."
-    docker build --no-cache -t kryonix-plataforma:latest .
+    # Build da imagem com código atualizado
+    info "🏗️ Fazendo build da imagem com código atualizado..."
+    docker build --no-cache --pull -t kryonix-plataforma:latest .
     
-    # Deploy do stack
-    info "🐳 Atualizando Docker Stack..."
-    docker stack deploy -c docker-stack.yml "$STACK_NAME"
+    # Deploy forçado do stack
+    info "🐳 Forçando atualização do Docker Stack..."
+    docker service update --force --image kryonix-plataforma:latest Kryonix_web
+    docker stack deploy -c docker-stack.yml "$STACK_NAME" --with-registry-auth
     
     # Aguardar serviços
     sleep 30
@@ -1191,7 +1194,7 @@ const { exec } = require('child_process');
 const fs = require('fs');
 
 const PORT = 9001;
-const PROJECT_DIR = '/opt/kryonix-plataform';
+const PROJECT_DIR = '/opt/kryonix-platform';
 
 const log = (message) => {
     const timestamp = new Date().toISOString();
@@ -1211,19 +1214,21 @@ const server = http.createServer((req, res) => {
                 const payload = JSON.parse(body);
                 log(`🚀 Deploy solicitado para: ${payload.ref}`);
 
-                // Executar deploy com pull do GitHub
+                // Executar deploy completo com pull forçado do GitHub
                 const deployScript = `
                     cd ${PROJECT_DIR} &&
-                    echo "�� Fazendo pull do GitHub..." &&
+                    echo "📥 Fazendo pull forçado do GitHub..." &&
                     git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" &&
                     git config pull.rebase false &&
-                    git fetch origin &&
+                    git fetch origin --force &&
                     git reset --hard origin/main &&
-                    echo "🏗️ Fazendo rebuild da imagem..." &&
-                    docker build --no-cache -t kryonix-plataforma:latest . &&
-                    echo "🚀 Fazendo redeploy..." &&
+                    git pull origin main --force &&
+                    echo "🏗️ Fazendo rebuild da imagem com código atualizado..." &&
+                    docker build --no-cache --pull -t kryonix-plataforma:latest . &&
+                    echo "🚀 Forçando redeploy dos serviços..." &&
+                    docker service update --force --image kryonix-plataforma:latest Kryonix_web &&
                     docker stack deploy -c docker-stack.yml Kryonix --with-registry-auth &&
-                    echo "✅ Deploy concluído!"
+                    echo "✅ Deploy completo concluído!"
                 `;
 
                 exec(deployScript, (error, stdout, stderr) => {
@@ -1596,7 +1601,7 @@ else
 fi
 
 # Verificar servidor de deploy
-log_info "🔧 Verificando servidor de deploy..."
+log_info "�� Verificando servidor de deploy..."
 sleep 3
 
 if curl -f -s "http://127.0.0.1:9001/" >/dev/null 2>&1; then
@@ -1709,7 +1714,7 @@ echo
 
 echo -e "${PURPLE}${BOLD}🔄 SINCRONIZAÇÃO INICIAL COM GITHUB${RESET}"
 echo -e "${WHITE}Para sincronizar o código atual do GitHub imediatamente:${RESET}"
-echo -e "${CYAN}  cd /opt/kryonix-plataform && ./webhook-deploy.sh manual${RESET}"
+echo -e "${CYAN}  cd /opt/kryonix-platform && ./webhook-deploy.sh manual${RESET}"
 echo
 echo -e "${WHITE}Para testar o webhook manualmente:${RESET}"
 echo -e "${CYAN}  curl -X POST https://kryonix.com.br/api/github-webhook \\${RESET}"
