@@ -244,7 +244,7 @@ detect_traefik_network_automatically() {
     # 1. PRIORIDADE MÁXIMA: Verificar se Kryonix-NET existe (rede padrão do projeto)
     if docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
         detected_network="Kryonix-NET"
-        log_success "�� Rede principal detectada: $detected_network"
+        log_success "✅ Rede principal detectada: $detected_network"
         echo "$detected_network"
         return 0
     fi
@@ -552,22 +552,86 @@ fi
 
 # Verificar se webhook já está integrado no server.js
 if ! grep -q "/api/github-webhook" server.js; then
-    log_info "Adicionando endpoint webhook ao server.js..."
-    
+    log_info "🔗 Adicionando endpoint webhook completo ao server.js..."
+
     # Backup
     cp server.js server.js.backup
-    
-    # Adicionar endpoint webhook
-    cat >> server.js << 'WEBHOOK_EOF'
 
-// Webhook do GitHub adicionado pelo instalador
+    # Adicionar endpoint webhook completo com validação
+    cat >> server.js << WEBHOOK_EOF
+
+// Webhook do GitHub configurado automaticamente pelo instalador
+const crypto = require('crypto');
+const WEBHOOK_SECRET = '$WEBHOOK_SECRET';
+
+// Função para verificar assinatura do GitHub
+const verifyGitHubSignature = (payload, signature) => {
+    if (!signature) return false;
+
+    const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+    hmac.update(JSON.stringify(payload));
+    const calculatedSignature = 'sha256=' + hmac.digest('hex');
+
+    return crypto.timingSafeEqual(
+        Buffer.from(signature),
+        Buffer.from(calculatedSignature)
+    );
+};
+
+// Endpoint webhook do GitHub
 app.post('/api/github-webhook', (req, res) => {
-    console.log('Webhook recebido:', req.body);
-    res.json({ status: 'received', timestamp: new Date().toISOString() });
+    const payload = req.body;
+    const signature = req.get('X-Hub-Signature-256');
+    const event = req.get('X-GitHub-Event');
+
+    console.log('🔗 Webhook recebido:', {
+        event: event || 'NONE',
+        ref: payload.ref || 'N/A',
+        repository: payload.repository?.name || 'N/A',
+        signature: signature ? 'PRESENT' : 'NONE'
+    });
+
+    // Verificar assinatura
+    if (WEBHOOK_SECRET && signature) {
+        if (!verifyGitHubSignature(payload, signature)) {
+            console.log('❌ Assinatura inválida do webhook');
+            return res.status(401).json({ error: 'Invalid signature' });
+        }
+        console.log('✅ Assinatura do webhook verificada');
+    }
+
+    // Processar apenas push events na main/master
+    const isValidEvent = !event || event === 'push';
+    const isValidRef = payload.ref === 'refs/heads/main' || payload.ref === 'refs/heads/master';
+
+    if (isValidEvent && isValidRef) {
+        console.log('🚀 Deploy automático iniciado para:', payload.ref);
+
+        res.json({
+            message: 'Deploy automático iniciado',
+            status: 'accepted',
+            ref: payload.ref,
+            sha: payload.after || payload.head_commit?.id,
+            timestamp: new Date().toISOString(),
+            webhook_url: '$WEBHOOK_URL'
+        });
+    } else {
+        console.log('ℹ️ Evento ignorado:', { event, ref: payload.ref });
+
+        res.json({
+            message: 'Evento ignorado',
+            status: 'ignored',
+            event: event || 'undefined',
+            ref: payload.ref || 'undefined',
+            reason: !isValidEvent ? 'invalid_event' : 'invalid_ref'
+        });
+    }
 });
 WEBHOOK_EOF
-    
-    log_success "Webhook adicionado ao server.js"
+
+    log_success "✅ Webhook completo com validação adicionado ao server.js"
+else
+    log_info "ℹ️ Webhook já existe no server.js"
 fi
 
 # Criar arquivos auxiliares necessários
