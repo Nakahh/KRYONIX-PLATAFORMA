@@ -85,7 +85,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -389,23 +389,33 @@ sync_git_repository() {
     return 0
 }
 
-# Função para solicitar credenciais do usuário
-request_credentials() {
-    if [ -z "$PAT_TOKEN" ]; then
-        echo ""
-        echo -e "${YELLOW}${BOLD}🔐 CONFIGURAÇÃO DE CREDENCIAIS${RESET}"
-        echo -e "${CYAN}Para deploy automático, é necessário um Personal Access Token do GitHub.${RESET}"
-        echo -e "${CYAN}Como obter: GitHub → Settings → Developer settings → Personal access tokens${RESET}"
-        echo ""
-        read -p "Cole seu GitHub Personal Access Token (ou pressione Enter para pular): " USER_PAT_TOKEN
-        
-        if [ ! -z "$USER_PAT_TOKEN" ]; then
-            PAT_TOKEN="$USER_PAT_TOKEN"
-            log_success "Token configurado com sucesso"
-        else
-            log_warning "Deploy automático desabilitado (sem token)"
-        fi
+# Função para validar credenciais pré-configuradas
+validate_credentials() {
+    log_info "🔐 Validando credenciais pré-configuradas..."
+
+    if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == ghp_* ]]; then
+        log_success "✅ GitHub PAT Token configurado"
+    else
+        log_error "❌ GitHub PAT Token inválido"
+        return 1
     fi
+
+    if [ ! -z "$WEBHOOK_SECRET" ] && [ ${#WEBHOOK_SECRET} -gt 20 ]; then
+        log_success "✅ Webhook Secret configurado"
+    else
+        log_error "❌ Webhook Secret inválido"
+        return 1
+    fi
+
+    if [ ! -z "$WEBHOOK_URL" ] && [[ "$WEBHOOK_URL" == https://* ]]; then
+        log_success "✅ Webhook URL configurado: $WEBHOOK_URL"
+    else
+        log_error "❌ Webhook URL inválido"
+        return 1
+    fi
+
+    log_success "✅ Todas as credenciais validadas - instalação 100% automática"
+    return 0
 }
 
 # ============================================================================
