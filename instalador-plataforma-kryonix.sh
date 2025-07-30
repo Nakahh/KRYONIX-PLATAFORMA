@@ -84,7 +84,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚��█████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -790,26 +790,57 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 8: VERIFICAR TRAEFIK
+# ETAPA 8: VERIFICAR TRAEFIK E VALIDAR REDE
 # ============================================================================
 
 processing_step
-log_info "Verificando Traefik existente..."
+log_info "Verificando Traefik e validando rede detectada..."
 
 CERT_RESOLVER="letsencryptresolver"
+TRAEFIK_FOUND=false
+
 if docker service ls | grep -q "traefik"; then
     TRAEFIK_SERVICE=$(docker service ls --format "{{.Name}}" | grep traefik | head -1)
-    log_success "Traefik encontrado: $TRAEFIK_SERVICE"
-    
+    TRAEFIK_FOUND=true
+    log_success "✅ Traefik encontrado: $TRAEFIK_SERVICE"
+
+    # Verificar se o Traefik está na mesma rede detectada
+    local traefik_networks=$(docker service inspect "$TRAEFIK_SERVICE" --format '{{range .Spec.TaskTemplate.Networks}}{{.Target}} {{end}}' 2>/dev/null || true)
+    local network_confirmed=false
+
+    for network_id in $traefik_networks; do
+        local network_name=$(docker network ls --format "{{.ID}} {{.Name}}" | grep "^$network_id" | awk '{print $2}' 2>/dev/null || true)
+        if [ "$network_name" = "$DOCKER_NETWORK" ]; then
+            network_confirmed=true
+            log_success "✅ Rede $DOCKER_NETWORK confirmada com Traefik"
+            break
+        fi
+    done
+
+    if [ "$network_confirmed" = false ]; then
+        log_warning "⚠️ Traefik não está na rede $DOCKER_NETWORK"
+        log_info "🔄 Rede do Traefik: $(echo $traefik_networks | xargs -I {} docker network ls --format '{{.Name}}' --filter id={} 2>/dev/null | head -1)"
+        log_info "📝 Usando rede detectada: $DOCKER_NETWORK (pode precisar de ajustes manuais)"
+    fi
+
     # Detectar resolver SSL
     if docker service logs $TRAEFIK_SERVICE 2>/dev/null | grep -q "letsencrypt"; then
         CERT_RESOLVER="letsencrypt"
     fi
-    log_info "Resolver SSL detectado: $CERT_RESOLVER"
+    log_info "🔐 Resolver SSL detectado: $CERT_RESOLVER"
 else
-    log_warning "Traefik não encontrado - KRYONIX funcionará localmente"
+    log_warning "⚠️ Traefik não encontrado - KRYONIX funcionará localmente"
+    log_info "📝 Rede $DOCKER_NETWORK será usada (pronta para Traefik futuro)"
 fi
 
+# Atualizar arquivo de configuração com informações do Traefik
+cat >> .kryonix-network-config << TRAEFIK_CONFIG_EOF
+TRAEFIK_FOUND=$TRAEFIK_FOUND
+TRAEFIK_SERVICE=${TRAEFIK_SERVICE:-"none"}
+CERT_RESOLVER=$CERT_RESOLVER
+TRAEFIK_CONFIG_EOF
+
+log_success "✅ Verificação do Traefik concluída"
 complete_step
 next_step
 
@@ -1158,7 +1189,7 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
             log_success "Webhook endpoint funcionando"
         fi
     else
-        WEB_STATUS="���️ INICIALIZANDO"
+        WEB_STATUS="⚠️ INICIALIZANDO"
     fi
 else
     WEB_STATUS="❌ PROBLEMA"
