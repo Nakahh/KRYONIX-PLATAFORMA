@@ -79,13 +79,13 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔════���════════════════════════════════════════════════════════════╗"
+    echo    "╔════���═══════════��════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║█��║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  █����   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -235,93 +235,32 @@ log_error() {
 # FUNÇÕES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
-# Função inteligente para detectar automaticamente a rede do Traefik
+# Função simplificada e robusta para detectar rede do Traefik
 detect_traefik_network_automatically() {
-    # Proteção contra loops infinitos
-    if [ "${DETECTION_IN_PROGRESS:-}" = "true" ]; then
-        echo "Kryonix-NET"
-        return 0
-    fi
-    export DETECTION_IN_PROGRESS=true
-
     local detected_network=""
 
     log_info "🔍 Detectando rede do Traefik automaticamente..."
 
-    # 1. PRIORIDADE MÁXIMA: Verificar se Kryonix-NET existe (rede padrão do projeto)
+    # 1. PRIORIDADE: Verificar se Kryonix-NET existe
     if docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
         detected_network="Kryonix-NET"
         log_success "✅ Rede principal detectada: $detected_network"
-        unset DETECTION_IN_PROGRESS
         echo "$detected_network"
         return 0
     fi
 
-    # 2. Verificar se há serviços Traefik rodando e descobrir qual rede eles usam
-    local traefik_services=$(docker service ls --format "{{.Name}}" | grep -i traefik | head -3)
-
-    if [ ! -z "$traefik_services" ]; then
-        log_info "📋 Serviços Traefik encontrados, analisando redes..."
-
-        # Para cada serviço Traefik, verificar em qual rede está
-        for service in $traefik_services; do
-            # Obter informações da rede do serviço
-            local service_networks=$(docker service inspect "$service" --format '{{range .Spec.TaskTemplate.Networks}}{{.Target}} {{end}}' 2>/dev/null || true)
-
-            for network_id in $service_networks; do
-                # Converter ID da rede para nome
-                local network_name=$(docker network ls --format "{{.ID}} {{.Name}}" | grep "^$network_id" | awk '{print $2}' 2>/dev/null || true)
-
-                if [ ! -z "$network_name" ] && [ "$network_name" != "ingress" ]; then
-                    # Verificar se é uma rede overlay (mais provável para Traefik)
-                    local network_driver=$(docker network inspect "$network_name" --format '{{.Driver}}' 2>/dev/null || true)
-
-                    if [ "$network_driver" = "overlay" ]; then
-                        detected_network="$network_name"
-                        log_success "✅ Rede do Traefik detectada via serviço $service: $detected_network"
-                        unset DETECTION_IN_PROGRESS
-                        echo "$detected_network"
-                        return 0
-                    fi
-                fi
-            done
-        done
-    fi
-
-    # 3. Buscar por padrões comuns de rede de proxy/traefik
-    log_info "🔍 Buscando por padrões comuns de rede..."
-    for pattern in "traefik" "proxy" "web" "public" "frontend"; do
-        local found_network=$(docker network ls --format "{{.Name}}" | grep -i "$pattern" | head -1)
-        if [ ! -z "$found_network" ]; then
-            # Verificar se é overlay
-            local network_driver=$(docker network inspect "$found_network" --format '{{.Driver}}' 2>/dev/null || true)
-            if [ "$network_driver" = "overlay" ]; then
-                detected_network="$found_network"
-                log_success "✅ Rede detectada por padrão ($pattern): $detected_network"
-                unset DETECTION_IN_PROGRESS
-                echo "$detected_network"
-                return 0
-            fi
-        fi
-    done
-
-    # 4. Verificar redes overlay existentes (excluindo ingress)
+    # 2. Verificar redes overlay existentes (excluindo ingress)
     local overlay_networks=$(docker network ls --filter driver=overlay --format "{{.Name}}" | grep -v "^ingress$" | head -1)
     if [ ! -z "$overlay_networks" ]; then
         detected_network="$overlay_networks"
-        log_info "✅ Rede overlay encontrada: $detected_network"
-        unset DETECTION_IN_PROGRESS
+        log_success "��� Rede overlay encontrada: $detected_network"
         echo "$detected_network"
         return 0
     fi
 
-    # 5. FALLBACK: Usar Kryonix-NET como padrão (será criada)
+    # 3. FALLBACK: Usar Kryonix-NET como padrão
     detected_network="Kryonix-NET"
-    log_warning "⚠️ Nenhuma rede específica detectada, usando padrão: $detected_network"
-
-    # Limpar proteção contra loop
-    unset DETECTION_IN_PROGRESS
-
+    log_info "ℹ️ Usando rede padrão: $detected_network"
     echo "$detected_network"
     return 0
 }
@@ -1337,7 +1276,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}══════════════════════════════��════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -1353,7 +1292,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK 
 echo -e "    ${BLUE}│${RESET} ${BOLD}Traefik:${RESET} $([ "$TRAEFIK_FOUND" = true ] && echo "✅ ENCONTRADO ($TRAEFIK_SERVICE)" || echo "⚠️ NÃO ENCONTRADO")"
 echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub CI/CD:${RESET} ✅ CONFIGURADO"
 echo ""
-echo -e "${CYAN}${BOLD}��� ACESSO:${RESET}"
+echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local:${RESET} http://localhost:8080"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Health:${RESET} http://localhost:8080/health"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook:${RESET} http://localhost:8080/api/github-webhook"
