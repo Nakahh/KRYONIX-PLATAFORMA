@@ -58,7 +58,7 @@ STEP_DESCRIPTIONS=(
     "Limpando ambiente anterior 🧹"
     "Configurando credenciais 🔐"
     "Preparando projeto 📁"
-    "Instalando dependências ��"
+    "Instalando dependências 📦"
     "Configurando firewall 🔥"
     "Configurando rede Docker 🔗"
     "Verificando Traefik 📊"
@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚══���══════════════════════════════════════════════════════════════╝"
+    echo    "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -581,10 +581,7 @@ app.post('/api/github-webhook', (req, res) => {
 });
 WEBHOOK_EOF
 
-    log_success "✅ Webhook completo com validação adicionado ao server.js"
-else
-    log_info "ℹ️ Webhook já existe no server.js"
-fi
+    log_success "✅ Webhook corrigido com deploy automático completo adicionado ao server.js"
 
 # Criar arquivos auxiliares necessários
 log_info "Criando arquivos auxiliares..."
@@ -1268,7 +1265,7 @@ deploy() {
 
         # Verificar se o update funcionou
         if check_service_health 6 10; then
-            log "✅ Deploy automático concluído com sucesso via update!"
+            log "��� Deploy automático concluído com sucesso via update!"
             return 0
         else
             warning "⚠️ Update não funcionou, forçando restart completo..."
@@ -1391,7 +1388,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}════════��═══════════════��══════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════════════════════════════���═════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
