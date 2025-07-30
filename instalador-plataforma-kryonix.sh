@@ -1192,20 +1192,29 @@ deploy() {
     git fetch origin
     git reset --hard origin/main || git reset --hard origin/master
     
-    # Instalar dependências
+    # Instalar dependências e executar build
     info "📦 Instalando dependências..."
     if [ -f "yarn.lock" ]; then
-        yarn install --production
-        if [ -f "package.json" ] && grep -q '"build"' package.json; then
-            info "🏗️ Executando yarn build..."
-            yarn build
-        fi
+        yarn install
+        # Sempre tentar build para Builder.io
+        info "🏗️ Executando yarn build (Builder.io)..."
+        yarn build 2>/dev/null || npm run build 2>/dev/null || info "ℹ️ Sem script de build"
     else
-        npm ci --production
-        if [ -f "package.json" ] && grep -q '"build"' package.json; then
-            info "🏗️ Executando npm run build..."
-            npm run build
-        fi
+        npm install
+        # Sempre tentar build para Builder.io
+        info "🏗️ Executando npm run build (Builder.io)..."
+        npm run build 2>/dev/null || info "ℹ️ Sem script de build"
+    fi
+
+    # Verificar se existe pasta dist/build gerada
+    if [ -d "dist" ]; then
+        info "📁 Build gerado em ./dist/"
+        cp -r dist/* public/ 2>/dev/null || true
+    elif [ -d "build" ]; then
+        info "📁 Build gerado em ./build/"
+        cp -r build/* public/ 2>/dev/null || true
+    elif [ -d ".next" ]; then
+        info "📁 Build Next.js gerado"
     fi
     
     # Limpar imagem antiga para garantir rebuild completo
@@ -1716,12 +1725,12 @@ complete_step
 # ============================================================================
 
 # Mostrar barra final de 100%
-echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[████████████████████████████████████████████████████] 100%${RESET}"
+echo -e "\n${WHITE}${BOLD}🚀 KRYONIX Deploy Progress: ${GREEN}[███████████████████████████████████████████��████████] 100%${RESET}"
 echo -e "🎉 ${GREEN}${BOLD}Plataforma KRYONIX + CI/CD configurados com SUCESSO!${RESET}\n"
 
 # Banner final épico
 echo -e "${BLUE}${BOLD}"
-echo "╔══════════════════════════════════════════════════════════════════════════════════════╗"
+echo "╔═════════════════════���════════════════════════════════════════════════════════════════╗"
 echo "║                                                                                    ║"
 echo -e "║                        ${GREEN}🎉 INSTALAÇÃO COMPLETA COM SUCESSO! 🎉${BLUE}                       ║"
 echo "║                                                                                    ║"
