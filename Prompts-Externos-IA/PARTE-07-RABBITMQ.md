@@ -563,7 +563,7 @@ cat > messaging/consumers/sdk-integration-consumer.js << 'EOF'
 const amqp = require('amqplib');
 const axios = require('axios');
 
-const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:Vitor@123456@localhost:5672';
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672';
 const KRYONIX_SDK_URL = process.env.KRYONIX_SDK_URL || 'http://localhost:8000';
 
 class SDKIntegrationConsumer {
@@ -688,7 +688,7 @@ cat > messaging/consumers/mobile-priority-consumer.js << 'EOF'
 const amqp = require('amqplib');
 const axios = require('axios');
 
-const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:Vitor@123456@localhost:5672/mobile';
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672/mobile';
 
 class MobilePriorityConsumer {
     async connect() {
@@ -733,7 +733,7 @@ class MobilePriorityConsumer {
 
     async processPriorityNotification(data, priority) {
         try {
-            console.log(`�� Processing priority ${priority} notification:`, data.userId);
+            console.log(`📱 Processing priority ${priority} notification:`, data.userId);
 
             const { userId, clientId, type, title, message, data: payload } = data;
 
@@ -813,7 +813,7 @@ cat > messaging/consumers/evolution-webhook-consumer.js << 'EOF'
 const amqp = require('amqplib');
 const axios = require('axios');
 
-const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:Vitor@123456@localhost:5672';
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672';
 
 class EvolutionWebhookConsumer {
     async connect() {
@@ -1005,7 +1005,7 @@ services:
       - ./consumers:/app
     command: node mobile-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/mobile
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/mobile
       - EVOLUTION_API_URL=http://evolution:8080
       - NODE_ENV=production
     networks:
@@ -1022,7 +1022,7 @@ services:
       - ./consumers:/app
     command: node ai-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/ai
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/ai
       - OLLAMA_URL=http://ollama:11434
       - NODE_ENV=production
     networks:
@@ -1039,7 +1039,7 @@ services:
       - ./consumers:/app
     command: node sdk-integration-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/kryonix-master
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/kryonix-master
       - KRYONIX_SDK_URL=http://localhost:8000
       - NODE_ENV=production
     networks:
@@ -1056,7 +1056,7 @@ services:
       - ./consumers:/app
     command: node mobile-priority-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/mobile
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/mobile
       - NODE_ENV=production
     networks:
       - kryonix-network
@@ -1072,7 +1072,7 @@ services:
       - ./consumers:/app
     command: node evolution-webhook-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/kryonix-master
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/kryonix-master
       - EVOLUTION_API_URL=http://evolution:8080
       - NODE_ENV=production
     networks:
@@ -1298,7 +1298,7 @@ cat > test-sdk-integration.js << 'EOF'
 const amqp = require('amqplib');
 
 async function testSDKCall() {
-    const connection = await amqp.connect('amqp://kryonix:Vitor@123456@localhost:5672/kryonix-master');
+    const connection = await amqp.connect('amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672/kryonix-master');
     const channel = await connection.createChannel();
 
     const sdkCall = {
@@ -1336,7 +1336,7 @@ cat > test-mobile-priority.js << 'EOF'
 const amqp = require('amqplib');
 
 async function testMobilePriority() {
-    const connection = await amqp.connect('amqp://kryonix:Vitor@123456@localhost:5672/mobile');
+    const connection = await amqp.connect('amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672/mobile');
     const channel = await connection.createChannel();
 
     const priorityNotification = {
