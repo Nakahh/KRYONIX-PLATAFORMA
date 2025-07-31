@@ -379,7 +379,7 @@ http:
   
   routers:
     evolution-api:
-      rule: "Host(\`evolution.kryonix.com.br\`)"
+      rule: "Host(\`api.kryonix.com.br\`)"
       tls:
         certResolver: letsencrypt
       service: evolution-api
