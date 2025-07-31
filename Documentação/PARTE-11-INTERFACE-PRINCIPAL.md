@@ -1,291 +1,386 @@
-# 🎨 PARTE 11 - INTERFACE PRINCIPAL MOBILE-FIRST KRYONIX
-*Agentes Especializados: Designer UX/UI Sênior + Expert Frontend + Specialist Mobile + Expert IA + Specialist Acessibilidade + Expert Performance*
+# 🎨 PARTE 11 - INTERFACE MULTI-TENANT MOBILE-FIRST KRYONIX
+*Agentes Especializados: Frontend Expert + Mobile UI Expert + Multi-Tenant Architect + PWA Specialist + Performance Expert + UX Designer*
 
-## 🎯 **OBJETIVO**
-Desenvolver interface principal 100% mobile-first da plataforma KRYONIX SaaS com React + IA integrada, priorizando 80% dos usuários mobile, design system avançado e experiência simplificada para leigos em programação.
+## 🎯 **OBJETIVO MULTI-TENANT**
+Desenvolver interface principal **100% mobile-first multi-tenant** da plataforma KRYONIX SaaS com isolamento completo por cliente, theming dinâmico, PWA instalável e performance otimizada para 80% usuários mobile.
 
-## 🧠 **ESTRATÉGIA INTERFACE IA MOBILE-FIRST**
+## 🏗️ **ARQUITETURA INTERFACE MULTI-TENANT**
 ```yaml
-MOBILE_FIRST_INTERFACE:
-  PRIMARY_FOCUS: "80% dos usuários são mobile"
-  AI_INTEGRATION:
-    - intelligent_ui: "IA adapta interface ao usuário"
-    - predictive_actions: "IA antecipa necessidades do usuário"
-    - smart_navigation: "IA sugere próximos passos"
-    - adaptive_layout: "IA otimiza layout por dispositivo"
-    - voice_interface: "IA responde comandos de voz"
-
-  MOBILE_OPTIMIZATION:
-    - "Touch-first design para gestos naturais"
-    - "Offline-first com sync inteligente"
-    - "PWA com instalação nativa"
-    - "Dark/Light mode automático"
-    - "Performance 60fps garantido"
-
-  SIMPLICITY_FOR_BEGINNERS:
-    - "Interface em português brasileiro"
-    - "Linguagem para leigos em programação"
-    - "Tutoriais interativos com IA"
-    - "One-click actions para tudo"
-    - "Explicações contextuais inteligentes"
-
-  BUSINESS_INTELLIGENCE:
-    - "Widgets de receita em destaque"
-    - "Métricas de negócio prioritárias"
-    - "Alertas visuais para oportunidades"
-    - "Dashboards executivos simplificados"
+Multi_Tenant_Interface_Architecture:
+  isolation_strategy: "UI isolada por cliente em todos os níveis"
+  theming: "Dinâmico por tenant com branding customizado"
+  mobile_focus: "80% usuários mobile como prioridade"
+  pwa_strategy: "Instalável por tenant específico"
+  
+UI_Isolation_Layers:
+  theme_layer: "Cores, logos e CSS por tenant"
+  component_layer: "Componentes isolados por cliente"
+  state_layer: "Estado global segregado por tenant"
+  routing_layer: "Rotas específicas por tenant"
+  cache_layer: "Cache separado por cliente"
+  
+Tenant_UI_Patterns:
+  subdomain_theming: "cliente-{id}.kryonix.com.br"
+  dynamic_branding: "Logo e cores do cliente"
+  isolated_pwa: "PWA específica por tenant"
+  tenant_components: "Widgets customizados por cliente"
+  role_based_ui: "Interface baseada em permissões"
 ```
 
-## 🎨 **DESIGN SYSTEM KRYONIX MOBILE-FIRST (Designer UX/UI Sênior)**
-```typescript
-// Design System Avançado KRYONIX
-export const kryonixMobileDesignSystem = {
-  colors: {
-    // Paleta principal KRYONIX
-    primary: {
-      50: '#E6F3FF',
-      100: '#CCE7FF',
-      500: '#0066CC',    // Azul KRYONIX principal
-      600: '#0052A3',
-      700: '#003D7A',
-      900: '#001A33'
-    },
-    secondary: {
-      50: '#E6F9FD',
-      100: '#CCF3FB',
-      500: '#00B4D8',    // Azul claro tecnológico
-      600: '#0090A6',
-      700: '#006B7D'
-    },
-    accent: {
-      50: '#FFF0EB',
-      100: '#FFE1D7',
-      500: '#FF6B35',    // Laranja energia/ação
-      600: '#E55527',
-      700: '#B8441F'
-    },
-    success: {
-      50: '#ECFDF5',
-      500: '#10B981',    // Verde sucesso
-      600: '#059669'
-    },
-    warning: {
-      50: '#FFFBEB',
-      500: '#F59E0B',    // Amarelo alerta
-      600: '#D97706'
-    },
-    error: {
-      50: '#FEF2F2',
-      500: '#EF4444',    // Vermelho erro
-      600: '#DC2626'
-    },
-    neutral: {
-      50: '#F8FAFC',     // Fundo claro
-      100: '#F1F5F9',
-      200: '#E2E8F0',
-      300: '#CBD5E1',
-      400: '#94A3B8',
-      500: '#64748B',
-      600: '#475569',
-      700: '#334155',
-      800: '#1E293B',
-      900: '#0F172A'     // Fundo escuro
-    }
-  },
+## 🎨 **TENANT CONTEXT PROVIDER**
 
-  typography: {
-    fontFamily: {
-      sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
-      mono: ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace']
-    },
-    fontSize: {
-      // Tamanhos otimizados para mobile
-      xs: ['0.75rem', { lineHeight: '1rem' }],     // 12px
-      sm: ['0.875rem', { lineHeight: '1.25rem' }], // 14px
-      base: ['1rem', { lineHeight: '1.5rem' }],    // 16px - base mobile
-      lg: ['1.125rem', { lineHeight: '1.75rem' }], // 18px
-      xl: ['1.25rem', { lineHeight: '1.75rem' }],  // 20px
-      '2xl': ['1.5rem', { lineHeight: '2rem' }],   // 24px
-      '3xl': ['1.875rem', { lineHeight: '2.25rem' }], // 30px
-      '4xl': ['2.25rem', { lineHeight: '2.5rem' }],   // 36px - títulos mobile
-    }
-  },
+### **🏢 Sistema Context Multi-Tenant**
+```tsx
+// contexts/TenantContext.tsx
+interface TenantConfig {
+  clientId: string;
+  companyName: string;
+  subdomain: string;
+  theme: {
+    colors: {
+      primary: string;
+      secondary: string;
+      accent: string;
+      background: string;
+      text: string;
+    };
+    logo: string;
+    favicon: string;
+    customCSS?: string;
+    darkMode: boolean;
+  };
+  modules: string[];
+  plan: 'basic' | 'pro' | 'enterprise';
+  settings: {
+    language: string;
+    timezone: string;
+    currency: string;
+    mobileOptimized: boolean;
+  };
+  permissions: Record<string, boolean>;
+  customization: {
+    layout: 'standard' | 'compact' | 'cards';
+    navigation: 'sidebar' | 'bottom' | 'drawer';
+    dashboard: 'executive' | 'operational' | 'custom';
+  };
+}
 
-  spacing: {
-    // Sistema de espaçamento touch-friendly
-    touch: {
-      minimal: '8px',   // Espaçamento mínimo
-      small: '12px',    // Botões pequenos
-      medium: '16px',   // Botões padrão
-      large: '20px',    // Botões grandes
-      xlarge: '24px'    // Áreas de toque grandes
-    }
-  },
-
-  shadows: {
-    // Sombras otimizadas para mobile
-    mobile: {
-      subtle: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-      small: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-      medium: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-      large: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-      floating: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
-    }
-  },
-
-  animations: {
-    // Animações mobile-optimized
-    mobile: {
-      duration: {
-        fast: '150ms',
-        normal: '250ms',
-        slow: '350ms'
-      },
-      easing: {
-        smooth: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
-        bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+export const TenantProvider = ({ children }: { children: React.ReactNode }) => {
+  const [tenant, setTenant] = useState<TenantConfig | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const initializeTenant = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Extrair tenant do subdomain ou header
+        const tenantId = extractTenantFromRequest();
+        
+        if (!tenantId) {
+          throw new Error('Tenant não identificado');
+        }
+        
+        // Buscar configuração do tenant
+        const tenantConfig = await fetchTenantConfig(tenantId);
+        
+        if (!tenantConfig) {
+          throw new Error('Configuração do tenant não encontrada');
+        }
+        
+        // Aplicar theming dinâmico
+        await applyTenantTheming(tenantConfig.theme);
+        
+        // Configurar PWA específica do tenant
+        await configureTenantPWA(tenantConfig);
+        
+        setTenant(tenantConfig);
+        setError(null);
+        
+      } catch (err) {
+        setError(err.message);
+        // Fallback para configuração padrão ou tela de erro
+      } finally {
+        setIsLoading(false);
       }
+    };
+    
+    initializeTenant();
+  }, []);
+  
+  const updateTenantConfig = useCallback(async (updates: Partial<TenantConfig>) => {
+    if (!tenant) return;
+    
+    const updatedConfig = { ...tenant, ...updates };
+    
+    // Aplicar mudanças de tema se houver
+    if (updates.theme) {
+      await applyTenantTheming(updatedConfig.theme);
     }
+    
+    // Salvar configuração
+    await saveTenantConfig(tenant.clientId, updatedConfig);
+    
+    setTenant(updatedConfig);
+  }, [tenant]);
+  
+  if (isLoading) {
+    return <TenantLoadingScreen />;
+  }
+  
+  if (error || !tenant) {
+    return <TenantErrorScreen error={error} />;
+  }
+  
+  return (
+    <TenantContext.Provider value={{
+      tenant,
+      updateConfig: updateTenantConfig,
+      isLoading
+    }}>
+      <TenantThemeProvider theme={tenant.theme}>
+        {children}
+      </TenantThemeProvider>
+    </TenantContext.Provider>
+  );
+};
+
+// Hook para usar o contexto do tenant
+export const useTenant = () => {
+  const context = useContext(TenantContext);
+  
+  if (!context) {
+    throw new Error('useTenant deve ser usado dentro de TenantProvider');
+  }
+  
+  return context;
+};
+
+// Função para extrair tenant da requisição
+const extractTenantFromRequest = (): string | null => {
+  // Método 1: Subdomain
+  const hostname = window.location.hostname;
+  const subdomainMatch = hostname.match(/^([a-z0-9-]+)\.kryonix\.com\.br$/);
+  
+  if (subdomainMatch && subdomainMatch[1] !== 'www' && subdomainMatch[1] !== 'api') {
+    return subdomainMatch[1];
+  }
+  
+  // Método 2: Path parameter
+  const pathMatch = window.location.pathname.match(/^\/tenant\/([a-z0-9-]+)/);
+  if (pathMatch) {
+    return pathMatch[1];
+  }
+  
+  // Método 3: Query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const tenantParam = urlParams.get('tenant');
+  if (tenantParam) {
+    return tenantParam;
+  }
+  
+  return null;
+};
+
+// Função para aplicar theming dinâmico
+const applyTenantTheming = async (theme: TenantConfig['theme']) => {
+  const root = document.documentElement;
+  
+  // Aplicar variáveis CSS customizadas
+  root.style.setProperty('--color-primary', theme.colors.primary);
+  root.style.setProperty('--color-secondary', theme.colors.secondary);
+  root.style.setProperty('--color-accent', theme.colors.accent);
+  root.style.setProperty('--color-background', theme.colors.background);
+  root.style.setProperty('--color-text', theme.colors.text);
+  
+  // Aplicar favicon customizado
+  if (theme.favicon) {
+    const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+    if (favicon) {
+      favicon.href = theme.favicon;
+    }
+  }
+  
+  // Aplicar CSS customizado
+  if (theme.customCSS) {
+    let customStyleElement = document.getElementById('tenant-custom-css');
+    
+    if (!customStyleElement) {
+      customStyleElement = document.createElement('style');
+      customStyleElement.id = 'tenant-custom-css';
+      document.head.appendChild(customStyleElement);
+    }
+    
+    customStyleElement.textContent = theme.customCSS;
+  }
+  
+  // Aplicar dark mode
+  if (theme.darkMode) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
   }
 };
 ```
 
-## 📱 **COMPONENTES MOBILE-FIRST (Expert Frontend + Specialist Mobile)**
-```tsx
-// Componentes otimizados para mobile
+## 📱 **COMPONENTES MULTI-TENANT MOBILE-FIRST**
 
-// Botão touch-friendly
-export const KryonixButton = ({
+### **🎨 Design System Dinâmico**
+```tsx
+// components/ui/TenantButton.tsx
+interface TenantButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  loading?: boolean;
+  icon?: React.ReactNode;
+  fullWidth?: boolean;
+  mobileOptimized?: boolean;
+}
+
+export const TenantButton = ({
   variant = 'primary',
-  size = 'medium',
-  children,
+  size = 'md',
   loading = false,
   icon,
+  fullWidth = false,
+  mobileOptimized = true,
+  children,
+  className,
   ...props
-}) => {
-  const baseClasses = `
-    inline-flex items-center justify-center
-    rounded-lg font-medium transition-all duration-200
-    disabled:opacity-50 disabled:cursor-not-allowed
-    active:scale-95 transform
-    focus:outline-none focus:ring-2 focus:ring-offset-2
-  `;
-
-  const variants = {
-    primary: `
-      bg-primary-500 hover:bg-primary-600 text-white
-      focus:ring-primary-500 shadow-lg hover:shadow-xl
-    `,
-    secondary: `
-      bg-secondary-500 hover:bg-secondary-600 text-white
-      focus:ring-secondary-500 shadow-lg hover:shadow-xl
-    `,
-    outline: `
-      border-2 border-primary-500 text-primary-500
-      hover:bg-primary-500 hover:text-white
-      focus:ring-primary-500
-    `,
-    ghost: `
-      text-primary-500 hover:bg-primary-50
-      focus:ring-primary-500
-    `
+}: TenantButtonProps) => {
+  const { tenant } = useTenant();
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  
+  // Cores dinâmicas baseadas no tenant
+  const variantStyles = useMemo(() => ({
+    primary: {
+      backgroundColor: tenant.theme.colors.primary,
+      borderColor: tenant.theme.colors.primary,
+      color: 'white',
+      '--hover-bg': shadeColor(tenant.theme.colors.primary, -10),
+      '--focus-ring': `${tenant.theme.colors.primary}40`,
+    },
+    secondary: {
+      backgroundColor: tenant.theme.colors.secondary,
+      borderColor: tenant.theme.colors.secondary,
+      color: 'white',
+      '--hover-bg': shadeColor(tenant.theme.colors.secondary, -10),
+      '--focus-ring': `${tenant.theme.colors.secondary}40`,
+    },
+    accent: {
+      backgroundColor: tenant.theme.colors.accent,
+      borderColor: tenant.theme.colors.accent,
+      color: 'white',
+      '--hover-bg': shadeColor(tenant.theme.colors.accent, -10),
+      '--focus-ring': `${tenant.theme.colors.accent}40`,
+    },
+    outline: {
+      backgroundColor: 'transparent',
+      borderColor: tenant.theme.colors.primary,
+      color: tenant.theme.colors.primary,
+      '--hover-bg': `${tenant.theme.colors.primary}10`,
+      '--focus-ring': `${tenant.theme.colors.primary}40`,
+    },
+    ghost: {
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      color: tenant.theme.colors.primary,
+      '--hover-bg': `${tenant.theme.colors.primary}10`,
+      '--focus-ring': `${tenant.theme.colors.primary}40`,
+    }
+  }), [tenant.theme.colors]);
+  
+  // Tamanhos otimizados para mobile
+  const sizeStyles = {
+    sm: mobileOptimized && isMobile ? 'px-3 py-2.5 text-sm min-h-[40px]' : 'px-3 py-2 text-sm min-h-[36px]',
+    md: mobileOptimized && isMobile ? 'px-4 py-3.5 text-base min-h-[48px]' : 'px-4 py-3 text-base min-h-[44px]',
+    lg: mobileOptimized && isMobile ? 'px-6 py-4.5 text-lg min-h-[56px]' : 'px-6 py-4 text-lg min-h-[52px]',
+    xl: mobileOptimized && isMobile ? 'px-8 py-5.5 text-xl min-h-[64px]' : 'px-8 py-5 text-xl min-h-[60px]'
   };
-
-  const sizes = {
-    small: 'px-3 py-2 text-sm min-h-[36px]',    // Mínimo para touch
-    medium: 'px-4 py-3 text-base min-h-[44px]',  // Padrão mobile
-    large: 'px-6 py-4 text-lg min-h-[52px]'      // Grande para ações principais
-  };
-
+  
   return (
     <button
-      className={cn(baseClasses, variants[variant], sizes[size])}
-      disabled={loading}
+      className={cn(
+        // Base styles
+        'inline-flex items-center justify-center rounded-lg font-medium',
+        'transition-all duration-200 transform active:scale-95',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'border-2',
+        
+        // Size styles
+        sizeStyles[size],
+        
+        // Full width
+        fullWidth && 'w-full',
+        
+        // Mobile optimizations
+        mobileOptimized && isMobile && 'touch-manipulation',
+        
+        className
+      )}
+      style={variantStyles[variant]}
+      disabled={loading || props.disabled}
       {...props}
     >
       {loading ? (
         <LoadingSpinner className="w-5 h-5 mr-2" />
       ) : icon ? (
-        <Icon className="w-5 h-5 mr-2" />
+        <span className="mr-2">{icon}</span>
       ) : null}
       {children}
     </button>
   );
 };
 
-// Input otimizado para mobile
-export const KryonixInput = ({
-  label,
-  error,
-  icon,
-  type = 'text',
-  className,
-  ...props
-}) => {
-  return (
-    <div className="space-y-2">
-      {label && (
-        <label className="block text-sm font-medium text-neutral-700">
-          {label}
-        </label>
-      )}
-      <div className="relative">
-        {icon && (
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-            <Icon className="w-5 h-5 text-neutral-400" />
-          </div>
-        )}
-        <input
-          type={type}
-          className={cn(
-            `w-full px-4 py-3 border border-neutral-300 rounded-lg`,
-            `focus:ring-2 focus:ring-primary-500 focus:border-primary-500`,
-            `transition-colors duration-200`,
-            `text-base`, // 16px para evitar zoom no iOS
-            `min-h-[44px]`, // Mínimo touch target
-            icon && 'pl-10',
-            error && 'border-error-500 focus:ring-error-500',
-            className
-          )}
-          {...props}
-        />
-      </div>
-      {error && (
-        <p className="text-sm text-error-500">{error}</p>
-      )}
-    </div>
-  );
-};
-
-// Card mobile-friendly
-export const KryonixCard = ({
+// components/ui/TenantCard.tsx
+export const TenantCard = ({
   title,
   subtitle,
   children,
   actions,
   gradient = false,
+  mobileOptimized = true,
   className
-}) => {
+}: TenantCardProps) => {
+  const { tenant } = useTenant();
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  
+  const cardStyles = useMemo(() => {
+    if (gradient) {
+      return {
+        background: `linear-gradient(135deg, ${tenant.theme.colors.primary}10, ${tenant.theme.colors.secondary}10)`,
+        borderColor: `${tenant.theme.colors.primary}20`,
+      };
+    }
+    return {
+      backgroundColor: tenant.theme.colors.background,
+      borderColor: `${tenant.theme.colors.primary}15`,
+    };
+  }, [tenant.theme.colors, gradient]);
+  
   return (
-    <div className={cn(
-      `bg-white rounded-xl shadow-mobile-medium`,
-      `border border-neutral-100`,
-      `transition-all duration-200`,
-      `hover:shadow-mobile-large hover:-translate-y-1`,
-      gradient && 'bg-gradient-to-br from-primary-50 to-secondary-50',
-      className
-    )}>
+    <div 
+      className={cn(
+        'rounded-xl border transition-all duration-200',
+        'hover:shadow-lg hover:-translate-y-1',
+        mobileOptimized && isMobile && 'active:scale-[0.98]',
+        className
+      )}
+      style={cardStyles}
+    >
       {(title || subtitle || actions) && (
-        <div className="p-4 border-b border-neutral-100">
+        <div className="p-4 border-b" style={{ borderColor: `${tenant.theme.colors.primary}15` }}>
           <div className="flex items-center justify-between">
             <div>
               {title && (
-                <h3 className="text-lg font-semibold text-neutral-900">
+                <h3 className="text-lg font-semibold" style={{ color: tenant.theme.colors.text }}>
                   {title}
                 </h3>
               )}
               {subtitle && (
-                <p className="text-sm text-neutral-600 mt-1">
+                <p className="text-sm mt-1 opacity-70" style={{ color: tenant.theme.colors.text }}>
                   {subtitle}
                 </p>
               )}
@@ -306,137 +401,222 @@ export const KryonixCard = ({
 };
 ```
 
-## 🏗️ **LAYOUT PRINCIPAL MOBILE-FIRST (Expert Frontend)**
+## 🏗️ **LAYOUT MULTI-TENANT AVANÇADO**
+
+### **📱 Layout Responsivo Tenant-Aware**
 ```tsx
-// Layout principal otimizado para mobile
-export const KryonixMobileLayout = ({ children }: { children: React.ReactNode }) => {
+// components/layout/TenantLayout.tsx
+export const TenantLayout = ({ children }: { children: React.ReactNode }) => {
+  const { tenant } = useTenant();
+  const { user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isOffline, setIsOffline] = useState(false);
-  const { user, notifications } = useKryonixContext();
+  const [notifications, setNotifications] = useState([]);
   const isMobile = useMediaQuery('(max-width: 768px)');
-
+  
   // PWA e offline detection
   useEffect(() => {
-    const handleOnline = () => setIsOffline(false);
+    const handleOnline = () => {
+      setIsOffline(false);
+      // Sincronizar dados offline
+      syncOfflineData(tenant.clientId);
+    };
+    
     const handleOffline = () => setIsOffline(true);
-
+    
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-
+    
+    // Detectar instalação PWA
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      showPWAInstallPrompt(tenant);
+    };
+    
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
-  }, []);
-
+  }, [tenant.clientId]);
+  
+  // WebSocket para notificações em tempo real por tenant
+  useEffect(() => {
+    const ws = new WebSocket(
+      `${process.env.NEXT_PUBLIC_WS_URL}/tenant/${tenant.clientId}`
+    );
+    
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      
+      // Filtrar apenas notificações do tenant atual
+      if (data.tenantId === tenant.clientId) {
+        setNotifications(prev => [...prev, data]);
+        
+        // Mostrar push notification se PWA
+        if ('serviceWorker' in navigator && 'Notification' in window) {
+          showTenantNotification(data, tenant);
+        }
+      }
+    };
+    
+    return () => ws.close();
+  }, [tenant.clientId]);
+  
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div 
+      className="min-h-screen transition-colors duration-200"
+      style={{ 
+        backgroundColor: tenant.theme.colors.background,
+        color: tenant.theme.colors.text 
+      }}
+    >
       {/* Offline indicator */}
       {isOffline && (
-        <div className="bg-warning-500 text-white px-4 py-2 text-center text-sm">
-          📵 Modo offline ativo - Dados serão sincronizados quando conectar
-        </div>
+        <TenantOfflineIndicator tenant={tenant} />
       )}
-
-      {/* Mobile-first header */}
-      <KryonixMobileHeader
+      
+      {/* Header multi-tenant */}
+      <TenantHeader
+        tenant={tenant}
         user={user}
         notifications={notifications}
         onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         isOffline={isOffline}
+        isMobile={isMobile}
       />
-
-      {/* Layout flex para mobile/desktop */}
+      
+      {/* Layout principal */}
       <div className="flex flex-col md:flex-row">
-        {/* Sidebar - hidden on mobile, drawer on mobile */}
+        {/* Navigation */}
         {isMobile ? (
-          <KryonixMobileDrawer
+          <TenantMobileDrawer
+            tenant={tenant}
+            user={user}
             isOpen={isMobileMenuOpen}
             onClose={() => setIsMobileMenuOpen(false)}
           />
         ) : (
-          <KryonixDesktopSidebar />
+          <TenantSidebar tenant={tenant} user={user} />
         )}
-
-        {/* Main content area */}
+        
+        {/* Content area */}
         <main className={cn(
           "flex-1 transition-all duration-200",
-          "px-4 py-6 md:px-6 md:py-8", // Padding mobile-first
-          "max-w-full overflow-hidden" // Prevent horizontal scroll
+          "px-4 py-6 md:px-6 md:py-8",
+          "max-w-full overflow-hidden",
+          "pb-20 md:pb-8" // Extra padding para bottom nav mobile
         )}>
-          {/* AI Assistant floating button - mobile priority */}
-          <KryonixAIAssistant isMobile={isMobile} />
-
+          {/* AI Assistant floating button */}
+          <TenantAIAssistant tenant={tenant} isMobile={isMobile} />
+          
+          {/* Breadcrumb tenant-aware */}
+          <TenantBreadcrumb tenant={tenant} />
+          
           {/* Page content */}
           <div className="space-y-6">
             {children}
           </div>
         </main>
       </div>
-
-      {/* Mobile bottom navigation */}
+      
+      {/* Bottom navigation mobile */}
       {isMobile && (
-        <KryonixMobileBottomNav />
+        <TenantMobileBottomNav tenant={tenant} user={user} />
       )}
-
-      {/* PWA install prompt */}
-      <PWAInstallPrompt />
+      
+      {/* Tenant notifications */}
+      <TenantNotificationCenter 
+        tenant={tenant}
+        notifications={notifications}
+        onClear={() => setNotifications([])}
+      />
     </div>
   );
 };
 
-// Header mobile-first
-export const KryonixMobileHeader = ({
+// Header específico do tenant
+export const TenantHeader = ({
+  tenant,
   user,
   notifications,
   onMenuToggle,
-  isOffline
-}) => {
+  isOffline,
+  isMobile
+}: TenantHeaderProps) => {
   return (
-    <header className="bg-white border-b border-neutral-200 sticky top-0 z-50">
+    <header 
+      className="sticky top-0 z-50 border-b transition-colors duration-200"
+      style={{ 
+        backgroundColor: tenant.theme.colors.background,
+        borderColor: `${tenant.theme.colors.primary}20`
+      }}
+    >
       <div className="px-4 py-3">
         <div className="flex items-center justify-between">
-          {/* Logo + Menu button mobile */}
+          {/* Logo + Menu do tenant */}
           <div className="flex items-center space-x-3">
-            <button
-              onClick={onMenuToggle}
-              className="md:hidden p-2 rounded-lg hover:bg-neutral-100"
-            >
-              <MenuIcon className="w-6 h-6" />
-            </button>
-
-            <div className="flex items-center space-x-2">
+            {isMobile && (
+              <button
+                onClick={onMenuToggle}
+                className="p-2 rounded-lg transition-colors"
+                style={{ 
+                  '--hover-bg': `${tenant.theme.colors.primary}10` 
+                }}
+              >
+                <MenuIcon className="w-6 h-6" style={{ color: tenant.theme.colors.text }} />
+              </button>
+            )}
+            
+            <div className="flex items-center space-x-3">
+              {/* Logo específico do tenant */}
               <img
-                src="/kryonix-logo.svg"
-                alt="KRYONIX"
-                className="w-8 h-8 md:w-10 md:h-10"
+                src={tenant.theme.logo || '/default-logo.svg'}
+                alt={tenant.companyName}
+                className="w-8 h-8 md:w-10 md:h-10 rounded-lg object-cover"
               />
-              <span className="text-lg md:text-xl font-bold text-primary-600">
-                KRYONIX
-              </span>
+              
+              <div>
+                <h1 className="text-lg md:text-xl font-bold" style={{ color: tenant.theme.colors.primary }}>
+                  {tenant.companyName}
+                </h1>
+                {isMobile && (
+                  <p className="text-xs opacity-70" style={{ color: tenant.theme.colors.text }}>
+                    KRYONIX Platform
+                  </p>
+                )}
+              </div>
             </div>
           </div>
-
-          {/* Actions mobile-optimized */}
+          
+          {/* Actions */}
           <div className="flex items-center space-x-2">
-            {/* IA Assistant quick access */}
-            <button className="p-2 rounded-lg hover:bg-neutral-100 relative">
-              <BrainIcon className="w-6 h-6 text-primary-500" />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-accent-500 rounded-full animate-pulse" />
-            </button>
-
+            {/* Status indicator */}
+            <div className="flex items-center space-x-2">
+              <div 
+                className={cn(
+                  "w-2 h-2 rounded-full",
+                  isOffline ? "bg-red-500" : "bg-green-500"
+                )}
+              />
+              <span className="text-xs hidden md:block" style={{ color: tenant.theme.colors.text }}>
+                {isOffline ? 'Offline' : 'Online'}
+              </span>
+            </div>
+            
+            {/* AI Assistant quick access */}
+            <TenantQuickActions tenant={tenant} />
+            
             {/* Notifications */}
-            <button className="p-2 rounded-lg hover:bg-neutral-100 relative">
-              <BellIcon className="w-6 h-6" />
-              {notifications.unread > 0 && (
-                <span className="absolute -top-1 -right-1 bg-error-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {notifications.unread}
-                </span>
-              )}
-            </button>
-
+            <TenantNotificationButton 
+              tenant={tenant}
+              notifications={notifications}
+            />
+            
             {/* User menu */}
-            <KryonixUserMenu user={user} />
+            <TenantUserMenu tenant={tenant} user={user} />
           </div>
         </div>
       </div>
@@ -445,75 +625,143 @@ export const KryonixMobileHeader = ({
 };
 ```
 
-## 🤖 **INTEGRAÇÃO IA NA INTERFACE (Expert IA)**
+## 🤖 **AI ASSISTANT MULTI-TENANT**
+
+### **🧠 Assistente IA Específico por Tenant**
 ```tsx
-// Assistente IA integrado na interface
-export const KryonixAIAssistant = ({ isMobile }: { isMobile: boolean }) => {
+// components/ai/TenantAIAssistant.tsx
+export const TenantAIAssistant = ({ 
+  tenant, 
+  isMobile 
+}: { 
+  tenant: TenantConfig;
+  isMobile: boolean;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState<AIMessage[]>([]);
-  const { aiService } = useKryonixAI();
-
-  // Comandos de voz para mobile
+  const [isTyping, setIsTyping] = useState(false);
+  
+  // Carregar histórico do chat do tenant
+  useEffect(() => {
+    loadTenantChatHistory(tenant.clientId).then(setMessages);
+  }, [tenant.clientId]);
+  
+  // Comandos de voz específicos do tenant
   const startVoiceCommand = async () => {
     if (!('webkitSpeechRecognition' in window)) {
-      alert('Comando de voz não suportado neste navegador');
+      toast.error('Comando de voz não suportado neste navegador');
       return;
     }
-
+    
     setIsListening(true);
     const recognition = new webkitSpeechRecognition();
-    recognition.lang = 'pt-BR';
+    recognition.lang = tenant.settings.language || 'pt-BR';
     recognition.continuous = false;
     recognition.interimResults = false;
-
+    
     recognition.onresult = async (event) => {
       const command = event.results[0][0].transcript;
-      await processAICommand(command);
+      await processTenantAICommand(command);
       setIsListening(false);
     };
-
+    
     recognition.onerror = () => {
       setIsListening(false);
+      toast.error('Erro no reconhecimento de voz');
     };
-
+    
     recognition.start();
   };
-
-  const processAICommand = async (input: string) => {
-    const response = await aiService.processCommand({
-      input,
-      context: 'kryonix_interface',
-      user_language: 'pt-BR',
-      simplify_for_beginners: true
-    });
-
-    setMessages(prev => [
-      ...prev,
-      { type: 'user', content: input },
-      { type: 'ai', content: response.message, actions: response.suggested_actions }
-    ]);
+  
+  const processTenantAICommand = async (input: string) => {
+    const userMessage: AIMessage = {
+      id: Date.now().toString(),
+      type: 'user',
+      content: input,
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    setIsTyping(true);
+    
+    try {
+      const response = await fetch('/api/ai/tenant-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Tenant-ID': tenant.clientId
+        },
+        body: JSON.stringify({
+          tenantId: tenant.clientId,
+          message: input,
+          context: {
+            tenant: tenant,
+            language: tenant.settings.language,
+            modules: tenant.modules,
+            plan: tenant.plan
+          }
+        })
+      });
+      
+      const data = await response.json();
+      
+      const aiMessage: AIMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: data.response,
+        actions: data.suggestedActions,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, aiMessage]);
+      
+      // Salvar no histórico do tenant
+      await saveTenantChatMessage(tenant.clientId, userMessage, aiMessage);
+      
+    } catch (error) {
+      console.error('Erro ao processar comando IA:', error);
+      toast.error('Erro ao processar comando. Tente novamente.');
+    } finally {
+      setIsTyping(false);
+    }
   };
-
+  
   return (
     <>
-      {/* Floating AI Button */}
+      {/* Floating AI Button com cores do tenant */}
       <button
         onClick={() => setIsOpen(true)}
         className={cn(
-          "fixed z-50 bg-primary-500 hover:bg-primary-600",
-          "text-white rounded-full shadow-mobile-floating",
-          "transition-all duration-200 hover:scale-110",
-          isMobile ? "bottom-20 right-4 w-14 h-14" : "bottom-6 right-6 w-16 h-16"
+          "fixed z-50 rounded-full shadow-lg transition-all duration-200",
+          "hover:scale-110 active:scale-95",
+          isMobile ? "bottom-24 right-4 w-14 h-14" : "bottom-6 right-6 w-16 h-16"
         )}
+        style={{
+          backgroundColor: tenant.theme.colors.primary,
+          color: 'white'
+        }}
       >
         <BrainIcon className="w-6 h-6 mx-auto" />
+        
+        {/* Indicador de listening */}
         {isListening && (
-          <span className="absolute inset-0 bg-accent-500 rounded-full animate-ping" />
+          <span 
+            className="absolute inset-0 rounded-full animate-ping"
+            style={{ backgroundColor: tenant.theme.colors.accent }}
+          />
         )}
+        
+        {/* Badge de notificação */}
+        <span 
+          className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-xs flex items-center justify-center text-white"
+          style={{ backgroundColor: tenant.theme.colors.accent }}
+        >
+          AI
+        </span>
       </button>
-
-      {/* AI Chat Modal */}
+      
+      {/* Modal do Chat IA */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -528,86 +776,91 @@ export const KryonixAIAssistant = ({ isMobile }: { isMobile: boolean }) => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 100, opacity: 0 }}
               className={cn(
-                "bg-white rounded-t-2xl md:rounded-2xl",
-                "w-full max-w-md h-96 flex flex-col",
-                "shadow-mobile-floating"
+                "rounded-t-2xl md:rounded-2xl w-full max-w-md h-96 flex flex-col shadow-xl",
+                "overflow-hidden"
               )}
+              style={{ backgroundColor: tenant.theme.colors.background }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
-              <div className="p-4 border-b border-neutral-200">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <BrainIcon className="w-6 h-6 text-primary-500" />
-                    <h3 className="font-semibold text-neutral-900">
-                      Assistente IA KRYONIX
-                    </h3>
-                  </div>
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="p-2 rounded-lg hover:bg-neutral-100"
+              {/* Header do chat */}
+              <div 
+                className="p-4 border-b flex items-center justify-between"
+                style={{ 
+                  borderColor: `${tenant.theme.colors.primary}20`,
+                  backgroundColor: `${tenant.theme.colors.primary}05`
+                }}
+              >
+                <div className="flex items-center space-x-3">
+                  <div 
+                    className="w-10 h-10 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: tenant.theme.colors.primary }}
                   >
-                    <XIcon className="w-5 h-5" />
-                  </button>
+                    <BrainIcon className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold" style={{ color: tenant.theme.colors.text }}>
+                      Assistente IA {tenant.companyName}
+                    </h3>
+                    <p className="text-xs opacity-70" style={{ color: tenant.theme.colors.text }}>
+                      Especializada no seu negócio
+                    </p>
+                  </div>
                 </div>
+                
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 rounded-lg transition-colors"
+                  style={{ '--hover-bg': `${tenant.theme.colors.primary}10` }}
+                >
+                  <XIcon className="w-5 h-5" style={{ color: tenant.theme.colors.text }} />
+                </button>
               </div>
-
+              
               {/* Messages */}
               <div className="flex-1 p-4 overflow-y-auto space-y-4">
                 {messages.length === 0 ? (
-                  <div className="text-center text-neutral-500 space-y-2">
-                    <p>Olá! Sou sua assistente IA.</p>
-                    <p>Como posso ajudar você hoje?</p>
-                    <div className="flex flex-wrap gap-2 justify-center mt-4">
-                      {[
-                        "Mostrar receita hoje",
-                        "Status do sistema",
-                        "Criar nova automação",
-                        "Relatório de usuários"
-                      ].map(suggestion => (
-                        <button
-                          key={suggestion}
-                          onClick={() => processAICommand(suggestion)}
-                          className="px-3 py-1 text-xs bg-neutral-100 rounded-full hover:bg-neutral-200"
-                        >
-                          {suggestion}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  <TenantAIWelcomeMessage tenant={tenant} onSuggestionClick={processTenantAICommand} />
                 ) : (
-                  messages.map((msg, idx) => (
-                    <AIMessageBubble key={idx} message={msg} />
+                  messages.map((message) => (
+                    <TenantAIMessageBubble 
+                      key={message.id} 
+                      message={message} 
+                      tenant={tenant}
+                      onActionClick={processTenantAICommand}
+                    />
                   ))
                 )}
+                
+                {/* Typing indicator */}
+                {isTyping && (
+                  <div className="flex items-center space-x-2">
+                    <div 
+                      className="w-8 h-8 rounded-full flex items-center justify-center"
+                      style={{ backgroundColor: `${tenant.theme.colors.primary}20` }}
+                    >
+                      <BrainIcon className="w-4 h-4" style={{ color: tenant.theme.colors.primary }} />
+                    </div>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: tenant.theme.colors.primary }} />
+                      <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: tenant.theme.colors.primary, animationDelay: '0.1s' }} />
+                      <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: tenant.theme.colors.primary, animationDelay: '0.2s' }} />
+                    </div>
+                  </div>
+                )}
               </div>
-
+              
               {/* Input */}
-              <div className="p-4 border-t border-neutral-200">
-                <div className="flex space-x-2">
-                  <input
-                    type="text"
-                    placeholder="Digite sua pergunta..."
-                    className="flex-1 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        processAICommand(e.target.value);
-                        e.target.value = '';
-                      }
-                    }}
-                  />
-                  <button
-                    onClick={startVoiceCommand}
-                    className={cn(
-                      "p-2 rounded-lg transition-colors",
-                      isListening
-                        ? "bg-accent-500 text-white"
-                        : "bg-neutral-100 hover:bg-neutral-200"
-                    )}
-                  >
-                    <MicIcon className="w-5 h-5" />
-                  </button>
-                </div>
+              <div 
+                className="p-4 border-t"
+                style={{ borderColor: `${tenant.theme.colors.primary}20` }}
+              >
+                <TenantAIInput
+                  tenant={tenant}
+                  onSend={processTenantAICommand}
+                  onVoiceStart={startVoiceCommand}
+                  isListening={isListening}
+                  disabled={isTyping}
+                />
               </div>
             </motion.div>
           </motion.div>
@@ -616,269 +869,874 @@ export const KryonixAIAssistant = ({ isMobile }: { isMobile: boolean }) => {
     </>
   );
 };
-```
 
-## 📱 **NAVEGAÇÃO MOBILE BOTTOM NAV (Specialist Mobile)**
-```tsx
-// Navegação inferior para mobile
-export const KryonixMobileBottomNav = () => {
-  const location = useLocation();
-
-  const navItems = [
-    {
-      label: 'Início',
-      icon: HomeIcon,
-      path: '/dashboard',
-      badge: null
-    },
-    {
-      label: 'Receita',
-      icon: TrendingUpIcon,
-      path: '/revenue',
-      badge: null
-    },
-    {
-      label: 'Automações',
-      icon: BoltIcon,
-      path: '/automations',
-      badge: '3' // Número de automações ativas
-    },
-    {
-      label: 'Usuários',
-      icon: UsersIcon,
-      path: '/users',
-      badge: null
-    },
-    {
-      label: 'Menu',
-      icon: GridIcon,
-      path: '/menu',
-      badge: null
+// Welcome message específica do tenant
+const TenantAIWelcomeMessage = ({ 
+  tenant, 
+  onSuggestionClick 
+}: { 
+  tenant: TenantConfig;
+  onSuggestionClick: (suggestion: string) => void;
+}) => {
+  const suggestions = useMemo(() => {
+    const baseSuggestions = [
+      `Como está a receita de ${tenant.companyName} hoje?`,
+      "Mostrar métricas em tempo real",
+      "Status dos usuários ativos",
+      "Criar nova automação"
+    ];
+    
+    // Sugestões baseadas nos módulos do tenant
+    const moduleSuggestions = [];
+    
+    if (tenant.modules.includes('whatsapp')) {
+      moduleSuggestions.push("Estatísticas do WhatsApp");
     }
-  ];
-
+    
+    if (tenant.modules.includes('crm')) {
+      moduleSuggestions.push("Relatório de vendas CRM");
+    }
+    
+    if (tenant.modules.includes('financeiro')) {
+      moduleSuggestions.push("Resumo financeiro");
+    }
+    
+    return [...baseSuggestions, ...moduleSuggestions].slice(0, 6);
+  }, [tenant]);
+  
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 z-40">
-      <div className="flex items-center justify-around px-2 py-2">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          const Icon = item.icon;
-
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={cn(
-                "flex flex-col items-center justify-center",
-                "px-3 py-2 rounded-lg transition-all duration-200",
-                "min-w-[60px] relative",
-                isActive
-                  ? "text-primary-600 bg-primary-50"
-                  : "text-neutral-600 hover:text-neutral-900"
-              )}
-            >
-              <Icon className="w-6 h-6 mb-1" />
-              <span className="text-xs font-medium">{item.label}</span>
-
-              {item.badge && (
-                <span className="absolute -top-1 -right-1 bg-accent-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {item.badge}
-                </span>
-              )}
-            </Link>
-          );
-        })}
+    <div className="text-center space-y-4">
+      <div className="space-y-2">
+        <p style={{ color: tenant.theme.colors.text }}>
+          Olá! Sou a assistente IA especializada da <strong>{tenant.companyName}</strong>.
+        </p>
+        <p className="text-sm opacity-70" style={{ color: tenant.theme.colors.text }}>
+          Como posso ajudar você hoje?
+        </p>
       </div>
-    </nav>
+      
+      <div className="grid grid-cols-1 gap-2">
+        {suggestions.map(suggestion => (
+          <button
+            key={suggestion}
+            onClick={() => onSuggestionClick(suggestion)}
+            className="px-3 py-2 text-sm rounded-lg transition-colors text-left"
+            style={{ 
+              backgroundColor: `${tenant.theme.colors.primary}10`,
+              color: tenant.theme.colors.text
+            }}
+          >
+            {suggestion}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 };
 ```
 
-## 🔧 **SCRIPT SETUP INTERFACE COMPLETO**
+## 📱 **PWA MULTI-TENANT DINÂMICO**
+
+### **🚀 PWA Específico por Tenant**
+```typescript
+// services/tenant-pwa.service.ts
+export class TenantPWAService {
+  
+  static async configureTenantPWA(tenant: TenantConfig) {
+    // Gerar manifest dinâmico específico do tenant
+    const manifest = this.generateTenantManifest(tenant);
+    
+    // Atualizar manifest link
+    await this.updateManifestLink(manifest);
+    
+    // Configurar service worker específico
+    await this.setupTenantServiceWorker(tenant);
+    
+    // Configurar notificações push
+    await this.setupTenantPushNotifications(tenant);
+  }
+  
+  private static generateTenantManifest(tenant: TenantConfig) {
+    return {
+      name: `${tenant.companyName} - Powered by KRYONIX`,
+      short_name: tenant.companyName,
+      description: `Plataforma ${tenant.companyName} - KRYONIX SaaS`,
+      start_url: `/?tenant=${tenant.clientId}&utm_source=pwa`,
+      display: 'standalone',
+      orientation: 'portrait-primary',
+      background_color: tenant.theme.colors.background,
+      theme_color: tenant.theme.colors.primary,
+      
+      icons: [
+        {
+          src: tenant.theme.logo || '/default-icon-192.png',
+          sizes: '192x192',
+          type: 'image/png',
+          purpose: 'any maskable'
+        },
+        {
+          src: tenant.theme.logo || '/default-icon-512.png', 
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'any maskable'
+        }
+      ],
+      
+      categories: ['business', 'productivity'],
+      
+      shortcuts: [
+        {
+          name: 'Dashboard',
+          short_name: 'Dashboard',
+          description: `Dashboard ${tenant.companyName}`,
+          url: `/dashboard?tenant=${tenant.clientId}`,
+          icons: [{ src: tenant.theme.logo || '/default-icon-96.png', sizes: '96x96' }]
+        },
+        {
+          name: 'Receita',
+          short_name: 'Receita',
+          description: 'Ver métricas de receita',
+          url: `/revenue?tenant=${tenant.clientId}`,
+          icons: [{ src: '/icons/revenue-96.png', sizes: '96x96' }]
+        }
+      ],
+      
+      // Tenant-specific configurations
+      scope: `/?tenant=${tenant.clientId}`,
+      id: `kryonix-${tenant.clientId}`,
+      
+      // Protocol handlers
+      protocol_handlers: [
+        {
+          protocol: 'web+kryonix',
+          url: `/?tenant=${tenant.clientId}&action=%s`
+        }
+      ]
+    };
+  }
+  
+  private static async updateManifestLink(manifest: any) {
+    // Remover manifest anterior
+    const existingLink = document.querySelector('link[rel="manifest"]');
+    if (existingLink) {
+      existingLink.remove();
+    }
+    
+    // Criar blob com o novo manifest
+    const manifestBlob = new Blob([JSON.stringify(manifest)], {
+      type: 'application/json'
+    });
+    const manifestUrl = URL.createObjectURL(manifestBlob);
+    
+    // Adicionar novo link do manifest
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = manifestUrl;
+    document.head.appendChild(link);
+  }
+  
+  private static async setupTenantServiceWorker(tenant: TenantConfig) {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register(
+          `/sw-tenant.js?tenantId=${tenant.clientId}`,
+          { scope: `/?tenant=${tenant.clientId}` }
+        );
+        
+        // Configurar cache específico do tenant
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.postMessage({
+              type: 'CONFIGURE_TENANT',
+              tenant: tenant
+            });
+          }
+        });
+        
+        return registration;
+      } catch (error) {
+        console.error('Erro registrando service worker:', error);
+      }
+    }
+  }
+  
+  private static async setupTenantPushNotifications(tenant: TenantConfig) {
+    if ('Notification' in window && 'serviceWorker' in navigator) {
+      const permission = await Notification.requestPermission();
+      
+      if (permission === 'granted') {
+        const registration = await navigator.serviceWorker.ready;
+        
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: process.env.NEXT_PUBLIC_VAPID_KEY
+        });
+        
+        // Registrar subscription específica do tenant
+        await fetch('/api/push/subscribe', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Tenant-ID': tenant.clientId
+          },
+          body: JSON.stringify({
+            subscription,
+            tenantId: tenant.clientId
+          })
+        });
+      }
+    }
+  }
+  
+  static async showTenantInstallPrompt(tenant: TenantConfig) {
+    // Prompt personalizado de instalação
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+      <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-sm w-full p-6 space-y-4">
+          <div class="text-center space-y-2">
+            <img src="${tenant.theme.logo}" alt="${tenant.companyName}" class="w-16 h-16 mx-auto rounded-lg">
+            <h3 class="text-lg font-semibold">Instalar ${tenant.companyName}</h3>
+            <p class="text-sm text-gray-600">
+              Adicione nosso app à sua tela inicial para acesso rápido
+            </p>
+          </div>
+          
+          <div class="space-y-3">
+            <button 
+              onclick="installTenantPWA()" 
+              class="w-full py-3 px-4 rounded-lg text-white font-medium"
+              style="background-color: ${tenant.theme.colors.primary}"
+            >
+              Instalar App
+            </button>
+            <button 
+              onclick="dismissInstallPrompt()" 
+              class="w-full py-3 px-4 rounded-lg border text-gray-700"
+            >
+              Agora não
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+  }
+}
+
+// Service Worker específico por tenant
+// public/sw-tenant.js
+const TENANT_CACHE_PREFIX = 'kryonix-tenant-';
+let tenantConfig = null;
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'CONFIGURE_TENANT') {
+    tenantConfig = event.data.tenant;
+  }
+});
+
+self.addEventListener('install', (event) => {
+  const urlParams = new URLSearchParams(self.location.search);
+  const tenantId = urlParams.get('tenantId');
+  
+  if (!tenantId) return;
+  
+  const cacheName = `${TENANT_CACHE_PREFIX}${tenantId}`;
+  
+  event.waitUntil(
+    caches.open(cacheName).then((cache) => {
+      return cache.addAll([
+        `/?tenant=${tenantId}`,
+        `/dashboard?tenant=${tenantId}`,
+        `/offline.html?tenant=${tenantId}`,
+        '/manifest.json'
+      ]);
+    })
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  const tenantId = url.searchParams.get('tenant') || 
+                   url.pathname.match(/tenant\/([^\/]+)/)?.[1];
+  
+  if (!tenantId) return;
+  
+  const cacheName = `${TENANT_CACHE_PREFIX}${tenantId}`;
+  
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      if (response) {
+        return response;
+      }
+      
+      return fetch(event.request).then((response) => {
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response;
+        }
+        
+        const responseToCache = response.clone();
+        
+        caches.open(cacheName).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+        
+        return response;
+      }).catch(() => {
+        // Fallback para página offline específica do tenant
+        return caches.match(`/offline.html?tenant=${tenantId}`);
+      });
+    })
+  );
+});
+
+// Push notifications específicas do tenant
+self.addEventListener('push', (event) => {
+  if (!event.data) return;
+  
+  const data = event.data.json();
+  
+  // Filtrar apenas notificações do tenant correto
+  if (tenantConfig && data.tenantId === tenantConfig.clientId) {
+    const options = {
+      body: data.body,
+      icon: tenantConfig.theme.logo || '/default-icon-192.png',
+      badge: '/badge-72x72.png',
+      tag: `${tenantConfig.clientId}-${data.id}`,
+      data: {
+        tenantId: tenantConfig.clientId,
+        url: data.url
+      },
+      actions: [
+        {
+          action: 'open',
+          title: 'Abrir',
+          icon: '/icons/open-action.png'
+        },
+        {
+          action: 'dismiss',
+          title: 'Dispensar',
+          icon: '/icons/dismiss-action.png'
+        }
+      ]
+    };
+    
+    event.waitUntil(
+      self.registration.showNotification(data.title, options)
+    );
+  }
+});
+```
+
+## 🔧 **SCRIPT SETUP MULTI-TENANT COMPLETO**
+
+### **🚀 Deploy Interface Multi-Tenant**
 ```bash
 #!/bin/bash
-# setup-interface-mobile-kryonix.sh
-# Script que configura interface mobile-first 100% automatizada
+# setup-interface-multi-tenant-complete.sh
 
-echo "🚀 Configurando Interface Mobile-First KRYONIX..."
+echo "🎨 KRYONIX - Setup Interface Multi-Tenant Mobile-First Completo"
+echo "============================================================="
 
-# 1. Instalar dependências frontend
-echo "Instalando dependências..."
-npm install react react-dom next.js @types/react @types/react-dom
+# Validar parâmetros
+if [ $# -lt 1 ]; then
+    echo "Uso: $0 <ambiente> [features]"
+    echo "Exemplo: $0 production pwa,ai,mobile"
+    exit 1
+fi
+
+ENVIRONMENT=$1
+FEATURES=${2:-"all"}
+
+echo "🌍 Ambiente: $ENVIRONMENT"
+echo "🚀 Features: $FEATURES"
+
+# 1. INSTALAR DEPENDÊNCIAS MULTI-TENANT
+echo "📦 Instalando dependências multi-tenant..."
+npm install react react-dom next typescript
+npm install @types/react @types/react-dom @types/node
 npm install tailwindcss @tailwindcss/forms @tailwindcss/typography
+npm install postcss autoprefixer
 npm install framer-motion react-hot-toast react-hook-form
 npm install @headlessui/react @heroicons/react
-npm install workbox-webpack-plugin next-pwa
-npm install react-query swr axios
+npm install next-pwa workbox-webpack-plugin
+npm install @tanstack/react-query axios swr
+npm install zustand immer
+npm install react-use use-debounce
+npm install date-fns clsx class-variance-authority
 
-# 2. Configurar Tailwind CSS
+# 2. CONFIGURAR ESTRUTURA MULTI-TENANT
+echo "🏗️ Criando estrutura multi-tenant..."
+mkdir -p {
+  src/{
+    components/{ui,layout,tenant,mobile,ai,pwa},
+    contexts/{tenant,auth,theme},
+    hooks/{tenant,mobile,ai},
+    services/{tenant,api,cache,pwa},
+    utils/{tenant,theme,device},
+    types/{tenant,ui,api}
+  },
+  pages/{
+    tenant/[tenantId],
+    api/{tenant,ai,pwa}
+  },
+  public/{
+    icons/{tenant,pwa},
+    manifests,
+    sw
+  },
+  docs/multi-tenant
+}
+
+# 3. CONFIGURAR TAILWIND MULTI-TENANT
+echo "🎨 Configurando Tailwind multi-tenant..."
 cat > tailwind.config.js << 'EOF'
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-    './src/**/*.{js,ts,jsx,tsx}'
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
+        // Dynamic tenant colors (will be overridden by CSS variables)
         primary: {
-          50: '#E6F3FF',
-          100: '#CCE7FF',
-          500: '#0066CC',
-          600: '#0052A3',
-          700: '#003D7A',
-          900: '#001A33'
+          50: 'rgb(var(--color-primary-50) / <alpha-value>)',
+          100: 'rgb(var(--color-primary-100) / <alpha-value>)',
+          200: 'rgb(var(--color-primary-200) / <alpha-value>)',
+          300: 'rgb(var(--color-primary-300) / <alpha-value>)',
+          400: 'rgb(var(--color-primary-400) / <alpha-value>)',
+          500: 'rgb(var(--color-primary-500) / <alpha-value>)',
+          600: 'rgb(var(--color-primary-600) / <alpha-value>)',
+          700: 'rgb(var(--color-primary-700) / <alpha-value>)',
+          800: 'rgb(var(--color-primary-800) / <alpha-value>)',
+          900: 'rgb(var(--color-primary-900) / <alpha-value>)',
         },
         secondary: {
-          50: '#E6F9FD',
-          100: '#CCF3FB',
-          500: '#00B4D8',
-          600: '#0090A6',
-          700: '#006B7D'
+          50: 'rgb(var(--color-secondary-50) / <alpha-value>)',
+          500: 'rgb(var(--color-secondary-500) / <alpha-value>)',
+          600: 'rgb(var(--color-secondary-600) / <alpha-value>)',
         },
         accent: {
-          50: '#FFF0EB',
-          100: '#FFE1D7',
-          500: '#FF6B35',
-          600: '#E55527',
-          700: '#B8441F'
+          50: 'rgb(var(--color-accent-50) / <alpha-value>)',
+          500: 'rgb(var(--color-accent-500) / <alpha-value>)',
+          600: 'rgb(var(--color-accent-600) / <alpha-value>)',
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif']
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Monaco', 'monospace']
       },
       spacing: {
-        'touch-small': '36px',
-        'touch-medium': '44px',
-        'touch-large': '52px'
+        'touch-sm': '40px',   // Mínimo para touch
+        'touch-md': '48px',   // Padrão mobile
+        'touch-lg': '56px',   // Grande para ações importantes
+        'touch-xl': '64px'    // Extra large
       },
-      boxShadow: {
-        'mobile-subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-        'mobile-medium': '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-        'mobile-large': '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-        'mobile-floating': '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+      animation: {
+        'float': 'float 3s ease-in-out infinite',
+        'pulse-slow': 'pulse 3s ease-in-out infinite',
+        'bounce-gentle': 'bounce-gentle 2s ease-in-out infinite'
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' }
+        },
+        'bounce-gentle': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' }
+        }
       }
-    }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),
-    require('@tailwindcss/typography')
-  ]
-};
+    require('@tailwindcss/typography'),
+  ],
+}
 EOF
 
-# 3. Configurar PWA
+# 4. CONFIGURAR NEXT.JS MULTI-TENANT
+echo "⚙️ Configurando Next.js..."
 cat > next.config.js << 'EOF'
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
+  buildExcludes: [/middleware-manifest\.json$/],
   runtimeCaching: [
     {
-      urlPattern: /^https:\/\/api\.kryonix\.com\.br\/.*$/i,
+      urlPattern: /^https:\/\/api\.kryonix\.com\.br\/tenant\/.*$/i,
       handler: 'NetworkFirst',
       options: {
-        cacheName: 'kryonix-api-cache',
+        cacheName: 'tenant-api-cache',
         expiration: {
-          maxEntries: 32,
+          maxEntries: 64,
           maxAgeSeconds: 24 * 60 * 60 // 24 hours
+        },
+        networkTimeoutSeconds: 10
+      }
+    },
+    {
+      urlPattern: /^https:\/\/.*\.kryonix\.com\.br\/.*\.(js|css|woff2|png|jpg|jpeg|svg)$/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'tenant-assets-cache',
+        expiration: {
+          maxEntries: 128,
+          maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
         }
       }
     }
   ]
 });
 
-module.exports = withPWA({
+/** @type {import('next').NextConfig} */
+const nextConfig = withPWA({
   reactStrictMode: true,
   swcMinify: true,
-  images: {
-    domains: ['storage.kryonix.com.br']
-  },
   experimental: {
     appDir: true
+  },
+  images: {
+    domains: [
+      'storage.kryonix.com.br',
+      'cdn.kryonix.com.br',
+      '*.kryonix.com.br'
+    ],
+    formats: ['image/webp', 'image/avif']
+  },
+  // Suporte a multi-tenant via rewrite
+  async rewrites() {
+    return [
+      {
+        source: '/tenant/:tenantId/:path*',
+        destination: '/:path*?tenant=:tenantId'
+      }
+    ];
+  },
+  // Headers para PWA e performance
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block'
+          }
+        ]
+      }
+    ];
   }
 });
+
+module.exports = nextConfig;
 EOF
 
-# 4. Criar manifest PWA
-cat > public/manifest.json << 'EOF'
+# 5. CONFIGURAR TYPESCRIPT
+echo "📝 Configurando TypeScript..."
+cat > tsconfig.json << 'EOF'
 {
-  "name": "KRYONIX SaaS Platform",
-  "short_name": "KRYONIX",
-  "description": "Plataforma SaaS 100% IA Autônoma",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#0066CC",
-  "theme_color": "#0066CC",
-  "orientation": "portrait-primary",
-  "icons": [
-    {
-      "src": "/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/contexts/*": ["./src/contexts/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/services/*": ["./src/services/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/types/*": ["./src/types/*"]
     }
-  ],
-  "categories": ["business", "productivity"],
-  "shortcuts": [
-    {
-      "name": "Dashboard",
-      "short_name": "Dashboard",
-      "description": "Acesso rápido ao dashboard",
-      "url": "/dashboard",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Receita",
-      "short_name": "Receita",
-      "description": "Ver métricas de receita",
-      "url": "/revenue",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
-    }
-  ]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }
 EOF
 
-# 5. Estrutura de pastas
-mkdir -p {
-  components/{ui,layout,features,charts,mobile},
-  pages/{dashboard,revenue,users,automations,analytics},
-  hooks,
-  services,
-  utils,
-  styles,
-  public/{icons,images}
+# 6. CONFIGURAR ESLINT E PRETTIER
+echo "🔧 Configurando ESLint e Prettier..."
+cat > .eslintrc.json << 'EOF'
+{
+  "extends": [
+    "next/core-web-vitals",
+    "prettier"
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": "warn",
+    "@next/next/no-img-element": "off"
+  }
+}
+EOF
+
+cat > .prettierrc << 'EOF'
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "printWidth": 80,
+  "tabWidth": 2
+}
+EOF
+
+# 7. CRIAR TIPOS TYPESCRIPT
+echo "📋 Criando tipos TypeScript..."
+cat > src/types/tenant.ts << 'EOF'
+export interface TenantConfig {
+  clientId: string;
+  companyName: string;
+  subdomain: string;
+  theme: TenantTheme;
+  modules: string[];
+  plan: 'basic' | 'pro' | 'enterprise';
+  settings: TenantSettings;
+  permissions: Record<string, boolean>;
+  customization: TenantCustomization;
 }
 
-# 6. Deploy componentes base
-echo "Criando componentes base..."
-# (componentes criados nos scripts anteriores)
+export interface TenantTheme {
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    text: string;
+  };
+  logo: string;
+  favicon: string;
+  customCSS?: string;
+  darkMode: boolean;
+}
 
-# 7. Configurar fontes
-echo "Configurando fontes otimizadas..."
-wget https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap -O styles/fonts.css
+export interface TenantSettings {
+  language: string;
+  timezone: string;
+  currency: string;
+  mobileOptimized: boolean;
+}
 
-# 8. Configurar ícones PWA
-echo "Configurando ícones PWA..."
-# Gerar ícones KRYONIX em vários tamanhos
+export interface TenantCustomization {
+  layout: 'standard' | 'compact' | 'cards';
+  navigation: 'sidebar' | 'bottom' | 'drawer';
+  dashboard: 'executive' | 'operational' | 'custom';
+}
+EOF
 
-# 9. Build e deploy
-echo "Building interface..."
+# 8. CRIAR SERVICE WORKER TENANT
+echo "⚙️ Configurando Service Worker..."
+cat > public/sw-tenant.js << 'EOF'
+// [Código do Service Worker inserido anteriormente no documento]
+EOF
+
+# 9. CONFIGURAR MANIFEST DINÂMICO
+echo "📱 Configurando PWA Manifest..."
+cat > pages/api/manifest/[tenantId].ts << 'EOF'
+import { NextApiRequest, NextApiResponse } from 'next';
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { tenantId } = req.query;
+  
+  try {
+    // Buscar configuração do tenant
+    const tenantConfig = await fetchTenantConfig(tenantId as string);
+    
+    if (!tenantConfig) {
+      return res.status(404).json({ error: 'Tenant not found' });
+    }
+    
+    const manifest = {
+      name: `${tenantConfig.companyName} - KRYONIX`,
+      short_name: tenantConfig.companyName,
+      description: `Plataforma ${tenantConfig.companyName}`,
+      start_url: `/?tenant=${tenantId}`,
+      display: 'standalone',
+      background_color: tenantConfig.theme.colors.background,
+      theme_color: tenantConfig.theme.colors.primary,
+      icons: [
+        {
+          src: tenantConfig.theme.logo || '/default-icon-192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: tenantConfig.theme.logo || '/default-icon-512.png',
+          sizes: '512x512', 
+          type: 'image/png'
+        }
+      ]
+    };
+    
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(manifest);
+    
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+EOF
+
+# 10. CONFIGURAR DOCKER PARA PRODUÇÃO
+echo "🐳 Configurando Docker..."
+cat > Dockerfile << 'EOF'
+FROM node:18-alpine AS base
+
+# Install dependencies
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+# Build the application
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm run build
+
+# Production image
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+CMD ["node", "server.js"]
+EOF
+
+# 11. CONFIGURAR CI/CD
+echo "🚀 Configurando CI/CD..."
+mkdir -p .github/workflows
+
+cat > .github/workflows/deploy-multi-tenant.yml << 'EOF'
+name: Deploy Multi-Tenant Interface
+
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'pages/**', 'public/**']
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run tests
+      run: npm run test
+    
+    - name: Build application
+      run: npm run build
+      env:
+        NEXT_PUBLIC_API_URL: ${{ secrets.API_URL }}
+        NEXT_PUBLIC_WS_URL: ${{ secrets.WS_URL }}
+    
+    - name: Deploy to production
+      run: |
+        docker build -t kryonix-interface-multi-tenant .
+        docker tag kryonix-interface-multi-tenant:latest registry.kryonix.com.br/interface:latest
+        docker push registry.kryonix.com.br/interface:latest
+EOF
+
+# 12. CONFIGURAR TESTES
+echo "🧪 Configurando testes..."
+npm install --save-dev @testing-library/react @testing-library/jest-dom jest jest-environment-jsdom
+
+cat > jest.config.js << 'EOF'
+const nextJest = require('next/jest')
+
+const createJestConfig = nextJest({
+  dir: './',
+})
+
+const customJestConfig = {
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  moduleNameMapping: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+  testEnvironment: 'jest-environment-jsdom',
+}
+
+module.exports = createJestConfig(customJestConfig)
+EOF
+
+# 13. BUILD E DEPLOY
+echo "🏗️ Building aplicação..."
 npm run build
 
-# 10. Configurar servidor de produção
+# 14. CONFIGURAR PM2 PARA PRODUÇÃO
+echo "🚀 Configurando PM2..."
 cat > ecosystem.config.js << 'EOF'
 module.exports = {
   apps: [{
-    name: 'kryonix-frontend',
+    name: 'kryonix-interface-multi-tenant',
     script: 'npm',
     args: 'start',
-    cwd: './',
     instances: 'max',
     exec_mode: 'cluster',
     env: {
@@ -887,69 +1745,97 @@ module.exports = {
       NEXT_PUBLIC_API_URL: 'https://api.kryonix.com.br',
       NEXT_PUBLIC_WS_URL: 'wss://api.kryonix.com.br'
     },
-    error_file: './logs/err.log',
-    out_file: './logs/out.log',
-    log_file: './logs/combined.log'
+    error_file: './logs/interface-error.log',
+    out_file: './logs/interface-out.log',
+    log_file: './logs/interface-combined.log',
+    time: true
   }]
 };
 EOF
 
+# Iniciar com PM2
 pm2 start ecosystem.config.js
 pm2 startup
 pm2 save
 
-echo "✅ Interface Mobile-First KRYONIX configurada!"
-echo "🌐 URL: https://app.kryonix.com.br"
-echo "📱 PWA: Instalável em dispositivos mobile"
-echo "🤖 IA: Assistente integrado com comando de voz"
-echo "🎨 Design: Sistema KRYONIX mobile-first"
-echo "⚡ Performance: 60fps garantido"
-echo "🌍 Offline: Modo offline com sync automática"
+echo ""
+echo "🎉 SETUP INTERFACE MULTI-TENANT CONCLUÍDO!"
+echo "========================================"
+echo ""
+echo "🎨 COMPONENTES CRIADOS:"
+echo "  • TenantProvider - Context multi-tenant"
+echo "  • TenantLayout - Layout responsivo"
+echo "  • TenantButton/Card - Componentes dinâmicos"
+echo "  • TenantAIAssistant - IA específica por tenant"
+echo "  • PWA dinâmica por tenant"
+echo ""
+echo "📱 FEATURES MOBILE-FIRST:"
+echo "  • Touch targets otimizados (48px+)"
+echo "  • Bottom navigation nativa"
+echo "  • Gestures e swipe actions"
+echo "  • PWA instalável por tenant"
+echo "  • Offline-first com sync"
+echo ""
+echo "🏢 MULTI-TENANCY:"
+echo "  • Theming dinâmico por cliente"
+echo "  • Isolamento completo de UI"
+echo "  • Subdomain routing"
+echo "  • Cache separado por tenant"
+echo "  • Manifest PWA específico"
+echo ""
+echo "🔧 PRÓXIMOS PASSOS:"
+echo "  1. Configurar variáveis de ambiente"
+echo "  2. Testar em diferentes tenants"
+echo "  3. Configurar CDN para assets"
+echo "  4. Monitorar performance Core Web Vitals"
+echo ""
 ```
 
-## ✅ **ENTREGÁVEIS COMPLETOS KRYONIX**
-- [ ] **Interface Mobile-First** priorizando 80% usuários mobile
-- [ ] **Design System KRYONIX** completo e profissional
-- [ ] **PWA Instalavel** funcionando como app nativo
-- [ ] **IA Assistente Integrada** com comando de voz
-- [ ] **Modo Offline** com sincronização inteligente
-- [ ] **Navegação Touch-Friendly** otimizada para gestos
-- [ ] **Performance 60fps** garantida em todos os dispositivos
-- [ ] **Dark/Light Mode** automático
-- [ ] **Acessibilidade WCAG** completa
-- [ ] **Componentes Reutilizáveis** mobile-optimized
-- [ ] **Animações Smooth** otimizadas para mobile
-- [ ] **Bottom Navigation** mobile nativa
-- [ ] **Gestos Touch** naturais e intuitivos
-- [ ] **Interface PT-BR** para leigos em programação
-- [ ] **Loading States** inteligentes
-- [ ] **Error Boundaries** com recovery automático
+## ✅ **CHECKLIST DE VALIDAÇÃO MULTI-TENANT**
 
-## 🧪 **TESTES AUTOMÁTICOS IA**
-```bash
-npm run test:mobile:touch:targets
-npm run test:mobile:performance:60fps
-npm run test:pwa:installation
-npm run test:offline:functionality
-npm run test:ai:voice:commands
-npm run test:accessibility:wcag
-npm run test:responsive:breakpoints
-npm run test:component:library
-```
+### **🏢 MULTI-TENANCY**
+- [ ] Context Provider isolado por cliente funcionando
+- [ ] Theming dinâmico por tenant aplicado
+- [ ] Subdomain routing configurado
+- [ ] Estado global segregado por cliente
+- [ ] Cache isolado por tenant
 
-## 📝 **CHECKLIST IMPLEMENTAÇÃO**
-- [ ] ✅ **6 Agentes Especializados** criando interface perfeita
-- [ ] 📱 **Mobile-First** priorizando 80% usuários mobile
-- [ ] 🤖 **IA Integrada** com assistente e comando de voz
-- [ ] 🇧🇷 **Interface PT-BR** para usuários leigos
-- [ ] 🎨 **Design System** profissional KRYONIX
-- [ ] ⚡ **Performance Máxima** 60fps garantido
-- [ ] 🌍 **PWA Nativo** instalavel como app
-- [ ] 🔄 **Offline-First** com sync inteligente
-- [ ] 🎯 **Touch-Optimized** gestos naturais
-- [ ] 🔄 **Deploy Automático** com scripts prontos
+### **📱 MOBILE-FIRST**
+- [ ] Touch targets ≥ 48px implementados
+- [ ] Bottom navigation mobile funcionando
+- [ ] Gestures e swipe actions ativos
+- [ ] Responsive breakpoints otimizados
+- [ ] Performance 60fps+ em mobile
+
+### **🎨 UI/UX**
+- [ ] Design system multi-tenant completo
+- [ ] Componentes reutilizáveis criados
+- [ ] Animações smooth implementadas
+- [ ] Dark/Light mode dinâmico
+- [ ] Acessibilidade WCAG AA
+
+### **🤖 PWA & AI**
+- [ ] PWA instalável por tenant
+- [ ] Service Worker específico funcionando
+- [ ] Manifest dinâmico por cliente
+- [ ] AI Assistant integrada por tenant
+- [ ] Offline-first com sync automático
+
+### **⚡ PERFORMANCE**
+- [ ] Code splitting por tenant implementado
+- [ ] Lazy loading ativo
+- [ ] Bundle otimizado
+- [ ] Core Web Vitals ≥ 90
+- [ ] Lighthouse score ≥ 95
+
+### **🔧 DESENVOLVIMENTO**
+- [ ] TypeScript configurado
+- [ ] Testes automatizados funcionando
+- [ ] CI/CD pipeline ativo
+- [ ] Docker containerizado
+- [ ] Monitoramento configurado
 
 ---
-*Parte 11 de 50 - Projeto KRYONIX SaaS Platform 100% IA Autônoma*
-*Próxima Parte: 12 - Dashboard Executivo Mobile-First*
-*🏢 KRYONIX - Interface do Futuro com IA*
+
+*Parte 11 de 50 - Projeto KRYONIX SaaS Platform - Versão Multi-Tenant*  
+*Próxima Parte: 12 - Dashboard Multi-Tenant Mobile-First*
