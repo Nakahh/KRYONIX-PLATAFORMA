@@ -1007,6 +1007,158 @@ class PerformanceService extends EventEmitter {
 }
 
 export default PerformanceService;
+
+// ================================
+// IMPLEMENTAÇÃO PRÁTICA - EXPRESS ROUTES
+// ================================
+
+// routes/performance.ts
+import express from 'express';
+import PerformanceService from '../services/PerformanceService';
+import { authenticateToken, validateTenant } from '../middleware/auth';
+
+const router = express.Router();
+
+// Endpoint para tracking de API metrics
+router.post('/api/track', authenticateToken, validateTenant, async (req, res) => {
+  try {
+    const { endpoint, method, statusCode, responseTimeMs, deviceType } = req.body;
+
+    await req.performanceService.trackApiMetric({
+      tenantId: req.tenantId,
+      userId: req.userId,
+      endpoint,
+      method,
+      statusCode,
+      responseTimeMs,
+      deviceType,
+      userAgent: req.get('User-Agent'),
+      ipAddress: req.ip
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Erro ao rastrear métrica de API:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Endpoint para Core Web Vitals
+router.post('/vitals', async (req, res) => {
+  try {
+    const { tenantId, metrics } = req.body;
+
+    for (const metric of metrics) {
+      await req.performanceService.trackFrontendMetric({
+        tenantId,
+        userId: metric.userId,
+        sessionId: metric.sessionId,
+        lcpMs: metric.lcp,
+        fidMs: metric.fid,
+        clsScore: metric.cls,
+        fcpMs: metric.fcp,
+        ttfbMs: metric.ttfb,
+        pageLoadTimeMs: metric.pageLoadTime,
+        pageUrl: metric.pageUrl,
+        deviceType: metric.deviceType,
+        isMobile: metric.isMobile,
+        browser: metric.browser,
+        os: metric.os
+      });
+    }
+
+    res.json({ success: true, processed: metrics.length });
+  } catch (error) {
+    console.error('Erro ao processar Core Web Vitals:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Endpoint para m��tricas em tempo real
+router.get('/:tenantId/realtime', authenticateToken, validateTenant, async (req, res) => {
+  try {
+    const tenantId = parseInt(req.params.tenantId);
+    const metrics = await req.performanceService.getRealtimeMetrics(tenantId);
+    res.json(metrics);
+  } catch (error) {
+    console.error('Erro ao obter métricas em tempo real:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Endpoint para sugestões de otimização
+router.get('/:tenantId/suggestions', authenticateToken, validateTenant, async (req, res) => {
+  try {
+    const tenantId = parseInt(req.params.tenantId);
+    const suggestions = await req.performanceService.getOptimizationSuggestions(tenantId);
+    res.json(suggestions);
+  } catch (error) {
+    console.error('Erro ao obter sugestões de otimização:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Endpoint para alertas ativos
+router.get('/:tenantId/alerts', authenticateToken, validateTenant, async (req, res) => {
+  try {
+    const tenantId = parseInt(req.params.tenantId);
+    const query = `
+      SELECT id, alert_type, severity, title, description,
+             current_value, threshold_value, related_resource,
+             created_at, status
+      FROM performance_alerts
+      WHERE tenant_id = $1 AND status = 'active'
+      ORDER BY severity DESC, created_at DESC
+      LIMIT 10
+    `;
+
+    const result = await req.db.query(query, [tenantId]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Erro ao obter alertas:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Endpoint para Prometheus metrics
+router.get('/prometheus', async (req, res) => {
+  try {
+    const metricsOutput = await generatePrometheusMetrics(req.performanceService);
+    res.set('Content-Type', 'text/plain');
+    res.send(metricsOutput);
+  } catch (error) {
+    console.error('Erro ao gerar métricas Prometheus:', error);
+    res.status(500).send('# Erro ao gerar métricas');
+  }
+});
+
+async function generatePrometheusMetrics(performanceService: PerformanceService): Promise<string> {
+  // Implementação seria mais complexa, mas aqui está um exemplo
+  return `
+# HELP api_response_time_seconds Tempo de resposta da API em segundos
+# TYPE api_response_time_seconds histogram
+api_response_time_seconds_bucket{le="0.1"} 245
+api_response_time_seconds_bucket{le="0.5"} 312
+api_response_time_seconds_bucket{le="1.0"} 389
+api_response_time_seconds_bucket{le="+Inf"} 400
+api_response_time_seconds_sum 12.5
+api_response_time_seconds_count 400
+
+# HELP cache_hit_rate Taxa de acerto do cache
+# TYPE cache_hit_rate gauge
+cache_hit_rate{tenant="1"} 0.85
+cache_hit_rate{tenant="2"} 0.78
+
+# HELP core_web_vitals_lcp_seconds Largest Contentful Paint em segundos
+# TYPE core_web_vitals_lcp_seconds histogram
+core_web_vitals_lcp_seconds_bucket{le="1.0"} 156
+core_web_vitals_lcp_seconds_bucket{le="2.5"} 298
+core_web_vitals_lcp_seconds_bucket{le="4.0"} 342
+core_web_vitals_lcp_seconds_bucket{le="+Inf"} 378
+`;
+}
+
+export default router;
 ```
 
 ---
