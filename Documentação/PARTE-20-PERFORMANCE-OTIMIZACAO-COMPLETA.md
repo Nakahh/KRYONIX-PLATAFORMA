@@ -2811,6 +2811,521 @@ class PerformanceBackgroundWorker {
 }
 
 export default PerformanceBackgroundWorker;
+
+// ================================
+// IA PARA OTIMIZAÇÃO AUTOMÁTICA E ANÁLISE PREDITIVA
+// ================================
+
+// services/PerformanceAIService.ts
+class PerformanceAIAnalyzer {
+  private performanceService: PerformanceService;
+  private predictions: Map<number, any> = new Map();
+  private optimizationHistory: Map<number, any[]> = new Map();
+
+  constructor(performanceService: PerformanceService) {
+    this.performanceService = performanceService;
+  }
+
+  // 🤖 Análise Preditiva de Performance
+  async predictPerformanceIssues(tenantId: number): Promise<any[]> {
+    try {
+      const historicalData = await this.getHistoricalPerformanceData(tenantId);
+      const predictions: any[] = [];
+
+      // Análise de tendência de resposta da API
+      const apiTrend = this.analyzeApiResponseTrend(historicalData.api);
+      if (apiTrend.isIncreasing && apiTrend.projectedValue > 1500) {
+        predictions.push({
+          type: 'api_degradation',
+          severity: 'warning',
+          probability: apiTrend.confidence,
+          estimatedTime: apiTrend.estimatedDays,
+          currentValue: apiTrend.currentValue,
+          projectedValue: apiTrend.projectedValue,
+          recommendation: 'Considere otimizar endpoints lentos ou aumentar recursos do servidor',
+          preventiveActions: [
+            'Implementar cache adicional',
+            'Otimizar queries do banco de dados',
+            'Considerar auto-scaling'
+          ]
+        });
+      }
+
+      // Análise de tendência de erro
+      const errorTrend = this.analyzeErrorRateTrend(historicalData.errors);
+      if (errorTrend.isIncreasing && errorTrend.projectedValue > 10) {
+        predictions.push({
+          type: 'error_rate_increase',
+          severity: 'critical',
+          probability: errorTrend.confidence,
+          estimatedTime: errorTrend.estimatedDays,
+          currentValue: errorTrend.currentValue,
+          projectedValue: errorTrend.projectedValue,
+          recommendation: 'Taxa de erro crescente detectada - investigação urgente necessária',
+          preventiveActions: [
+            'Revisar logs de erro recentes',
+            'Verificar integridade do banco de dados',
+            'Monitorar recursos do sistema'
+          ]
+        });
+      }
+
+      // Análise de capacidade de cache
+      const cacheTrend = this.analyzeCacheCapacityTrend(historicalData.cache);
+      if (cacheTrend.hitRateDecreasing) {
+        predictions.push({
+          type: 'cache_efficiency_decline',
+          severity: 'warning',
+          probability: cacheTrend.confidence,
+          estimatedTime: cacheTrend.estimatedDays,
+          currentValue: cacheTrend.currentHitRate,
+          projectedValue: cacheTrend.projectedHitRate,
+          recommendation: 'Eficiência do cache em declínio - otimização necessária',
+          preventiveActions: [
+            'Aumentar TTL para dados estáticos',
+            'Implementar cache warming',
+            'Revisar estratégia de invalidação'
+          ]
+        });
+      }
+
+      // Análise de Core Web Vitals para mobile
+      const mobileVitalsTrend = this.analyzeMobileVitalsTrend(historicalData.frontend);
+      if (mobileVitalsTrend.lcpDegrading) {
+        predictions.push({
+          type: 'mobile_performance_decline',
+          severity: 'warning',
+          probability: mobileVitalsTrend.confidence,
+          estimatedTime: mobileVitalsTrend.estimatedDays,
+          currentValue: mobileVitalsTrend.currentLCP,
+          projectedValue: mobileVitalsTrend.projectedLCP,
+          recommendation: 'Performance mobile deteriorando - 80% dos usuários são mobile',
+          preventiveActions: [
+            'Otimizar imagens para mobile',
+            'Implementar lazy loading',
+            'Reduzir tamanho do bundle'
+          ]
+        });
+      }
+
+      // Salvar predições
+      this.predictions.set(tenantId, {
+        predictions,
+        generatedAt: new Date(),
+        nextAnalysis: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 horas
+      });
+
+      return predictions;
+    } catch (error) {
+      console.error('Erro na análise preditiva:', error);
+      return [];
+    }
+  }
+
+  // 🔍 Análise de Tendência de Resposta da API
+  private analyzeApiResponseTrend(apiData: any[]): any {
+    if (!apiData || apiData.length < 7) {
+      return { isIncreasing: false, confidence: 0 };
+    }
+
+    // Análise de regressão linear simples
+    const recentData = apiData.slice(-7); // Últimos 7 dias
+    const xValues = recentData.map((_, index) => index);
+    const yValues = recentData.map(d => d.avg_response_time);
+
+    const slope = this.calculateLinearRegression(xValues, yValues).slope;
+    const currentValue = yValues[yValues.length - 1];
+    const isIncreasing = slope > 10; // Aumentando mais que 10ms por dia
+
+    return {
+      isIncreasing,
+      slope,
+      currentValue,
+      projectedValue: currentValue + (slope * 7), // Projeção para 7 dias
+      confidence: Math.min(Math.abs(slope) / 50, 0.95), // Confiança baseada na inclinação
+      estimatedDays: isIncreasing ? Math.ceil((1500 - currentValue) / slope) : null
+    };
+  }
+
+  // 📊 Análise de Tendência de Taxa de Erro
+  private analyzeErrorRateTrend(errorData: any[]): any {
+    if (!errorData || errorData.length < 7) {
+      return { isIncreasing: false, confidence: 0 };
+    }
+
+    const recentData = errorData.slice(-7);
+    const xValues = recentData.map((_, index) => index);
+    const yValues = recentData.map(d => d.error_rate);
+
+    const slope = this.calculateLinearRegression(xValues, yValues).slope;
+    const currentValue = yValues[yValues.length - 1];
+    const isIncreasing = slope > 0.5; // Aumentando mais que 0.5% por dia
+
+    return {
+      isIncreasing,
+      slope,
+      currentValue,
+      projectedValue: currentValue + (slope * 7),
+      confidence: Math.min(Math.abs(slope) / 2, 0.95),
+      estimatedDays: isIncreasing ? Math.ceil((10 - currentValue) / slope) : null
+    };
+  }
+
+  // 🚀 Análise de Tendência de Cache
+  private analyzeCacheCapacityTrend(cacheData: any[]): any {
+    if (!cacheData || cacheData.length < 7) {
+      return { hitRateDecreasing: false, confidence: 0 };
+    }
+
+    const recentData = cacheData.slice(-7);
+    const xValues = recentData.map((_, index) => index);
+    const yValues = recentData.map(d => d.hit_rate);
+
+    const slope = this.calculateLinearRegression(xValues, yValues).slope;
+    const currentHitRate = yValues[yValues.length - 1];
+    const hitRateDecreasing = slope < -2; // Diminuindo mais que 2% por dia
+
+    return {
+      hitRateDecreasing,
+      slope,
+      currentHitRate,
+      projectedHitRate: currentHitRate + (slope * 7),
+      confidence: Math.min(Math.abs(slope) / 10, 0.95),
+      estimatedDays: hitRateDecreasing ? Math.ceil((currentHitRate - 70) / Math.abs(slope)) : null
+    };
+  }
+
+  // 📱 Análise de Core Web Vitals Mobile
+  private analyzeMobileVitalsTrend(frontendData: any[]): any {
+    if (!frontendData || frontendData.length < 7) {
+      return { lcpDegrading: false, confidence: 0 };
+    }
+
+    const mobileData = frontendData.filter(d => d.is_mobile).slice(-7);
+    const xValues = mobileData.map((_, index) => index);
+    const yValues = mobileData.map(d => d.avg_lcp);
+
+    const slope = this.calculateLinearRegression(xValues, yValues).slope;
+    const currentLCP = yValues[yValues.length - 1];
+    const lcpDegrading = slope > 50; // LCP aumentando mais que 50ms por dia
+
+    return {
+      lcpDegrading,
+      slope,
+      currentLCP,
+      projectedLCP: currentLCP + (slope * 7),
+      confidence: Math.min(Math.abs(slope) / 200, 0.95),
+      estimatedDays: lcpDegrading ? Math.ceil((2500 - currentLCP) / slope) : null
+    };
+  }
+
+  // 📐 Cálculo de Regressão Linear
+  private calculateLinearRegression(xValues: number[], yValues: number[]): { slope: number; intercept: number } {
+    const n = xValues.length;
+    const sumX = xValues.reduce((a, b) => a + b, 0);
+    const sumY = yValues.reduce((a, b) => a + b, 0);
+    const sumXY = xValues.reduce((sum, x, i) => sum + x * yValues[i], 0);
+    const sumXX = xValues.reduce((sum, x) => sum + x * x, 0);
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+
+    return { slope, intercept };
+  }
+
+  // 🤖 Otimização Automática Inteligente
+  async applyIntelligentOptimizations(tenantId: number): Promise<any[]> {
+    const optimizations: any[] = [];
+
+    try {
+      // Obter métricas atuais
+      const metrics = await this.performanceService.getRealtimeMetrics(tenantId);
+      const predictions = await this.predictPerformanceIssues(tenantId);
+
+      // Otimização baseada em métricas atuais
+      if (metrics.cache?.hit_rate < 75) {
+        const result = await this.optimizeCacheStrategy(tenantId, metrics.cache);
+        optimizations.push({
+          type: 'cache_optimization',
+          action: 'TTL adjustment and cache warming',
+          result,
+          impact: 'medium',
+          appliedAt: new Date()
+        });
+      }
+
+      // Otimização preventiva baseada em predições
+      for (const prediction of predictions) {
+        if (prediction.probability > 0.7) {
+          const preventiveOpt = await this.applyPreventiveOptimization(tenantId, prediction);
+          if (preventiveOpt) {
+            optimizations.push(preventiveOpt);
+          }
+        }
+      }
+
+      // Otimização específica para mobile (80% dos usuários)
+      const mobileOptimization = await this.optimizeForMobile(tenantId, metrics);
+      if (mobileOptimization) {
+        optimizations.push(mobileOptimization);
+      }
+
+      // Salvar histórico de otimizações
+      if (!this.optimizationHistory.has(tenantId)) {
+        this.optimizationHistory.set(tenantId, []);
+      }
+      this.optimizationHistory.get(tenantId)!.push(...optimizations);
+
+      return optimizations;
+    } catch (error) {
+      console.error('Erro na otimização inteligente:', error);
+      return [];
+    }
+  }
+
+  // 🚀 Otimização de Estratégia de Cache
+  private async optimizeCacheStrategy(tenantId: number, cacheMetrics: any): Promise<string> {
+    const actions: string[] = [];
+
+    // Aumentar TTL para keys com baixa taxa de mudança
+    const staticKeys = await this.identifyStaticKeys(tenantId);
+    for (const key of staticKeys) {
+      await this.redis.expire(key, 7200); // 2 horas
+      actions.push(`TTL aumentado para ${key}`);
+    }
+
+    // Implementar cache warming para keys frequentes
+    const frequentKeys = await this.identifyFrequentKeys(tenantId);
+    for (const key of frequentKeys.slice(0, 10)) {
+      await this.warmupCache(key);
+      actions.push(`Cache warming aplicado para ${key}`);
+    }
+
+    // Otimizar estratégia de eviction
+    await this.redis.config('SET', 'maxmemory-policy', 'allkeys-lru');
+    actions.push('Política de eviction otimizada para LRU');
+
+    return actions.join('; ');
+  }
+
+  // 🛡️ Otimização Preventiva
+  private async applyPreventiveOptimization(tenantId: number, prediction: any): Promise<any | null> {
+    switch (prediction.type) {
+      case 'api_degradation':
+        return await this.preventApiDegradation(tenantId, prediction);
+
+      case 'error_rate_increase':
+        return await this.preventErrorIncrease(tenantId, prediction);
+
+      case 'mobile_performance_decline':
+        return await this.preventMobilePerformanceDecline(tenantId, prediction);
+
+      default:
+        return null;
+    }
+  }
+
+  // 📱 Otimização Específica para Mobile
+  private async optimizeForMobile(tenantId: number, metrics: any): Promise<any | null> {
+    const mobileOptimizations: string[] = [];
+
+    // Verificar se imagens estão sendo servidas em formato otimizado
+    const hasWebPSupport = await this.checkWebPOptimization(tenantId);
+    if (!hasWebPSupport) {
+      await this.enableWebPOptimization(tenantId);
+      mobileOptimizations.push('WebP optimization habilitada');
+    }
+
+    // Verificar lazy loading
+    const hasLazyLoading = await this.checkLazyLoading(tenantId);
+    if (!hasLazyLoading) {
+      await this.enableLazyLoading(tenantId);
+      mobileOptimizations.push('Lazy loading habilitado');
+    }
+
+    // Otimizar bundle para mobile
+    if (metrics.frontend?.avg_bundle_size > 500) { // 500KB
+      await this.optimizeMobileBundle(tenantId);
+      mobileOptimizations.push('Bundle otimizado para mobile');
+    }
+
+    if (mobileOptimizations.length > 0) {
+      return {
+        type: 'mobile_optimization',
+        action: 'Mobile-first optimizations applied',
+        result: mobileOptimizations.join('; '),
+        impact: 'high',
+        appliedAt: new Date(),
+        mobileUsersImpacted: '80%'
+      };
+    }
+
+    return null;
+  }
+
+  // 🔄 Métodos auxiliares (implementações simplificadas)
+  private async getHistoricalPerformanceData(tenantId: number): Promise<any> {
+    // Implementação para obter dados históricos dos últimos 30 dias
+    return {
+      api: [], // Dados de API
+      errors: [], // Dados de erro
+      cache: [], // Dados de cache
+      frontend: [] // Dados de frontend
+    };
+  }
+
+  private async identifyStaticKeys(tenantId: number): Promise<string[]> {
+    // Identificar keys que raramente mudam
+    return [`static:${tenantId}:config`, `static:${tenantId}:translations`];
+  }
+
+  private async identifyFrequentKeys(tenantId: number): Promise<string[]> {
+    // Identificar keys mais acessadas
+    return [`user:${tenantId}:profile`, `dashboard:${tenantId}:data`];
+  }
+
+  private async warmupCache(key: string): Promise<void> {
+    // Implementar cache warming
+    console.log(`Cache warming para ${key}`);
+  }
+
+  private async preventApiDegradation(tenantId: number, prediction: any): Promise<any> {
+    return {
+      type: 'preventive_api_optimization',
+      action: 'Preemptive API optimization',
+      result: 'Query optimization and connection pooling improved',
+      impact: 'high',
+      appliedAt: new Date(),
+      prediction: prediction.type
+    };
+  }
+
+  private async preventErrorIncrease(tenantId: number, prediction: any): Promise<any> {
+    return {
+      type: 'preventive_error_monitoring',
+      action: 'Enhanced error monitoring',
+      result: 'Circuit breakers and retry logic enhanced',
+      impact: 'critical',
+      appliedAt: new Date(),
+      prediction: prediction.type
+    };
+  }
+
+  private async preventMobilePerformanceDecline(tenantId: number, prediction: any): Promise<any> {
+    return {
+      type: 'preventive_mobile_optimization',
+      action: 'Preemptive mobile optimization',
+      result: 'Image compression and bundle splitting applied',
+      impact: 'high',
+      appliedAt: new Date(),
+      prediction: prediction.type,
+      mobileUsersImpacted: '80%'
+    };
+  }
+
+  private async checkWebPOptimization(tenantId: number): Promise<boolean> {
+    // Verificar se WebP está habilitado
+    return false; // Simplificado
+  }
+
+  private async enableWebPOptimization(tenantId: number): Promise<void> {
+    // Habilitar otimização WebP
+    console.log(`WebP optimization habilitada para tenant ${tenantId}`);
+  }
+
+  private async checkLazyLoading(tenantId: number): Promise<boolean> {
+    // Verificar se lazy loading está habilitado
+    return false; // Simplificado
+  }
+
+  private async enableLazyLoading(tenantId: number): Promise<void> {
+    // Habilitar lazy loading
+    console.log(`Lazy loading habilitado para tenant ${tenantId}`);
+  }
+
+  private async optimizeMobileBundle(tenantId: number): Promise<void> {
+    // Otimizar bundle para mobile
+    console.log(`Bundle otimizado para mobile - tenant ${tenantId}`);
+  }
+
+  // 📊 Relatório de IA e Otimizações
+  async generatePerformanceAIReport(tenantId: number): Promise<any> {
+    const predictions = this.predictions.get(tenantId);
+    const optimizationHistory = this.optimizationHistory.get(tenantId) || [];
+
+    return {
+      tenantId,
+      reportGeneratedAt: new Date(),
+      predictions: predictions?.predictions || [],
+      optimizationsApplied: optimizationHistory.length,
+      lastOptimization: optimizationHistory[optimizationHistory.length - 1]?.appliedAt,
+      performanceScore: await this.calculateAIPerformanceScore(tenantId),
+      recommendations: await this.generateAIRecommendations(tenantId),
+      mobileOptimizationLevel: await this.calculateMobileOptimizationLevel(tenantId),
+      nextAnalysisScheduled: predictions?.nextAnalysis || new Date(Date.now() + 24 * 60 * 60 * 1000)
+    };
+  }
+
+  private async calculateAIPerformanceScore(tenantId: number): Promise<number> {
+    // Calcular score baseado em métricas e otimizações aplicadas
+    const metrics = await this.performanceService.getRealtimeMetrics(tenantId);
+    const optimizations = this.optimizationHistory.get(tenantId) || [];
+
+    let score = 100;
+
+    // Penalizar por métricas ruins
+    if (metrics.api?.avg_response_time > 1000) score -= 20;
+    if (metrics.cache?.hit_rate < 80) score -= 15;
+    if (metrics.api?.error_count > 10) score -= 25;
+
+    // Bonificar por otimizações recentes
+    const recentOptimizations = optimizations.filter(opt =>
+      new Date(opt.appliedAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    );
+    score += Math.min(recentOptimizations.length * 5, 20);
+
+    return Math.max(Math.min(score, 100), 0);
+  }
+
+  private async generateAIRecommendations(tenantId: number): Promise<string[]> {
+    const recommendations = [
+      'Implementar cache warming para keys frequentes',
+      'Otimizar imagens para formato WebP (importante para 80% usuários mobile)',
+      'Configurar lazy loading para melhorar LCP mobile',
+      'Implementar Service Workers para cache offline',
+      'Considerar CDN para assets estáticos'
+    ];
+
+    return recommendations;
+  }
+
+  private async calculateMobileOptimizationLevel(tenantId: number): Promise<number> {
+    // Calcular nível de otimização para mobile (0-100)
+    let level = 0;
+
+    if (await this.checkWebPOptimization(tenantId)) level += 25;
+    if (await this.checkLazyLoading(tenantId)) level += 25;
+
+    // Verificar outras otimizações mobile
+    const hasServiceWorker = await this.checkServiceWorker(tenantId);
+    if (hasServiceWorker) level += 25;
+
+    const hasMobileFirstDesign = await this.checkMobileFirstDesign(tenantId);
+    if (hasMobileFirstDesign) level += 25;
+
+    return level;
+  }
+
+  private async checkServiceWorker(tenantId: number): Promise<boolean> {
+    return false; // Simplificado
+  }
+
+  private async checkMobileFirstDesign(tenantId: number): Promise<boolean> {
+    return true; // Assumindo que o design é mobile-first
+  }
+}
+
+export default PerformanceAIAnalyzer;
 ```
 
 ---
@@ -3825,7 +4340,7 @@ echo "🚀 Auto-optimization and alerting system is operational"
 2. **🚀 PerformanceService TypeScript** - Tracking completo de performance  
 3. **🔄 Middleware de Performance** - Cache inteligente e tracking automático
 4. **📱 Dashboard React Mobile-First** - Interface otimizada para 80% mobile users
-5. **�� Core Web Vitals Tracking** - LCP, FID, CLS, FCP, TTFB
+5. **🎯 Core Web Vitals Tracking** - LCP, FID, CLS, FCP, TTFB
 6. **🚨 Sistema de Alertas** - Prometheus + AlertManager + auto-fix
 7. **📊 Monitoramento Prometheus/Grafana** - Dashboards e métricas real-time
 8. **🔧 Scripts de Deploy** - Configuração automatizada completa
