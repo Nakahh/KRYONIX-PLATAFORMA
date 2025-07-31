@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██��  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -880,24 +880,24 @@ if [ ! -f "public/index.html" ]; then
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <!-- Meta tags para compartilhamento (Open Graph) -->
-    <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS 100% Autônoma por IA">
-    <meta property="og:description" content="🤖 Revolução em SaaS: 15 agentes de IA autônomos, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
-    <meta property="og:image" content="https://kryonix.com.br/logo-com-nome.png">
+    <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS Completa">
+    <meta property="og:description" content="🚀 KRYONIX: Plataforma SaaS completa com 15 agentes de IA, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
+    <meta property="og:image" content="https://kryonix.com.br/logo kryonix.png">
     <meta property="og:url" content="https://kryonix.com.br">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR">
-    <meta property="og:site_name" content="🚀 KRYONIX - IA Autônoma">
+    <meta property="og:site_name" content="🚀 KRYONIX">
 
     <!-- WhatsApp específico -->
-    <meta property="og:image:alt" content="KRYONIX - Logo oficial da plataforma SaaS autônoma brasileira com IA">
-    <meta name="whatsapp:title" content="🚀 KRYONIX - IA Autônoma">
-    <meta name="whatsapp:description" content="🤖 A revolução do SaaS chegou! 15 agentes IA + 8 módulos + Deploy automático. 100% brasileiro! 📱✨">
+    <meta property="og:image:alt" content="KRYONIX - Logo oficial da plataforma SaaS brasileira">
+    <meta name="whatsapp:title" content="🚀 KRYONIX">
+    <meta name="whatsapp:description" content="🚀 Plataforma SaaS completa! 15 agentes IA + 8 módulos + Deploy automático. 100% brasileiro! 📱✨">
 
     <!-- Meta tags para Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="🚀 KRYONIX - IA Autônoma Brasileira">
-    <meta name="twitter:description" content="🤖 15 agentes IA + 8 módulos SaaS + Deploy automático. A revolução tecnológica 100% brasileira chegou! 📱✨">
-    <meta name="twitter:image" content="https://kryonix.com.br/logo-com-nome.png">
+    <meta name="twitter:title" content="🚀 KRYONIX - Plataforma SaaS">
+    <meta name="twitter:description" content="🚀 15 agentes IA + 8 módulos SaaS + Deploy automático. Plataforma tecnológica 100% brasileira! 📱✨">
+    <meta name="twitter:image" content="https://kryonix.com.br/logo kryonix.png">
 
     <meta name="theme-color" content="#667eea">
     <style>
@@ -1653,7 +1653,7 @@ deploy() {
     cp package.json package.json.old 2>/dev/null || true
 
     # Pull das mudanças com verificação automática
-    info "�� Fazendo pull do repositório..."
+    info "📥 Fazendo pull do repositório..."
 
     # Verificar se origin existe e está configurado
     if ! git remote get-url origin >/dev/null 2>&1; then
