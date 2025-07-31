@@ -1494,7 +1494,7 @@ check_dependency_changes() {
             return 1
         fi
     else
-        info "📦 Primeira execução - backup será criado"
+        info "📦 Primeira execuç��o - backup será criado"
         return 0
     fi
 }
@@ -1883,13 +1883,36 @@ DOCKERFILE_EMERGENCY_EOF
 
 case "${1:-}" in
     "webhook")
-        deploy
+        info "🚀 DEPLOY AUTOMÁTICO INICIADO VIA WEBHOOK"
+        info "⏰ Timestamp: $(date)"
+        info "👤 Usuário: $USER"
+        info "📁 Diretório: $PWD"
+        deploy "webhook_triggered"
+        exit_code=$?
+        if [ $exit_code -eq 0 ]; then
+            log "✅ WEBHOOK DEPLOY CONCLUÍDO COM SUCESSO"
+        else
+            error "❌ WEBHOOK DEPLOY FALHOU (exit code: $exit_code)"
+        fi
+        exit $exit_code
         ;;
     "manual")
-        deploy
+        info "🔧 DEPLOY MANUAL INICIADO"
+        deploy "manual_triggered"
+        ;;
+    "test")
+        info "🧪 TESTE DO SISTEMA DE DEPLOY"
+        check_service_health 3 5
         ;;
     *)
-        echo "Uso: $0 {webhook|manual}"
+        echo "Uso: $0 {webhook|manual|test}"
+        echo ""
+        echo "Opções:"
+        echo "  webhook  - Deploy automático via webhook GitHub"
+        echo "  manual   - Deploy manual"
+        echo "  test     - Testar sistema"
+        echo ""
+        echo "Logs: tail -f /var/log/kryonix-deploy.log"
         ;;
 esac
 WEBHOOK_DEPLOY_EOF
