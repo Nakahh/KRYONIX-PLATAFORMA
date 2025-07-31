@@ -1822,7 +1822,7 @@ log_info "🛠️ Criando script de diagnóstico webhook..."
 cat > diagnostico-webhook.sh << 'DIAGNOSTICO_EOF'
 #!/bin/bash
 
-echo "🔍 DIAGNÓSTICO WEBHOOK KRYONIX - VERSÃO CORRIGIDA"
+echo "🔍 DIAGNÓSTICO WEBHOOK KRYONIX - VERS��O CORRIGIDA"
 echo "================================================"
 
 # 1. Verificar arquivos essenciais
@@ -1966,42 +1966,67 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
     if test_service_health "http://localhost:8080/health" 10 5; then
         WEB_STATUS="✅ ONLINE"
         
-        # TESTE COMPLETO DO WEBHOOK
-        log_info "🧪 Testando webhook endpoint..."
+        # TESTE COMPLETO DO WEBHOOK CORRIGIDO
+        log_info "🧪 Testando webhook endpoint com assinatura..."
 
-        # Teste 1: GET para verificar se endpoint existe
-        webhook_get_response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:8080/api/github-webhook" 2>/dev/null)
-        log_info "📡 GET /api/github-webhook: HTTP $webhook_get_response"
+        # Preparar payload de teste válido
+        webhook_test_payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"pusher":{"name":"test"},"head_commit":{"id":"test123"}}'
 
-        # Teste 2: POST sem assinatura (deve funcionar com nossa correção)
-        webhook_test_payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"test_mode":true}'
+        # Gerar assinatura correta
+        webhook_signature=$(echo -n "$webhook_test_payload" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | cut -d' ' -f2)
+        webhook_signature="sha256=$webhook_signature"
 
-        webhook_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/github-webhook" \
+        log_info "🔐 Testando com assinatura válida..."
+
+        # Teste com assinatura correta
+        webhook_response=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "http://localhost:8080/api/github-webhook" \
            -H "Content-Type: application/json" \
            -H "X-GitHub-Event: push" \
+           -H "X-Hub-Signature-256: $webhook_signature" \
            -H "User-Agent: GitHub-Hookshot/test" \
            -d "$webhook_test_payload" 2>/dev/null)
 
-        webhook_http_code="${webhook_response: -3}"
+        webhook_http_code=$(echo "$webhook_response" | grep "HTTP_CODE:" | cut -d':' -f2)
+        webhook_body=$(echo "$webhook_response" | grep -v "HTTP_CODE:")
 
-        # Teste 3: Endpoint de teste manual
-        test_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/webhook-test" \
-           -H "Content-Type: application/json" \
-           -d '{"test": "manual"}' 2>/dev/null)
-        test_http_code="${test_response: -3}"
-
-        log_info "🔧 POST /api/webhook-test: HTTP $test_http_code"
+        log_info "📡 Resposta webhook: HTTP $webhook_http_code"
 
         if [ "$webhook_http_code" = "200" ]; then
-            log_success "✅ Webhook endpoint funcionando (HTTP 200)"
-            log_info "🚀 Deploy automático está pronto!"
+            log_success "✅ Webhook funcionando com assinatura válida!"
+            log_info "🚀 Deploy automático está pronto e seguro!"
+
+            # Verificar se resposta contém dados esperados
+            if echo "$webhook_body" | grep -q "accepted"; then
+                log_success "✅ Webhook aceita pushes na branch main"
+                WEBHOOK_STATUS="✅ FUNCIONANDO"
+            else
+                log_warning "⚠️ Resposta inesperada do webhook"
+                log_info "Resposta: $webhook_body"
+            fi
         elif [ "$webhook_http_code" = "401" ]; then
-            log_warning "⚠️ Webhook ainda retornando 401"
-            log_info "🔑 Verifique secret no GitHub: $WEBHOOK_SECRET"
-            log_info "🔧 Ou teste sem secret primeiro"
+            log_error "❌ Webhook retornando 401 - problema com assinatura"
+            log_info "🔧 Verifique configuração do secret no GitHub"
+            WEBHOOK_STATUS="❌ ERRO 401"
         else
             log_warning "⚠️ Webhook retornando HTTP $webhook_http_code"
             log_info "🔧 Verifique logs: docker service logs Kryonix_web"
+            WEBHOOK_STATUS="⚠️ HTTP $webhook_http_code"
+        fi
+
+        # Teste adicional: verificar se webhook rejeita eventos inválidos
+        log_info "🔒 Testando segurança do webhook..."
+        invalid_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/github-webhook" \
+           -H "Content-Type: application/json" \
+           -H "X-GitHub-Event: issues" \
+           -H "X-Hub-Signature-256: $webhook_signature" \
+           -d '{"action":"opened"}' 2>/dev/null)
+
+        invalid_http_code="${invalid_response: -3}"
+        if [ "$invalid_http_code" = "200" ]; then
+            invalid_body="${invalid_response%???}"
+            if echo "$invalid_body" | grep -q "ignored"; then
+                log_success "✅ Webhook rejeita eventos não-push corretamente"
+            fi
         fi
     else
         WEB_STATUS="⚠️ INICIALIZANDO"
@@ -2059,7 +2084,7 @@ echo -e "${GREEN}${BOLD}🔧 CORREÇÕES CRÍTICAS APLICADAS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Prioridades Traefik:${RESET} ✅ Webhook prioridade 3000 (ULTRA MÁXIMA)"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Endpoint Específico:${RESET} ✅ Rota exclusiva /api/github-webhook"
 echo -e "    ${BLUE}│${RESET} ${BOLD}📁 Criação Automática:${RESET} ✅ server.js criado se ausente"
-echo -e "    ${BLUE}│${RESET} ${BOLD}🔧 Verificação Automática:${RESET} ✅ Correção automática de problemas"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🔧 Verificação Automática:${RESET} ✅ Correç��o automática de problemas"
 echo -e "    ${BLUE}│${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Caminho absoluto para webhook-deploy.sh"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Completo:${RESET} ✅ Validação de 15 tentativas com health check"
 echo ""
