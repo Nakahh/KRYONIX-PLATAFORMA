@@ -969,7 +969,7 @@ services:
     hostname: rabbitmq-kryonix
     environment:
       - RABBITMQ_DEFAULT_USER=kryonix
-      - RABBITMQ_DEFAULT_PASS=Vitor@123456
+      - RABBITMQ_DEFAULT_PASS=8ed56dd2b7dc80f9dd205a348e1dd303
       - RABBITMQ_DEFAULT_VHOST=/kryonix-master
       - RABBITMQ_CONFIG_FILE=/etc/rabbitmq/rabbitmq
     volumes:
