@@ -1,0 +1,8 @@
+Favicon SVG criado com:
+- Ícone de foguete 🚀
+- Gradiente azul/roxo KRYONIX
+- Fogo/exhaust animado
+- Estrelas no fundo
+- Texto "KRYONIX" na base
+
+O favicon deve aparecer na URL do navegador com o foguete!

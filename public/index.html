@@ -3,11 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 KRYONIX - Plataforma SaaS IA</title>
-    <meta name="description" content="KRYONIX - Plataforma SaaS 100% Autônoma por IA">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <title>Kryonix</title>
+    <meta name="description" content="🤖 KRYONIX é a revolução em SaaS! Plataforma 100% autônoma com 15 agentes de IA, 8 módulos integrados e deploy automático. Mobile-first, desenvolvida em português para empresas brasileiras. ✨">
+
+    <!-- Favicon Kryonix -->
+    <link rel="icon" type="image/png" href="/logo kryonix.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo kryonix.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/logo kryonix.png">
+    <link rel="apple-touch-icon" href="/logo kryonix.png">
+    <link rel="shortcut icon" href="/logo kryonix.png">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Meta tags para compartilhamento (Open Graph) -->
+    <meta property="og:title" content="Kryonix">
+    <meta property="og:description" content="🤖 Revolução em SaaS: 15 agentes de IA autônomos, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
+    <meta property="og:image" content="https://kryonix.com.br/logo-com-nome.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://kryonix.com.br">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Kryonix">
+
+    <!-- WhatsApp específico -->
+    <meta property="og:image:alt" content="KRYONIX - Logo oficial da plataforma SaaS autônoma brasileira com IA">
+    <meta name="whatsapp:title" content="Kryonix">
+    <meta name="whatsapp:description" content="🤖 A revolução do SaaS chegou! 15 agentes IA + 8 módulos + Deploy automático. 100% brasileiro! 📱✨">
+
+    <!-- Meta tags para Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Kryonix">
+    <meta name="twitter:description" content="🤖 15 agentes IA + 8 módulos SaaS + Deploy automático. A revoluç��o tecnológica 100% brasileira chegou! 📱✨">
+    <meta name="twitter:image" content="https://kryonix.com.br/logo-com-nome.png">
+    <meta name="twitter:image:alt" content="KRYONIX - Logo oficial da plataforma SaaS brasileira com IA autônoma">
+
+    <!-- Meta tags adicionais -->
+    <meta name="author" content="KRYONIX - Vitor Fernandes">
+    <meta name="keywords" content="SaaS, IA, Inteligência Artificial, Plataforma Autônoma, Mobile-First, Brasil, Agentes IA, Automação, Deploy Automático, GitHub, Webhook">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#667eea">
+
+    <!-- Meta tags para melhor compartilhamento -->
+    <meta name="application-name" content="Kryonix">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+
+    <!-- Link preview otimizado -->
+    <link rel="canonical" href="https://kryonix.com.br">
+    <meta name="format-detection" content="telephone=yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kryonix">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "KRYONIX",
+        "description": "Plataforma SaaS 100% autônoma por inteligência artificial",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "BRL"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "KRYONIX",
+            "url": "https://kryonix.com.br"
+        },
+        "image": "https://kryonix.com.br/logo-com-nome.png",
+        "url": "https://kryonix.com.br"
+    }
+    </script>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -470,7 +542,7 @@
                 <div class="kryonix-logo">
                     <img src="/logo kryonix.png" alt="KRYONIX - Plataforma SaaS IA" />
                 </div>
-                <div class="kryonix-tagline">🤖 Plataforma SaaS 100% Autônoma por Inteligência Artificial</div>
+                <div class="kryonix-tagline">Plataforma SaaS 100% Autônoma por Inteligência Artificial</div>
                 <div class="banner-badges">
                     <div class="badge ai">🧠 15 Agentes IA</div>
                     <div class="badge saas">☁️ 8 Módulos SaaS</div>
@@ -492,7 +564,7 @@
                     📊 Ver Progresso em Tempo Real
                 </a>
                 <a href="#status" class="btn btn-secondary">
-                    ���� Status dos Sistemas
+                    📊 Status dos Sistemas
                 </a>
             </div>
         </div>
@@ -519,7 +591,7 @@
                 <div class="status-card">
                     <div class="status-header">
                         <div class="status-indicator" id="deploy-indicator"></div>
-                        <div class="status-title-small">🚀 Deploy Automático</div>
+                        <div class="status-title-small">Deploy Automático</div>
                     </div>
                     <div class="status-value" id="deploy-status">Configurando sistema...</div>
                 </div>
@@ -651,6 +723,49 @@
                 }
             });
         });
+
+        // Atualizar meta tags dinamicamente baseado no status
+        function updateMetaTags() {
+            const currentProgress = document.getElementById('progress-percentage').textContent;
+            const description = `KRYONIX está ${currentProgress} implementado. Acompanhe o desenvolvimento da plataforma SaaS mais avançada do Brasil com 15 agentes de IA.`;
+
+            // Atualizar meta description
+            const metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc) {
+                metaDesc.setAttribute('content', description);
+            }
+
+            // Atualizar Open Graph description
+            const ogDesc = document.querySelector('meta[property="og:description"]');
+            if (ogDesc) {
+                ogDesc.setAttribute('content', description);
+            }
+        }
+
+        // Atualizar meta tags a cada mudança de status
+        setTimeout(updateMetaTags, 2000);
+
+        // Função para atualizar título dinamicamente baseado na página
+        function updatePageTitle() {
+            const path = window.location.pathname;
+            let pageTitle = 'Kryonix';
+
+            if (path.includes('progresso')) {
+                pageTitle = 'Kryonix - Progresso';
+            } else if (path.includes('status')) {
+                pageTitle = 'Kryonix - Status';
+            } else if (path.includes('monitor')) {
+                pageTitle = 'Kryonix - Monitor';
+            }
+
+            document.title = pageTitle;
+        }
+
+        // Atualizar título na carga da página
+        updatePageTitle();
+
+        // Atualizar título quando navegar (para SPAs futuras)
+        window.addEventListener('popstate', updatePageTitle);
     </script>
 </body>
 </html>
