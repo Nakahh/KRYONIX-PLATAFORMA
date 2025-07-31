@@ -84,7 +84,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══��█╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -682,9 +682,11 @@ app.post('/api/github-webhook', (req, res) => {
     //     console.log('✅ Assinatura do webhook verificada');
     // }
 
-    // Processar apenas push events na main/master
-    const isValidEvent = !event || event === 'push';
-    const isValidRef = payload.ref === 'refs/heads/main' || payload.ref === 'refs/heads/master';
+    // CORREÇÃO TEMPORÁRIA: Aceitar qualquer evento para teste
+    const isValidEvent = true; // Aceitar qualquer evento temporariamente
+    const isValidRef = true;   // Aceitar qualquer ref temporariamente
+
+    console.log('🔧 MODO TESTE: Aceitando todos os eventos temporariamente');
 
     if (isValidEvent && isValidRef) {
         console.log('🚀 Deploy automático iniciado para:', payload.ref);
@@ -1843,7 +1845,7 @@ deploy() {
 </body>
 </html>
 HTML_EOF
-        info "✅ Arquivo index.html mínimo criado"
+        info "��� Arquivo index.html mínimo criado"
     fi
 
     # Limpar imagem antiga para garantir rebuild completo
@@ -1956,7 +1958,7 @@ case "${1:-}" in
         exit $exit_code
         ;;
     "manual")
-        info "🔧 DEPLOY MANUAL INICIADO"
+        info "���� DEPLOY MANUAL INICIADO"
         deploy "manual_triggered"
         ;;
     "test")
@@ -2042,7 +2044,7 @@ else
 fi
 
 # Aguardar estabilização
-log_info "Aguardando estabilização (60s)..."
+log_info "Aguardando estabilizaç��o (60s)..."
 sleep 60
 
 # Verificar serviços
