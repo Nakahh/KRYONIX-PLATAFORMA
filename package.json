@@ -1,7 +1,6 @@
 {
   "name": "kryonix-platform",
-  "version": "1.0.0", 
-  "type": "module",
+  "version": "1.0.0",
   "description": "KRYONIX - Plataforma SaaS 100% Autônoma por IA",
   "main": "index.js",
   "scripts": {
