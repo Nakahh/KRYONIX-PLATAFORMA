@@ -75,7 +75,7 @@ STEP_DESCRIPTIONS=(
 # FUNÇÕES DE INTERFACE E PROGRESSO
 # ============================================================================
 
-# Função para mostrar banner da Plataforma Kryonix
+# Funç��o para mostrar banner da Plataforma Kryonix
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
@@ -84,7 +84,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══��█╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -689,15 +689,34 @@ app.post('/api/github-webhook', (req, res) => {
     console.log('🔧 MODO TESTE: Aceitando todos os eventos temporariamente');
 
     if (isValidEvent && isValidRef) {
-        console.log('🚀 Deploy automático iniciado para:', payload.ref);
+        console.log('🚀 Deploy automático iniciado para:', payload.ref || 'ref_desconhecida');
+        console.log('📦 Repositório:', payload.repository?.name || 'desconhecido');
+        console.log('👤 Pusher:', payload.pusher?.name || 'desconhecido');
+
+        // Verificar se o script existe antes de executar
+        const deployScriptPath = '/opt/kryonix-plataform/webhook-deploy.sh';
+        console.log('🔍 Verificando script de deploy:', deployScriptPath);
 
         // Executar deploy automático em background
-        const deployScript = spawn('/opt/kryonix-plataform/webhook-deploy.sh', ['webhook'], {
-            cwd: '/opt/kryonix-plataform',
-            detached: true,
-            stdio: 'ignore'
-        });
-        deployScript.unref();
+        try {
+            const deployScript = spawn(deployScriptPath, ['webhook'], {
+                cwd: '/opt/kryonix-plataform',
+                detached: true,
+                stdio: ['ignore', 'pipe', 'pipe']
+            });
+
+            deployScript.on('error', (error) => {
+                console.error('❌ Erro ao executar deploy script:', error.message);
+            });
+
+            deployScript.on('spawn', () => {
+                console.log('✅ Deploy script iniciado com sucesso');
+            });
+
+            deployScript.unref();
+        } catch (error) {
+            console.error('❌ Falha ao iniciar deploy script:', error.message);
+        }
 
         res.json({
             message: 'Deploy automático iniciado',
@@ -1845,7 +1864,7 @@ deploy() {
 </body>
 </html>
 HTML_EOF
-        info "��� Arquivo index.html mínimo criado"
+        info "✅ Arquivo index.html mínimo criado"
     fi
 
     # Limpar imagem antiga para garantir rebuild completo
@@ -1958,7 +1977,7 @@ case "${1:-}" in
         exit $exit_code
         ;;
     "manual")
-        info "���� DEPLOY MANUAL INICIADO"
+        info "🔧 DEPLOY MANUAL INICIADO"
         deploy "manual_triggered"
         ;;
     "test")
@@ -1984,7 +2003,7 @@ chmod +x webhook-deploy.sh
 sudo chmod 755 webhook-deploy.sh
 sudo chown $USER:$USER webhook-deploy.sh
 
-# CORRIGIDO: Verificar se o script de deploy está funcionando
+# CORRIGIDO: Verificar se o script de deploy est�� funcionando
 log_info "🧪 Testando script de deploy..."
 if ./webhook-deploy.sh manual &>/dev/null; then
     log_success "✅ Script de deploy testado e funcionando"
@@ -2044,7 +2063,7 @@ else
 fi
 
 # Aguardar estabilização
-log_info "Aguardando estabilizaç��o (60s)..."
+log_info "Aguardando estabilização (60s)..."
 sleep 60
 
 # Verificar serviços
@@ -2134,7 +2153,7 @@ if docker service ls | grep -q "traefik"; then
 echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 fi
 echo ""
-echo -e "${CYAN}${BOLD}🛠️ COMANDOS ÚTEIS:${RESET}"
+echo -e "${CYAN}${BOLD}���️ COMANDOS ÚTEIS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${RESET} - Ver logs"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
