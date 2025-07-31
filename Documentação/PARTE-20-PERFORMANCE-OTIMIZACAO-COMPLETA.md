@@ -1074,7 +1074,7 @@ router.post('/vitals', async (req, res) => {
   }
 });
 
-// Endpoint para m��tricas em tempo real
+// Endpoint para métricas em tempo real
 router.get('/:tenantId/realtime', authenticateToken, validateTenant, async (req, res) => {
   try {
     const tenantId = parseInt(req.params.tenantId);
@@ -2143,6 +2143,254 @@ const CacheOperationsChart: React.FC<{ tenantId: number }> = ({ tenantId }) => (
 );
 
 export default PerformanceDashboard;
+
+// ================================
+// HOOKS REACT PARA PERFORMANCE
+// ================================
+
+// hooks/usePerformanceMetrics.ts
+import { useState, useEffect, useCallback } from 'react';
+
+interface PerformanceMetrics {
+  api: any;
+  frontend: any;
+  cache: any;
+  infrastructure: any;
+}
+
+export const usePerformanceMetrics = (tenantId: number, interval: number = 30000) => {
+  const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchMetrics = useCallback(async () => {
+    try {
+      setError(null);
+      const response = await fetch(`/api/performance/${tenantId}/realtime`);
+
+      if (!response.ok) {
+        throw new Error('Falha ao carregar métricas');
+      }
+
+      const data = await response.json();
+      setMetrics(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+      console.error('Erro ao carregar métricas:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [tenantId]);
+
+  useEffect(() => {
+    fetchMetrics();
+    const intervalId = setInterval(fetchMetrics, interval);
+    return () => clearInterval(intervalId);
+  }, [fetchMetrics, interval]);
+
+  const refresh = useCallback(() => {
+    setLoading(true);
+    fetchMetrics();
+  }, [fetchMetrics]);
+
+  return { metrics, loading, error, refresh };
+};
+
+// hooks/usePerformanceAlerts.ts
+export const usePerformanceAlerts = (tenantId: number) => {
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      try {
+        const response = await fetch(`/api/performance/${tenantId}/alerts`);
+        const data = await response.json();
+        setAlerts(data);
+      } catch (error) {
+        console.error('Erro ao carregar alertas:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAlerts();
+
+    // Configurar WebSocket para alertas em tempo real
+    const ws = new WebSocket(`ws://localhost:3000/ws/alerts/${tenantId}`);
+
+    ws.onmessage = (event) => {
+      const newAlert = JSON.parse(event.data);
+      setAlerts(prev => [newAlert, ...prev.slice(0, 9)]); // Manter apenas 10 alertas
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [tenantId]);
+
+  const acknowledgeAlert = async (alertId: number) => {
+    try {
+      await fetch(`/api/performance/alerts/${alertId}/acknowledge`, {
+        method: 'PATCH'
+      });
+
+      setAlerts(prev => prev.map(alert =>
+        alert.id === alertId ? { ...alert, status: 'acknowledged' } : alert
+      ));
+    } catch (error) {
+      console.error('Erro ao reconhecer alerta:', error);
+    }
+  };
+
+  return { alerts, loading, acknowledgeAlert };
+};
+
+// hooks/useCoreWebVitals.ts
+export const useCoreWebVitals = () => {
+  const [vitals, setVitals] = useState<any>({});
+
+  useEffect(() => {
+    // Inicializar tracking de Core Web Vitals
+    if (typeof window !== 'undefined' && (window as any).kryonixPerformance) {
+      const tracker = (window as any).kryonixPerformance;
+
+      // Obter métricas atuais
+      const currentMetrics = tracker.getMetrics();
+      setVitals(currentMetrics);
+
+      // Listener para atualizações
+      const updateVitals = () => {
+        const newMetrics = tracker.getMetrics();
+        setVitals(newMetrics);
+      };
+
+      // Atualizar a cada 5 segundos
+      const interval = setInterval(updateVitals, 5000);
+
+      return () => clearInterval(interval);
+    }
+  }, []);
+
+  const trackCustomMetric = useCallback((name: string, value: number) => {
+    if ((window as any).kryonixPerformance) {
+      (window as any).kryonixPerformance.trackCustomMetric(name, value);
+    }
+  }, []);
+
+  return { vitals, trackCustomMetric };
+};
+
+// ================================
+// COMPONENTE DE NOTIFICAÇÕES EM TEMPO REAL
+// ================================
+
+// components/PerformanceNotifications.tsx
+import React, { useState, useEffect } from 'react';
+import { Toast, ToastProvider } from '@/components/ui/toast';
+import { AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
+
+interface NotificationProps {
+  tenantId: number;
+}
+
+const PerformanceNotifications: React.FC<NotificationProps> = ({ tenantId }) => {
+  const [notifications, setNotifications] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Conectar WebSocket para notificações em tempo real
+    const ws = new WebSocket(`ws://localhost:3000/ws/performance/${tenantId}`);
+
+    ws.onmessage = (event) => {
+      const notification = JSON.parse(event.data);
+
+      // Adicionar notificação
+      setNotifications(prev => [
+        {
+          id: Date.now(),
+          ...notification,
+          timestamp: new Date()
+        },
+        ...prev.slice(0, 4) // Manter apenas 5 notificações
+      ]);
+
+      // Auto-remover após 10 segundos
+      setTimeout(() => {
+        setNotifications(prev => prev.filter(n => n.id !== notification.id));
+      }, 10000);
+    };
+
+    return () => ws.close();
+  }, [tenantId]);
+
+  const removeNotification = (id: number) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'error':
+      case 'critical':
+        return <AlertCircle className="w-5 h-5 text-red-500" />;
+      case 'warning':
+        return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
+      case 'success':
+        return <CheckCircle className="w-5 h-5 text-green-500" />;
+      default:
+        return <Info className="w-5 h-5 text-blue-500" />;
+    }
+  };
+
+  const getBackgroundColor = (type: string) => {
+    switch (type) {
+      case 'error':
+      case 'critical':
+        return 'bg-red-50 border-red-200';
+      case 'warning':
+        return 'bg-yellow-50 border-yellow-200';
+      case 'success':
+        return 'bg-green-50 border-green-200';
+      default:
+        return 'bg-blue-50 border-blue-200';
+    }
+  };
+
+  return (
+    <ToastProvider>
+      <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+        {notifications.map((notification) => (
+          <div
+            key={notification.id}
+            className={`p-4 rounded-lg border shadow-lg animate-slide-in ${getBackgroundColor(notification.type)}`}
+          >
+            <div className="flex items-start space-x-3">
+              {getIcon(notification.type)}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900">
+                  {notification.title}
+                </p>
+                <p className="text-xs text-gray-600 mt-1">
+                  {notification.message}
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {notification.timestamp.toLocaleTimeString()}
+                </p>
+              </div>
+              <button
+                onClick={() => removeNotification(notification.id)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </ToastProvider>
+  );
+};
+
+export default PerformanceNotifications;
 ```
 
 ---
