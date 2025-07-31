@@ -1149,7 +1149,7 @@ class MobileConsumer {
 
     async processSMS(data) {
         try {
-            console.log('📨 Processing SMS:', data.to);
+            console.log('���� Processing SMS:', data.to);
             // SMS integration here
             console.log('✅ SMS processed');
         } catch (error) {
@@ -1277,13 +1277,13 @@ echo "🔍 Verificando serviços multi-tenant..."
 sleep 60
 
 # Verificar RabbitMQ Management
-curl -s -u kryonix:Vitor@123456 http://localhost:15672/api/overview && echo "✅ RabbitMQ Management OK" || echo "❌ RabbitMQ Management ERRO"
+curl -s -u kryonix:8ed56dd2b7dc80f9dd205a348e1dd303 http://localhost:15672/api/overview && echo "✅ RabbitMQ Management OK" || echo "❌ RabbitMQ Management ERRO"
 
 # Verificar VHosts
-curl -s -u kryonix:Vitor@123456 http://localhost:15672/api/vhosts && echo "✅ VHosts OK" || echo "❌ VHosts ERRO"
+curl -s -u kryonix:8ed56dd2b7dc80f9dd205a348e1dd303 http://localhost:15672/api/vhosts && echo "✅ VHosts OK" || echo "❌ VHosts ERRO"
 
 # Verificar Exchanges
-curl -s -u kryonix:Vitor@123456 http://localhost:15672/api/exchanges && echo "✅ Exchanges OK" || echo "❌ Exchanges ERRO"
+curl -s -u kryonix:8ed56dd2b7dc80f9dd205a348e1dd303 http://localhost:15672/api/exchanges && echo "✅ Exchanges OK" || echo "❌ Exchanges ERRO"
 
 # Verificar Consumers
 docker ps | grep -E "(mobile|ai|sdk|evolution)-consumer" && echo "✅ Consumers ativos" || echo "❌ Consumers não iniciados"
