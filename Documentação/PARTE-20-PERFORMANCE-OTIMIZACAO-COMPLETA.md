@@ -2391,6 +2391,426 @@ const PerformanceNotifications: React.FC<NotificationProps> = ({ tenantId }) => 
 };
 
 export default PerformanceNotifications;
+
+// ================================
+// SERVIDOR WEBSOCKET PARA TEMPO REAL
+// ================================
+
+// services/WebSocketService.ts
+import { Server as HttpServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import jwt from 'jsonwebtoken';
+
+class PerformanceWebSocketService {
+  private io: SocketIOServer;
+  private connectedClients: Map<number, Set<string>> = new Map(); // tenantId -> socketIds
+
+  constructor(httpServer: HttpServer) {
+    this.io = new SocketIOServer(httpServer, {
+      cors: {
+        origin: process.env.FRONTEND_URL || "http://localhost:3000",
+        methods: ["GET", "POST"]
+      },
+      path: '/ws/performance'
+    });
+
+    this.setupAuthentication();
+    this.setupEventHandlers();
+  }
+
+  private setupAuthentication() {
+    this.io.use((socket, next) => {
+      const token = socket.handshake.auth.token;
+
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+        socket.data.userId = decoded.userId;
+        socket.data.tenantId = decoded.tenantId;
+        next();
+      } catch (error) {
+        next(new Error('Autenticação falhou'));
+      }
+    });
+  }
+
+  private setupEventHandlers() {
+    this.io.on('connection', (socket) => {
+      const tenantId = socket.data.tenantId;
+      const userId = socket.data.userId;
+
+      console.log(`Cliente conectado: Tenant ${tenantId}, User ${userId}`);
+
+      // Adicionar à lista de clientes conectados
+      if (!this.connectedClients.has(tenantId)) {
+        this.connectedClients.set(tenantId, new Set());
+      }
+      this.connectedClients.get(tenantId)!.add(socket.id);
+
+      // Join room específico do tenant
+      socket.join(`tenant:${tenantId}`);
+
+      // Eventos personalizados
+      socket.on('subscribe-performance', () => {
+        socket.join(`performance:${tenantId}`);
+        socket.emit('subscribed', { channel: 'performance' });
+      });
+
+      socket.on('subscribe-alerts', () => {
+        socket.join(`alerts:${tenantId}`);
+        socket.emit('subscribed', { channel: 'alerts' });
+      });
+
+      socket.on('request-realtime-metrics', async () => {
+        try {
+          // Aqui você pegaria as métricas em tempo real
+          const metrics = await this.getRealTimeMetrics(tenantId);
+          socket.emit('realtime-metrics', metrics);
+        } catch (error) {
+          socket.emit('error', { message: 'Erro ao obter métricas' });
+        }
+      });
+
+      socket.on('disconnect', () => {
+        console.log(`Cliente desconectado: Tenant ${tenantId}, User ${userId}`);
+        this.connectedClients.get(tenantId)?.delete(socket.id);
+
+        if (this.connectedClients.get(tenantId)?.size === 0) {
+          this.connectedClients.delete(tenantId);
+        }
+      });
+    });
+  }
+
+  // Métodos públicos para enviar dados
+  public broadcastMetrics(tenantId: number, metrics: any) {
+    this.io.to(`performance:${tenantId}`).emit('metrics-update', {
+      tenantId,
+      metrics,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  public broadcastAlert(tenantId: number, alert: any) {
+    this.io.to(`alerts:${tenantId}`).emit('new-alert', {
+      tenantId,
+      alert,
+      timestamp: new Date().toISOString()
+    });
+
+    // Notificação geral para todos os clientes do tenant
+    this.io.to(`tenant:${tenantId}`).emit('notification', {
+      type: alert.severity,
+      title: alert.title,
+      message: alert.description,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  public broadcastOptimization(tenantId: number, optimization: any) {
+    this.io.to(`tenant:${tenantId}`).emit('optimization-applied', {
+      tenantId,
+      optimization,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  private async getRealTimeMetrics(tenantId: number): Promise<any> {
+    // Implementação para obter métricas em tempo real
+    // Normalmente seria integrado com o PerformanceService
+    return {
+      api: { responseTime: 120, requestCount: 1500 },
+      cache: { hitRate: 85 },
+      errors: { count: 2 }
+    };
+  }
+
+  public getConnectedClients(tenantId: number): number {
+    return this.connectedClients.get(tenantId)?.size || 0;
+  }
+}
+
+export default PerformanceWebSocketService;
+
+// ================================
+// INTEGRAÇÃO COM EXPRESS APP
+// ================================
+
+// app.ts (exemplo de integração)
+/*
+import express from 'express';
+import { createServer } from 'http';
+import PerformanceWebSocketService from './services/WebSocketService';
+import PerformanceService from './services/PerformanceService';
+
+const app = express();
+const httpServer = createServer(app);
+
+// Inicializar WebSocket Service
+const wsService = new PerformanceWebSocketService(httpServer);
+
+// Inicializar Performance Service
+const performanceService = new PerformanceService(db, redis);
+
+// Conectar eventos do PerformanceService com WebSocket
+performanceService.on('apiMetric', (metric) => {
+  // Broadcast para clientes conectados
+  wsService.broadcastMetrics(metric.tenantId, {
+    type: 'api',
+    data: metric
+  });
+});
+
+performanceService.on('performanceAlert', (alert) => {
+  wsService.broadcastAlert(alert.tenantId, alert);
+});
+
+performanceService.on('optimizationApplied', (optimization) => {
+  wsService.broadcastOptimization(optimization.tenantId, optimization);
+});
+
+// Middleware para adicionar services ao request
+app.use((req, res, next) => {
+  req.performanceService = performanceService;
+  req.wsService = wsService;
+  next();
+});
+*/
+
+// ================================
+// WORKER PARA PROCESSAMENTO EM BACKGROUND
+// ================================
+
+// workers/PerformanceWorker.ts
+class PerformanceBackgroundWorker {
+  private performanceService: PerformanceService;
+  private wsService: PerformanceWebSocketService;
+  private intervals: Map<string, NodeJS.Timeout> = new Map();
+
+  constructor(performanceService: PerformanceService, wsService: PerformanceWebSocketService) {
+    this.performanceService = performanceService;
+    this.wsService = wsService;
+    this.startWorkers();
+  }
+
+  private startWorkers() {
+    // Worker para atualizar métricas em tempo real
+    const metricsWorker = setInterval(async () => {
+      await this.updateRealtimeMetrics();
+    }, 15000); // A cada 15 segundos
+
+    this.intervals.set('metrics', metricsWorker);
+
+    // Worker para verificar alertas
+    const alertsWorker = setInterval(async () => {
+      await this.checkPerformanceAlerts();
+    }, 30000); // A cada 30 segundos
+
+    this.intervals.set('alerts', alertsWorker);
+
+    // Worker para limpeza de dados antigos
+    const cleanupWorker = setInterval(async () => {
+      await this.cleanupOldData();
+    }, 3600000); // A cada 1 hora
+
+    this.intervals.set('cleanup', cleanupWorker);
+
+    // Worker para otimizações automáticas
+    const optimizationWorker = setInterval(async () => {
+      await this.runAutoOptimizations();
+    }, 300000); // A cada 5 minutos
+
+    this.intervals.set('optimization', optimizationWorker);
+
+    console.log('🔄 Workers de performance iniciados');
+  }
+
+  private async updateRealtimeMetrics() {
+    try {
+      // Obter todos os tenants ativos
+      const activeTenants = await this.getActiveTenants();
+
+      for (const tenantId of activeTenants) {
+        const metrics = await this.performanceService.getRealtimeMetrics(tenantId);
+        this.wsService.broadcastMetrics(tenantId, metrics);
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar métricas em tempo real:', error);
+    }
+  }
+
+  private async checkPerformanceAlerts() {
+    try {
+      const activeTenants = await this.getActiveTenants();
+
+      for (const tenantId of activeTenants) {
+        // Verificar métricas críticas
+        const metrics = await this.performanceService.getRealtimeMetrics(tenantId);
+
+        // Verificar resposta lenta da API
+        if (metrics.api?.avg_response_time > 1000) {
+          await this.createAlert(tenantId, {
+            type: 'slow_api',
+            severity: 'warning',
+            title: 'API Lenta Detectada',
+            message: `Tempo médio de resposta: ${Math.round(metrics.api.avg_response_time)}ms`,
+            value: metrics.api.avg_response_time,
+            threshold: 1000
+          });
+        }
+
+        // Verificar taxa de erro alta
+        const errorRate = (metrics.api?.error_count / metrics.api?.total_requests) * 100;
+        if (errorRate > 5) {
+          await this.createAlert(tenantId, {
+            type: 'high_error_rate',
+            severity: 'critical',
+            title: 'Taxa de Erro Alta',
+            message: `Taxa de erro: ${errorRate.toFixed(1)}%`,
+            value: errorRate,
+            threshold: 5
+          });
+        }
+
+        // Verificar cache hit rate baixo
+        if (metrics.cache?.hit_rate < 70) {
+          await this.createAlert(tenantId, {
+            type: 'low_cache_hit',
+            severity: 'warning',
+            title: 'Cache Hit Rate Baixo',
+            message: `Taxa de acerto: ${metrics.cache.hit_rate}%`,
+            value: parseFloat(metrics.cache.hit_rate),
+            threshold: 70
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao verificar alertas:', error);
+    }
+  }
+
+  private async createAlert(tenantId: number, alertData: any) {
+    try {
+      // Verificar se já existe alerta similar ativo
+      const existingAlert = await this.checkExistingAlert(tenantId, alertData.type);
+
+      if (!existingAlert) {
+        const alert = await this.performanceService.createAlert({
+          tenantId,
+          alertType: alertData.type,
+          severity: alertData.severity,
+          title: alertData.title,
+          description: alertData.message,
+          metricName: alertData.type,
+          currentValue: alertData.value,
+          thresholdValue: alertData.threshold
+        });
+
+        // Broadcast via WebSocket
+        this.wsService.broadcastAlert(tenantId, alert);
+      }
+    } catch (error) {
+      console.error('Erro ao criar alerta:', error);
+    }
+  }
+
+  private async checkExistingAlert(tenantId: number, alertType: string): Promise<boolean> {
+    // Implementação para verificar se já existe alerta similar
+    return false; // Simplificado
+  }
+
+  private async cleanupOldData() {
+    try {
+      console.log('🧹 Iniciando limpeza de dados antigos...');
+
+      // Limpar métricas antigas (mais de 30 dias)
+      await this.performanceService.cleanupOldMetrics();
+
+      // Limpar alertas resolvidos (mais de 7 dias)
+      await this.performanceService.cleanupOldAlerts();
+
+      console.log('✅ Limpeza de dados concluída');
+    } catch (error) {
+      console.error('Erro na limpeza de dados:', error);
+    }
+  }
+
+  private async runAutoOptimizations() {
+    try {
+      const activeTenants = await this.getActiveTenants();
+
+      for (const tenantId of activeTenants) {
+        const suggestions = await this.performanceService.getOptimizationSuggestions(tenantId);
+
+        // Aplicar otimizações automáticas seguras
+        for (const suggestion of suggestions) {
+          if (suggestion.type === 'low_cache_hit' && suggestion.impact === 'medium') {
+            await this.applyAutoOptimization(tenantId, suggestion);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Erro nas otimizações automáticas:', error);
+    }
+  }
+
+  private async applyAutoOptimization(tenantId: number, suggestion: any) {
+    try {
+      console.log(`🔧 Aplicando otimização automática para tenant ${tenantId}:`, suggestion.title);
+
+      // Lógica de otimização baseada no tipo
+      let result = '';
+
+      switch (suggestion.type) {
+        case 'low_cache_hit':
+          result = await this.optimizeCacheSettings(tenantId);
+          break;
+        case 'slow_query':
+          result = await this.optimizeQueries(tenantId);
+          break;
+        default:
+          return;
+      }
+
+      // Broadcast da otimização aplicada
+      this.wsService.broadcastOptimization(tenantId, {
+        type: suggestion.type,
+        action: suggestion.title,
+        result,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      console.error('Erro ao aplicar otimização automática:', error);
+    }
+  }
+
+  private async optimizeCacheSettings(tenantId: number): Promise<string> {
+    // Implementação para otimizar configurações de cache
+    return 'TTL de cache ajustado para melhorar hit rate';
+  }
+
+  private async optimizeQueries(tenantId: number): Promise<string> {
+    // Implementação para otimizar queries lentas
+    return 'Índices sugeridos para queries lentas';
+  }
+
+  private async getActiveTenants(): Promise<number[]> {
+    // Implementação para obter tenants ativos
+    // Por exemplo, tenants que tiveram atividade nas últimas 24 horas
+    return [1, 2, 3]; // Simplificado
+  }
+
+  public stop() {
+    console.log('🛑 Parando workers de performance...');
+    this.intervals.forEach((interval, name) => {
+      clearInterval(interval);
+      console.log(`   ✅ Worker ${name} parado`);
+    });
+    this.intervals.clear();
+  }
+}
+
+export default PerformanceBackgroundWorker;
 ```
 
 ---
@@ -3405,7 +3825,7 @@ echo "🚀 Auto-optimization and alerting system is operational"
 2. **🚀 PerformanceService TypeScript** - Tracking completo de performance  
 3. **🔄 Middleware de Performance** - Cache inteligente e tracking automático
 4. **📱 Dashboard React Mobile-First** - Interface otimizada para 80% mobile users
-5. **🎯 Core Web Vitals Tracking** - LCP, FID, CLS, FCP, TTFB
+5. **�� Core Web Vitals Tracking** - LCP, FID, CLS, FCP, TTFB
 6. **🚨 Sistema de Alertas** - Prometheus + AlertManager + auto-fix
 7. **📊 Monitoramento Prometheus/Grafana** - Dashboards e métricas real-time
 8. **🔧 Scripts de Deploy** - Configuração automatizada completa
