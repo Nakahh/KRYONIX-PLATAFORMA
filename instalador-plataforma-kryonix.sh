@@ -33,22 +33,37 @@ GEAR='⚙'
 ROCKET='🚀'
 WRENCH='🔧'
 
-# Configurações do projeto
-PROJECT_DIR="/opt/kryonix-plataform"
-WEB_PORT="8080"
-WEBHOOK_PORT="8080"
-DOMAIN_NAME="kryonix.com.br"
-DOCKER_NETWORK=""  # Será detectado automaticamente
-STACK_NAME="Kryonix"
+# ============================================================================
+# CONFIGURAÇÃO 100% AUTOMÁTICA - FUNCIONA EM QUALQUER SERVIDOR
+# ============================================================================
 
-# Configurações CI/CD - Credenciais configuradas para operação 100% automática
-GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PAT_TOKEN="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"
-WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
-JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
-WEBHOOK_URL="https://kryonix.com.br/api/github-webhook"
+# Detectar informações do servidor automaticamente
 SERVER_HOST="${SERVER_HOST:-$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo '127.0.0.1')}"
 SERVER_USER="${SERVER_USER:-$(whoami)}"
+SERVER_HOSTNAME=$(hostname)
+
+# Configurações automáticas baseadas no servidor
+PROJECT_DIR="/opt/kryonix-platform-$(date +%Y%m%d)"
+WEB_PORT="8080"
+WEBHOOK_PORT="8080"
+DOCKER_NETWORK=""  # Será detectado automaticamente
+STACK_NAME="Kryonix-$(date +%Y%m%d)"
+
+# CONFIGURAÇÃO DINÂMICA - Adapta-se a qualquer repositório/domínio
+GITHUB_REPO="${GITHUB_REPO:-https://github.com/Nakahh/KRYONIX-PLATAFORMA.git}"  # Pode ser sobrescrito
+DOMAIN_NAME="${DOMAIN_NAME:-$SERVER_HOST}"  # Usa IP do servidor se não definido
+PAT_TOKEN="${PAT_TOKEN:-}"  # Será solicitado se necessário
+WEBHOOK_SECRET="Kryonix-$(openssl rand -hex 16)-$(date +%s)"  # Gerado dinamicamente
+JWT_SECRET="JWT-$(openssl rand -hex 20)-$(date +%s)"  # Gerado dinamicamente
+WEBHOOK_URL="http://$SERVER_HOST:$WEB_PORT/api/github-webhook"
+
+# Verificar se variáveis críticas foram fornecidas via ambiente
+if [ -z "$PAT_TOKEN" ] && [[ "$GITHUB_REPO" == *"github.com"* ]]; then
+    echo -e "${YELLOW}⚠️ AVISO: PAT_TOKEN não definido. Para repositórios privados, defina:${RESET}"
+    echo -e "${CYAN}export PAT_TOKEN='seu_token_aqui'${RESET}"
+    echo -e "${CYAN}Para repositórios públicos, continuando sem autenticação...${RESET}"
+    GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"  # Público
+fi
 
 # Variáveis da barra de progresso
 TOTAL_STEPS=15
@@ -86,7 +101,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚���══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -889,7 +904,7 @@ if docker service ls | grep -q "traefik"; then
     TRAEFIK_FOUND=true
     log_success "✅ Traefik encontrado: $TRAEFIK_SERVICE"
 
-    # Verificar se o Traefik est�� na mesma rede detectada
+    # Verificar se o Traefik está na mesma rede detectada
     traefik_networks=$(docker service inspect "$TRAEFIK_SERVICE" --format '{{range .Spec.TaskTemplate.Networks}}{{.Target}} {{end}}' 2>/dev/null || true)
     network_confirmed=false
 
@@ -1751,7 +1766,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════���════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
