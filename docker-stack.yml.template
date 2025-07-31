@@ -8,8 +8,12 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=8080
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
     networks:
-      - ${TRAEFIK_NETWORK}
+      - kryonix-net
+    volumes:
+      - /opt/kryonix-plataform:/opt/kryonix-plataform:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
       replicas: 1
       restart_policy:
@@ -19,32 +23,49 @@ services:
       labels:
         # Traefik básico
         - traefik.enable=true
-        - traefik.docker.network=${TRAEFIK_NETWORK}
+        - traefik.docker.network=kryonix-net
         
-        # Configuração HTTP (porta 80)
+        # Configuração do serviço
+        - traefik.http.services.kryonix-web.loadbalancer.server.port=8080
+        
+        # Router para API (PRIORIDADE MÁXIMA) - CORREÇÃO: webhook/api precisa de prioridade
+        - traefik.http.routers.kryonix-api.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/api/`)
+        - traefik.http.routers.kryonix-api.entrypoints=websecure
+        - traefik.http.routers.kryonix-api.tls=true
+        - traefik.http.routers.kryonix-api.tls.certresolver=${CERT_RESOLVER:-letsencryptresolver}
+        - traefik.http.routers.kryonix-api.service=kryonix-web
+        - traefik.http.routers.kryonix-api.priority=1000
+        
+        # Router para API HTTP também (CORREÇÃO: webhook pode vir via HTTP em desenvolvimento)
+        - traefik.http.routers.kryonix-api-http.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/api/`)
+        - traefik.http.routers.kryonix-api-http.entrypoints=web
+        - traefik.http.routers.kryonix-api-http.service=kryonix-web
+        - traefik.http.routers.kryonix-api-http.priority=1000
+        
+        # Router HTTP (prioridade baixa)
         - traefik.http.routers.kryonix-http.rule=Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)
         - traefik.http.routers.kryonix-http.entrypoints=web
-        - traefik.http.routers.kryonix-http.service=kryonix-service
+        - traefik.http.routers.kryonix-http.service=kryonix-web
+        - traefik.http.routers.kryonix-http.priority=100
         
-        # Configuração HTTPS (porta 443)
+        # Router HTTPS (prioridade baixa)
         - traefik.http.routers.kryonix-https.rule=Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)
         - traefik.http.routers.kryonix-https.entrypoints=websecure
         - traefik.http.routers.kryonix-https.tls=true
         - traefik.http.routers.kryonix-https.tls.certresolver=${CERT_RESOLVER:-letsencryptresolver}
-        - traefik.http.routers.kryonix-https.service=kryonix-service
+        - traefik.http.routers.kryonix-https.service=kryonix-web
+        - traefik.http.routers.kryonix-https.priority=100
         
-        # Redirecionamento HTTP -> HTTPS
+        # Redirecionamento HTTP -> HTTPS (apenas para páginas, não API)
         - traefik.http.routers.kryonix-http.middlewares=https-redirect
         - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
-        
-        # Configuração do serviço
-        - traefik.http.services.kryonix-service.loadbalancer.server.port=8080
-        
-        # Headers de segurança
-        - traefik.http.middlewares.kryonix-headers.headers.customrequestheaders.X-Forwarded-Proto=https
-        - traefik.http.middlewares.kryonix-headers.headers.customrequestheaders.X-Forwarded-For={client_ip}
-        - traefik.http.routers.kryonix-https.middlewares=kryonix-headers
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   webhook:
     image: kryonix-plataforma:latest
@@ -52,8 +73,9 @@ services:
       - "8082:8082"
     environment:
       - NODE_ENV=production
+      - PORT=8082
     networks:
-      - ${TRAEFIK_NETWORK}
+      - kryonix-net
     volumes:
       - ./webhook-listener.js:/app/webhook-listener.js:ro
     command: ["node", "webhook-listener.js"]
@@ -61,6 +83,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+        delay: 10s
+        max_attempts: 3
 
   monitor:
     image: kryonix-plataforma:latest
@@ -68,8 +92,9 @@ services:
       - "8084:8084"
     environment:
       - NODE_ENV=production
+      - PORT=8084
     networks:
-      - ${TRAEFIK_NETWORK}
+      - kryonix-net
     volumes:
       - ./kryonix-monitor.js:/app/kryonix-monitor.js:ro
     command: ["node", "kryonix-monitor.js"]
@@ -77,9 +102,19 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+        delay: 10s
+        max_attempts: 3
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=kryonix-net
+        - traefik.http.services.kryonix-monitor.loadbalancer.server.port=8084
+        - traefik.http.routers.kryonix-monitor.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/monitor`)
+        - traefik.http.routers.kryonix-monitor.entrypoints=websecure
+        - traefik.http.routers.kryonix-monitor.tls=true
+        - traefik.http.routers.kryonix-monitor.service=kryonix-monitor
 
 networks:
-  ${TRAEFIK_NETWORK}:
+  kryonix-net:
     external: true
 
 configs:
