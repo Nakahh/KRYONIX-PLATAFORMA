@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════���═══════════════════════════════════════════════╗"
+    echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -1004,7 +1004,7 @@ log_info "🎯 Rede detectada: $DOCKER_NETWORK"
 if docker network ls --format "{{.Name}}" | grep -q "^${DOCKER_NETWORK}$" 2>/dev/null; then
     log_success "✅ Rede $DOCKER_NETWORK já existe"
 elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 2>&1; then
-    log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
+    log_success "�� Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
     log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
@@ -1640,7 +1640,7 @@ deploy() {
     # Sempre instalar dependências completas (podem ter sido adicionadas novas)
     info "📦 Instalando/Atualizando TODAS as dependências..."
 
-    # Limpar cache e node_modules para garantir instala��ão limpa
+    # Limpar cache e node_modules para garantir instalação limpa
     if [ "$DEPENDENCIES_CHANGED" = true ]; then
         info "🧹 Limpando cache de dependências para instalação limpa..."
         rm -rf node_modules 2>/dev/null || true
@@ -2071,12 +2071,12 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada e funcionando!${RESET}"
 echo -e "${PURPLE}🚀 Push no GitHub = Deploy automático ativado!${RESET}"
 echo ""
 echo -e "${GREEN}${BOLD}🔧 CORREÇÕES CRÍTICAS APLICADAS:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Prioridades Traefik:${RESET} ✅ API webhook prioridade 1000 (máxima)"
-echo -e "    ${BLUE}│${RESET} ${BOLD}🌐 Rede Fixa:${RESET} ✅ kryonix-net (estável, sem detecção automática)"
-echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Webhook HTTP/HTTPS:${RESET} ✅ Suporte completo para GitHub webhook"
-echo -e "    ${BLUE}│${RESET} ${BOLD}📦 Volumes Otimizados:${RESET} ✅ Apenas volumes essenciais"
-echo -e "    ${BLUE}│${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Webhook não será mais interceptado"
-echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Avançado:${RESET} ✅ Validação com payload GitHub real"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Prioridades Traefik:${RESET} ✅ Webhook prioridade 3000 (ULTRA MÁXIMA)"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Endpoint Específico:${RESET} ✅ Rota exclusiva /api/github-webhook"
+echo -e "    ${BLUE}│${RESET} ${BOLD}📁 Criação Automática:${RESET} ✅ server.js criado se ausente"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🔧 Verificação Automática:${RESET} ✅ Correção automática de problemas"
+echo -e "    ${BLUE}│${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Caminho absoluto para webhook-deploy.sh"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Completo:${RESET} ✅ Validação de 15 tentativas com health check"
 echo ""
 echo -e "${PURPLE}${BOLD}🎨 DEPLOY INTELIGENTE AVANÇADO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Dependências Inteligentes:${RESET} ✅ Detecta e instala novas dependências automaticamente"
