@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════��═══╗"
+    echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -125,7 +125,7 @@ animate_progress_bar() {
             ;;
         "concluido")
             bar_color="$GREEN"
-            status_icon="��"
+            status_icon="✅"
             ;;
         "erro")
             bar_color="$RED"
@@ -365,7 +365,7 @@ echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
-echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
+echo -e "${BLUE}├�� SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
 echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação necessária!${RESET}\n"
@@ -498,7 +498,7 @@ sudo chown -R $USER:$USER "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
 # Configurar repositório Git com credenciais automáticas
-log_info "��� Configurando acesso ao GitHub com credenciais..."
+log_info "🔗 Configurando acesso ao GitHub com credenciais..."
 REPO_WITH_TOKEN="https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 sync_git_repository "$REPO_WITH_TOKEN"
 
@@ -1928,7 +1928,7 @@ log_info "🧪 Testando script de deploy..."
 if ./webhook-deploy.sh manual &>/dev/null; then
     log_success "✅ Script de deploy testado e funcionando"
 else
-    log_warning "⚠️ Script de deploy pode precisar de ajustes, mas est�� criado"
+    log_warning "⚠️ Script de deploy pode precisar de ajustes, mas está criado"
 fi
 
 log_success "✅ Webhook deploy ultra-avançado criado com deploy automático completo"
@@ -1995,16 +1995,28 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
     if test_service_health "http://localhost:8080/health" 10 5; then
         WEB_STATUS="✅ ONLINE"
         
-        # CORREÇÃO: Teste avançado do webhook
-        log_info "🧪 Testando webhook com payload real..."
-        if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
+        # TESTE COMPLETO DO WEBHOOK
+        log_info "🧪 Testando webhook com payload simulado do GitHub..."
+
+        webhook_test_payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA","full_name":"Nakahh/KRYONIX-PLATAFORMA"},"pusher":{"name":"test"},"head_commit":{"id":"test123","message":"Test deploy"},"test_mode":true}'
+
+        webhook_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/github-webhook" \
            -H "Content-Type: application/json" \
            -H "X-GitHub-Event: push" \
-           -d '{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"test":true}' >/dev/null 2>&1; then
-            log_success "✅ Webhook endpoint respondendo corretamente"
+           -H "User-Agent: GitHub-Hookshot/test" \
+           -d "$webhook_test_payload" 2>/dev/null)
+
+        webhook_http_code="${webhook_response: -3}"
+
+        if [ "$webhook_http_code" = "200" ]; then
+            log_success "✅ Webhook endpoint funcionando (HTTP 200)"
             log_info "🚀 Deploy automático está pronto!"
+        elif [ "$webhook_http_code" = "401" ]; then
+            log_warning "⚠️ Webhook retornando 401 - configurar secret no GitHub"
+            log_info "🔑 Secret: $WEBHOOK_SECRET"
         else
-            log_warning "⚠️ Webhook pode estar inicializando..."
+            log_warning "⚠️ Webhook retornando HTTP $webhook_http_code"
+            log_info "🔧 Endpoint pode estar inicializando..."
         fi
     else
         WEB_STATUS="⚠️ INICIALIZANDO"
@@ -2047,7 +2059,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 fi
 echo ""
 echo -e "${CYAN}${BOLD}🛠️ COMANDOS ÚTEIS:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
+echo -e "    ${BLUE}��${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${RESET} - Ver logs"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker network ls${RESET} - Ver redes (rede: $DOCKER_NETWORK)"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
