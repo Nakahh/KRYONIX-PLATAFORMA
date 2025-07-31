@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗█���╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -353,7 +353,7 @@ validate_credentials() {
 }
 
 # ============================================================================
-# INÍCIO DO INSTALADOR
+# IN��CIO DO INSTALADOR
 # ============================================================================
 
 # Mostrar banner
@@ -921,25 +921,51 @@ app.post('/api/github-webhook', (req, res) => {
         });
         deployScript.unref();
 
-        res.json({
-            message: 'Deploy automático iniciado',
-            status: 'accepted',
-            ref: payload.ref,
-            sha: payload.after || payload.head_commit?.id,
-            timestamp: new Date().toISOString(),
-            webhook_url: '$WEBHOOK_URL'
-        });
-    } else {
-        console.log('ℹ️ Evento ignorado:', { event, ref: payload.ref });
+});
 
-        res.json({
-            message: 'Evento ignorado',
-            status: 'ignored',
-            event: event || 'undefined',
-            ref: payload.ref || 'undefined',
-            reason: !isValidEvent ? 'invalid_event' : 'invalid_ref'
-        });
-    }
+// Endpoint GET para verificação do webhook pelo GitHub
+app.get('/api/github-webhook', (req, res) => {
+    console.log('📡 GitHub verificando webhook endpoint (GET)');
+    console.log(`   User-Agent: ${req.headers['user-agent']}`);
+    console.log(`   IP: ${req.ip}`);
+
+    res.status(200).json({
+        message: 'KRYONIX GitHub Webhook Endpoint - FUNCIONANDO',
+        status: 'online',
+        timestamp: new Date().toISOString(),
+        configuration: {
+            webhook_secret_configured: !!WEBHOOK_SECRET,
+            signature_verification: 'enabled',
+            accepted_methods: ['POST'],
+            accepted_events: ['push'],
+            accepted_branches: ['main'],
+            deploy_script: './webhook-deploy.sh'
+        },
+        security: {
+            signature_required: true,
+            https_recommended: true,
+            branch_filtering: 'enabled',
+            event_filtering: 'enabled'
+        },
+        troubleshooting: {
+            logs_location: '/var/log/kryonix-deploy.log',
+            test_endpoint: '/api/webhook-test',
+            health_check: '/health'
+        }
+    });
+});
+
+// Endpoint para teste manual (sem verificação de assinatura)
+app.post('/api/webhook-test', (req, res) => {
+    console.log('🧪 TESTE MANUAL DO WEBHOOK');
+    console.log('📋 Dados recebidos:', req.body);
+
+    res.json({
+        message: 'Teste do webhook recebido com sucesso',
+        timestamp: new Date().toISOString(),
+        payload: req.body,
+        note: 'Este endpoint é apenas para testes - não executa deploy'
+    });
 });
 WEBHOOK_EOF
 
@@ -2442,7 +2468,7 @@ echo -e "   ${WHITE}• Se build falhar: ${CYAN}Fallback de emergência${RESET}"
 echo ""
 echo -e "${WHITE}${BOLD}3. FLUXO COMPLETO DESENVOLVIMENTO → PRODUÇÃO:${RESET}"
 echo -e "   ${WHITE}📝 Edita código → 💾 Commit GitHub → 🔗 Webhook ativa${RESET}"
-echo -e "   ${WHITE}📥 Pull código → 📦 Install deps → 🏗️ Build → 🐳 Deploy${RESET}"
+echo -e "   ${WHITE}���� Pull código → 📦 Install deps → 🏗️ Build → 🐳 Deploy${RESET}"
 echo ""
 echo -e "${WHITE}${BOLD}4. TEMPO DE DEPLOY AUTOMÁTICO:${RESET}"
 echo -e "   ${WHITE}• Webhook responde: ${CYAN}~2-5 segundos${RESET}"
