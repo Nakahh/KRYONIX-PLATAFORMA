@@ -83,8 +83,8 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █���███╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ���██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -894,7 +894,7 @@ if [ ! -f "public/index.html" ]; then
     <link rel="apple-touch-icon" href="/favicon.svg">
 
     <!-- Meta tags para compartilhamento (Open Graph) -->
-    <meta property="og:title" content="��� KRYONIX - Plataforma SaaS 100% Autônoma por IA">
+    <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS 100% Autônoma por IA">
     <meta property="og:description" content="🤖 Revolução em SaaS: 15 agentes de IA autônomos, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
     <meta property="og:image" content="https://kryonix.com.br/logo-com-nome.png">
     <meta property="og:url" content="https://kryonix.com.br">
@@ -1377,7 +1377,7 @@ next_step
 processing_step
 log_info "Configurando variáveis para deploy final..."
 
-WEB_STATUS="⚠️ AGUARDANDO DEPLOY"
+WEB_STATUS="���️ AGUARDANDO DEPLOY"
 DOMAIN_STATUS="⚠️ AGUARDANDO DEPLOY"
 
 log_success "Configuração preparada para deploy"
@@ -2267,7 +2267,15 @@ echo -e "   ${WHITE}• Site atualizado: ${CYAN}~30 segundos após deploy${RESET
 echo -e "   ${WHITE}• Total aproximado: ${CYAN}2-3 minutos${RESET}"
 echo ""
 echo -e "${RED}${BOLD}🔥 TROUBLESHOOTING WEBHOOK:${RESET}"
-echo -e "   ${WHITE}• ${YELLOW}HTTP 401:${RESET} Configure o secret no GitHub webhook"
+echo ""
+echo -e "${YELLOW}${BOLD}💡 RESOLVER ERRO 401 (PRIORIDADE):${RESET}"
+echo -e "   ${WHITE}1. Teste sem secret: ${CYAN}curl -X POST https://kryonix.com.br/api/github-webhook -d '{\"test\":true}'${RESET}"
+echo -e "   ${WHITE}2. Verifique endpoint: ${CYAN}curl https://kryonix.com.br/api/github-webhook${RESET}"
+echo -e "   ${WHITE}3. Configure secret exato no GitHub: ${CYAN}$WEBHOOK_SECRET${RESET}"
+echo -e "   ${WHITE}4. Verifique Content-Type: ${CYAN}application/json${RESET}"
+echo -e "   ${WHITE}5. Use HTTPS e SSL verification habilitado${RESET}"
+echo ""
+echo -e "${YELLOW}${BOLD}🔧 OUTROS PROBLEMAS:${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}HTTP 500:${RESET} Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Deploy não executou:${RESET} Teste manual: ${CYAN}./webhook-deploy.sh test${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Endpoint offline:${RESET} Verifique: ${CYAN}curl http://localhost:8080/health${RESET}"
