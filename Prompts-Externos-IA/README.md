@@ -8,7 +8,8 @@
 **KRYONIX** é uma **Plataforma SaaS 100% Autônoma por IA** com 8 módulos integrados e 32 stacks tecnológicas funcionando em harmonia.
 
 ### **📊 INFORMAÇÕES ESSENCIAIS**
-- **Servidor**: 144.202.90.55
+- **Servidor**: 45.76.246.44 (ssh-remote+linuxuser@45.76.246.44)
+- **Senha SSH**: 6Cp(U.PAik,8,)m6
 - **Domínio Principal**: www.kryonix.com.br
 - **GitHub**: https://github.com/Nakahh/KRYONIX-PLATAFORMA
 - **Rede Docker**: kryonix-net (Docker Swarm)
