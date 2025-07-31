@@ -300,7 +300,7 @@ class KryonixRabbitMQClientManager:
             import requests
             import base64
 
-            auth = base64.b64encode(b'kryonix:Vitor@123456').decode('ascii')
+            auth = base64.b64encode(b'kryonix:8ed56dd2b7dc80f9dd205a348e1dd303').decode('ascii')
             headers = {'Authorization': f'Basic {auth}'}
 
             vhost_name = f'/cliente_{cliente_id}'
@@ -1222,7 +1222,7 @@ class AIConsumer {
             });
             console.log('✅ NLP completed');
         } catch (error) {
-            console.error('��� NLP failed:', error.message);
+            console.error('❌ NLP failed:', error.message);
         }
     }
 
