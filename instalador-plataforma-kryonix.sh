@@ -753,8 +753,11 @@ log_success "✅ Webhook inserido corretamente ANTES do fallback route"
 
 # Webhook foi inserido corretamente na posição adequada usando sed
 
-# Criar arquivos auxiliares necessários
-const crypto = require('crypto');
+log_info "Criando arquivos auxiliares..."
+
+# webhook-listener.js - CORRIGIDO: Arquivo estava faltando causando falha no deploy
+cat > webhook-listener.js << 'WEBHOOK_LISTENER_EOF'
+const express = require('express');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -2451,7 +2454,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════════════��═════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}═════════���══════════════════════════════��════════════════��═════════${RESET}"
 echo ""
