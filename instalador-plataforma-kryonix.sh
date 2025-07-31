@@ -60,7 +60,7 @@ STEP_DESCRIPTIONS=(
     "Preparando projeto 📁"
     "Instalando dependências 📦"
     "Configurando firewall 🔥"
-    "Configurando rede Docker ����"
+    "Configurando rede Docker 🔗"
     "Verificando Traefik 📊"
     "Criando imagem Docker 🏗️"
     "Preparando stack ��️"
@@ -83,7 +83,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ���█████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═���  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═══════════════════════��═════════════════════════════════════════╝"
+    echo    "╚════════════════════════════���════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -362,7 +362,7 @@ show_banner
 # Verificação inicial do ambiente
 echo -e "${PURPLE}${BOLD}🔍 VERIFICAÇÃO INICIAL DO AMBIENTE${RESET}"
 
-# Verificar se já existe instalação anterior
+# Verificar se j�� existe instalação anterior
 if [ -d "$PROJECT_DIR" ]; then
     echo -e "${YELLOW}⚠️ Instalação anterior detectada em $PROJECT_DIR${RESET}"
     echo -e "${CYAN}🔄 Processo de atualização será aplicado${RESET}"
@@ -825,7 +825,7 @@ app.get('/health', (req, res) => {
 
 app.post('/webhook', (req, res) => {
   console.log('🔗 Webhook secundário recebido:', new Date().toISOString());
-  console.log('��� Payload:', req.body);
+  console.log('�� Payload:', req.body);
   res.json({ message: 'Webhook processado pelo listener', timestamp: new Date().toISOString() });
 });
 
@@ -1743,7 +1743,7 @@ deploy() {
     info "🔍 Verificando saúde do serviço..."
     for i in {1..12}; do
         if curl -f -s -m 10 "http://localhost:8080/health" >/dev/null 2>&1; then
-            success "✅ Servi��o está saudável!"
+            success "✅ Serviço está saud��vel!"
             break
         fi
 
@@ -2042,7 +2042,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}════════════════════════════════════════════════���══════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════��═════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
@@ -2214,9 +2214,9 @@ echo -e "   ${WHITE}4. Verifique logs: ${CYAN}docker service logs Kryonix_web${R
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK:${RESET}"
 echo -e "   ${WHITE}• URL: ${CYAN}https://kryonix.com.br/api/github-webhook${RESET}"
-echo -e "   ${WHITE}• Secret: ${CYAN}(opcional - verificação desabilitada)${RESET}"
+echo -e "   ${WHITE}• Secret: ${CYAN}OBRIGATÓRIO - use o secret configurado${RESET}"
 echo -e "   ${WHITE}• Content-Type: ${CYAN}application/json${RESET}"
-echo -e "   ${WHITE}• Events: ${CYAN}Push events${RESET}"
+echo -e "   ${WHITE}• Events: ${CYAN}Just the push event${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}🔧 OUTROS PROBLEMAS:${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}HTTP 500:${RESET} Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
