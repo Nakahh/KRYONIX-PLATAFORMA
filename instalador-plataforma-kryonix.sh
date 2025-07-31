@@ -628,28 +628,16 @@ const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3c
 
 // Função para verificar assinatura do GitHub
 const verifyGitHubSignature = (payload, signature) => {
-    // CORREÇÃO TEMPORÁRIA: Aceitar requests sem assinatura em desenvolvimento
-    if (!signature) {
-        console.log('⚠️ Webhook sem assinatura - permitindo para desenvolvimento');
-        return true;
-    }
+    if (!signature) return false;
 
     const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
     hmac.update(JSON.stringify(payload));
     const calculatedSignature = 'sha256=' + hmac.digest('hex');
 
-    const isValid = crypto.timingSafeEqual(
+    return crypto.timingSafeEqual(
         Buffer.from(signature),
         Buffer.from(calculatedSignature)
     );
-
-    console.log('🔍 Verificação assinatura:', {
-        received: signature,
-        calculated: calculatedSignature,
-        valid: isValid
-    });
-
-    return isValid;
 };
 
 // Endpoint webhook do GitHub
@@ -659,31 +647,19 @@ app.post('/api/github-webhook', (req, res) => {
     const event = req.get('X-GitHub-Event');
 
     console.log('🔗 Webhook recebido:', {
-        timestamp: new Date().toISOString(),
         event: event || 'NONE',
         ref: payload.ref || 'N/A',
         repository: payload.repository?.name || 'N/A',
-        signature: signature ? 'PRESENT' : 'NONE',
-        user_agent: req.get('User-Agent') || 'N/A',
-        content_type: req.get('Content-Type') || 'N/A',
-        payload_size: JSON.stringify(payload).length
+        signature: signature ? 'PRESENT' : 'NONE'
     });
 
-    // Verificar assinatura - CORREÇÃO: Melhor tratamento de erros
+    // Verificar assinatura
     if (WEBHOOK_SECRET && signature) {
         if (!verifyGitHubSignature(payload, signature)) {
             console.log('❌ Assinatura inválida do webhook');
-            return res.status(401).json({
-                error: 'Invalid signature',
-                received_signature: signature ? 'present' : 'missing',
-                webhook_secret_configured: !!WEBHOOK_SECRET
-            });
+            return res.status(401).json({ error: 'Invalid signature' });
         }
         console.log('✅ Assinatura do webhook verificada');
-    } else if (WEBHOOK_SECRET && !signature) {
-        console.log('⚠️ Webhook sem assinatura mas secret configurado - permitindo');
-    } else {
-        console.log('ℹ️ Webhook sem autenticação - ambiente de desenvolvimento');
     }
 
     // Processar apenas push events na main/master
@@ -720,28 +696,6 @@ app.post('/api/github-webhook', (req, res) => {
             reason: !isValidEvent ? 'invalid_event' : 'invalid_ref'
         });
     }
-});
-
-// Endpoint de teste para debug do webhook
-app.get('/api/github-webhook', (req, res) => {
-    res.json({
-        message: 'KRYONIX Webhook Endpoint',
-        status: 'online',
-        timestamp: new Date().toISOString(),
-        webhook_secret_configured: !!process.env.WEBHOOK_SECRET,
-        accepted_methods: ['POST'],
-        test_url: 'POST /api/github-webhook com payload GitHub'
-    });
-});
-
-// Endpoint para testar webhook manualmente
-app.post('/api/webhook-test', (req, res) => {
-    console.log('🧪 Teste manual do webhook:', req.body);
-    res.json({
-        message: 'Teste do webhook recebido',
-        timestamp: new Date().toISOString(),
-        payload: req.body
-    });
 });
 WEBHOOK_EOF
 
@@ -1377,7 +1331,7 @@ next_step
 processing_step
 log_info "Configurando variáveis para deploy final..."
 
-WEB_STATUS="���️ AGUARDANDO DEPLOY"
+WEB_STATUS="⚠️ AGUARDANDO DEPLOY"
 DOMAIN_STATUS="⚠️ AGUARDANDO DEPLOY"
 
 log_success "Configuração preparada para deploy"
@@ -2059,14 +2013,9 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
         WEB_STATUS="✅ ONLINE"
         
         # TESTE COMPLETO DO WEBHOOK
-        log_info "🧪 Testando webhook endpoint..."
+        log_info "🧪 Testando webhook com payload simulado do GitHub..."
 
-        # Teste 1: GET para verificar se endpoint existe
-        webhook_get_response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:8080/api/github-webhook" 2>/dev/null)
-        log_info "📡 GET /api/github-webhook: HTTP $webhook_get_response"
-
-        # Teste 2: POST sem assinatura (deve funcionar com nossa correção)
-        webhook_test_payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"test_mode":true}'
+        webhook_test_payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA","full_name":"Nakahh/KRYONIX-PLATAFORMA"},"pusher":{"name":"test"},"head_commit":{"id":"test123","message":"Test deploy"},"test_mode":true}'
 
         webhook_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/github-webhook" \
            -H "Content-Type: application/json" \
@@ -2076,24 +2025,15 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
 
         webhook_http_code="${webhook_response: -3}"
 
-        # Teste 3: Endpoint de teste manual
-        test_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/webhook-test" \
-           -H "Content-Type: application/json" \
-           -d '{"test": "manual"}' 2>/dev/null)
-        test_http_code="${test_response: -3}"
-
-        log_info "🔧 POST /api/webhook-test: HTTP $test_http_code"
-
         if [ "$webhook_http_code" = "200" ]; then
             log_success "✅ Webhook endpoint funcionando (HTTP 200)"
             log_info "🚀 Deploy automático está pronto!"
         elif [ "$webhook_http_code" = "401" ]; then
-            log_warning "⚠️ Webhook ainda retornando 401"
-            log_info "🔑 Verifique secret no GitHub: $WEBHOOK_SECRET"
-            log_info "🔧 Ou teste sem secret primeiro"
+            log_warning "⚠️ Webhook retornando 401 - configurar secret no GitHub"
+            log_info "🔑 Secret: $WEBHOOK_SECRET"
         else
             log_warning "⚠️ Webhook retornando HTTP $webhook_http_code"
-            log_info "🔧 Verifique logs: docker service logs Kryonix_web"
+            log_info "🔧 Endpoint pode estar inicializando..."
         fi
     else
         WEB_STATUS="⚠️ INICIALIZANDO"
@@ -2267,15 +2207,7 @@ echo -e "   ${WHITE}• Site atualizado: ${CYAN}~30 segundos após deploy${RESET
 echo -e "   ${WHITE}• Total aproximado: ${CYAN}2-3 minutos${RESET}"
 echo ""
 echo -e "${RED}${BOLD}🔥 TROUBLESHOOTING WEBHOOK:${RESET}"
-echo ""
-echo -e "${YELLOW}${BOLD}💡 RESOLVER ERRO 401 (PRIORIDADE):${RESET}"
-echo -e "   ${WHITE}1. Teste sem secret: ${CYAN}curl -X POST https://kryonix.com.br/api/github-webhook -d '{\"test\":true}'${RESET}"
-echo -e "   ${WHITE}2. Verifique endpoint: ${CYAN}curl https://kryonix.com.br/api/github-webhook${RESET}"
-echo -e "   ${WHITE}3. Configure secret exato no GitHub: ${CYAN}$WEBHOOK_SECRET${RESET}"
-echo -e "   ${WHITE}4. Verifique Content-Type: ${CYAN}application/json${RESET}"
-echo -e "   ${WHITE}5. Use HTTPS e SSL verification habilitado${RESET}"
-echo ""
-echo -e "${YELLOW}${BOLD}🔧 OUTROS PROBLEMAS:${RESET}"
+echo -e "   ${WHITE}• ${YELLOW}HTTP 401:${RESET} Configure o secret no GitHub webhook"
 echo -e "   ${WHITE}• ${YELLOW}HTTP 500:${RESET} Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Deploy não executou:${RESET} Teste manual: ${CYAN}./webhook-deploy.sh test${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Endpoint offline:${RESET} Verifique: ${CYAN}curl http://localhost:8080/health${RESET}"
