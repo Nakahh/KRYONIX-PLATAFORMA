@@ -79,9 +79,9 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔═══════════════════════════════════════════════════════════════���═╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██���██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -360,7 +360,7 @@ validate_credentials() {
 show_banner
 
 # Detecção automática do ambiente
-echo -e "${PURPLE}${BOLD}���� INSTALADOR KRYONIX 100% AUTOMÁTICO${RESET}"
+echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX 100% AUTOMÁTICO${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
@@ -1603,10 +1603,27 @@ deploy() {
     # Backup do package.json atual para comparação
     cp package.json package.json.old 2>/dev/null || true
 
-    # Pull das mudanças
+    # Pull das mudanças com verificação automática
     info "📥 Fazendo pull do repositório..."
-    git fetch origin --force
-    git reset --hard origin/main || git reset --hard origin/master
+
+    # Verificar se origin existe e está configurado
+    if ! git remote get-url origin >/dev/null 2>&1; then
+        info "🔗 Configurando remote origin..."
+        git remote add origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+    fi
+
+    # Fazer fetch e reset com fallback para master
+    git fetch origin --force || {
+        warning "Fetch falhou, tentando clone completo..."
+        cd ..
+        sudo rm -rf kryonix-plataform
+        git clone "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform
+        cd kryonix-plataform
+    }
+
+    git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null || {
+        info "🔄 Usando HEAD local como fallback"
+    }
     git clean -fd
 
     # Detectar mudanças no package.json (novas dependências do Builder.io)
@@ -1950,7 +1967,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════���══════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
