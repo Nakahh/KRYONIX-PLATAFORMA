@@ -368,7 +368,7 @@ class KryonixRabbitMQClientManager:
                 host='localhost',
                 port=5672,
                 virtual_host=vhost_name,
-                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456')
+                credentials=pika.PlainCredentials('kryonix', '8ed56dd2b7dc80f9dd205a348e1dd303')
             )
 
             client_connection = pika.BlockingConnection(client_params)
@@ -410,7 +410,7 @@ class KryonixRabbitMQClientManager:
                 host='localhost',
                 port=5672,
                 virtual_host=vhost_name,
-                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456')
+                credentials=pika.PlainCredentials('kryonix', '8ed56dd2b7dc80f9dd205a348e1dd303')
             )
 
             client_connection = pika.BlockingConnection(client_params)
@@ -493,7 +493,7 @@ class KryonixRabbitMQClientManager:
                 host='localhost',
                 port=5672,
                 virtual_host=vhost_name,
-                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456')
+                credentials=pika.PlainCredentials('kryonix', '8ed56dd2b7dc80f9dd205a348e1dd303')
             )
 
             client_connection = pika.BlockingConnection(client_params)
@@ -733,7 +733,7 @@ class MobilePriorityConsumer {
 
     async processPriorityNotification(data, priority) {
         try {
-            console.log(`📱 Processing priority ${priority} notification:`, data.userId);
+            console.log(`�� Processing priority ${priority} notification:`, data.userId);
 
             const { userId, clientId, type, title, message, data: payload } = data;
 
