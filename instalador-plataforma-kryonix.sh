@@ -81,12 +81,12 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗█���╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚���══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -234,7 +234,7 @@ log_error() {
 }
 
 # ============================================================================
-# FUNÇ��ES AUXILIARES CENTRALIZADAS
+# FUNÇÕES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
 # Funç��o simplificada e robusta para detectar rede do Traefik (sem logs internos)
@@ -858,7 +858,7 @@ PAT_TOKEN_CONFIGURED=true
 WEBHOOK_URL=$WEBHOOK_URL
 WEBHOOK_SECRET_CONFIGURED=true
 
-# Status da Instala��ão
+# Status da Instalação
 KRYONIX_INSTALLED=true
 KRYONIX_VERSION=2025.01
 AUTO_DEPLOY_ENABLED=true
@@ -889,7 +889,7 @@ if docker service ls | grep -q "traefik"; then
     TRAEFIK_FOUND=true
     log_success "✅ Traefik encontrado: $TRAEFIK_SERVICE"
 
-    # Verificar se o Traefik está na mesma rede detectada
+    # Verificar se o Traefik est�� na mesma rede detectada
     traefik_networks=$(docker service inspect "$TRAEFIK_SERVICE" --format '{{range .Spec.TaskTemplate.Networks}}{{.Target}} {{end}}' 2>/dev/null || true)
     network_confirmed=false
 
@@ -1751,7 +1751,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════���════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -1786,12 +1786,13 @@ echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada e funcionando!${RESET}"
 echo -e "${PURPLE}🚀 Push no GitHub = Deploy automático ativado!${RESET}"
 echo ""
-echo -e "${GREEN}${BOLD}🔧 CORREÇÕES APLICADAS NESTA VERSÃO:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Corrigido:${RESET} ✅ Agora executa deploy automático completo"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Rebuild Automático:${RESET} ✅ Pull + Install + Build + Restart do container"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Validação GitHub:${RESET} ✅ Verificação de assinatura implementada"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Logs Melhorados:${RESET} ✅ Deploy trackado em tempo real"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Restart Inteligente:${RESET} ✅ Update rápido ou restart completo se necessário"
+echo -e "${GREEN}${BOLD}🔧 CORREÇÕES CRÍTICAS APLICADAS:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Prioridades Traefik:${RESET} ✅ API webhook prioridade 1000 (máxima)"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🌐 Rede Fixa:${RESET} ✅ kryonix-net (estável, sem detecção automática)"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Webhook HTTP/HTTPS:${RESET} ✅ Suporte completo para GitHub webhook"
+echo -e "    ${BLUE}│${RESET} ${BOLD}📦 Volumes Otimizados:${RESET} ✅ Apenas volumes essenciais"
+echo -e "    ${BLUE}│${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Webhook não será mais interceptado"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Avançado:${RESET} ✅ Validação com payload GitHub real"
 echo ""
 echo -e "${PURPLE}${BOLD}🎨 DEPLOY INTELIGENTE AVANÇADO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Dependências Inteligentes:${RESET} ✅ Detecta e instala novas dependências automaticamente"
