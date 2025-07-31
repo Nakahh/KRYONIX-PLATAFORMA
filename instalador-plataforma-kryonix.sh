@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Configura��ões de encoding seguro para evitar problemas com caracteres especiais
+# Configurações de encoding seguro para evitar problemas com caracteres especiais
 export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
 export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
@@ -85,7 +85,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ���"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -860,7 +860,7 @@ if [ -f "Marca-KRYONIX (Branding)/logo kryonix.png" ]; then
     cp "Marca-KRYONIX (Branding)/logo kryonix.png" public/apple-touch-icon.png
     log_success "✅ Logo oficial configurado como favicon"
 else
-    log_warning "⚠️ Logo não encontrada na pasta branding"
+    log_warning "⚠��� Logo não encontrada na pasta branding"
 fi
 
 if [ ! -f "public/index.html" ]; then
@@ -971,7 +971,7 @@ if [ ! -f "public/index.html" ]; then
     </div>
 
     <script>
-        console.log('🚀 KRYONIX Platform Ready - Favicon com foguete ativo!');
+        console.log('🚀 KRYONIX Platform Ready - Logo oficial ativo!');
         fetch('/api/status')
             .then(response => response.json())
             .then(data => console.log('✅ Plataforma KRYONIX funcionando:', data))
@@ -2136,7 +2136,7 @@ echo ""
 echo -e "${GREEN}${BOLD}🔧 CORREÇÕES CRÍTICAS APLICADAS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Prioridades Traefik:${RESET} ✅ Webhook prioridade 3000 (ULTRA MÁXIMA)"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Endpoint Específico:${RESET} ✅ Rota exclusiva /api/github-webhook"
-echo -e "    ${BLUE}��${RESET} ${BOLD}📁 Criação Automática:${RESET} ✅ server.js criado se ausente"
+echo -e "    ${BLUE}│${RESET} ${BOLD}📁 Criação Automática:${RESET} ✅ server.js criado se ausente"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🔧 Verificação Automática:${RESET} ✅ Correção automática de problemas"
 echo -e "    ${BLUE}│${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Caminho absoluto para webhook-deploy.sh"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Completo:${RESET} ✅ Validação de 15 tentativas com health check"
