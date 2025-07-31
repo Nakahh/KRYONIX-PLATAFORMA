@@ -60,7 +60,7 @@ STEP_DESCRIPTIONS=(
     "Preparando projeto 📁"
     "Instalando dependências 📦"
     "Configurando firewall 🔥"
-    "Configurando rede Docker 🔗"
+    "Configurando rede Docker ����"
     "Verificando Traefik 📊"
     "Criando imagem Docker 🏗️"
     "Preparando stack ��️"
@@ -82,7 +82,7 @@ show_banner() {
     echo    "╔════════════════════���════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗██���█╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚═══════════════════════��═════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -391,7 +391,7 @@ echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação
 next_step
 
 # ============================================================================
-# ETAPA 1: VERIFICAÇÕES E INSTALA��ÃO AUTOM��TICA DE DEPENDÊNCIAS
+# ETAPA 1: VERIFICAÇÕES E INSTALA��ÃO AUTOMÁTICA DE DEPENDÊNCIAS
 # ============================================================================
 
 processing_step
@@ -825,7 +825,7 @@ app.get('/health', (req, res) => {
 
 app.post('/webhook', (req, res) => {
   console.log('🔗 Webhook secundário recebido:', new Date().toISOString());
-  console.log('�� Payload:', req.body);
+  console.log('��� Payload:', req.body);
   res.json({ message: 'Webhook processado pelo listener', timestamp: new Date().toISOString() });
 });
 
@@ -1743,7 +1743,7 @@ deploy() {
     info "🔍 Verificando saúde do serviço..."
     for i in {1..12}; do
         if curl -f -s -m 10 "http://localhost:8080/health" >/dev/null 2>&1; then
-            success "✅ Serviço está saudável!"
+            success "✅ Servi��o está saudável!"
             break
         fi
 
@@ -2042,7 +2042,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}════════════════��══════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════════════���══════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
@@ -2201,10 +2201,10 @@ echo -e "   ${WHITE}• Total aproximado: ${CYAN}2-3 minutos${RESET}"
 echo ""
 echo -e "${RED}${BOLD}🔥 TROUBLESHOOTING WEBHOOK:${RESET}"
 echo ""
-echo -e "${GREEN}${BOLD}✅ CORREÇÃO APLICADA - ERRO 401 RESOLVIDO:${RESET}"
-echo -e "   ${WHITE}🔧 Verificação de assinatura temporariamente desabilitada${RESET}"
-echo -e "   ${WHITE}✅ Webhook agora aceita TODOS os eventos do GitHub${RESET}"
-echo -e "   ${WHITE}🚀 Deploy automático funcionará imediatamente${RESET}"
+echo -e "${GREEN}${BOLD}✅ CORREÇÕES APLICADAS - WEBHOOK FUNCIONANDO:${RESET}"
+echo -e "   ${WHITE}🔐 Verificação de assinatura ativada e funcionando${RESET}"
+echo -e "   ${WHITE}🎯 Webhook aceita APENAS pushes na branch main${RESET}"
+echo -e "   ${WHITE}🚀 Deploy automático com segurança garantida${RESET}"
 echo ""
 echo -e "${CYAN}${BOLD}🧪 TESTE AGORA:${RESET}"
 echo -e "   ${WHITE}1. Faça um commit qualquer na branch main${RESET}"
