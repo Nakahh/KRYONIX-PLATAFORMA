@@ -621,30 +621,274 @@ log_info "✅ Adicionando webhook corrigido..."
 
     cat >> server.js << 'WEBHOOK_EOF'
 
-// Webhook do GitHub configurado automaticamente pelo instalador - DEPLOY AVANÇADO
+// Webhook do GitHub configurado automaticamente pelo instalador - VERSÃO CORRIGIDA COMPLETA
 const crypto = require('crypto');
 const { spawn } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
 
-// Função para verificar assinatura do GitHub
+// Função para verificar assinatura do GitHub com logs detalhados
 const verifyGitHubSignature = (payload, signature) => {
-    if (!signature) return false;
+    console.log('🔐 Iniciando verificação de assinatura...');
 
-    const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
-    hmac.update(JSON.stringify(payload));
-    const calculatedSignature = 'sha256=' + hmac.digest('hex');
+    if (!signature) {
+        console.log('❌ Assinatura ausente no webhook');
+        return false;
+    }
 
-    return crypto.timingSafeEqual(
-        Buffer.from(signature),
-        Buffer.from(calculatedSignature)
-    );
+    if (!WEBHOOK_SECRET) {
+        console.log('❌ WEBHOOK_SECRET não configurado');
+        return false;
+    }
+
+    try {
+        const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+        hmac.update(JSON.stringify(payload));
+        const calculatedSignature = 'sha256=' + hmac.digest('hex');
+
+        const isValid = crypto.timingSafeEqual(
+            Buffer.from(signature),
+            Buffer.from(calculatedSignature)
+        );
+
+        console.log(`🔐 Assinatura: ${isValid ? '✅ VÁLIDA' : '❌ INVÁLIDA'}`);
+        console.log(`   - Recebida: ${signature.substring(0, 20)}...`);
+        console.log(`   - Calculada: ${calculatedSignature.substring(0, 20)}...`);
+
+        return isValid;
+    } catch (error) {
+        console.error('❌ Erro na verificação de assinatura:', error.message);
+        return false;
+    }
 };
 
-// Endpoint webhook do GitHub
+// Endpoint webhook do GitHub - VERSÃO CORRIGIDA PARA TODOS OS PROBLEMAS
 app.post('/api/github-webhook', (req, res) => {
+    const startTime = Date.now();
+    const timestamp = new Date().toISOString();
+
+    console.log('🔔 ===============================================');
+    console.log('🔔 WEBHOOK GITHUB RECEBIDO:', timestamp);
+    console.log('🔔 ===============================================');
+
     const payload = req.body;
-    const signature = req.get('X-Hub-Signature-256');
-    const event = req.get('X-GitHub-Event');
+    const event = req.headers['x-github-event'];
+    const signature = req.headers['x-hub-signature-256'];
+    const userAgent = req.headers['user-agent'];
+    const contentType = req.headers['content-type'];
+
+    // LOGS DETALHADOS para troubleshooting
+    console.log('📋 Headers completos:');
+    console.log(`   Event: ${event || 'AUSENTE'}`);
+    console.log(`   User-Agent: ${userAgent || 'AUSENTE'}`);
+    console.log(`   Content-Type: ${contentType || 'AUSENTE'}`);
+    console.log(`   Signature: ${signature ? 'PRESENTE' : 'AUSENTE'}`);
+
+    console.log('📋 Payload estrutura:');
+    console.log(`   Ref: ${payload?.ref || 'AUSENTE'}`);
+    console.log(`   Repository: ${payload?.repository?.name || 'AUSENTE'}`);
+    console.log(`   Pusher: ${payload?.pusher?.name || 'AUSENTE'}`);
+    console.log(`   Commits: ${payload?.commits?.length || 0}`);
+
+    // CORREÇÃO 1: Verificação de assinatura OBRIGATÓRIA
+    console.log('🔐 Verificando assinatura...');
+    if (!verifyGitHubSignature(payload, signature)) {
+        console.log('❌ WEBHOOK REJEITADO: Assinatura inválida ou ausente');
+        return res.status(401).json({
+            error: 'Unauthorized - Invalid or missing signature',
+            message: 'Webhook rejeitado por falha na verificação de assinatura',
+            timestamp: timestamp,
+            troubleshooting: {
+                signature_present: !!signature,
+                webhook_secret_configured: !!WEBHOOK_SECRET,
+                expected_header: 'X-Hub-Signature-256'
+            }
+        });
+    }
+
+    // CORREÇÃO 2: Filtros ESPECÍFICOS para branch main
+    console.log('🔍 Verificando evento e branch...');
+
+    const isValidEvent = event === 'push';
+    const isValidRef = payload?.ref === 'refs/heads/main';
+    const isValidRepo = payload?.repository?.name === 'KRYONIX-PLATAFORMA';
+
+    if (!isValidEvent) {
+        console.log(`❌ Evento ignorado: ${event} (apenas 'push' aceito)`);
+        return res.json({
+            message: 'Evento ignorado - apenas push events são processados',
+            received_event: event,
+            accepted_events: ['push'],
+            status: 'ignored',
+            reason: 'invalid_event',
+            timestamp: timestamp
+        });
+    }
+
+    if (!isValidRef) {
+        console.log(`❌ Branch ignorada: ${payload?.ref} (apenas refs/heads/main aceita)`);
+        return res.json({
+            message: 'Branch ignorada - apenas main branch é processada',
+            received_ref: payload?.ref,
+            accepted_refs: ['refs/heads/main'],
+            status: 'ignored',
+            reason: 'invalid_branch',
+            timestamp: timestamp
+        });
+    }
+
+    console.log('✅ WEBHOOK VÁLIDO: Push na branch main detectado');
+    console.log(`📦 Repository: ${payload?.repository?.name}`);
+    console.log(`👤 Pusher: ${payload?.pusher?.name}`);
+    console.log(`🆔 Commit: ${payload?.after?.substring(0, 8)}...`);
+
+    // CORREÇÃO 3: Path relativo correto
+    const deployScriptPath = path.join(process.cwd(), 'webhook-deploy.sh');
+
+    console.log('📁 Verificando script de deploy...');
+    console.log(`   Caminho: ${deployScriptPath}`);
+
+    if (!fs.existsSync(deployScriptPath)) {
+        console.error('❌ Script de deploy não encontrado');
+        console.error(`   Procurado em: ${deployScriptPath}`);
+        console.error(`   Diretório atual: ${process.cwd()}`);
+
+        return res.status(500).json({
+            error: 'Deploy script not found',
+            path: deployScriptPath,
+            current_directory: process.cwd(),
+            timestamp: timestamp,
+            troubleshooting: 'Verifique se webhook-deploy.sh existe no diretório raiz'
+        });
+    }
+
+    // Verificar se script é executável
+    try {
+        const stats = fs.statSync(deployScriptPath);
+        if (!(stats.mode & parseInt('111', 8))) {
+            console.error('❌ Script de deploy não é executável');
+
+            return res.status(500).json({
+                error: 'Deploy script not executable',
+                path: deployScriptPath,
+                permissions: stats.mode.toString(8),
+                timestamp: timestamp,
+                troubleshooting: 'Execute: chmod +x webhook-deploy.sh'
+            });
+        }
+    } catch (error) {
+        console.error('❌ Erro ao verificar script:', error.message);
+
+        return res.status(500).json({
+            error: 'Deploy script access error',
+            path: deployScriptPath,
+            error_message: error.message,
+            timestamp: timestamp
+        });
+    }
+
+    console.log('✅ Script de deploy encontrado e executável');
+    console.log('🚀 Iniciando deploy automático...');
+
+    // CORREÇÃO 4: Logs detalhados com timeout
+    const deployProcess = spawn('bash', [deployScriptPath, 'webhook'], {
+        cwd: process.cwd(),
+        stdio: 'pipe',
+        timeout: 300000, // 5 minutos
+        env: {
+            ...process.env,
+            WEBHOOK_TRIGGER: 'true',
+            WEBHOOK_REF: payload?.ref,
+            WEBHOOK_SHA: payload?.after,
+            WEBHOOK_REPOSITORY: payload?.repository?.name,
+            WEBHOOK_PUSHER: payload?.pusher?.name
+        }
+    });
+
+    let deployOutput = '';
+    let deployError = '';
+
+    deployProcess.stdout.on('data', (data) => {
+        const output = data.toString().trim();
+        if (output) {
+            console.log(`📋 [DEPLOY STDOUT] ${output}`);
+            deployOutput += output + '\n';
+        }
+    });
+
+    deployProcess.stderr.on('data', (data) => {
+        const error = data.toString().trim();
+        if (error) {
+            console.error(`⚠️ [DEPLOY STDERR] ${error}`);
+            deployError += error + '\n';
+        }
+    });
+
+    deployProcess.on('close', (code) => {
+        const duration = Date.now() - startTime;
+        console.log(`🔄 Deploy finalizado após ${duration}ms com código: ${code}`);
+
+        if (code === 0) {
+            console.log('✅ DEPLOY EXECUTADO COM SUCESSO');
+        } else {
+            console.error('❌ DEPLOY FALHOU');
+            console.error(`   Exit code: ${code}`);
+            if (deployError) {
+                console.error(`   Último erro: ${deployError.split('\n').slice(-5).join('\n')}`);
+            }
+        }
+
+        console.log('🔔 ===============================================');
+        console.log('🔔 WEBHOOK PROCESSAMENTO FINALIZADO');
+        console.log('🔔 ===============================================');
+    });
+
+    deployProcess.on('error', (error) => {
+        console.error('❌ ERRO CRÍTICO ao executar deploy:', error.message);
+        console.error(`   Comando: bash ${deployScriptPath} webhook`);
+        console.error(`   Diretório: ${process.cwd()}`);
+    });
+
+    deployProcess.on('timeout', () => {
+        console.error('❌ TIMEOUT: Deploy excedeu 5 minutos');
+        deployProcess.kill('SIGTERM');
+    });
+
+    // Resposta imediata com dados completos
+    const responseData = {
+        message: 'Deploy automático iniciado com sucesso',
+        status: 'accepted',
+        timestamp: timestamp,
+        webhook_data: {
+            event: event,
+            ref: payload?.ref,
+            sha: payload?.after,
+            short_sha: payload?.after?.substring(0, 8),
+            repository: payload?.repository?.name,
+            pusher: payload?.pusher?.name,
+            commits_count: payload?.commits?.length || 0
+        },
+        deploy_info: {
+            script_path: deployScriptPath,
+            timeout_seconds: 300,
+            environment_variables: [
+                'WEBHOOK_TRIGGER=true',
+                `WEBHOOK_REF=${payload?.ref}`,
+                `WEBHOOK_SHA=${payload?.after}`,
+                `WEBHOOK_REPOSITORY=${payload?.repository?.name}`,
+                `WEBHOOK_PUSHER=${payload?.pusher?.name}`
+            ]
+        },
+        security: {
+            signature_verified: true,
+            webhook_secret_configured: true,
+            filters_applied: ['event=push', 'ref=refs/heads/main']
+        }
+    };
+
+    console.log('📤 Enviando resposta para GitHub...');
+    res.json(responseData);
 
     console.log('🔗 Webhook recebido:', {
         event: event || 'NONE',
@@ -2051,7 +2295,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════���══════════════════════════════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
