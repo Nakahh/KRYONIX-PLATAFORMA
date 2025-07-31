@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ���█╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -565,7 +565,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/health', (req, res) => {
     res.json({
         status: 'healthy',
-        service: 'KRYONIX Platform',
+        service: 'KRYONIX',
         timestamp: new Date().toISOString(),
         environment: NODE_ENV,
         port: PORT,
@@ -577,7 +577,7 @@ app.get('/health', (req, res) => {
 
 app.get('/api/status', (req, res) => {
     res.json({
-        service: 'KRYONIX Platform',
+        service: 'KRYONIX',
         status: 'operational',
         timestamp: new Date().toISOString(),
         environment: NODE_ENV
@@ -860,7 +860,7 @@ if [ -f "Marca-KRYONIX (Branding)/logo kryonix.png" ]; then
     cp "Marca-KRYONIX (Branding)/logo kryonix.png" public/apple-touch-icon.png
     log_success "✅ Logo oficial configurado como favicon"
 else
-    log_warning "⚠��� Logo não encontrada na pasta branding"
+    log_warning "⚠️ Logo não encontrada na pasta branding"
 fi
 
 if [ ! -f "public/index.html" ]; then
@@ -881,7 +881,7 @@ if [ ! -f "public/index.html" ]; then
 
     <!-- Meta tags para compartilhamento (Open Graph) -->
     <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS Completa">
-    <meta property="og:description" content="🚀 KRYONIX: Plataforma SaaS completa com 15 agentes de IA, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
+    <meta property="og:description" content="🚀 KRYONIX: Plataforma SaaS completa com 15 agentes de IA, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! ��✨">
     <meta property="og:image" content="https://kryonix.com.br/logo kryonix.png">
     <meta property="og:url" content="https://kryonix.com.br">
     <meta property="og:type" content="website">
@@ -2095,7 +2095,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════════════════���════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
