@@ -85,8 +85,8 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═���  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║��█╔╝ ██╗     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -391,7 +391,7 @@ echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação
 next_step
 
 # ============================================================================
-# ETAPA 1: VERIFICAÇÕES E INSTALA��ÃO AUTOMÁTICA DE DEPENDÊNCIAS
+# ETAPA 1: VERIFICAÇÕES E INSTALAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
 # ============================================================================
 
 processing_step
@@ -406,7 +406,7 @@ fi
 
 # Verificar e ativar Docker Swarm automaticamente
 if ! docker info | grep -q "Swarm: active"; then
-    log_info "🔄 Docker Swarm não ativo, inicializando automaticamente..."
+    log_info "🔄 Docker Swarm n��o ativo, inicializando automaticamente..."
     docker swarm init --advertise-addr $(curl -s -4 ifconfig.me 2>/dev/null || echo '127.0.0.1') >/dev/null 2>&1
     if docker info | grep -q "Swarm: active"; then
         log_success "Docker Swarm ativado automaticamente"
@@ -565,7 +565,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/health', (req, res) => {
     res.json({
         status: 'healthy',
-        service: 'KRYONIX',
+        service: 'KRYONIX Platform',
         timestamp: new Date().toISOString(),
         environment: NODE_ENV,
         port: PORT,
@@ -577,7 +577,7 @@ app.get('/health', (req, res) => {
 
 app.get('/api/status', (req, res) => {
     res.json({
-        service: 'KRYONIX',
+        service: 'KRYONIX Platform',
         status: 'operational',
         timestamp: new Date().toISOString(),
         environment: NODE_ENV
@@ -591,7 +591,7 @@ app.get('*', (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 KRYONIX server running on port ${PORT}`);
+    console.log(`🚀 KRYONIX Platform server running on port ${PORT}`);
     console.log(`🌐 Environment: ${NODE_ENV}`);
     console.log(`🔗 Health check: http://localhost:${PORT}/health`);
 });
@@ -616,158 +616,494 @@ if grep -q "/api/github-webhook" server.js; then
     sed -i '/^const crypto.*$/,/^});$/d' server.js
 fi
 
-# Sempre adicionar webhook corrigido
-log_info "✅ Adicionando webhook corrigido..."
+# CORREÇÃO: Inserir webhook ANTES do fallback route
+log_info "✅ Adicionando webhook na posição correta (antes do fallback)..."
 
-    cat >> server.js << 'WEBHOOK_EOF'
+# Criar backup
+cp server.js server.js.webhook-backup
 
-// Webhook do GitHub configurado automaticamente pelo instalador - DEPLOY AVANÇADO
-const crypto = require('crypto');
+# Usar sed para inserir webhook antes do fallback route
+sed -i '/\/\/ Fallback para SPA/i\
+\
+\/\/ Webhook do GitHub - CORREÇÕES APLICADAS\
+const crypto = require('\''crypto'\'');\
+const { spawn } = require('\''child_process'\'');\
+const fs = require('\''fs'\'');\
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || '\''Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8'\'';\
+\
+\/\/ Função para verificar assinatura (CORRIGIDA)\
+const verifyGitHubSignature = (payload, signature) => {\
+    if (!signature) {\
+        console.log('\''⚠️ Webhook sem assinatura - rejeitando por segurança'\'');\
+        return false;\
+    }\
+\
+    try {\
+        const hmac = crypto.createHmac('\''sha256'\'', WEBHOOK_SECRET);\
+        hmac.update(JSON.stringify(payload));\
+        const calculatedSignature = '\''sha256='\'' + hmac.digest('\''hex'\'');\
+\
+        const isValid = crypto.timingSafeEqual(\
+            Buffer.from(signature),\
+            Buffer.from(calculatedSignature)\
+        );\
+\
+        console.log(`🔐 Assinatura: ${isValid ? '\''✅ Válida'\'' : '\''❌ Inválida'\''}`);\
+        return isValid;\
+    } catch (error) {\
+        console.error('\''❌ Erro na verificação:'\'', error.message);\
+        return false;\
+    }\
+};\
+\
+\/\/ Endpoint webhook (CORRIGIDO com filtros específicos)\
+app.post('\''/api/github-webhook'\'', (req, res) => {\
+    console.log('\''🔔 Webhook recebido:'\'', new Date().toISOString());\
+\
+    const payload = req.body;\
+    const event = req.headers['\''x-github-event'\''];\
+    const signature = req.headers['\''x-hub-signature-256'\''];\
+\
+    console.log(`📋 Event: ${event || '\''NONE'\''}, Ref: ${payload?.ref || '\''N/A'\''}`);\
+\
+    \/\/ CORREÇÃO 1: Verificação de assinatura obrigatória\
+    if (!verifyGitHubSignature(payload, signature)) {\
+        console.log('\''❌ Webhook rejeitado: assinatura inválida'\'');\
+        return res.status(401).json({ \
+            error: '\''Invalid signature'\'',\
+            timestamp: new Date().toISOString()\
+        });\
+    }\
+\
+    \/\/ CORREÇÃO 2: Filtros específicos para push na main\
+    const isValidEvent = event === '\''push'\'';\
+    const isValidRef = payload?.ref === '\''refs/heads/main'\'';\
+\
+    if (!isValidEvent) {\
+        console.log(`ℹ️ Evento ignorado: ${event} (esperado: push)`);\
+        return res.json({\
+            message: '\''Evento ignorado - apenas push aceito'\'',\
+            event: event,\
+            status: '\''ignored'\''\
+        });\
+    }\
+\
+    if (!isValidRef) {\
+        console.log(`ℹ️ Branch ignorada: ${payload?.ref} (esperado: main)`);\
+        return res.json({\
+            message: '\''Branch ignorada - apenas main aceita'\'',\
+            ref: payload?.ref,\
+            status: '\''ignored'\''\
+        });\
+    }\
+\
+    console.log('\''✅ Push válido na main - iniciando deploy'\'');\
+\
+    \/\/ CORREÇÃO 3: Usar path relativo correto\
+    const deployScriptPath = '\''.\/webhook-deploy.sh'\'';\
+    \
+    if (!fs.existsSync(deployScriptPath)) {\
+        console.error('\''❌ Script não encontrado:'\'', deployScriptPath);\
+        return res.status(500).json({\
+            error: '\''Deploy script not found'\'',\
+            path: deployScriptPath\
+        });\
+    }\
+\
+    console.log('\''🚀 Executando deploy...'\'');\
+\
+    const deployProcess = spawn('\''bash'\'', [deployScriptPath, '\''webhook'\''], {\
+        cwd: process.cwd(),\
+        stdio: '\''pipe'\''\
+    });\
+\
+    deployProcess.stdout.on('\''data'\'', (data) => {\
+        console.log('\''📋 Deploy:'\'', data.toString().trim());\
+    });\
+\
+    deployProcess.stderr.on('\''data'\'', (data) => {\
+        console.error('\''⚠️ Deploy stderr:'\'', data.toString().trim());\
+    });\
+\
+    deployProcess.on('\''close'\'', (code) => {\
+        console.log(`🔄 Deploy finalizado com código: ${code}`);\
+    });\
+\
+    \/\/ Resposta imediata\
+    res.json({\
+        message: '\''Deploy iniciado com sucesso'\'',\
+        status: '\''accepted'\'',\
+        ref: payload?.ref,\
+        sha: payload?.after,\
+        timestamp: new Date().toISOString()\
+    });\
+});\
+\
+\/\/ Endpoint para teste\
+app.post('\''/api/webhook-test'\'', (req, res) => {\
+    console.log('\''🧪 Teste webhook:'\'', req.body);\
+    res.json({\
+        message: '\''Teste recebido'\'',\
+        timestamp: new Date().toISOString()\
+    });\
+});\
+' server.js
+
+log_success "✅ Webhook inserido corretamente ANTES do fallback route"
+
+# Webhook foi inserido corretamente na posição adequada usando sed
+
+log_info "Criando arquivos auxiliares..."
+
+# webhook-listener.js - CORRIGIDO: Arquivo estava faltando causando falha no deploy
+cat > webhook-listener.js << 'WEBHOOK_LISTENER_EOF'
+const express = require('express');
 const { spawn } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
 
-// Função para verificar assinatura do GitHub
+// Função para verificar assinatura do GitHub com logs detalhados
 const verifyGitHubSignature = (payload, signature) => {
-    // CORREÇÃO TEMPORÁRIA: Aceitar requests sem assinatura em desenvolvimento
+    console.log('🔐 Iniciando verificação de assinatura...');
+
     if (!signature) {
-        console.log('⚠️ Webhook sem assinatura - permitindo para desenvolvimento');
-        return true;
+        console.log('❌ Assinatura ausente no webhook');
+        return false;
     }
 
-    const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
-    hmac.update(JSON.stringify(payload));
-    const calculatedSignature = 'sha256=' + hmac.digest('hex');
+    if (!WEBHOOK_SECRET) {
+        console.log('❌ WEBHOOK_SECRET não configurado');
+        return false;
+    }
 
-    const isValid = crypto.timingSafeEqual(
-        Buffer.from(signature),
-        Buffer.from(calculatedSignature)
-    );
+    try {
+        const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+        hmac.update(JSON.stringify(payload));
+        const calculatedSignature = 'sha256=' + hmac.digest('hex');
 
-    console.log('🔍 Verificação assinatura:', {
-        received: signature,
-        calculated: calculatedSignature,
-        valid: isValid
-    });
+        const isValid = crypto.timingSafeEqual(
+            Buffer.from(signature),
+            Buffer.from(calculatedSignature)
+        );
 
-    return isValid;
+        console.log(`🔐 Assinatura: ${isValid ? '✅ VÁLIDA' : '❌ INVÁLIDA'}`);
+        console.log(`   - Recebida: ${signature.substring(0, 20)}...`);
+        console.log(`   - Calculada: ${calculatedSignature.substring(0, 20)}...`);
+
+        return isValid;
+    } catch (error) {
+        console.error('❌ Erro na verificação de assinatura:', error.message);
+        return false;
+    }
 };
 
-// Endpoint webhook do GitHub
+// Endpoint webhook do GitHub - VERSÃO CORRIGIDA PARA TODOS OS PROBLEMAS
 app.post('/api/github-webhook', (req, res) => {
+    const startTime = Date.now();
+    const timestamp = new Date().toISOString();
+
+    console.log('🔔 ===============================================');
+    console.log('🔔 WEBHOOK GITHUB RECEBIDO:', timestamp);
+    console.log('🔔 ===============================================');
+
     const payload = req.body;
-    const signature = req.get('X-Hub-Signature-256');
-    const event = req.get('X-GitHub-Event');
+    const event = req.headers['x-github-event'];
+    const signature = req.headers['x-hub-signature-256'];
+    const userAgent = req.headers['user-agent'];
+    const contentType = req.headers['content-type'];
+
+    // LOGS DETALHADOS para troubleshooting
+    console.log('📋 Headers completos:');
+    console.log(`   Event: ${event || 'AUSENTE'}`);
+    console.log(`   User-Agent: ${userAgent || 'AUSENTE'}`);
+    console.log(`   Content-Type: ${contentType || 'AUSENTE'}`);
+    console.log(`   Signature: ${signature ? 'PRESENTE' : 'AUSENTE'}`);
+
+    console.log('📋 Payload estrutura:');
+    console.log(`   Ref: ${payload?.ref || 'AUSENTE'}`);
+    console.log(`   Repository: ${payload?.repository?.name || 'AUSENTE'}`);
+    console.log(`   Pusher: ${payload?.pusher?.name || 'AUSENTE'}`);
+    console.log(`   Commits: ${payload?.commits?.length || 0}`);
+
+    // CORREÇÃO 1: Verificação de assinatura OBRIGATÓRIA
+    console.log('🔐 Verificando assinatura...');
+    if (!verifyGitHubSignature(payload, signature)) {
+        console.log('❌ WEBHOOK REJEITADO: Assinatura inválida ou ausente');
+        return res.status(401).json({
+            error: 'Unauthorized - Invalid or missing signature',
+            message: 'Webhook rejeitado por falha na verificação de assinatura',
+            timestamp: timestamp,
+            troubleshooting: {
+                signature_present: !!signature,
+                webhook_secret_configured: !!WEBHOOK_SECRET,
+                expected_header: 'X-Hub-Signature-256'
+            }
+        });
+    }
+
+    // CORREÇÃO 2: Filtros ESPECÍFICOS para branch main
+    console.log('🔍 Verificando evento e branch...');
+
+    const isValidEvent = event === 'push';
+    const isValidRef = payload?.ref === 'refs/heads/main';
+    const isValidRepo = payload?.repository?.name === 'KRYONIX-PLATAFORMA';
+
+    if (!isValidEvent) {
+        console.log(`❌ Evento ignorado: ${event} (apenas 'push' aceito)`);
+        return res.json({
+            message: 'Evento ignorado - apenas push events são processados',
+            received_event: event,
+            accepted_events: ['push'],
+            status: 'ignored',
+            reason: 'invalid_event',
+            timestamp: timestamp
+        });
+    }
+
+    if (!isValidRef) {
+        console.log(`❌ Branch ignorada: ${payload?.ref} (apenas refs/heads/main aceita)`);
+        return res.json({
+            message: 'Branch ignorada - apenas main branch é processada',
+            received_ref: payload?.ref,
+            accepted_refs: ['refs/heads/main'],
+            status: 'ignored',
+            reason: 'invalid_branch',
+            timestamp: timestamp
+        });
+    }
+
+    console.log('✅ WEBHOOK VÁLIDO: Push na branch main detectado');
+    console.log(`📦 Repository: ${payload?.repository?.name}`);
+    console.log(`👤 Pusher: ${payload?.pusher?.name}`);
+    console.log(`🆔 Commit: ${payload?.after?.substring(0, 8)}...`);
+
+    // CORREÇÃO 3: Path relativo correto
+    const deployScriptPath = path.join(process.cwd(), 'webhook-deploy.sh');
+
+    console.log('📁 Verificando script de deploy...');
+    console.log(`   Caminho: ${deployScriptPath}`);
+
+    if (!fs.existsSync(deployScriptPath)) {
+        console.error('❌ Script de deploy não encontrado');
+        console.error(`   Procurado em: ${deployScriptPath}`);
+        console.error(`   Diretório atual: ${process.cwd()}`);
+
+        return res.status(500).json({
+            error: 'Deploy script not found',
+            path: deployScriptPath,
+            current_directory: process.cwd(),
+            timestamp: timestamp,
+            troubleshooting: 'Verifique se webhook-deploy.sh existe no diretório raiz'
+        });
+    }
+
+    // Verificar se script é executável
+    try {
+        const stats = fs.statSync(deployScriptPath);
+        if (!(stats.mode & parseInt('111', 8))) {
+            console.error('❌ Script de deploy não é executável');
+
+            return res.status(500).json({
+                error: 'Deploy script not executable',
+                path: deployScriptPath,
+                permissions: stats.mode.toString(8),
+                timestamp: timestamp,
+                troubleshooting: 'Execute: chmod +x webhook-deploy.sh'
+            });
+        }
+    } catch (error) {
+        console.error('❌ Erro ao verificar script:', error.message);
+
+        return res.status(500).json({
+            error: 'Deploy script access error',
+            path: deployScriptPath,
+            error_message: error.message,
+            timestamp: timestamp
+        });
+    }
+
+    console.log('✅ Script de deploy encontrado e executável');
+    console.log('🚀 Iniciando deploy automático...');
+
+    // CORREÇÃO 4: Logs detalhados com timeout
+    const deployProcess = spawn('bash', [deployScriptPath, 'webhook'], {
+        cwd: process.cwd(),
+        stdio: 'pipe',
+        timeout: 300000, // 5 minutos
+        env: {
+            ...process.env,
+            WEBHOOK_TRIGGER: 'true',
+            WEBHOOK_REF: payload?.ref,
+            WEBHOOK_SHA: payload?.after,
+            WEBHOOK_REPOSITORY: payload?.repository?.name,
+            WEBHOOK_PUSHER: payload?.pusher?.name
+        }
+    });
+
+    let deployOutput = '';
+    let deployError = '';
+
+    deployProcess.stdout.on('data', (data) => {
+        const output = data.toString().trim();
+        if (output) {
+            console.log(`📋 [DEPLOY STDOUT] ${output}`);
+            deployOutput += output + '\n';
+        }
+    });
+
+    deployProcess.stderr.on('data', (data) => {
+        const error = data.toString().trim();
+        if (error) {
+            console.error(`⚠️ [DEPLOY STDERR] ${error}`);
+            deployError += error + '\n';
+        }
+    });
+
+    deployProcess.on('close', (code) => {
+        const duration = Date.now() - startTime;
+        console.log(`🔄 Deploy finalizado após ${duration}ms com código: ${code}`);
+
+        if (code === 0) {
+            console.log('✅ DEPLOY EXECUTADO COM SUCESSO');
+        } else {
+            console.error('❌ DEPLOY FALHOU');
+            console.error(`   Exit code: ${code}`);
+            if (deployError) {
+                console.error(`   Último erro: ${deployError.split('\n').slice(-5).join('\n')}`);
+            }
+        }
+
+        console.log('🔔 ===============================================');
+        console.log('🔔 WEBHOOK PROCESSAMENTO FINALIZADO');
+        console.log('🔔 ===============================================');
+    });
+
+    deployProcess.on('error', (error) => {
+        console.error('❌ ERRO CRÍTICO ao executar deploy:', error.message);
+        console.error(`   Comando: bash ${deployScriptPath} webhook`);
+        console.error(`   Diretório: ${process.cwd()}`);
+    });
+
+    deployProcess.on('timeout', () => {
+        console.error('❌ TIMEOUT: Deploy excedeu 5 minutos');
+        deployProcess.kill('SIGTERM');
+    });
+
+    // Resposta imediata com dados completos
+    const responseData = {
+        message: 'Deploy automático iniciado com sucesso',
+        status: 'accepted',
+        timestamp: timestamp,
+        webhook_data: {
+            event: event,
+            ref: payload?.ref,
+            sha: payload?.after,
+            short_sha: payload?.after?.substring(0, 8),
+            repository: payload?.repository?.name,
+            pusher: payload?.pusher?.name,
+            commits_count: payload?.commits?.length || 0
+        },
+        deploy_info: {
+            script_path: deployScriptPath,
+            timeout_seconds: 300,
+            environment_variables: [
+                'WEBHOOK_TRIGGER=true',
+                `WEBHOOK_REF=${payload?.ref}`,
+                `WEBHOOK_SHA=${payload?.after}`,
+                `WEBHOOK_REPOSITORY=${payload?.repository?.name}`,
+                `WEBHOOK_PUSHER=${payload?.pusher?.name}`
+            ]
+        },
+        security: {
+            signature_verified: true,
+            webhook_secret_configured: true,
+            filters_applied: ['event=push', 'ref=refs/heads/main']
+        }
+    };
+
+    console.log('📤 Enviando resposta para GitHub...');
+    res.json(responseData);
 
     console.log('🔗 Webhook recebido:', {
-        timestamp: new Date().toISOString(),
         event: event || 'NONE',
         ref: payload.ref || 'N/A',
         repository: payload.repository?.name || 'N/A',
-        signature: signature ? 'PRESENT' : 'NONE',
-        user_agent: req.get('User-Agent') || 'N/A',
-        content_type: req.get('Content-Type') || 'N/A',
-        payload_size: JSON.stringify(payload).length
+        signature: signature ? 'PRESENT' : 'NONE'
     });
 
-    // CORREÇÃO FINAL: Desabilitar verificação temporariamente para funcionamento imediato
-    console.log('🔧 MODO DESENVOLVIMENTO: Verificação de assinatura desabilitada');
-    console.log('✅ Webhook aceito automaticamente para troubleshooting');
+    // Verificar assinatura
+    if (WEBHOOK_SECRET && signature) {
+        if (!verifyGitHubSignature(payload, signature)) {
+            console.log('❌ Assinatura inválida do webhook');
+            return res.status(401).json({ error: 'Invalid signature' });
+        }
+        console.log('✅ Assinatura do webhook verificada');
+    }
 
-    // TODO: Reativar verificação após confirmar funcionamento
-    // if (WEBHOOK_SECRET && signature) {
-    //     if (!verifyGitHubSignature(payload, signature)) {
-    //         console.log('❌ Assinatura inválida do webhook');
-    //         return res.status(401).json({ error: 'Invalid signature' });
-    //     }
-    //     console.log('✅ Assinatura do webhook verificada');
-    // }
-
-    // CORREÇÃO TEMPORÁRIA: Aceitar qualquer evento para teste
-    const isValidEvent = true; // Aceitar qualquer evento temporariamente
-    const isValidRef = true;   // Aceitar qualquer ref temporariamente
-
-    console.log('🔧 MODO TESTE: Aceitando todos os eventos temporariamente');
+    // Processar apenas push events na main/master
+    const isValidEvent = !event || event === 'push';
+    const isValidRef = payload.ref === 'refs/heads/main' || payload.ref === 'refs/heads/master';
 
     if (isValidEvent && isValidRef) {
-        console.log('🚀 Deploy automático iniciado para:', payload.ref || 'ref_desconhecida');
-        console.log('📦 Repositório:', payload.repository?.name || 'desconhecido');
-        console.log('👤 Pusher:', payload.pusher?.name || 'desconhecido');
-
-        // Verificar se o script existe antes de executar
-        const deployScriptPath = '/opt/kryonix-plataform/webhook-deploy.sh';
-        console.log('🔍 Verificando script de deploy:', deployScriptPath);
+        console.log('🚀 Deploy automático iniciado para:', payload.ref);
 
         // Executar deploy automático em background
-        try {
-            const deployScript = spawn(deployScriptPath, ['webhook'], {
-                cwd: '/opt/kryonix-plataform',
-                detached: true,
-                stdio: ['ignore', 'pipe', 'pipe']
-            });
-
-            deployScript.on('error', (error) => {
-                console.error('❌ Erro ao executar deploy script:', error.message);
-            });
-
-            deployScript.on('spawn', () => {
-                console.log('✅ Deploy script iniciado com sucesso');
-            });
-
-            deployScript.unref();
-        } catch (error) {
-            console.error('❌ Falha ao iniciar deploy script:', error.message);
-        }
-
-        res.json({
-            message: 'Deploy automático iniciado',
-            status: 'accepted',
-            ref: payload.ref,
-            sha: payload.after || payload.head_commit?.id,
-            timestamp: new Date().toISOString(),
-            webhook_url: '$WEBHOOK_URL'
+        const deployScript = spawn('/opt/kryonix-plataform/webhook-deploy.sh', ['webhook'], {
+            cwd: '/opt/kryonix-plataform',
+            detached: true,
+            stdio: 'ignore'
         });
-    } else {
-        console.log('ℹ️ Evento ignorado:', { event, ref: payload.ref });
+        deployScript.unref();
 
-        res.json({
-            message: 'Evento ignorado',
-            status: 'ignored',
-            event: event || 'undefined',
-            ref: payload.ref || 'undefined',
-            reason: !isValidEvent ? 'invalid_event' : 'invalid_ref'
-        });
-    }
 });
 
-// Endpoint de status para GitHub verificar webhook
+// Endpoint GET para verificação do webhook pelo GitHub
 app.get('/api/github-webhook', (req, res) => {
-    console.log('📡 GitHub verificando webhook endpoint via GET');
+    console.log('📡 GitHub verificando webhook endpoint (GET)');
+    console.log(`   User-Agent: ${req.headers['user-agent']}`);
+    console.log(`   IP: ${req.ip}`);
+
     res.status(200).json({
-        message: 'KRYONIX GitHub Webhook Endpoint',
+        message: 'KRYONIX GitHub Webhook Endpoint - FUNCIONANDO',
         status: 'online',
         timestamp: new Date().toISOString(),
-        webhook_secret_configured: !!process.env.WEBHOOK_SECRET,
-        accepted_methods: ['POST'],
-        ready_for_github: true,
-        troubleshooting_mode: true,
-        signature_validation: 'temporarily_disabled'
+        configuration: {
+            webhook_secret_configured: !!WEBHOOK_SECRET,
+            signature_verification: 'enabled',
+            accepted_methods: ['POST'],
+            accepted_events: ['push'],
+            accepted_branches: ['main'],
+            deploy_script: './webhook-deploy.sh'
+        },
+        security: {
+            signature_required: true,
+            https_recommended: true,
+            branch_filtering: 'enabled',
+            event_filtering: 'enabled'
+        },
+        troubleshooting: {
+            logs_location: '/var/log/kryonix-deploy.log',
+            test_endpoint: '/api/webhook-test',
+            health_check: '/health'
+        }
     });
 });
 
-// Endpoint para testar webhook manualmente
+// Endpoint para teste manual (sem verificação de assinatura)
 app.post('/api/webhook-test', (req, res) => {
-    console.log('🧪 Teste manual do webhook:', req.body);
+    console.log('🧪 TESTE MANUAL DO WEBHOOK');
+    console.log('📋 Dados recebidos:', req.body);
+
     res.json({
-        message: 'Teste do webhook recebido',
+        message: 'Teste do webhook recebido com sucesso',
         timestamp: new Date().toISOString(),
-        payload: req.body
+        payload: req.body,
+        note: 'Este endpoint é apenas para testes - não executa deploy'
     });
-});
-WEBHOOK_EOF
+# Arquivos auxiliares necessários já foram tratados acima
 
-    log_success "✅ Webhook corrigido com deploy automático completo adicionado ao server.js"
-
-# Criar arquivos auxiliares necessários
+# Continuando com outros arquivos auxiliares
 log_info "Criando arquivos auxiliares..."
 
 # webhook-listener.js - CORRIGIDO: Arquivo estava faltando causando falha no deploy
@@ -850,18 +1186,52 @@ if [ -f "Marca-KRYONIX (Branding)/Logo Kryonix com nome.png" ]; then
     log_success "✅ Logo com nome copiada para compartilhamento"
 fi
 
-# Usar logo oficial KRYONIX como favicon
-log_info "Configurando logo oficial KRYONIX como favicon..."
+# Criar favicon com foguete
+log_info "Criando favicon com ícone de foguete..."
+cat > public/favicon.svg << 'FAVICON_EOF'
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="rocketGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="fireGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ffa500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffeb3b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
 
-# Copiar logo oficial para favicon
-if [ -f "Marca-KRYONIX (Branding)/logo kryonix.png" ]; then
-    cp "Marca-KRYONIX (Branding)/logo kryonix.png" public/favicon.png
-    cp "Marca-KRYONIX (Branding)/logo kryonix.png" public/favicon.ico
-    cp "Marca-KRYONIX (Branding)/logo kryonix.png" public/apple-touch-icon.png
-    log_success "✅ Logo oficial configurado como favicon"
-else
-    log_warning "⚠️ Logo não encontrada na pasta branding"
-fi
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="url(#rocketGradient)" stroke="#fff" stroke-width="2"/>
+
+  <!-- Rocket body -->
+  <ellipse cx="32" cy="28" rx="6" ry="16" fill="#f5f5f5"/>
+
+  <!-- Rocket nose -->
+  <path d="M32,12 L38,20 L26,20 Z" fill="#4CAF50"/>
+
+  <!-- Rocket fins -->
+  <path d="M26,36 L24,44 L26,44 Z" fill="#2196F3"/>
+  <path d="M38,36 L40,44 L38,44 Z" fill="#2196F3"/>
+
+  <!-- Rocket window -->
+  <circle cx="32" cy="24" r="3" fill="#2196F3" opacity="0.8"/>
+
+  <!-- Fire/exhaust -->
+  <path d="M32,44 L28,52 L32,50 L36,52 Z" fill="url(#fireGradient)"/>
+  <path d="M32,50 L30,56 L32,54 L34,56 Z" fill="#ff6b6b" opacity="0.8"/>
+
+  <!-- Stars -->
+  <circle cx="18" cy="18" r="1" fill="#fff"/>
+  <circle cx="46" cy="20" r="1" fill="#fff"/>
+  <circle cx="20" cy="46" r="1" fill="#fff"/>
+  <circle cx="44" cy="44" r="1" fill="#fff"/>
+
+  <!-- KRYONIX text (small) -->
+  <text x="32" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="#fff">KRYONIX</text>
+</svg>
+FAVICON_EOF
 
 if [ ! -f "public/index.html" ]; then
     log_info "Criando index.html otimizado para compartilhamento..."
@@ -871,33 +1241,33 @@ if [ ! -f "public/index.html" ]; then
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 KRYONIX - Plataforma SaaS</title>
-    <meta name="description" content="🚀 KRYONIX - Plataforma SaaS completa com 15 agentes de IA, 8 módulos integrados e deploy automático. Mobile-first, desenvolvida em português para empresas brasileiras. ✨">
+    <title>🚀 KRYONIX - IA Autônoma Brasileira</title>
+    <meta name="description" content="🤖 KRYONIX é a revolução em SaaS! Plataforma 100% autônoma com 15 agentes de IA, 8 módulos integrados e deploy automático. Mobile-first, desenvolvida em português para empresas brasileiras. ✨">
 
-    <!-- Favicon Logo Oficial KRYONIX -->
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <!-- Favicon com Foguete 🚀 -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="shortcut icon" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
 
     <!-- Meta tags para compartilhamento (Open Graph) -->
-    <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS Completa">
-    <meta property="og:description" content="🚀 KRYONIX: Plataforma SaaS completa com 15 agentes de IA, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
-    <meta property="og:image" content="https://kryonix.com.br/logo kryonix.png">
+    <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS 100% Autônoma por IA">
+    <meta property="og:description" content="🤖 Revolução em SaaS: 15 agentes de IA autônomos, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
+    <meta property="og:image" content="https://kryonix.com.br/logo-com-nome.png">
     <meta property="og:url" content="https://kryonix.com.br">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR">
-    <meta property="og:site_name" content="🚀 KRYONIX">
+    <meta property="og:site_name" content="🚀 KRYONIX - IA Autônoma">
 
     <!-- WhatsApp específico -->
-    <meta property="og:image:alt" content="KRYONIX - Logo oficial da plataforma SaaS brasileira">
-    <meta name="whatsapp:title" content="🚀 KRYONIX">
-    <meta name="whatsapp:description" content="🚀 Plataforma SaaS completa! 15 agentes IA + 8 módulos + Deploy automático. 100% brasileiro! 📱✨">
+    <meta property="og:image:alt" content="KRYONIX - Logo oficial da plataforma SaaS autônoma brasileira com IA">
+    <meta name="whatsapp:title" content="🚀 KRYONIX - IA Autônoma">
+    <meta name="whatsapp:description" content="🤖 A revolução do SaaS chegou! 15 agentes IA + 8 módulos + Deploy automático. 100% brasileiro! 📱✨">
 
     <!-- Meta tags para Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="🚀 KRYONIX - Plataforma SaaS">
-    <meta name="twitter:description" content="🚀 15 agentes IA + 8 módulos SaaS + Deploy automático. Plataforma tecnológica 100% brasileira! 📱✨">
-    <meta name="twitter:image" content="https://kryonix.com.br/logo kryonix.png">
+    <meta name="twitter:title" content="🚀 KRYONIX - IA Autônoma Brasileira">
+    <meta name="twitter:description" content="🤖 15 agentes IA + 8 módulos SaaS + Deploy automático. A revolução tecnológica 100% brasileira chegou! 📱✨">
+    <meta name="twitter:image" content="https://kryonix.com.br/logo-com-nome.png">
 
     <meta name="theme-color" content="#667eea">
     <style>
@@ -951,9 +1321,9 @@ if [ ! -f "public/index.html" ]; then
 </head>
 <body>
     <div class="container">
-        <h1>🚀 KRYONIX</h1>
+        <h1>🚀 KRYONIX Platform</h1>
         <p style="font-size: 1.2rem; margin-bottom: 2rem;">
-            Plataforma SaaS Completa
+            Plataforma SaaS 100% Autônoma por Inteligência Artificial
         </p>
         
         <div class="status">
@@ -971,7 +1341,7 @@ if [ ! -f "public/index.html" ]; then
     </div>
 
     <script>
-        console.log('🚀 KRYONIX Platform Ready - Logo oficial ativo!');
+        console.log('🚀 KRYONIX Platform Ready - Favicon com foguete ativo!');
         fetch('/api/status')
             .then(response => response.json())
             .then(data => console.log('✅ Plataforma KRYONIX funcionando:', data))
@@ -1363,7 +1733,7 @@ next_step
 processing_step
 log_info "Configurando variáveis para deploy final..."
 
-WEB_STATUS="���️ AGUARDANDO DEPLOY"
+WEB_STATUS="⚠️ AGUARDANDO DEPLOY"
 DOMAIN_STATUS="⚠️ AGUARDANDO DEPLOY"
 
 log_success "Configuração preparada para deploy"
@@ -1704,7 +2074,7 @@ deploy() {
 
         # Verificar se existe script de build
         if grep -q '"build"' package.json; then
-            info "🏗️ Executando build com Yarn..."
+            info "���️ Executando build com Yarn..."
             yarn build || {
                 warning "Build falhou, tentando scripts alternativos..."
                 yarn build:prod 2>/dev/null || yarn compile 2>/dev/null || info "ℹ️ Build personalizado não encontrado"
@@ -1810,7 +2180,7 @@ deploy() {
         warning "⚠️ Arquivo principal não detectado, usando server.js como padrão"
         MAIN_FILE="server.js"
     fi
-    info "📄 Arquivo principal detectado: $MAIN_FILE"
+    info "���� Arquivo principal detectado: $MAIN_FILE"
 
     # Verificar se public/index.html existe
     if [ ! -f "public/index.html" ]; then
@@ -1888,7 +2258,7 @@ DOCKERFILE_EMERGENCY_EOF
         sleep 45
     fi
 
-    # Verificação final de saúde com múltiplas tentativas
+    # Verificaç��o final de saúde com múltiplas tentativas
     info "🔍 Verificação final de saúde (até 3 minutos)..."
 
     # Aguardar estabilização inicial
@@ -2045,14 +2415,9 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
         WEB_STATUS="✅ ONLINE"
         
         # TESTE COMPLETO DO WEBHOOK
-        log_info "🧪 Testando webhook endpoint..."
+        log_info "🧪 Testando webhook com payload simulado do GitHub..."
 
-        # Teste 1: GET para verificar se endpoint existe
-        webhook_get_response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:8080/api/github-webhook" 2>/dev/null)
-        log_info "📡 GET /api/github-webhook: HTTP $webhook_get_response"
-
-        # Teste 2: POST sem assinatura (deve funcionar com nossa correção)
-        webhook_test_payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"test_mode":true}'
+        webhook_test_payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA","full_name":"Nakahh/KRYONIX-PLATAFORMA"},"pusher":{"name":"test"},"head_commit":{"id":"test123","message":"Test deploy"},"test_mode":true}'
 
         webhook_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/github-webhook" \
            -H "Content-Type: application/json" \
@@ -2062,24 +2427,15 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
 
         webhook_http_code="${webhook_response: -3}"
 
-        # Teste 3: Endpoint de teste manual
-        test_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/webhook-test" \
-           -H "Content-Type: application/json" \
-           -d '{"test": "manual"}' 2>/dev/null)
-        test_http_code="${test_response: -3}"
-
-        log_info "🔧 POST /api/webhook-test: HTTP $test_http_code"
-
         if [ "$webhook_http_code" = "200" ]; then
             log_success "✅ Webhook endpoint funcionando (HTTP 200)"
             log_info "🚀 Deploy automático está pronto!"
         elif [ "$webhook_http_code" = "401" ]; then
-            log_warning "⚠️ Webhook ainda retornando 401"
-            log_info "🔑 Verifique secret no GitHub: $WEBHOOK_SECRET"
-            log_info "🔧 Ou teste sem secret primeiro"
+            log_warning "⚠️ Webhook retornando 401 - configurar secret no GitHub"
+            log_info "🔑 Secret: $WEBHOOK_SECRET"
         else
             log_warning "⚠️ Webhook retornando HTTP $webhook_http_code"
-            log_info "🔧 Verifique logs: docker service logs Kryonix_web"
+            log_info "🔧 Endpoint pode estar inicializando..."
         fi
     else
         WEB_STATUS="⚠️ INICIALIZANDO"
@@ -2095,16 +2451,16 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════���═══════════════��═════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════���══════════════════════════════��════════════════��═════════${RESET}"
 echo ""
-echo -e "${PURPLE}${BOLD}🚀 INSTALAÇÃO KRYONIX 100% AUTOMÁTICA REALIZADA:${RESET}"
+echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Credenciais:${RESET} ✅ Pré-configuradas e validadas"
 echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub:${RESET} ✅ Conectado com PAT Token"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook:${RESET} ✅ $WEBHOOK_URL"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Logo Oficial:${RESET} ✅ logo kryonix.png configurado"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Portabilidade:${RESET} ✅ Funciona em qualquer servidor"
 echo ""
 echo -e "${CYAN}${BOLD}�� STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} $WEB_STATUS"
@@ -2130,7 +2486,7 @@ echo -e "    ${BLUE}│${RESET} ${YELLOW}curl -X POST http://localhost:8080/api/
 echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh test${RESET} - Testar deploy"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - Deploy manual"
 echo ""
-echo -e "${GREEN}${BOLD}✅ KRYONIX instalado e funcionando!${RESET}"
+echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada e funcionando!${RESET}"
 echo -e "${PURPLE}🚀 Push no GitHub = Deploy automático ativado!${RESET}"
 echo ""
 echo -e "${GREEN}${BOLD}🔧 CORREÇÕES CRÍTICAS APLICADAS:${RESET}"
@@ -2235,7 +2591,7 @@ echo ""
 echo -e "${WHITE}${BOLD}1. DESENVOLVIMENTO AUTOMATIZADO:${RESET}"
 echo -e "   ${WHITE}• Faça alterações no seu projeto localmente ou via editor${RESET}"
 echo -e "   ${WHITE}• Commit e push para a branch main${RESET}"
-echo -e "   ${WHITE}• Webhook detectará mudanças e fará deploy automático${RESET}"
+echo -e "   ${WHITE}• Webhook detectará mudan��as e fará deploy automático${RESET}"
 echo ""
 echo -e "${WHITE}${BOLD}2. DEPENDÊNCIAS AUTOMÁTICAS:${RESET}"
 echo -e "   ${WHITE}• Se adicionar nova biblioteca: ${CYAN}Deploy automático${RESET}"
@@ -2244,7 +2600,7 @@ echo -e "   ${WHITE}• Se build falhar: ${CYAN}Fallback de emergência${RESET}"
 echo ""
 echo -e "${WHITE}${BOLD}3. FLUXO COMPLETO DESENVOLVIMENTO → PRODUÇÃO:${RESET}"
 echo -e "   ${WHITE}📝 Edita código → 💾 Commit GitHub → 🔗 Webhook ativa${RESET}"
-echo -e "   ${WHITE}��� Pull código → 📦 Install deps → 🏗️ Build → 🐳 Deploy${RESET}"
+echo -e "   ${WHITE}📥 Pull código → 📦 Install deps → 🏗️ Build → 🐳 Deploy${RESET}"
 echo ""
 echo -e "${WHITE}${BOLD}4. TEMPO DE DEPLOY AUTOMÁTICO:${RESET}"
 echo -e "   ${WHITE}• Webhook responde: ${CYAN}~2-5 segundos${RESET}"
@@ -2253,25 +2609,7 @@ echo -e "   ${WHITE}• Site atualizado: ${CYAN}~30 segundos após deploy${RESET
 echo -e "   ${WHITE}• Total aproximado: ${CYAN}2-3 minutos${RESET}"
 echo ""
 echo -e "${RED}${BOLD}🔥 TROUBLESHOOTING WEBHOOK:${RESET}"
-echo ""
-echo -e "${GREEN}${BOLD}✅ CORREÇÃO APLICADA - ERRO 401 RESOLVIDO:${RESET}"
-echo -e "   ${WHITE}🔧 Verificação de assinatura temporariamente desabilitada${RESET}"
-echo -e "   ${WHITE}✅ Webhook agora aceita TODOS os eventos do GitHub${RESET}"
-echo -e "   ${WHITE}🚀 Deploy automático funcionará imediatamente${RESET}"
-echo ""
-echo -e "${CYAN}${BOLD}🧪 TESTE AGORA:${RESET}"
-echo -e "   ${WHITE}1. Faça um commit qualquer na branch main${RESET}"
-echo -e "   ${WHITE}2. Push para o GitHub${RESET}"
-echo -e "   ${WHITE}3. Deploy automático iniciará em 2-5 segundos${RESET}"
-echo -e "   ${WHITE}4. Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
-echo ""
-echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK:${RESET}"
-echo -e "   ${WHITE}• URL: ${CYAN}https://kryonix.com.br/api/github-webhook${RESET}"
-echo -e "   ${WHITE}• Secret: ${CYAN}(opcional - verificação desabilitada)${RESET}"
-echo -e "   ${WHITE}• Content-Type: ${CYAN}application/json${RESET}"
-echo -e "   ${WHITE}• Events: ${CYAN}Push events${RESET}"
-echo ""
-echo -e "${YELLOW}${BOLD}🔧 OUTROS PROBLEMAS:${RESET}"
+echo -e "   ${WHITE}• ${YELLOW}HTTP 401:${RESET} Configure o secret no GitHub webhook"
 echo -e "   ${WHITE}• ${YELLOW}HTTP 500:${RESET} Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Deploy não executou:${RESET} Teste manual: ${CYAN}./webhook-deploy.sh test${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Endpoint offline:${RESET} Verifique: ${CYAN}curl http://localhost:8080/health${RESET}"
