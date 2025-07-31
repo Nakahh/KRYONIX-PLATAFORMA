@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔════════════════════���════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ���"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -1223,7 +1223,7 @@ COPY package*.json ./
 # Instalar dependências
 RUN npm install --production && npm cache clean --force
 
-# Copiar código da aplicação
+# Copiar código da aplicaç��o
 COPY server.js ./
 COPY public/ ./public/
 
@@ -1480,7 +1480,7 @@ cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 #!/bin/bash
 
 # ==============================================================================
-# WEBHOOK DE DEPLOY AUTOMÁTICO KRYONIX - VERSÃO CORRIGIDA
+# WEBHOOK DE DEPLOY AUTOMÁTICO KRYONIX - VERSÃO CORRIGIDA E SIMPLIFICADA
 # ==============================================================================
 
 set -euo pipefail
@@ -2171,7 +2171,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Prioridades Traefik:${RESET} ✅ Web
 echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Endpoint Específico:${RESET} ✅ Rota exclusiva /api/github-webhook"
 echo -e "    ${BLUE}│${RESET} ${BOLD}📁 Criação Automática:${RESET} ✅ server.js criado se ausente"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🔧 Verificação Automática:${RESET} ✅ Correção automática de problemas"
-echo -e "    ${BLUE}│${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Caminho absoluto para webhook-deploy.sh"
+echo -e "    ${BLUE}��${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Caminho absoluto para webhook-deploy.sh"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Completo:${RESET} ✅ Validação de 15 tentativas com health check"
 echo ""
 echo -e "${PURPLE}${BOLD}🎨 DEPLOY INTELIGENTE AVANÇADO:${RESET}"
