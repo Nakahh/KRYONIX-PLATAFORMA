@@ -188,11 +188,12 @@
 - **Objetivo**: LLM local e privado
 - **URL**: https://ollama.kryonix.com.br
 
-### 🔄 **PARTE-28: LANGFUSE TRACKING**
+### ✅ **PARTE-28: LANGFUSE TRACKING**
 - **Arquivo**: `PARTE-28-LANGFUSE.md`
-- **Status**: 🔄 A criar
-- **Objetivo**: Observabilidade de IA
+- **Status**: ✅ Criado e configurado
+- **Objetivo**: Observabilidade de IA multi-tenant
 - **URL**: https://langfuse.kryonix.com.br
+- **Credenciais**: Criar usuário no primeiro acesso
 
 ### 🔄 **PARTE-29: CHATBOTS INTELIGENTES**
 - **Arquivo**: `PARTE-29-CHATBOTS.md`
