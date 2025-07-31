@@ -72,7 +72,7 @@ connection_max = 1000
 
 # Multi-tenant security
 default_user = kryonix
-default_pass = Vitor@123456
+default_pass = 8ed56dd2b7dc80f9dd205a348e1dd303
 default_vhost = /kryonix-master
 
 # SSL for mobile security
