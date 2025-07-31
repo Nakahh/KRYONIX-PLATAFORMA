@@ -72,7 +72,7 @@ STEP_DESCRIPTIONS=(
 )
 
 # ============================================================================
-# FUN��ÕES DE INTERFACE E PROGRESSO
+# FUNÇÕES DE INTERFACE E PROGRESSO
 # ============================================================================
 
 # Função para mostrar banner da Plataforma Kryonix
@@ -330,7 +330,7 @@ validate_credentials() {
     if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == ghp_* ]]; then
         log_success "✅ GitHub PAT Token configurado"
     else
-        log_error "❌ GitHub PAT Token inv��lido"
+        log_error "❌ GitHub PAT Token inválido"
         return 1
     fi
 
@@ -1814,7 +1814,95 @@ else
     log_warning "⚠️ Script de deploy pode precisar de ajustes, mas está criado"
 fi
 
-log_success "✅ Webhook deploy ultra-avançado criado com deploy automático completo"
+log_success "✅ Webhook deploy simplificado e corrigido criado"
+
+# Criar script de diagnóstico
+log_info "🛠️ Criando script de diagnóstico webhook..."
+
+cat > diagnostico-webhook.sh << 'DIAGNOSTICO_EOF'
+#!/bin/bash
+
+echo "🔍 DIAGNÓSTICO WEBHOOK KRYONIX - VERSÃO CORRIGIDA"
+echo "================================================"
+
+# 1. Verificar arquivos essenciais
+echo "1. ARQUIVOS ESSENCIAIS:"
+files=("server.js" "webhook-deploy.sh" "docker-stack.yml" "package.json")
+for file in "${files[@]}"; do
+    if [ -f "$file" ]; then
+        echo "   ✅ $file existe"
+        if [ "$file" = "webhook-deploy.sh" ] && [ -x "$file" ]; then
+            echo "   ✅ $file é executável"
+        elif [ "$file" = "webhook-deploy.sh" ]; then
+            echo "   ❌ $file não é executável"
+        fi
+    else
+        echo "   ❌ $file não encontrado"
+    fi
+done
+
+# 2. Teste do script de deploy
+echo -e "\n2. TESTE DO SCRIPT:"
+if [ -f "webhook-deploy.sh" ] && [ -x "webhook-deploy.sh" ]; then
+    echo "   Testando script de deploy..."
+    if ./webhook-deploy.sh test; then
+        echo "   ✅ Script funcionando"
+    else
+        echo "   ❌ Script com problemas"
+    fi
+else
+    echo "   ❌ Script não encontrado ou não executável"
+fi
+
+# 3. Verificar serviços Docker
+echo -e "\n3. SERVIÇOS DOCKER:"
+if docker service ls | grep -q Kryonix; then
+    echo "   ✅ Serviços KRYONIX encontrados"
+    docker service ls | grep Kryonix
+else
+    echo "   ❌ Nenhum serviço KRYONIX encontrado"
+fi
+
+# 4. Teste de conectividade
+echo -e "\n4. CONECTIVIDADE:"
+if curl -f -s -m 5 "http://localhost:8080/health" >/dev/null; then
+    echo "   ✅ Health check OK"
+    echo "   Detalhes do webhook:"
+    curl -s "http://localhost:8080/health" | grep -o '"webhook":[^}]*}' 2>/dev/null || echo "   Webhook info não disponível"
+else
+    echo "   ❌ Health check falhou"
+fi
+
+# 5. Teste do webhook
+echo -e "\n5. TESTE WEBHOOK:"
+secret="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"pusher":{"name":"test"}}'
+
+# Gerar assinatura correta
+signature="sha256=$(echo -n "$payload" | openssl dgst -sha256 -hmac "$secret" | cut -d' ' -f2)"
+
+echo "   Testando com assinatura correta..."
+response=$(curl -s -w "\nHTTP: %{http_code}" -X POST "http://localhost:8080/api/github-webhook" \
+    -H "Content-Type: application/json" \
+    -H "X-GitHub-Event: push" \
+    -H "X-Hub-Signature-256: $signature" \
+    -d "$payload" 2>/dev/null)
+
+echo "   Resposta do webhook:"
+echo "$response"
+
+echo -e "\n================================================"
+echo "🔍 DIAGNÓSTICO CONCLUÍDO"
+echo ""
+echo "🔧 COMANDOS ÚTEIS:"
+echo "   docker service logs Kryonix_web --tail 50"
+echo "   curl http://localhost:8080/health"
+echo "   ./webhook-deploy.sh test"
+DIAGNOSTICO_EOF
+
+chmod +x diagnostico-webhook.sh
+log_success "✅ Script de diagnóstico criado"
+
 complete_step
 next_step
 
