@@ -81,10 +81,10 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗█���╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═���█╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -234,7 +234,7 @@ log_error() {
 }
 
 # ============================================================================
-# FUNÇÕES AUXILIARES CENTRALIZADAS
+# FUNÇ��ES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
 # Funç��o simplificada e robusta para detectar rede do Traefik (sem logs internos)
@@ -858,7 +858,7 @@ PAT_TOKEN_CONFIGURED=true
 WEBHOOK_URL=$WEBHOOK_URL
 WEBHOOK_SECRET_CONFIGURED=true
 
-# Status da Instalação
+# Status da Instala��ão
 KRYONIX_INSTALLED=true
 KRYONIX_VERSION=2025.01
 AUTO_DEPLOY_ENABLED=true
@@ -1191,7 +1191,7 @@ jobs:
             sleep 30
           done
           
-          echo "⚠️ Verifica��ão manual necessária"
+          echo "⚠️ Verificação manual necessária"
           exit 1
 GITHUB_ACTIONS_EOF
 
@@ -1724,11 +1724,16 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
     if test_service_health "http://localhost:8080/health" 10 5; then
         WEB_STATUS="✅ ONLINE"
         
-        # Testar webhook
+        # CORREÇÃO: Teste avançado do webhook
+        log_info "🧪 Testando webhook com payload real..."
         if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
            -H "Content-Type: application/json" \
-           -d '{"test":true}' >/dev/null 2>&1; then
-            log_success "Webhook endpoint funcionando"
+           -H "X-GitHub-Event: push" \
+           -d '{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"test":true}' >/dev/null 2>&1; then
+            log_success "✅ Webhook endpoint respondendo corretamente"
+            log_info "🚀 Deploy automático está pronto!"
+        else
+            log_warning "⚠️ Webhook pode estar inicializando..."
         fi
     else
         WEB_STATUS="⚠️ INICIALIZANDO"
@@ -1746,7 +1751,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════��════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
