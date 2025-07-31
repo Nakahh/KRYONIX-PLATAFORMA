@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚═════════════════════════════════════════════════��═══════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -1697,285 +1697,75 @@ deploy() {
         exit 1
     }
 
-    # Backup do package.json atual para comparação
-    cp package.json package.json.old 2>/dev/null || true
+    success "✅ Código atualizado"
 
-    # Pull das mudanças com verificação automática
-    info "📥 Fazendo pull do repositório..."
+    # Detectar package manager
+    if [ -f "package.json" ]; then
+        info "📦 Instalando dependências..."
 
-    # Verificar se origin existe e está configurado
-    if ! git remote get-url origin >/dev/null 2>&1; then
-        info "🔗 Configurando remote origin..."
-        git remote add origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-    fi
-
-    # Fazer fetch e reset com fallback para master
-    git fetch origin --force || {
-        warning "Fetch falhou, tentando clone completo..."
-        cd ..
-        sudo rm -rf kryonix-plataform
-        git clone "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform
-        cd kryonix-plataform
-    }
-
-    git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null || {
-        info "🔄 Usando HEAD local como fallback"
-    }
-    git clean -fd
-
-    # Detectar mudanças no package.json (novas dependências do Builder.io)
-    DEPENDENCIES_CHANGED=false
-    if [ -f "package.json.old" ]; then
-        if ! diff package.json package.json.old >/dev/null 2>&1; then
-            info "🔄 Mudanças detectadas no package.json - novas dependências podem ter sido adicionadas"
-            DEPENDENCIES_CHANGED=true
-        fi
-    else
-        DEPENDENCIES_CHANGED=true
-    fi
-
-    # Sempre instalar dependências completas (podem ter sido adicionadas novas)
-    info "📦 Instalando/Atualizando TODAS as dependências..."
-
-    # Limpar cache e node_modules para garantir instalação limpa
-    if [ "$DEPENDENCIES_CHANGED" = true ]; then
-        info "🧹 Limpando cache de dependências para instalação limpa..."
-        rm -rf node_modules 2>/dev/null || true
-        rm -f package-lock.json yarn.lock 2>/dev/null || true
-    fi
-
-    # Detectar gerenciador de pacotes e instalar dependências completas
-    if [ -f "yarn.lock" ] || command -v yarn >/dev/null 2>&1; then
-        info "📦 Usando Yarn para dependências..."
-        yarn cache clean 2>/dev/null || true
-        yarn install --force --no-frozen-lockfile
-
-        # Verificar se existe script de build
-        if grep -q '"build"' package.json; then
-            info "🏗️ Executando build com Yarn..."
-            yarn build || {
-                warning "Build falhou, tentando scripts alternativos..."
-                yarn build:prod 2>/dev/null || yarn compile 2>/dev/null || info "ℹ️ Build personalizado não encontrado"
+        if command -v npm &> /dev/null; then
+            npm install --production --silent || {
+                warning "Falha na instalação de dependências, continuando..."
             }
         fi
-    else
-        info "📦 Usando NPM para dependências..."
-        npm cache clean --force 2>/dev/null || true
-        npm install --force --no-save
 
-        # Verificar se existe script de build
-        if grep -q '"build"' package.json; then
-            info "🏗️ Executando build com NPM..."
-            npm run build || {
-                warning "Build falhou, tentando scripts alternativos..."
-                npm run build:prod 2>/dev/null || npm run compile 2>/dev/null || info "ℹ️ Build personalizado não encontrado"
-            }
-        fi
+        success "✅ Dependências processadas"
     fi
 
-    # Verificar e processar arquivos gerados
-    info "�� Verificando arquivos de build gerados..."
+    # Build da imagem Docker
+    info "🐳 Construindo imagem Docker..."
+    docker build --no-cache -t kryonix-plataforma:latest . || {
+        error "Falha no build da imagem Docker"
+        exit 1
+    }
 
-    # Criar public se não existir
-    mkdir -p public
+    success "✅ Imagem Docker construída"
 
-    # Processar diferentes tipos de build
-    if [ -d "dist" ]; then
-        info "📁 Build gerado em ./dist/"
-        cp -r dist/* public/ 2>/dev/null || true
-        if [ -f "dist/index.html" ]; then
-            cp dist/index.html public/ 2>/dev/null || true
-        fi
-    elif [ -d "build" ]; then
-        info "📁 Build gerado em ./build/"
-        cp -r build/* public/ 2>/dev/null || true
-        if [ -f "build/index.html" ]; then
-            cp build/index.html public/ 2>/dev/null || true
-        fi
-    elif [ -d ".next" ]; then
-        info "�� Build Next.js gerado"
-        # Para Next.js, não precisamos copiar para public
-    elif [ -d "out" ]; then
-        info "📁 Export estático gerado em ./out/"
-        cp -r out/* public/ 2>/dev/null || true
-    elif [ -d "_site" ]; then
-        info "📁 Site estático gerado em ./_site/"
-        cp -r _site/* public/ 2>/dev/null || true
-    fi
-
-    # Verificar se há arquivos CSS/JS adicionais
-    for dir in "assets" "static" "css" "js"; do
-        if [ -d "$dir" ] && [ ! -d "public/$dir" ]; then
-            info "📁 Copiando $dir para public..."
-            cp -r "$dir" public/ 2>/dev/null || true
-        fi
-    done
-
-    # Verificar dependências de runtime necessárias
-    info "🔍 Verificando dependências de runtime..."
-
-    # Verificar frameworks comuns
-    if grep -q '"react"' package.json; then
-        info "✅ React detectado"
-    elif grep -q '"vue"' package.json; then
-        info "✅ Vue detectado"
-    elif grep -q '"@angular"' package.json; then
-        info "✅ Angular detectado"
-    elif grep -q '"next"' package.json; then
-        info "✅ Next.js detectado"
-    fi
-
-    # Limpar arquivo de backup
-    rm -f package.json.old 2>/dev/null || true
-
-    # Verificações finais antes do build Docker
-    info "🔍 Verificações finais antes do build..."
-
-    # Verificar se package.json existe e é válido
-    if [ ! -f "package.json" ]; then
-        error "❌ package.json não encontrado!"
-        return 1
-    fi
-
-    # Verificar se node_modules foi instalado corretamente
-    if [ ! -d "node_modules" ]; then
-        warning "⚠️ node_modules não encontrado, tentando instalação de emergência..."
-        npm install --force || yarn install --force || {
-            error "❌ Falha na instalação de emergência das dependências"
-            return 1
+    # Verificar se o serviço existe
+    if docker service ls | grep -q "Kryonix_web"; then
+        info "🔄 Atualizando serviço existente..."
+        docker service update --force --image kryonix-plataforma:latest Kryonix_web || {
+            error "Falha ao atualizar serviço"
+            exit 1
         }
-    fi
-
-    # Verificar se há arquivo principal (server.js, index.js, app.js)
-    MAIN_FILE=""
-    if [ -f "server.js" ]; then
-        MAIN_FILE="server.js"
-    elif [ -f "index.js" ]; then
-        MAIN_FILE="index.js"
-    elif [ -f "app.js" ]; then
-        MAIN_FILE="app.js"
     else
-        warning "⚠️ Arquivo principal não detectado, usando server.js como padrão"
-        MAIN_FILE="server.js"
-    fi
-    info "📄 Arquivo principal detectado: $MAIN_FILE"
-
-    # Verificar se public/index.html existe
-    if [ ! -f "public/index.html" ]; then
-        warning "⚠️ public/index.html não encontrado, criando versão mínima..."
-        mkdir -p public
-        cat > public/index.html << 'HTML_EOF'
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYONIX Platform</title>
-</head>
-<body>
-    <h1>🚀 KRYONIX Platform</h1>
-    <p>Plataforma carregando...</p>
-    <script>
-        console.log('KRYONIX Platform Ready');
-    </script>
-</body>
-</html>
-HTML_EOF
-        info "✅ Arquivo index.html mínimo criado"
-    fi
-
-    # Limpar imagem antiga para garantir rebuild completo
-    info "🧹 Limpando imagem Docker antiga..."
-    docker rmi kryonix-plataforma:latest 2>/dev/null || true
-
-    # Build da imagem com verificação
-    info "🏗️ Fazendo build da nova imagem Docker..."
-    if ! docker build --no-cache -t kryonix-plataforma:latest . ; then
-        error "❌ Falha no build da imagem Docker"
-
-        # Tentar build de emergência com Dockerfile mínimo
-        warning "🔄 Tentando build de emergência..."
-        cat > Dockerfile.emergency << 'DOCKERFILE_EMERGENCY_EOF'
-FROM node:18-bullseye-slim
-WORKDIR /app
-COPY package*.json ./
-RUN npm install --production || yarn install --production
-COPY . .
-EXPOSE 8080
-CMD ["node", "server.js"]
-DOCKERFILE_EMERGENCY_EOF
-
-        if docker build -f Dockerfile.emergency -t kryonix-plataforma:latest . ; then
-            info "✅ Build de emergência bem-sucedido"
-            rm -f Dockerfile.emergency
+        warning "Serviço Kryonix_web não encontrado, tentando stack deploy..."
+        if [ -f "docker-stack.yml" ]; then
+            docker stack deploy -c docker-stack.yml Kryonix || {
+                error "Falha no deploy da stack"
+                exit 1
+            }
         else
-            error "❌ Build de emergência falhou"
-            return 1
+            error "Arquivo docker-stack.yml não encontrado"
+            exit 1
         fi
-    else
-        info "✅ Build da imagem concluído com sucesso"
     fi
 
-    # Tentar update primeiro (mais rápido)
-    info "🔄 Tentando update do serviço..."
-    if docker service update --force --image kryonix-plataforma:latest "Kryonix_web" 2>/dev/null; then
-        info "✅ Update do serviço executado"
-        sleep 30
+    success "✅ Serviço atualizado"
 
-        # Verificar se o update funcionou
-        if check_service_health 6 10; then
-            log "✅ Deploy automático concluído com sucesso via update!"
-            return 0
-        else
-            warning "⚠️ Update não funcionou, forçando restart completo..."
-            force_restart_stack
-        fi
-    else
-        info "🔄 Update falhou, fazendo deploy completo do stack..."
-        docker stack deploy -c docker-stack.yml "$STACK_NAME"
-        sleep 45
-    fi
-
-    # Verificação final de saúde com múltiplas tentativas
-    info "🔍 Verificação final de saúde (até 3 minutos)..."
-
-    # Aguardar estabilização inicial
-    sleep 30
-
-    # Verificar health check local primeiro
-    for i in {1..18}; do
-        if curl -f -s -m 5 "http://localhost:8080/health" >/dev/null 2>&1; then
-            log "✅ Health check local OK"
+    # Health check
+    info "🔍 Verificando saúde do serviço..."
+    for i in {1..12}; do
+        if curl -f -s -m 10 "http://localhost:8080/health" >/dev/null 2>&1; then
+            success "✅ Serviço está saudável!"
             break
         fi
-        if [ $i -lt 18 ]; then
-            info "Aguardando health check local... ($i/18)"
-            sleep 10
+
+        if [ $i -eq 12 ]; then
+            error "❌ Serviço não respondeu após ${HEALTH_TIMEOUT}s"
+            exit 1
         fi
+
+        info "Tentativa $i/12 - aguardando 10s..."
+        sleep 10
     done
 
-    # Verificar webhook endpoint especificamente
-    info "🔗 Testando endpoint webhook..."
-    if curl -f -s -m 5 "http://localhost:8080/api/github-webhook" \
-       -X POST \
-       -H "Content-Type: application/json" \
-       -d '{"test": true}' >/dev/null 2>&1; then
-        log "✅ Endpoint webhook respondendo"
-    else
-        warning "⚠️ Webhook endpoint pode estar inicializando..."
-    fi
+    # Limpeza
+    info "🧹 Limpando imagens antigas..."
+    docker image prune -f >/dev/null 2>&1 || true
 
-    # Health check final
-    if check_service_health 6 10; then
-        log "✅ Deploy automático concluído com sucesso!"
-        log "🚀 Sistema pronto para receber webhooks GitHub!"
-        return 0
-    else
-        error "❌ Deploy pode ter problemas - verificação manual recomendada"
-        # Mesmo assim retornar 0 para não falhar o webhook
-        log "ℹ️ Webhook continuará funcionando mesmo com health check pendente"
-        return 0
-    fi
+    success "🎉 Deploy automático concluído com sucesso!"
+    info "🌐 Aplicação disponível em: http://localhost:8080"
 }
 
 case "${1:-}" in
@@ -2290,7 +2080,7 @@ echo -e "   ${WHITE}• Se adicionar nova biblioteca: ${CYAN}Deploy automático$
 echo -e "   ${WHITE}• Se package.json mudar: ${CYAN}Reinstalação completa${RESET}"
 echo -e "   ${WHITE}• Se build falhar: ${CYAN}Fallback de emergência${RESET}"
 echo ""
-echo -e "${WHITE}${BOLD}3. FLUXO COMPLETO DESENVOLVIMENTO → PRODUÇÃO:${RESET}"
+echo -e "${WHITE}${BOLD}3. FLUXO COMPLETO DESENVOLVIMENTO ��� PRODUÇÃO:${RESET}"
 echo -e "   ${WHITE}📝 Edita código → 💾 Commit GitHub → 🔗 Webhook ativa${RESET}"
 echo -e "   ${WHITE}��� Pull código → 📦 Install deps → 🏗️ Build → 🐳 Deploy${RESET}"
 echo ""
