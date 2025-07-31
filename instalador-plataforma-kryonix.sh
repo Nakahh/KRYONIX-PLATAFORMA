@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██���██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -360,7 +360,7 @@ validate_credentials() {
 show_banner
 
 # Detecção automática do ambiente
-echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX 100% AUTOMÁTICO${RESET}"
+echo -e "${PURPLE}${BOLD}���� INSTALADOR KRYONIX 100% AUTOMÁTICO${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
@@ -1195,19 +1195,25 @@ services:
         # Configuração do serviço
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
-        # Router para API (PRIORIDADE MÁXIMA) - CORREÇÃO: webhook/api precisa de prioridade 1000
+        # Router para API (PRIORIDADE MÁXIMA) - webhook/api com prioridade 2000 (ULTRA ALTA)
         - "traefik.http.routers.kryonix-api.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
         - "traefik.http.routers.kryonix-api.entrypoints=websecure"
         - "traefik.http.routers.kryonix-api.tls=true"
         - "traefik.http.routers.kryonix-api.tls.certresolver=$CERT_RESOLVER"
         - "traefik.http.routers.kryonix-api.service=kryonix-web"
-        - "traefik.http.routers.kryonix-api.priority=1000"
+        - "traefik.http.routers.kryonix-api.priority=2000"
 
-        # Router para API HTTP também (CORREÇÃO: webhook pode vir via HTTP em desenvolvimento)
+        # Router para API HTTP também (ULTRA PRIORIDADE para webhook HTTP)
         - "traefik.http.routers.kryonix-api-http.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
         - "traefik.http.routers.kryonix-api-http.entrypoints=web"
         - "traefik.http.routers.kryonix-api-http.service=kryonix-web"
-        - "traefik.http.routers.kryonix-api-http.priority=1000"
+        - "traefik.http.routers.kryonix-api-http.priority=2000"
+
+        # Router específico para webhook (PRIORIDADE ABSOLUTA)
+        - "traefik.http.routers.kryonix-webhook.rule=Host(\`$DOMAIN_NAME\`) && Path(\`/api/github-webhook\`)"
+        - "traefik.http.routers.kryonix-webhook.entrypoints=websecure,web"
+        - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
+        - "traefik.http.routers.kryonix-webhook.priority=3000"
 
         # Router HTTP (prioridade baixa)
         - "traefik.http.routers.kryonix-http.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
