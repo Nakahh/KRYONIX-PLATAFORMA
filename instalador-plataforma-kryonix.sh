@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ���█╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -152,7 +152,7 @@ animate_progress_bar() {
 
     echo -ne "] ${target_progress}% ${status_icon}${RESET}"
 
-    # Nova linha apenas quando concluído ou erro
+    # Nova linha apenas quando conclu��do ou erro
     if [ "$status" = "concluido" ] || [ "$status" = "erro" ]; then
         echo ""
         CURRENT_STEP_BAR_SHOWN=false  # Reset para próxima etapa
@@ -591,7 +591,7 @@ app.get('*', (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 KRYONIX Platform server running on port ${PORT}`);
+    console.log(`🚀 KRYONIX server running on port ${PORT}`);
     console.log(`🌐 Environment: ${NODE_ENV}`);
     console.log(`🔗 Health check: http://localhost:${PORT}/health`);
 });
@@ -881,7 +881,7 @@ if [ ! -f "public/index.html" ]; then
 
     <!-- Meta tags para compartilhamento (Open Graph) -->
     <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS Completa">
-    <meta property="og:description" content="🚀 KRYONIX: Plataforma SaaS completa com 15 agentes de IA, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! ��✨">
+    <meta property="og:description" content="🚀 KRYONIX: Plataforma SaaS completa com 15 agentes de IA, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
     <meta property="og:image" content="https://kryonix.com.br/logo kryonix.png">
     <meta property="og:url" content="https://kryonix.com.br">
     <meta property="og:type" content="website">
@@ -2095,7 +2095,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}══════════════════════════════════════���════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
