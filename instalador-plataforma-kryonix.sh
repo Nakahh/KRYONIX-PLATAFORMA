@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔════════════════════���════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -621,123 +621,164 @@ log_info "✅ Adicionando webhook corrigido..."
 
     cat >> server.js << 'WEBHOOK_EOF'
 
-// Webhook do GitHub configurado automaticamente pelo instalador - DEPLOY AVANÇADO
+// Webhook do GitHub - VERSÃO CORRIGIDA PARA FUNCIONAMENTO IMEDIATO
 const crypto = require('crypto');
 const { spawn } = require('child_process');
+const fs = require('fs');
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
 
 // Função para verificar assinatura do GitHub
 const verifyGitHubSignature = (payload, signature) => {
-    // CORREÇÃO TEMPORÁRIA: Aceitar requests sem assinatura em desenvolvimento
     if (!signature) {
-        console.log('⚠️ Webhook sem assinatura - permitindo para desenvolvimento');
-        return true;
+        console.log('⚠️ Nenhuma assinatura fornecida');
+        return false;
     }
 
-    const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
-    hmac.update(JSON.stringify(payload));
-    const calculatedSignature = 'sha256=' + hmac.digest('hex');
+    try {
+        const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+        hmac.update(JSON.stringify(payload));
+        const calculatedSignature = 'sha256=' + hmac.digest('hex');
 
-    const isValid = crypto.timingSafeEqual(
-        Buffer.from(signature),
-        Buffer.from(calculatedSignature)
-    );
+        const isValid = crypto.timingSafeEqual(
+            Buffer.from(signature),
+            Buffer.from(calculatedSignature)
+        );
 
-    console.log('🔍 Verificação assinatura:', {
-        received: signature,
-        calculated: calculatedSignature,
-        valid: isValid
-    });
-
-    return isValid;
+        console.log(`🔐 Verificação de assinatura: ${isValid ? 'VÁLIDA' : 'INVÁLIDA'}`);
+        return isValid;
+    } catch (error) {
+        console.error('❌ Erro na verificação de assinatura:', error.message);
+        return false;
+    }
 };
 
-// Endpoint webhook do GitHub
+// Endpoint webhook do GitHub - CORRIGIDO
 app.post('/api/github-webhook', (req, res) => {
+    const startTime = Date.now();
+    console.log('🔔 Webhook GitHub recebido:', new Date().toISOString());
+
     const payload = req.body;
-    const signature = req.get('X-Hub-Signature-256');
-    const event = req.get('X-GitHub-Event');
+    const event = req.headers['x-github-event'];
+    const signature = req.headers['x-hub-signature-256'];
+    const userAgent = req.headers['user-agent'];
 
-    console.log('🔗 Webhook recebido:', {
-        timestamp: new Date().toISOString(),
-        event: event || 'NONE',
-        ref: payload.ref || 'N/A',
-        repository: payload.repository?.name || 'N/A',
-        signature: signature ? 'PRESENT' : 'NONE',
-        user_agent: req.get('User-Agent') || 'N/A',
-        content_type: req.get('Content-Type') || 'N/A',
-        payload_size: JSON.stringify(payload).length
-    });
+    // Log detalhado para debug
+    console.log('📋 Dados do webhook:');
+    console.log(`   Event: ${event || 'NONE'}`);
+    console.log(`   Ref: ${payload?.ref || 'N/A'}`);
+    console.log(`   Repository: ${payload?.repository?.name || 'N/A'}`);
+    console.log(`   User-Agent: ${userAgent || 'N/A'}`);
+    console.log(`   Signature: ${signature ? 'PRESENT' : 'NONE'}`);
 
-    // CORREÇÃO FINAL: Desabilitar verificação temporariamente para funcionamento imediato
-    console.log('🔧 MODO DESENVOLVIMENTO: Verificação de assinatura desabilitada');
-    console.log('✅ Webhook aceito automaticamente para troubleshooting');
-
-    // TODO: Reativar verificação após confirmar funcionamento
-    // if (WEBHOOK_SECRET && signature) {
-    //     if (!verifyGitHubSignature(payload, signature)) {
-    //         console.log('❌ Assinatura inválida do webhook');
-    //         return res.status(401).json({ error: 'Invalid signature' });
-    //     }
-    //     console.log('✅ Assinatura do webhook verificada');
-    // }
-
-    // CORREÇÃO TEMPORÁRIA: Aceitar qualquer evento para teste
-    const isValidEvent = true; // Aceitar qualquer evento temporariamente
-    const isValidRef = true;   // Aceitar qualquer ref temporariamente
-
-    console.log('🔧 MODO TESTE: Aceitando todos os eventos temporariamente');
-
-    if (isValidEvent && isValidRef) {
-        console.log('🚀 Deploy automático iniciado para:', payload.ref || 'ref_desconhecida');
-        console.log('📦 Repositório:', payload.repository?.name || 'desconhecido');
-        console.log('👤 Pusher:', payload.pusher?.name || 'desconhecido');
-
-        // Verificar se o script existe antes de executar
-        const deployScriptPath = '/opt/kryonix-plataform/webhook-deploy.sh';
-        console.log('🔍 Verificando script de deploy:', deployScriptPath);
-
-        // Executar deploy automático em background
-        try {
-            const deployScript = spawn(deployScriptPath, ['webhook'], {
-                cwd: '/opt/kryonix-plataform',
-                detached: true,
-                stdio: ['ignore', 'pipe', 'pipe']
-            });
-
-            deployScript.on('error', (error) => {
-                console.error('❌ Erro ao executar deploy script:', error.message);
-            });
-
-            deployScript.on('spawn', () => {
-                console.log('✅ Deploy script iniciado com sucesso');
-            });
-
-            deployScript.unref();
-        } catch (error) {
-            console.error('❌ Falha ao iniciar deploy script:', error.message);
-        }
-
-        res.json({
-            message: 'Deploy automático iniciado',
-            status: 'accepted',
-            ref: payload.ref,
-            sha: payload.after || payload.head_commit?.id,
-            timestamp: new Date().toISOString(),
-            webhook_url: '$WEBHOOK_URL'
-        });
-    } else {
-        console.log('ℹ️ Evento ignorado:', { event, ref: payload.ref });
-
-        res.json({
-            message: 'Evento ignorado',
-            status: 'ignored',
-            event: event || 'undefined',
-            ref: payload.ref || 'undefined',
-            reason: !isValidEvent ? 'invalid_event' : 'invalid_ref'
+    // PROBLEMA 1 CORRIGIDO: Verificação de assinatura obrigatória
+    if (!verifyGitHubSignature(payload, signature)) {
+        console.log('❌ Assinatura inválida ou ausente - rejeitando webhook');
+        return res.status(401).json({
+            error: 'Unauthorized - Invalid signature',
+            timestamp: new Date().toISOString()
         });
     }
-});
+
+    // PROBLEMA 2 CORRIGIDO: Filtros específicos
+    const isValidEvent = event === 'push';
+    const isValidRef = payload?.ref === 'refs/heads/main';
+    const isValidRepo = payload?.repository?.name === 'KRYONIX-PLATAFORMA';
+
+    if (!isValidEvent) {
+        console.log(`ℹ️ Evento ignorado: ${event} (esperado: push)`);
+        return res.json({
+            message: 'Evento ignorado - não é push',
+            event: event,
+            status: 'ignored',
+            reason: 'invalid_event'
+        });
+    }
+
+    if (!isValidRef) {
+        console.log(`ℹ️ Branch ignorada: ${payload?.ref} (esperado: refs/heads/main)`);
+        return res.json({
+            message: 'Branch ignorada - não é main',
+            ref: payload?.ref,
+            status: 'ignored',
+            reason: 'invalid_branch'
+        });
+    }
+
+    console.log('✅ Push válido na branch main detectado - iniciando deploy');
+
+    // PROBLEMA 3 CORRIGIDO: Script de deploy simplificado
+    const deployScriptPath = './webhook-deploy.sh';
+
+    if (!fs.existsSync(deployScriptPath)) {
+        console.error('❌ Script de deploy não encontrado:', deployScriptPath);
+        return res.status(500).json({
+            error: 'Deploy script not found',
+            path: deployScriptPath,
+            timestamp: new Date().toISOString()
+        });
+    }
+
+    if (!(fs.statSync(deployScriptPath).mode & parseInt('111', 8))) {
+        console.error('❌ Script de deploy não é executável:', deployScriptPath);
+        return res.status(500).json({
+            error: 'Deploy script not executable',
+            path: deployScriptPath,
+            timestamp: new Date().toISOString()
+        });
+    }
+
+    console.log('🚀 Executando deploy automático...');
+
+    // Executar deploy com timeout e logs
+    const deployProcess = spawn('bash', [deployScriptPath, 'webhook'], {
+        cwd: process.cwd(),
+        stdio: 'pipe',
+        timeout: 300000 // 5 minutos
+    });
+
+    let deployOutput = '';
+    let deployError = '';
+
+    deployProcess.stdout.on('data', (data) => {
+        const output = data.toString();
+        console.log('📋 Deploy:', output.trim());
+        deployOutput += output;
+    });
+
+    deployProcess.stderr.on('data', (data) => {
+        const error = data.toString();
+        console.error('⚠️ Deploy stderr:', error.trim());
+        deployError += error;
+    });
+
+    deployProcess.on('close', (code) => {
+        const duration = Date.now() - startTime;
+        console.log(`🔄 Deploy finalizado em ${duration}ms com código: ${code}`);
+
+        if (code === 0) {
+            console.log('✅ Deploy executado com sucesso');
+        } else {
+            console.error('❌ Deploy falhou');
+        }
+    });
+
+    deployProcess.on('error', (error) => {
+        console.error('❌ Erro ao executar deploy:', error.message);
+    });
+
+    // Resposta imediata
+    res.json({
+        message: 'Deploy automático iniciado com sucesso',
+        status: 'accepted',
+        data: {
+            ref: payload?.ref,
+            sha: payload?.after || payload?.head_commit?.id,
+            repository: payload?.repository?.name,
+            pusher: payload?.pusher?.name,
+            timestamp: new Date().toISOString(),
+            deploy_script: deployScriptPath
+        }
+    });
 
 // Endpoint de status para GitHub verificar webhook
 app.get('/api/github-webhook', (req, res) => {
@@ -1129,7 +1170,7 @@ if docker service ls | grep -q "traefik"; then
     done
 
     if [ "$network_confirmed" = false ]; then
-        log_warning "⚠�� Traefik não está na rede $DOCKER_NETWORK"
+        log_warning "⚠���� Traefik não está na rede $DOCKER_NETWORK"
         log_info "🔄 Traefik em rede diferente, continuando com $DOCKER_NETWORK"
         log_info "📝 Usando rede detectada: $DOCKER_NETWORK (pode precisar de ajustes manuais)"
     fi
@@ -1439,22 +1480,17 @@ cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 #!/bin/bash
 
 # ==============================================================================
-# WEBHOOK DE DEPLOY AUTOMÁTICO ULTRA-AVANÇADO E ROBUSTO
-# Versão: 2.0.0 - Compatível com qualquer stack de desenvolvimento moderno
+# WEBHOOK DE DEPLOY AUTOMÁTICO KRYONIX - VERSÃO CORRIGIDA
 # ==============================================================================
 
 set -euo pipefail
 
-# ===== CONFIGURAÇÕES GLOBAIS =====
-STACK_NAME="Kryonix"
-DEPLOY_PATH="/opt/kryonix-plataform"
-LOG_FILE="/var/log/kryonix-deploy.log"
-BACKUP_DIR="/tmp/deploy-backups"
-MAX_RETRIES=5
-HEALTH_CHECK_TIMEOUT=180
-DEPENDENCY_CHECK_TIMEOUT=300
-BUILD_TIMEOUT=600
-DOCKER_TIMEOUT=300
+# Configurações
+DEPLOY_MODE="${1:-manual}"
+PROJECT_DIR="$(pwd)"
+LOG_FILE="/tmp/kryonix-deploy.log"
+MAX_RETRIES=3
+HEALTH_TIMEOUT=120
 
 # ===== CORES =====
 RED='\033[0;31m'
@@ -1633,21 +1669,18 @@ deploy() {
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
     sudo git config --system --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
 
-    # Configurar credenciais do GitHub
-    info "🔑 Configurando credenciais GitHub..."
+    # Atualizar código
+    info "📥 Atualizando código do repositório..."
+    git config --global --add safe.directory "$PROJECT_DIR" || true
+    git fetch origin --force || {
+        error "Falha ao buscar atualizações"
+        exit 1
+    }
 
-    # Verificar se é um repositório Git válido
-    if [ ! -d ".git" ]; then
-        info "📂 Inicializando repositório Git..."
-        git init
-        git config --global user.name "KRYONIX Deploy"
-        git config --global user.email "deploy@kryonix.com.br"
-        git config --global pull.rebase false
-        git config --global init.defaultBranch main
-        git remote add origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-    else
-        git remote set-url origin "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-    fi
+    git reset --hard origin/main || {
+        error "Falha ao resetar para origin/main"
+        exit 1
+    }
 
     # Backup do package.json atual para comparação
     cp package.json package.json.old 2>/dev/null || true
