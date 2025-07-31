@@ -84,8 +84,8 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔��█╗      ║"
-    echo    "║     ██║  ██╗█��║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██║  ██╗█��║  ██║   ██║   ╚██████╔���██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -1750,7 +1750,7 @@ HTML_EOF
     docker rmi kryonix-plataforma:latest 2>/dev/null || true
 
     # Build da imagem com verificação
-    info "🏗️ Fazendo build da nova imagem Docker..."
+    info "���️ Fazendo build da nova imagem Docker..."
     if ! docker build --no-cache -t kryonix-plataforma:latest . ; then
         error "❌ Falha no build da imagem Docker"
 
@@ -1779,7 +1779,7 @@ DOCKERFILE_EMERGENCY_EOF
 
     # Tentar update primeiro (mais rápido)
     info "🔄 Tentando update do serviço..."
-    if docker service update --force --image kryonix-plataforma:latest "${STACK_NAME}_web" 2>/dev/null; then
+    if docker service update --force --image kryonix-plataforma:latest "Kryonix_web" 2>/dev/null; then
         info "✅ Update do serviço executado"
         sleep 30
 
@@ -1932,7 +1932,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl
 echo -e "    ${BLUE}│${RESET} ${BOLD}Credenciais:${RESET} ✅ Pré-configuradas e validadas"
 echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub:${RESET} ✅ Conectado com PAT Token"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook:${RESET} ✅ $WEBHOOK_URL"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Portabilidade:${RESET} �� Funciona em qualquer servidor"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Portabilidade:${RESET} ✅ Funciona em qualquer servidor"
 echo ""
 echo -e "${CYAN}${BOLD}�� STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} $WEB_STATUS"
