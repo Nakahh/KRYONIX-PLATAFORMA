@@ -11,7 +11,8 @@
 - **Auto-Creation**: Criação automática de filas quando novo cliente é criado
 - **8 APIs Modulares**: CRM, WhatsApp, Agendamento, Financeiro, Marketing, Analytics, Portal, Whitelabel
 - **URL**: https://rabbitmq.kryonix.com.br
-- **Login Master**: kryonix / Vitor@123456
+- **Login Master**: kryonix / 8ed56dd2b7dc80f9dd205a348e1dd303
+- **AMQP URL**: amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672
 
 ---
 
