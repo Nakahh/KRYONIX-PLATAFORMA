@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔══════════════════════════════════════════════════════���══════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -994,6 +994,9 @@ next_step
 processing_step
 log_info "Criando docker-stack.yml otimizado..."
 
+# CORREÇÃO CRÍTICA: Usar rede fixa e prioridades otimizadas
+FIXED_NETWORK="kryonix-net"
+
 cat > docker-stack.yml << STACK_EOF
 version: '3.8'
 
@@ -1009,12 +1012,12 @@ services:
       labels:
         # Traefik básico
         - "traefik.enable=true"
-        - "traefik.docker.network=$DOCKER_NETWORK"
+        - "traefik.docker.network=$FIXED_NETWORK"
 
         # Configuração do serviço
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
-        # Router para API (PRIORIDADE MÁXIMA) - CORRIGIDO: webhook/api precisa de prioridade
+        # Router para API (PRIORIDADE MÁXIMA) - CORREÇÃO: webhook/api precisa de prioridade 1000
         - "traefik.http.routers.kryonix-api.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
         - "traefik.http.routers.kryonix-api.entrypoints=websecure"
         - "traefik.http.routers.kryonix-api.tls=true"
@@ -1022,19 +1025,19 @@ services:
         - "traefik.http.routers.kryonix-api.service=kryonix-web"
         - "traefik.http.routers.kryonix-api.priority=1000"
 
-        # Router para API HTTP também (CORRIGIDO: webhook pode vir via HTTP em desenvolvimento)
+        # Router para API HTTP também (CORREÇÃO: webhook pode vir via HTTP em desenvolvimento)
         - "traefik.http.routers.kryonix-api-http.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
         - "traefik.http.routers.kryonix-api-http.entrypoints=web"
         - "traefik.http.routers.kryonix-api-http.service=kryonix-web"
         - "traefik.http.routers.kryonix-api-http.priority=1000"
 
-        # Router HTTP
+        # Router HTTP (prioridade baixa)
         - "traefik.http.routers.kryonix-http.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
         - "traefik.http.routers.kryonix-http.entrypoints=web"
         - "traefik.http.routers.kryonix-http.service=kryonix-web"
         - "traefik.http.routers.kryonix-http.priority=100"
 
-        # Router HTTPS
+        # Router HTTPS (prioridade baixa)
         - "traefik.http.routers.kryonix-https.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
         - "traefik.http.routers.kryonix-https.entrypoints=websecure"
         - "traefik.http.routers.kryonix-https.tls=true"
@@ -1048,7 +1051,7 @@ services:
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
     networks:
-      - $DOCKER_NETWORK
+      - $FIXED_NETWORK
     ports:
       - "8080:8080"
     environment:
@@ -1073,7 +1076,7 @@ services:
       - NODE_ENV=production
       - PORT=8082
     networks:
-      - $DOCKER_NETWORK
+      - $FIXED_NETWORK
     volumes:
       - ./webhook-listener.js:/app/webhook-listener.js:ro
     command: ["node", "webhook-listener.js"]
@@ -1092,7 +1095,7 @@ services:
       - NODE_ENV=production
       - PORT=8084
     networks:
-      - $DOCKER_NETWORK
+      - $FIXED_NETWORK
     volumes:
       - ./kryonix-monitor.js:/app/kryonix-monitor.js:ro
     command: ["node", "kryonix-monitor.js"]
@@ -1104,7 +1107,7 @@ services:
         max_attempts: 3
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=$DOCKER_NETWORK"
+        - "traefik.docker.network=$FIXED_NETWORK"
         - "traefik.http.services.kryonix-monitor.loadbalancer.server.port=8084"
         - "traefik.http.routers.kryonix-monitor.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/monitor\`)"
         - "traefik.http.routers.kryonix-monitor.entrypoints=websecure"
@@ -1112,7 +1115,7 @@ services:
         - "traefik.http.routers.kryonix-monitor.service=kryonix-monitor"
 
 networks:
-  $DOCKER_NETWORK:
+  $FIXED_NETWORK:
     external: true
 STACK_EOF
 
