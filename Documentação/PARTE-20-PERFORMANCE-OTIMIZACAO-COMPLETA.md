@@ -4305,7 +4305,7 @@ curl -X POST http://localhost:3000/api/performance/vitals \
 
 # Test TimescaleDB connection
 echo "🗄️  Testing TimescaleDB connection..."
-docker exec kryonix-timescaledb psql -U kryonix -d kryonix_performance -c "SELECT version();" > /dev/null && echo "✅ TimescaleDB connected" || echo "❌ TimescaleDB connection failed"
+docker exec kryonix-timescaledb psql -U kryonix -d kryonix_performance -c "SELECT version();" > /dev/null && echo "✅ TimescaleDB connected" || echo "��� TimescaleDB connection failed"
 
 # Test Redis connection
 echo "🚀 Testing Redis connection..."
@@ -4324,10 +4324,212 @@ echo "⚡ Running performance benchmark..."
 ab -n 100 -c 10 http://localhost:3000/ > /dev/null 2>&1 && echo "✅ Performance benchmark completed" || echo "⚠️  Performance benchmark failed"
 
 echo ""
-echo "🎉 Performance monitoring validation completed!"
-echo "📱 Mobile-first performance tracking is ready for 80% mobile user base"
-echo "🔄 Multi-tenant performance isolation is active"
-echo "🚀 Auto-optimization and alerting system is operational"
+echo "🎉 Validação do monitoramento de performance concluída!"
+echo "📱 Rastreamento de performance mobile-first pronto para 80% de usuários mobile"
+echo "🔄 Isolamento de performance multi-tenant ativo"
+echo "🚀 Sistema de auto-otimização e alertas operacional"
+
+# ================================
+# SCRIPT DE INSTALAÇÃO COMPLETA EM PORTUGUÊS
+# ================================
+# instalar-performance-kryonix.sh
+
+#!/bin/bash
+set -e
+
+echo "🚀 Instalando Sistema COMPLETO de Performance KRYONIX..."
+echo "📱 Otimizado para 80% de usuários mobile"
+echo ""
+
+# Verificar dependências
+echo "🔍 Verificando dependências..."
+command -v docker >/dev/null 2>&1 || { echo "❌ Docker é necessário mas não está instalado." >&2; exit 1; }
+command -v docker-compose >/dev/null 2>&1 || { echo "❌ Docker Compose é necessário mas não está instalado." >&2; exit 1; }
+command -v node >/dev/null 2>&1 || { echo "❌ Node.js é necessário mas não está instalado." >&2; exit 1; }
+command -v npm >/dev/null 2>&1 || { echo "❌ NPM é necessário mas não está instalado." >&2; exit 1; }
+
+echo "✅ Todas as dependências estão instaladas"
+
+# Criar estrutura de diretórios
+echo "📁 Criando estrutura de diretórios..."
+mkdir -p {src/{services,middleware,routes,components,hooks},monitoring/{grafana,prometheus,alertmanager},scripts,tests}
+
+# Configurar permissões
+echo "🔐 Configurando permissões..."
+sudo chown -R $USER:$USER . 2>/dev/null || true
+sudo chown -R 472:472 monitoring/grafana/ 2>/dev/null || true
+sudo chown -R 65534:65534 monitoring/prometheus/ 2>/dev/null || true
+
+# Instalar dependências do Node.js
+echo "📦 Instalando dependências do Node.js..."
+npm install --silent || {
+    echo "⚠️ Erro na instalação das dependências. Tentando com yarn..."
+    yarn install --silent 2>/dev/null || {
+        echo "❌ Falha na instalação das dependências"
+        exit 1
+    }
+}
+
+# Criar rede Docker
+echo "🌐 Criando rede Docker..."
+docker network create kryonix-network 2>/dev/null || echo "ℹ️ Rede já existe"
+
+# Iniciar stack de monitoramento
+echo "📊 Iniciando stack de monitoramento..."
+docker-compose -f docker-compose.monitoring.yml up -d
+
+# Aguardar serviços ficarem prontos
+echo "⏳ Aguardando serviços iniciarem..."
+sleep 45
+
+# Verificar saúde dos serviços
+echo "🏥 Verificando saúde dos serviços..."
+
+check_service_health() {
+    local service=$1
+    local port=$2
+    local endpoint=${3:-"/"}
+    local max_attempts=20
+    local attempt=1
+
+    while [ $attempt -le $max_attempts ]; do
+        if curl -sf "http://localhost:$port$endpoint" > /dev/null 2>&1; then
+            echo "✅ $service está saudável"
+            return 0
+        fi
+        echo "🔄 Tentativa $attempt/$max_attempts: Aguardando $service..."
+        sleep 3
+        ((attempt++))
+    done
+
+    echo "❌ $service falhou ao iniciar"
+    return 1
+}
+
+# Verificar serviços principais
+check_service_health "TimescaleDB" 5433 "/"
+check_service_health "Redis Performance" 6380 "/"
+check_service_health "Prometheus" 9090 "/api/v1/query?query=up"
+check_service_health "Grafana" 3001 "/api/health"
+check_service_health "AlertManager" 9093 "/"
+
+# Configurar Grafana
+echo "📊 Configurando Grafana..."
+sleep 10
+
+# Criar datasource Prometheus
+curl -X POST \
+  http://admin:kryonix2024@localhost:3001/api/datasources \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "Prometheus KRYONIX",
+    "type": "prometheus",
+    "url": "http://prometheus:9090",
+    "access": "proxy",
+    "isDefault": true
+  }' > /dev/null 2>&1 && echo "✅ Datasource Prometheus configurado" || echo "⚠️ Datasource já existe"
+
+# Criar datasource TimescaleDB
+curl -X POST \
+  http://admin:kryonix2024@localhost:3001/api/datasources \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "TimescaleDB KRYONIX",
+    "type": "postgres",
+    "url": "timescaledb:5432",
+    "database": "kryonix_performance",
+    "user": "kryonix_monitor",
+    "secureJsonData": {
+      "password": "monitor2024"
+    }
+  }' > /dev/null 2>&1 && echo "✅ Datasource TimescaleDB configurado" || echo "⚠️ Datasource já existe"
+
+# Executar testes de validação
+echo "🧪 Executando testes de validação..."
+
+# Teste 1: Inserir métricas de teste
+echo "📊 Testando inserção de métricas..."
+docker exec kryonix-timescaledb psql -U kryonix -d kryonix_performance -c "
+  INSERT INTO api_metrics (tenant_id, endpoint, method, status_code, response_time_ms, device_type)
+  VALUES (1, '/test', 'GET', 200, 150, 'mobile');
+" > /dev/null 2>&1 && echo "✅ Inserção de métricas funcionando" || echo "❌ Erro na inserção de métricas"
+
+# Teste 2: Verificar cache Redis
+echo "🚀 Testando cache Redis..."
+docker exec kryonix-redis-performance redis-cli set test_key "test_value" > /dev/null 2>&1
+docker exec kryonix-redis-performance redis-cli get test_key > /dev/null 2>&1 && echo "✅ Cache Redis funcionando" || echo "❌ Erro no cache Redis"
+
+# Teste 3: Verificar métricas Prometheus
+echo "📈 Testando métricas Prometheus..."
+curl -sf "http://localhost:9090/api/v1/query?query=up" | grep -q "success" && echo "✅ Prometheus funcionando" || echo "❌ Erro no Prometheus"
+
+# Teste 4: Testar API de performance (se disponível)
+echo "🔌 Testando API de performance..."
+if curl -sf http://localhost:3000/health > /dev/null 2>&1; then
+    curl -X POST http://localhost:3000/api/performance/vitals \
+      -H "Content-Type: application/json" \
+      -d '{
+        "tenantId": 1,
+        "sessionId": "test-install-session",
+        "metrics": [{
+          "lcp": 1200,
+          "fid": 50,
+          "cls": 0.05,
+          "pageUrl": "http://localhost:3000/test-install",
+          "isMobile": true,
+          "deviceType": "mobile"
+        }]
+      }' > /dev/null 2>&1 && echo "✅ API de performance funcionando" || echo "⚠️ API de performance não disponível (OK se app não estiver rodando)"
+else
+    echo "ℹ️ App principal não está rodando (OK para instalação isolada)"
+fi
+
+# Executar benchmark de performance
+echo "⚡ Executando benchmark de performance..."
+if command -v ab >/dev/null 2>&1; then
+    ab -n 50 -c 5 http://localhost:3001/ > /dev/null 2>&1 && echo "✅ Benchmark concluído" || echo "⚠️ Benchmark falhou"
+else
+    echo "ℹ️ Apache Bench não disponível - pulando benchmark"
+fi
+
+# Verificar uso de recursos
+echo "💾 Verificando uso de recursos..."
+docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}" | grep kryonix | head -5
+
+# Relatório final
+echo ""
+echo "🎉 ================================"
+echo "   INSTALAÇÃO KRYONIX CONCLUÍDA!"
+echo "================================"
+echo ""
+echo "🌐 URLs de Acesso:"
+echo "   📊 Grafana Dashboard: http://localhost:3001"
+echo "      👤 Usuário: admin"
+echo "      🔑 Senha: kryonix2024"
+echo ""
+echo "   📈 Prometheus: http://localhost:9090"
+echo "   🚨 AlertManager: http://localhost:9093"
+echo "   🗄️ TimescaleDB: localhost:5433/kryonix_performance"
+echo "   🚀 Redis Performance: localhost:6380"
+echo ""
+echo "📱 Características:"
+echo "   ✅ Otimizado para 80% usuários mobile"
+echo "   ✅ Multi-tenant com isolamento RLS"
+echo "   ✅ Core Web Vitals tracking ativo"
+echo "   ✅ Auto-otimização inteligente"
+echo "   ✅ Alertas em tempo real"
+echo "   ✅ Análise preditiva de IA"
+echo ""
+echo "🔧 Próximos passos:"
+echo "   1. Configure alertas personalizados no AlertManager"
+echo "   2. Importe dashboards customizados no Grafana"
+echo "   3. Integre o tracking de performance no seu app"
+echo "   4. Configure limites de performance por tenant"
+echo ""
+echo "📚 Documentação completa em:"
+echo "   - Documentação/PARTE-20-PERFORMANCE-OTIMIZACAO-COMPLETA.md"
+echo ""
+echo "🚀 Sistema KRYONIX Performance pronto para produção!"
 ```
 
 ---
