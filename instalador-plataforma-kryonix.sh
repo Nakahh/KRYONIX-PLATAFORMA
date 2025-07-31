@@ -82,7 +82,7 @@ show_banner() {
     echo    "╔════════════════════���════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗██���█╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -391,7 +391,7 @@ echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação
 next_step
 
 # ============================================================================
-# ETAPA 1: VERIFICAÇÕES E INSTALA��ÃO AUTOMÁTICA DE DEPENDÊNCIAS
+# ETAPA 1: VERIFICAÇÕES E INSTALA��ÃO AUTOM��TICA DE DEPENDÊNCIAS
 # ============================================================================
 
 processing_step
@@ -1822,7 +1822,7 @@ log_info "🛠️ Criando script de diagnóstico webhook..."
 cat > diagnostico-webhook.sh << 'DIAGNOSTICO_EOF'
 #!/bin/bash
 
-echo "🔍 DIAGNÓSTICO WEBHOOK KRYONIX - VERS��O CORRIGIDA"
+echo "🔍 DIAGNÓSTICO WEBHOOK KRYONIX - VERSÃO CORRIGIDA"
 echo "================================================"
 
 # 1. Verificar arquivos essenciais
@@ -2042,7 +2042,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════��══════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
@@ -2081,12 +2081,12 @@ echo -e "${GREEN}${BOLD}✅ KRYONIX instalado e funcionando!${RESET}"
 echo -e "${PURPLE}🚀 Push no GitHub = Deploy automático ativado!${RESET}"
 echo ""
 echo -e "${GREEN}${BOLD}🔧 CORREÇÕES CRÍTICAS APLICADAS:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Prioridades Traefik:${RESET} ✅ Webhook prioridade 3000 (ULTRA MÁXIMA)"
-echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Endpoint Específico:${RESET} ✅ Rota exclusiva /api/github-webhook"
-echo -e "    ${BLUE}│${RESET} ${BOLD}📁 Criação Automática:${RESET} ✅ server.js criado se ausente"
-echo -e "    ${BLUE}│${RESET} ${BOLD}🔧 Verificação Automática:${RESET} ✅ Correç��o automática de problemas"
-echo -e "    ${BLUE}│${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Caminho absoluto para webhook-deploy.sh"
-echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Completo:${RESET} ✅ Validação de 15 tentativas com health check"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🔐 Verificação de Assinatura:${RESET} ✅ Obrigatória e funcionando"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Filtros Específicos:${RESET} ✅ Apenas push na branch main aceito"
+echo -e "    ${BLUE}│${RESET} ${BOLD}📜 Script Simplificado:${RESET} ✅ webhook-deploy.sh otimizado"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Path Relativo:${RESET} ✅ ./webhook-deploy.sh (sem hardcode)"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🚦 Prioridades Traefik:${RESET} ✅ Webhook prioridade 2000"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Completo:${RESET} ✅ Validação com assinatura real"
 echo ""
 echo -e "${PURPLE}${BOLD}🎨 DEPLOY INTELIGENTE AVANÇADO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Dependências Inteligentes:${RESET} ✅ Detecta e instala novas dependências automaticamente"
