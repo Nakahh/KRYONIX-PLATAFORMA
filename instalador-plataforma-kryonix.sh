@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ █████���╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -359,7 +359,24 @@ validate_credentials() {
 # Mostrar banner
 show_banner
 
+# Verificação inicial do ambiente
+echo -e "${PURPLE}${BOLD}🔍 VERIFICAÇÃO INICIAL DO AMBIENTE${RESET}"
+
+# Verificar se já existe instalação anterior
+if [ -d "$PROJECT_DIR" ]; then
+    echo -e "${YELLOW}⚠️ Instalação anterior detectada em $PROJECT_DIR${RESET}"
+    echo -e "${CYAN}🔄 Processo de atualização será aplicado${RESET}"
+fi
+
+# Verificar se webhook está rodando (problema atual)
+if curl -f -s -m 3 "http://localhost:8080/health" >/dev/null 2>&1; then
+    echo -e "${GREEN}✅ Serviço já rodando - será atualizado${RESET}"
+else
+    echo -e "${CYAN}📦 Serviço será instalado do zero${RESET}"
+fi
+
 # Detecção automática do ambiente
+echo ""
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX 100% AUTOMÁTICO${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
@@ -1004,7 +1021,7 @@ log_info "🎯 Rede detectada: $DOCKER_NETWORK"
 if docker network ls --format "{{.Name}}" | grep -q "^${DOCKER_NETWORK}$" 2>/dev/null; then
     log_success "✅ Rede $DOCKER_NETWORK já existe"
 elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 2>&1; then
-    log_success "�� Rede $DOCKER_NETWORK criada com sucesso"
+    log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
     log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
@@ -1570,7 +1587,7 @@ deploy() {
     log "🚀 Iniciando deploy automático do KRYONIX Platform..."
     info "📋 Payload recebido: $payload"
 
-    # Verificar e criar diretório se necessário
+    # Verificar e criar diretório se necess��rio
     if [ ! -d "$DEPLOY_PATH" ]; then
         info "📁 Criando diretório de deploy: $DEPLOY_PATH"
         sudo mkdir -p "$DEPLOY_PATH"
