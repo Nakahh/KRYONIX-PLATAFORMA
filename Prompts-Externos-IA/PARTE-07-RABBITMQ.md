@@ -1149,7 +1149,7 @@ class MobileConsumer {
 
     async processSMS(data) {
         try {
-            console.log('���� Processing SMS:', data.to);
+            console.log('📨 Processing SMS:', data.to);
             // SMS integration here
             console.log('✅ SMS processed');
         } catch (error) {
@@ -1402,7 +1402,7 @@ echo "
 ✅ Scripts de automação e monitoramento
 ✅ Integração completa Evolution API + SDK
 
-🔐 Login: kryonix / Vitor@123456
+🔐 Login: kryonix / 8ed56dd2b7dc80f9dd205a348e1dd303
 
 📱 CONSUMERS ATIVOS:
 📱 mobile-consumer (WhatsApp, SMS, Push)
