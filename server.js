@@ -3,7 +3,7 @@ import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 
@@ -139,7 +139,6 @@ app.post('/api/github-webhook', (req, res) => {
       console.log('🚀 Executando script de deploy webhook...');
 
       // Usar spawn para melhor controle do processo
-      import { spawn } from 'child_process';
       const deployProcess = spawn('bash', [deployScript, 'webhook', JSON.stringify(payload)], {
         cwd: '/opt/kryonix-plataform',
         stdio: 'pipe'
