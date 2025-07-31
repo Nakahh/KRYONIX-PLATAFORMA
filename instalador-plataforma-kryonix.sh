@@ -75,7 +75,7 @@ STEP_DESCRIPTIONS=(
 # FUNÇÕES DE INTERFACE E PROGRESSO
 # ============================================================================
 
-# Funç��o para mostrar banner da Plataforma Kryonix
+# Função para mostrar banner da Plataforma Kryonix
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
@@ -739,15 +739,18 @@ app.post('/api/github-webhook', (req, res) => {
     }
 });
 
-// Endpoint de teste para debug do webhook
+// Endpoint de status para GitHub verificar webhook
 app.get('/api/github-webhook', (req, res) => {
-    res.json({
-        message: 'KRYONIX Webhook Endpoint',
+    console.log('📡 GitHub verificando webhook endpoint via GET');
+    res.status(200).json({
+        message: 'KRYONIX GitHub Webhook Endpoint',
         status: 'online',
         timestamp: new Date().toISOString(),
         webhook_secret_configured: !!process.env.WEBHOOK_SECRET,
         accepted_methods: ['POST'],
-        test_url: 'POST /api/github-webhook com payload GitHub'
+        ready_for_github: true,
+        troubleshooting_mode: true,
+        signature_validation: 'temporarily_disabled'
     });
 });
 
@@ -2003,7 +2006,7 @@ chmod +x webhook-deploy.sh
 sudo chmod 755 webhook-deploy.sh
 sudo chown $USER:$USER webhook-deploy.sh
 
-# CORRIGIDO: Verificar se o script de deploy est�� funcionando
+# CORRIGIDO: Verificar se o script de deploy está funcionando
 log_info "🧪 Testando script de deploy..."
 if ./webhook-deploy.sh manual &>/dev/null; then
     log_success "✅ Script de deploy testado e funcionando"
@@ -2153,7 +2156,7 @@ if docker service ls | grep -q "traefik"; then
 echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 fi
 echo ""
-echo -e "${CYAN}${BOLD}���️ COMANDOS ÚTEIS:${RESET}"
+echo -e "${CYAN}${BOLD}🛠️ COMANDOS ÚTEIS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${RESET} - Ver logs"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
