@@ -18,7 +18,7 @@ Notification System:
   Storage: PostgreSQL + Redis
   Templates: Strapi CMS
   Analytics: Metabase tracking
-```
+
 
 ## 📊 **MODELO DE DADOS**
 ```sql
@@ -636,6 +636,7 @@ psql -h postgresql.kryonix.com.br -U postgres -d kryonix_saas -f notifications-s
 # 2. Configurar Ntfy
 curl -d "Testing KRYONIX notifications" \
   -u kryonix:Vitor@123456 \
+  -H "Authorization: Basic a3J5b25peDpWaXRvckAxMjM0NTY=" \
   https://ntfy.kryonix.com.br/test
 
 # 3. Testar SendGrid
