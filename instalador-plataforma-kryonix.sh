@@ -1101,12 +1101,9 @@ app.post('/api/webhook-test', (req, res) => {
         payload: req.body,
         note: 'Este endpoint é apenas para testes - não executa deploy'
     });
-});
-WEBHOOK_EOF
+# Arquivos auxiliares necessários já foram tratados acima
 
-    log_success "✅ Webhook CORRIGIDO com verificação de assinatura obrigatória, filtros específicos e logs detalhados"
-
-# Criar arquivos auxiliares necessários
+# Continuando com outros arquivos auxiliares
 log_info "Criando arquivos auxiliares..."
 
 # webhook-listener.js - CORRIGIDO: Arquivo estava faltando causando falha no deploy
@@ -2077,7 +2074,7 @@ deploy() {
 
         # Verificar se existe script de build
         if grep -q '"build"' package.json; then
-            info "🏗️ Executando build com Yarn..."
+            info "���️ Executando build com Yarn..."
             yarn build || {
                 warning "Build falhou, tentando scripts alternativos..."
                 yarn build:prod 2>/dev/null || yarn compile 2>/dev/null || info "ℹ️ Build personalizado não encontrado"
@@ -2183,7 +2180,7 @@ deploy() {
         warning "⚠️ Arquivo principal não detectado, usando server.js como padrão"
         MAIN_FILE="server.js"
     fi
-    info "📄 Arquivo principal detectado: $MAIN_FILE"
+    info "���� Arquivo principal detectado: $MAIN_FILE"
 
     # Verificar se public/index.html existe
     if [ ! -f "public/index.html" ]; then
@@ -2454,7 +2451,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═════════════════════════════════════════════��═════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════���═══════════════��═════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}═════════���══════════════════════════════��════════════════��═════════${RESET}"
 echo ""
