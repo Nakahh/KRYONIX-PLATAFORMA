@@ -97,7 +97,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚█��╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -389,17 +389,44 @@ echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação
 next_step
 
 # ============================================================================
-# ETAPA 1: VERIFICAR DOCKER SWARM
+# ETAPA 1: VERIFICAÇÕES E INSTALAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
 # ============================================================================
 
-if ! docker info | grep -q "Swarm: active"; then
-    error_step
-    log_error "Docker Swarm não está ativo!"
-    log_info "Execute: docker swarm init"
-    exit 1
+processing_step
+
+# Verificar e instalar Docker se necessário
+if ! command -v docker >/dev/null 2>&1; then
+    log_info "🐳 Docker não encontrado, instalando automaticamente..."
+    curl -fsSL https://get.docker.com | sh >/dev/null 2>&1
+    sudo usermod -aG docker $USER
+    log_success "Docker instalado com sucesso"
 fi
 
-log_success "Docker Swarm detectado e ativo"
+# Verificar e ativar Docker Swarm automaticamente
+if ! docker info | grep -q "Swarm: active"; then
+    log_info "🔄 Docker Swarm não ativo, inicializando automaticamente..."
+    docker swarm init --advertise-addr $(curl -s -4 ifconfig.me 2>/dev/null || echo '127.0.0.1') >/dev/null 2>&1
+    if docker info | grep -q "Swarm: active"; then
+        log_success "Docker Swarm ativado automaticamente"
+    else
+        error_step
+        log_error "Falha ao ativar Docker Swarm"
+        log_info "Execute manualmente: docker swarm init"
+        exit 1
+    fi
+else
+    log_success "Docker Swarm já ativo"
+fi
+
+# Verificar outras dependências críticas
+for cmd in curl git openssl; do
+    if ! command -v $cmd >/dev/null 2>&1; then
+        log_info "📦 Instalando $cmd..."
+        sudo apt-get update >/dev/null 2>&1 || sudo yum update >/dev/null 2>&1 || true
+        sudo apt-get install -y $cmd >/dev/null 2>&1 || sudo yum install -y $cmd >/dev/null 2>&1 || true
+    fi
+done
+
 complete_step
 next_step
 
@@ -1764,7 +1791,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════════════════════��═════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
