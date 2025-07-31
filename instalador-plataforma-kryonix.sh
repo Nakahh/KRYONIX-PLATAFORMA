@@ -82,10 +82,10 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔═��██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗█��║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -769,14 +769,14 @@ if [ ! -f "public/index.html" ]; then
     <!-- Meta tags para compartilhamento (Open Graph) -->
     <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS 100% Autônoma por IA">
     <meta property="og:description" content="🤖 Revolução em SaaS: 15 agentes de IA autônomos, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
-    <meta property="og:image" content="https://kryonix.com.br/logo kryonix.png">
+    <meta property="og:image" content="https://kryonix.com.br/logo-com-nome.png">
     <meta property="og:url" content="https://kryonix.com.br">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR">
     <meta property="og:site_name" content="🚀 KRYONIX - IA Autônoma">
 
     <!-- WhatsApp específico -->
-    <meta property="og:image:alt" content="KRYONIX - Logo da plataforma SaaS autônoma brasileira com IA">
+    <meta property="og:image:alt" content="KRYONIX - Logo oficial da plataforma SaaS autônoma brasileira com IA">
     <meta name="whatsapp:title" content="🚀 KRYONIX - IA Autônoma">
     <meta name="whatsapp:description" content="🤖 A revolução do SaaS chegou! 15 agentes IA + 8 módulos + Deploy automático. 100% brasileiro! 📱✨">
 
@@ -784,7 +784,7 @@ if [ ! -f "public/index.html" ]; then
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="🚀 KRYONIX - IA Autônoma Brasileira">
     <meta name="twitter:description" content="🤖 15 agentes IA + 8 módulos SaaS + Deploy automático. A revolução tecnológica 100% brasileira chegou! 📱✨">
-    <meta name="twitter:image" content="https://kryonix.com.br/logo kryonix.png">
+    <meta name="twitter:image" content="https://kryonix.com.br/logo-com-nome.png">
 
     <meta name="theme-color" content="#667eea">
     <style>
@@ -861,7 +861,7 @@ if [ ! -f "public/index.html" ]; then
         console.log('🚀 KRYONIX Platform Ready - Favicon com foguete ativo!');
         fetch('/api/status')
             .then(response => response.json())
-            .then(data => console.log('�� Plataforma KRYONIX funcionando:', data))
+            .then(data => console.log('✅ Plataforma KRYONIX funcionando:', data))
             .catch(err => console.log('⚠️ API carregando...'));
     </script>
 </body>
