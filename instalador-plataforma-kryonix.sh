@@ -391,7 +391,7 @@ echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação
 next_step
 
 # ============================================================================
-# ETAPA 1: VERIFICAÇÕES E INSTALAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
+# ETAPA 1: VERIFICAÇÕES E INSTALA��ÃO AUTOMÁTICA DE DEPENDÊNCIAS
 # ============================================================================
 
 processing_step
@@ -850,52 +850,18 @@ if [ -f "Marca-KRYONIX (Branding)/Logo Kryonix com nome.png" ]; then
     log_success "✅ Logo com nome copiada para compartilhamento"
 fi
 
-# Criar favicon com foguete
-log_info "Criando favicon com ícone de foguete..."
-cat > public/favicon.svg << 'FAVICON_EOF'
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <defs>
-    <linearGradient id="rocketGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="fireGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#ffa500;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#ffeb3b;stop-opacity:1" />
-    </linearGradient>
-  </defs>
+# Usar logo oficial KRYONIX como favicon
+log_info "Configurando logo oficial KRYONIX como favicon..."
 
-  <!-- Background circle -->
-  <circle cx="32" cy="32" r="30" fill="url(#rocketGradient)" stroke="#fff" stroke-width="2"/>
-
-  <!-- Rocket body -->
-  <ellipse cx="32" cy="28" rx="6" ry="16" fill="#f5f5f5"/>
-
-  <!-- Rocket nose -->
-  <path d="M32,12 L38,20 L26,20 Z" fill="#4CAF50"/>
-
-  <!-- Rocket fins -->
-  <path d="M26,36 L24,44 L26,44 Z" fill="#2196F3"/>
-  <path d="M38,36 L40,44 L38,44 Z" fill="#2196F3"/>
-
-  <!-- Rocket window -->
-  <circle cx="32" cy="24" r="3" fill="#2196F3" opacity="0.8"/>
-
-  <!-- Fire/exhaust -->
-  <path d="M32,44 L28,52 L32,50 L36,52 Z" fill="url(#fireGradient)"/>
-  <path d="M32,50 L30,56 L32,54 L34,56 Z" fill="#ff6b6b" opacity="0.8"/>
-
-  <!-- Stars -->
-  <circle cx="18" cy="18" r="1" fill="#fff"/>
-  <circle cx="46" cy="20" r="1" fill="#fff"/>
-  <circle cx="20" cy="46" r="1" fill="#fff"/>
-  <circle cx="44" cy="44" r="1" fill="#fff"/>
-
-  <!-- KRYONIX text (small) -->
-  <text x="32" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="#fff">KRYONIX</text>
-</svg>
-FAVICON_EOF
+# Copiar logo oficial para favicon
+if [ -f "Marca-KRYONIX (Branding)/logo kryonix.png" ]; then
+    cp "Marca-KRYONIX (Branding)/logo kryonix.png" public/favicon.png
+    cp "Marca-KRYONIX (Branding)/logo kryonix.png" public/favicon.ico
+    cp "Marca-KRYONIX (Branding)/logo kryonix.png" public/apple-touch-icon.png
+    log_success "✅ Logo oficial configurado como favicon"
+else
+    log_warning "⚠️ Logo não encontrada na pasta branding"
+fi
 
 if [ ! -f "public/index.html" ]; then
     log_info "Criando index.html otimizado para compartilhamento..."
@@ -2160,7 +2126,7 @@ echo -e "${CYAN}${BOLD}🛠️ COMANDOS ÚTEIS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${RESET} - Ver logs"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
-echo -e "    ${BLUE}│${RESET} ${YELLOW}curl -X POST http://localhost:8080/api/github-webhook -d '{\"test\":true}'${RESET} - Testar webhook"
+echo -e "    ${BLUE}���${RESET} ${YELLOW}curl -X POST http://localhost:8080/api/github-webhook -d '{\"test\":true}'${RESET} - Testar webhook"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh test${RESET} - Testar deploy"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - Deploy manual"
 echo ""
@@ -2302,7 +2268,7 @@ echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK:${RESET}"
 echo -e "   ${WHITE}• URL: ${CYAN}https://kryonix.com.br/api/github-webhook${RESET}"
 echo -e "   ${WHITE}• Secret: ${CYAN}(opcional - verificação desabilitada)${RESET}"
-echo -e "   ${WHITE}• Content-Type: ${CYAN}application/json${RESET}"
+echo -e "   ${WHITE}�� Content-Type: ${CYAN}application/json${RESET}"
 echo -e "   ${WHITE}• Events: ${CYAN}Push events${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}🔧 OUTROS PROBLEMAS:${RESET}"
