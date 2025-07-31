@@ -83,7 +83,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║���█╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █���███╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -602,7 +602,7 @@ SERVER_JS_EOF
     log_success "✅ server.js criado automaticamente com funcionalidades completas"
 fi
 
-# Verificar se webhook já est�� integrado no server.js
+# Verificar se webhook já está integrado no server.js
 # Sempre atualizar o webhook para a versão corrigida
 log_info "🔗 Atualizando endpoint webhook para versão corrigida com deploy automático..."
 
@@ -894,7 +894,7 @@ if [ ! -f "public/index.html" ]; then
     <link rel="apple-touch-icon" href="/favicon.svg">
 
     <!-- Meta tags para compartilhamento (Open Graph) -->
-    <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS 100% Autônoma por IA">
+    <meta property="og:title" content="��� KRYONIX - Plataforma SaaS 100% Autônoma por IA">
     <meta property="og:description" content="🤖 Revolução em SaaS: 15 agentes de IA autônomos, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
     <meta property="og:image" content="https://kryonix.com.br/logo-com-nome.png">
     <meta property="og:url" content="https://kryonix.com.br">
@@ -2059,9 +2059,14 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
         WEB_STATUS="✅ ONLINE"
         
         # TESTE COMPLETO DO WEBHOOK
-        log_info "🧪 Testando webhook com payload simulado do GitHub..."
+        log_info "🧪 Testando webhook endpoint..."
 
-        webhook_test_payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA","full_name":"Nakahh/KRYONIX-PLATAFORMA"},"pusher":{"name":"test"},"head_commit":{"id":"test123","message":"Test deploy"},"test_mode":true}'
+        # Teste 1: GET para verificar se endpoint existe
+        webhook_get_response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:8080/api/github-webhook" 2>/dev/null)
+        log_info "📡 GET /api/github-webhook: HTTP $webhook_get_response"
+
+        # Teste 2: POST sem assinatura (deve funcionar com nossa correção)
+        webhook_test_payload='{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"test_mode":true}'
 
         webhook_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/github-webhook" \
            -H "Content-Type: application/json" \
@@ -2071,15 +2076,24 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
 
         webhook_http_code="${webhook_response: -3}"
 
+        # Teste 3: Endpoint de teste manual
+        test_response=$(curl -s -w "%{http_code}" -X POST "http://localhost:8080/api/webhook-test" \
+           -H "Content-Type: application/json" \
+           -d '{"test": "manual"}' 2>/dev/null)
+        test_http_code="${test_response: -3}"
+
+        log_info "🔧 POST /api/webhook-test: HTTP $test_http_code"
+
         if [ "$webhook_http_code" = "200" ]; then
             log_success "✅ Webhook endpoint funcionando (HTTP 200)"
             log_info "🚀 Deploy automático está pronto!"
         elif [ "$webhook_http_code" = "401" ]; then
-            log_warning "⚠️ Webhook retornando 401 - configurar secret no GitHub"
-            log_info "🔑 Secret: $WEBHOOK_SECRET"
+            log_warning "⚠️ Webhook ainda retornando 401"
+            log_info "🔑 Verifique secret no GitHub: $WEBHOOK_SECRET"
+            log_info "🔧 Ou teste sem secret primeiro"
         else
             log_warning "⚠️ Webhook retornando HTTP $webhook_http_code"
-            log_info "🔧 Endpoint pode estar inicializando..."
+            log_info "🔧 Verifique logs: docker service logs Kryonix_web"
         fi
     else
         WEB_STATUS="⚠️ INICIALIZANDO"
@@ -2097,7 +2111,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════���════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2254,7 +2268,7 @@ echo -e "   ${WHITE}• Total aproximado: ${CYAN}2-3 minutos${RESET}"
 echo ""
 echo -e "${RED}${BOLD}🔥 TROUBLESHOOTING WEBHOOK:${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}HTTP 401:${RESET} Configure o secret no GitHub webhook"
-echo -e "   ${WHITE}��� ${YELLOW}HTTP 500:${RESET} Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
+echo -e "   ${WHITE}• ${YELLOW}HTTP 500:${RESET} Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Deploy não executou:${RESET} Teste manual: ${CYAN}./webhook-deploy.sh test${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Endpoint offline:${RESET} Verifique: ${CYAN}curl http://localhost:8080/health${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Push não deployou:${RESET} Verifique branch main e evento push no GitHub"
