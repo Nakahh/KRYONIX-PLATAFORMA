@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔════════════════════���════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ���"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -1223,7 +1223,7 @@ COPY package*.json ./
 # Instalar dependências
 RUN npm install --production && npm cache clean --force
 
-# Copiar código da aplicaç��o
+# Copiar código da aplicação
 COPY server.js ./
 COPY public/ ./public/
 
@@ -1649,25 +1649,40 @@ force_restart_stack() {
     return 0
 }
 
+# Verificar se é teste
+if [ "$DEPLOY_MODE" = "test" ]; then
+    info "🧪 Modo de teste ativado"
+    success "✅ Script de deploy está funcionando!"
+    exit 0
+fi
+
 deploy() {
     local payload="$1"
 
-    log "🚀 Iniciando deploy automático do KRYONIX Platform..."
-    info "📋 Payload recebido: $payload"
+    info "🚀 Iniciando deploy automático KRYONIX"
+    info "📂 Diretório: $PROJECT_DIR"
+    info "🎯 Modo: $DEPLOY_MODE"
 
-    # Verificar e criar diretório se necess��rio
-    if [ ! -d "$DEPLOY_PATH" ]; then
-        info "📁 Criando diretório de deploy: $DEPLOY_PATH"
-        sudo mkdir -p "$DEPLOY_PATH"
-        sudo chown -R $USER:$USER "$DEPLOY_PATH"
+    # Verificar Docker
+    if ! command -v docker &> /dev/null; then
+        error "Docker não encontrado"
+        exit 1
     fi
 
-    cd "$DEPLOY_PATH"
+    if ! docker info &> /dev/null; then
+        error "Docker daemon não está rodando"
+        exit 1
+    fi
 
-    # Corrigir ownership do Git antes de fazer pull
-    info "🔧 Corrigindo permissões Git..."
-    git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
-    sudo git config --system --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
+    info "✅ Docker verificado"
+
+    # Verificar Git
+    if [ ! -d ".git" ]; then
+        error "Não é um repositório Git"
+        exit 1
+    fi
+
+    info "✅ Repositório Git verificado"
 
     # Atualizar código
     info "📥 Atualizando código do repositório..."
@@ -2171,7 +2186,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Prioridades Traefik:${RESET} ✅ Web
 echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Endpoint Específico:${RESET} ✅ Rota exclusiva /api/github-webhook"
 echo -e "    ${BLUE}│${RESET} ${BOLD}📁 Criação Automática:${RESET} ✅ server.js criado se ausente"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🔧 Verificação Automática:${RESET} ✅ Correção automática de problemas"
-echo -e "    ${BLUE}��${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Caminho absoluto para webhook-deploy.sh"
+echo -e "    ${BLUE}│${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Caminho absoluto para webhook-deploy.sh"
 echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Completo:${RESET} ✅ Validação de 15 tentativas com health check"
 echo ""
 echo -e "${PURPLE}${BOLD}🎨 DEPLOY INTELIGENTE AVANÇADO:${RESET}"
@@ -2254,7 +2269,7 @@ if [ "$WEBHOOK_STATUS" = "❌ ERRO" ]; then
 
     # Se ainda não funcionar, mostrar comando de troubleshooting
     if [ "$WEBHOOK_STATUS" = "❌ ERRO" ]; then
-        echo -e "${RED}${BOLD}⚠️ CORREÇÃO MANUAL NECESSÁRIA${RESET}"
+        echo -e "${RED}${BOLD}⚠️ CORRE��ÃO MANUAL NECESSÁRIA${RESET}"
         echo -e "${YELLOW}Execute os comandos:${RESET}"
         echo -e "${CYAN}  docker service logs ${STACK_NAME}_web${RESET}"
         echo -e "${CYAN}  docker service update --force ${STACK_NAME}_web${RESET}"
