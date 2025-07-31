@@ -85,7 +85,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ���█║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -931,7 +931,7 @@ if docker service ls | grep -q "traefik"; then
 
     if [ "$network_confirmed" = false ]; then
         log_warning "⚠�� Traefik não está na rede $DOCKER_NETWORK"
-        log_info "🔄 Traefik em rede diferente, continuando com $DOCKER_NETWORK"
+        log_info "��� Traefik em rede diferente, continuando com $DOCKER_NETWORK"
         log_info "📝 Usando rede detectada: $DOCKER_NETWORK (pode precisar de ajustes manuais)"
     fi
 
@@ -1545,7 +1545,7 @@ deploy() {
     # Verificações finais antes do build Docker
     info "🔍 Verificações finais antes do build..."
 
-    # Verificar se package.json existe e �� válido
+    # Verificar se package.json existe e é válido
     if [ ! -f "package.json" ]; then
         error "❌ package.json não encontrado!"
         return 1
@@ -1778,7 +1778,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════��════════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -1796,10 +1796,9 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub CI/CD:${RESET} ✅ CONFIGURADO"
 echo ""
 echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local:${RESET} http://localhost:8080"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} http://$SERVER_HOST:8080"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Health:${RESET} http://$SERVER_HOST:8080/health"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook:${RESET} $WEBHOOK_URL"
-if docker service ls | grep -q "traefik" && [[ "$DOMAIN_NAME" != "$SERVER_HOST" ]]; then
+echo -e "    ${BLUE}│${RESET} ${BOLD}Health:${RESET} http://localhost:8080/health"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook:${RESET} http://localhost:8080/api/github-webhook"
+if docker service ls | grep -q "traefik"; then
 echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 fi
 echo ""
