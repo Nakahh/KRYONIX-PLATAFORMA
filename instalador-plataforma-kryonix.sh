@@ -1021,9 +1021,6 @@ next_step
 processing_step
 log_info "Criando docker-stack.yml otimizado..."
 
-# CORREÇÃO CRÍTICA: Usar rede fixa e prioridades otimizadas
-FIXED_NETWORK="kryonix-net"
-
 cat > docker-stack.yml << STACK_EOF
 version: '3.8'
 
@@ -1039,7 +1036,7 @@ services:
       labels:
         # Traefik básico
         - "traefik.enable=true"
-        - "traefik.docker.network=$FIXED_NETWORK"
+        - "traefik.docker.network=$DOCKER_NETWORK"
 
         # Configuração do serviço
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
@@ -1078,7 +1075,7 @@ services:
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
     networks:
-      - $FIXED_NETWORK
+      - $DOCKER_NETWORK
     ports:
       - "8080:8080"
     environment:
@@ -1103,7 +1100,7 @@ services:
       - NODE_ENV=production
       - PORT=8082
     networks:
-      - $FIXED_NETWORK
+      - $DOCKER_NETWORK
     volumes:
       - ./webhook-listener.js:/app/webhook-listener.js:ro
     command: ["node", "webhook-listener.js"]
@@ -1122,7 +1119,7 @@ services:
       - NODE_ENV=production
       - PORT=8084
     networks:
-      - $FIXED_NETWORK
+      - $DOCKER_NETWORK
     volumes:
       - ./kryonix-monitor.js:/app/kryonix-monitor.js:ro
     command: ["node", "kryonix-monitor.js"]
@@ -1134,7 +1131,7 @@ services:
         max_attempts: 3
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=$FIXED_NETWORK"
+        - "traefik.docker.network=$DOCKER_NETWORK"
         - "traefik.http.services.kryonix-monitor.loadbalancer.server.port=8084"
         - "traefik.http.routers.kryonix-monitor.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/monitor\`)"
         - "traefik.http.routers.kryonix-monitor.entrypoints=websecure"
@@ -1142,7 +1139,7 @@ services:
         - "traefik.http.routers.kryonix-monitor.service=kryonix-monitor"
 
 networks:
-  $FIXED_NETWORK:
+  $DOCKER_NETWORK:
     external: true
 STACK_EOF
 
