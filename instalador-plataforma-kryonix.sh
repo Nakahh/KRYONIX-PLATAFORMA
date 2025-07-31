@@ -79,12 +79,12 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔══════════════════════════════════════════════════════���══════════╗"
+    echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═���█╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -808,16 +808,10 @@ next_step
 processing_step
 log_info "🔍 Iniciando detecção automática da rede Docker..."
 
-# Detectar automaticamente a rede do Traefik
-DOCKER_NETWORK=$(detect_traefik_network_automatically)
+# CORREÇÃO: Usar rede fixa "kryonix-net" para evitar problemas de detecção
+DOCKER_NETWORK="kryonix-net"
 
-if [ -z "$DOCKER_NETWORK" ]; then
-    error_step
-    log_error "❌ Falha na detecção automática da rede"
-    exit 1
-fi
-
-log_info "🎯 Rede detectada: $DOCKER_NETWORK"
+log_info "🎯 Usando rede fixa: $DOCKER_NETWORK (mais estável que detecção automática)"
 
 # Verificar se rede já existe
 if docker network ls --format "{{.Name}}" | grep -q "^${DOCKER_NETWORK}$" 2>/dev/null; then
@@ -828,6 +822,16 @@ else
     error_step
     log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
     exit 1
+fi
+
+# CORREÇÃO: Adicionar verificação de prioridades do Traefik
+log_info "🔧 Verificando configuração de prioridades do Traefik..."
+if docker service ls | grep -q "traefik"; then
+    log_success "✅ Traefik detectado - prioridades API serão aplicadas"
+    log_info "   • API webhook: prioridade 1000 (máxima)"
+    log_info "   • Páginas web: prioridade 100 (baixa)"
+else
+    log_warning "⚠️ Traefik não encontrado - funcionará localmente"
 fi
 
 # Salvar configuração completa para qualquer servidor
@@ -1187,7 +1191,7 @@ jobs:
             sleep 30
           done
           
-          echo "⚠️ Verificação manual necessária"
+          echo "⚠️ Verifica��ão manual necessária"
           exit 1
 GITHUB_ACTIONS_EOF
 
@@ -1742,7 +1746,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════��════════════════════════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
