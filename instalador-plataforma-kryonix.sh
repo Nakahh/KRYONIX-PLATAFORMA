@@ -84,8 +84,8 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗█��║  ██║   ██║   ╚██████╔���██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██╔═██╗ ██╔═���██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██║  ██╗█��║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -1564,6 +1564,13 @@ deploy() {
     log "🚀 Iniciando deploy automático do KRYONIX Platform..."
     info "📋 Payload recebido: $payload"
 
+    # Verificar e criar diretório se necessário
+    if [ ! -d "$DEPLOY_PATH" ]; then
+        info "📁 Criando diretório de deploy: $DEPLOY_PATH"
+        sudo mkdir -p "$DEPLOY_PATH"
+        sudo chown -R $USER:$USER "$DEPLOY_PATH"
+    fi
+
     cd "$DEPLOY_PATH"
 
     # Corrigir ownership do Git antes de fazer pull
@@ -1750,7 +1757,7 @@ HTML_EOF
     docker rmi kryonix-plataforma:latest 2>/dev/null || true
 
     # Build da imagem com verificação
-    info "���️ Fazendo build da nova imagem Docker..."
+    info "🏗️ Fazendo build da nova imagem Docker..."
     if ! docker build --no-cache -t kryonix-plataforma:latest . ; then
         error "❌ Falha no build da imagem Docker"
 
