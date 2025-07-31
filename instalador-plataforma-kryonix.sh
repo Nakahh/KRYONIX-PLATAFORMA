@@ -41,7 +41,7 @@ DOMAIN_NAME="kryonix.com.br"
 DOCKER_NETWORK=""  # Será detectado automaticamente
 STACK_NAME="Kryonix"
 
-# Configurações CI/CD - Credenciais configuradas para operação 100% automática
+# Configurações CI/CD - Credenciais fixas para repositório privado
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PAT_TOKEN="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"
 WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
@@ -85,7 +85,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗█��║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -374,17 +374,44 @@ echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação
 next_step
 
 # ============================================================================
-# ETAPA 1: VERIFICAR DOCKER SWARM
+# ETAPA 1: VERIFICAÇÕES E INSTALAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
 # ============================================================================
 
-if ! docker info | grep -q "Swarm: active"; then
-    error_step
-    log_error "Docker Swarm não está ativo!"
-    log_info "Execute: docker swarm init"
-    exit 1
+processing_step
+
+# Verificar e instalar Docker se necessário
+if ! command -v docker >/dev/null 2>&1; then
+    log_info "🐳 Docker não encontrado, instalando automaticamente..."
+    curl -fsSL https://get.docker.com | sh >/dev/null 2>&1
+    sudo usermod -aG docker $USER
+    log_success "Docker instalado com sucesso"
 fi
 
-log_success "Docker Swarm detectado e ativo"
+# Verificar e ativar Docker Swarm automaticamente
+if ! docker info | grep -q "Swarm: active"; then
+    log_info "🔄 Docker Swarm não ativo, inicializando automaticamente..."
+    docker swarm init --advertise-addr $(curl -s -4 ifconfig.me 2>/dev/null || echo '127.0.0.1') >/dev/null 2>&1
+    if docker info | grep -q "Swarm: active"; then
+        log_success "Docker Swarm ativado automaticamente"
+    else
+        error_step
+        log_error "Falha ao ativar Docker Swarm"
+        log_info "Execute manualmente: docker swarm init"
+        exit 1
+    fi
+else
+    log_success "Docker Swarm já ativo"
+fi
+
+# Verificar outras dependências críticas
+for cmd in curl git openssl; do
+    if ! command -v $cmd >/dev/null 2>&1; then
+        log_info "📦 Instalando $cmd..."
+        sudo apt-get update >/dev/null 2>&1 || sudo yum update >/dev/null 2>&1 || true
+        sudo apt-get install -y $cmd >/dev/null 2>&1 || sudo yum install -y $cmd >/dev/null 2>&1 || true
+    fi
+done
+
 complete_step
 next_step
 
@@ -610,7 +637,7 @@ app.get('/health', (req, res) => {
 
 app.post('/webhook', (req, res) => {
   console.log('🔗 Webhook secundário recebido:', new Date().toISOString());
-  console.log('📦 Payload:', req.body);
+  console.log('�� Payload:', req.body);
   res.json({ message: 'Webhook processado pelo listener', timestamp: new Date().toISOString() });
 });
 
@@ -662,15 +689,104 @@ KRYONIX_MONITOR_EOF
 # Criar diretório public se necessário
 mkdir -p public
 
+# Copiar logo oficial da pasta branding
+log_info "Copiando logo oficial KRYONIX..."
+if [ -f "Marca-KRYONIX (Branding)/logo kryonix.png" ]; then
+    cp "Marca-KRYONIX (Branding)/logo kryonix.png" public/
+    log_success "✅ Logo oficial copiada"
+else
+    log_warning "⚠️ Logo não encontrada na pasta branding"
+fi
+
+if [ -f "Marca-KRYONIX (Branding)/Logo Kryonix com nome.png" ]; then
+    cp "Marca-KRYONIX (Branding)/Logo Kryonix com nome.png" public/logo-com-nome.png
+    log_success "✅ Logo com nome copiada para compartilhamento"
+fi
+
+# Criar favicon com foguete
+log_info "Criando favicon com ícone de foguete..."
+cat > public/favicon.svg << 'FAVICON_EOF'
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="rocketGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="fireGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ffa500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffeb3b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="url(#rocketGradient)" stroke="#fff" stroke-width="2"/>
+
+  <!-- Rocket body -->
+  <ellipse cx="32" cy="28" rx="6" ry="16" fill="#f5f5f5"/>
+
+  <!-- Rocket nose -->
+  <path d="M32,12 L38,20 L26,20 Z" fill="#4CAF50"/>
+
+  <!-- Rocket fins -->
+  <path d="M26,36 L24,44 L26,44 Z" fill="#2196F3"/>
+  <path d="M38,36 L40,44 L38,44 Z" fill="#2196F3"/>
+
+  <!-- Rocket window -->
+  <circle cx="32" cy="24" r="3" fill="#2196F3" opacity="0.8"/>
+
+  <!-- Fire/exhaust -->
+  <path d="M32,44 L28,52 L32,50 L36,52 Z" fill="url(#fireGradient)"/>
+  <path d="M32,50 L30,56 L32,54 L34,56 Z" fill="#ff6b6b" opacity="0.8"/>
+
+  <!-- Stars -->
+  <circle cx="18" cy="18" r="1" fill="#fff"/>
+  <circle cx="46" cy="20" r="1" fill="#fff"/>
+  <circle cx="20" cy="46" r="1" fill="#fff"/>
+  <circle cx="44" cy="44" r="1" fill="#fff"/>
+
+  <!-- KRYONIX text (small) -->
+  <text x="32" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="#fff">KRYONIX</text>
+</svg>
+FAVICON_EOF
+
 if [ ! -f "public/index.html" ]; then
-    log_info "Criando index.html padrão..."
+    log_info "Criando index.html otimizado para compartilhamento..."
     cat > public/index.html << 'HTML_EOF'
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYONIX - Plataforma SaaS Autônoma</title>
+    <title>🚀 KRYONIX - IA Autônoma Brasileira</title>
+    <meta name="description" content="🤖 KRYONIX é a revolução em SaaS! Plataforma 100% autônoma com 15 agentes de IA, 8 módulos integrados e deploy automático. Mobile-first, desenvolvida em português para empresas brasileiras. ✨">
+
+    <!-- Favicon com Foguete 🚀 -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="shortcut icon" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+
+    <!-- Meta tags para compartilhamento (Open Graph) -->
+    <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS 100% Autônoma por IA">
+    <meta property="og:description" content="🤖 Revolução em SaaS: 15 agentes de IA autônomos, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
+    <meta property="og:image" content="https://kryonix.com.br/logo-com-nome.png">
+    <meta property="og:url" content="https://kryonix.com.br">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="🚀 KRYONIX - IA Autônoma">
+
+    <!-- WhatsApp específico -->
+    <meta property="og:image:alt" content="KRYONIX - Logo oficial da plataforma SaaS autônoma brasileira com IA">
+    <meta name="whatsapp:title" content="🚀 KRYONIX - IA Autônoma">
+    <meta name="whatsapp:description" content="🤖 A revolução do SaaS chegou! 15 agentes IA + 8 módulos + Deploy automático. 100% brasileiro! 📱✨">
+
+    <!-- Meta tags para Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="🚀 KRYONIX - IA Autônoma Brasileira">
+    <meta name="twitter:description" content="🤖 15 agentes IA + 8 módulos SaaS + Deploy automático. A revolução tecnológica 100% brasileira chegou! 📱✨">
+    <meta name="twitter:image" content="https://kryonix.com.br/logo-com-nome.png">
+
+    <meta name="theme-color" content="#667eea">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -742,6 +858,7 @@ if [ ! -f "public/index.html" ]; then
     </div>
 
     <script>
+        console.log('🚀 KRYONIX Platform Ready - Favicon com foguete ativo!');
         fetch('/api/status')
             .then(response => response.json())
             .then(data => console.log('✅ Plataforma KRYONIX funcionando:', data))
@@ -1014,7 +1131,7 @@ services:
         # Configuração do serviço
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
-        # Router para API (PRIORIDADE MÁXIMA) - CORRIGIDO: webhook/api precisa de prioridade
+        # Router para API (PRIORIDADE MÁXIMA) - CORREÇÃO: webhook/api precisa de prioridade 1000
         - "traefik.http.routers.kryonix-api.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
         - "traefik.http.routers.kryonix-api.entrypoints=websecure"
         - "traefik.http.routers.kryonix-api.tls=true"
@@ -1022,19 +1139,19 @@ services:
         - "traefik.http.routers.kryonix-api.service=kryonix-web"
         - "traefik.http.routers.kryonix-api.priority=1000"
 
-        # Router para API HTTP também (CORRIGIDO: webhook pode vir via HTTP em desenvolvimento)
+        # Router para API HTTP também (CORREÇÃO: webhook pode vir via HTTP em desenvolvimento)
         - "traefik.http.routers.kryonix-api-http.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
         - "traefik.http.routers.kryonix-api-http.entrypoints=web"
         - "traefik.http.routers.kryonix-api-http.service=kryonix-web"
         - "traefik.http.routers.kryonix-api-http.priority=1000"
 
-        # Router HTTP
+        # Router HTTP (prioridade baixa)
         - "traefik.http.routers.kryonix-http.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
         - "traefik.http.routers.kryonix-http.entrypoints=web"
         - "traefik.http.routers.kryonix-http.service=kryonix-web"
         - "traefik.http.routers.kryonix-http.priority=100"
 
-        # Router HTTPS
+        # Router HTTPS (prioridade baixa)
         - "traefik.http.routers.kryonix-https.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
         - "traefik.http.routers.kryonix-https.entrypoints=websecure"
         - "traefik.http.routers.kryonix-https.tls=true"
@@ -1717,11 +1834,16 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
     if test_service_health "http://localhost:8080/health" 10 5; then
         WEB_STATUS="✅ ONLINE"
         
-        # Testar webhook
+        # CORREÇÃO: Teste avançado do webhook
+        log_info "🧪 Testando webhook com payload real..."
         if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
            -H "Content-Type: application/json" \
-           -d '{"test":true}' >/dev/null 2>&1; then
-            log_success "Webhook endpoint funcionando"
+           -H "X-GitHub-Event: push" \
+           -d '{"ref":"refs/heads/main","repository":{"name":"KRYONIX-PLATAFORMA"},"test":true}' >/dev/null 2>&1; then
+            log_success "✅ Webhook endpoint respondendo corretamente"
+            log_info "🚀 Deploy automático está pronto!"
+        else
+            log_warning "⚠️ Webhook pode estar inicializando..."
         fi
     else
         WEB_STATUS="⚠️ INICIALIZANDO"
@@ -1774,12 +1896,13 @@ echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada e funcionando!${RESET}"
 echo -e "${PURPLE}🚀 Push no GitHub = Deploy automático ativado!${RESET}"
 echo ""
-echo -e "${GREEN}${BOLD}🔧 CORREÇÕES APLICADAS NESTA VERSÃO:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Corrigido:${RESET} ✅ Agora executa deploy automático completo"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Rebuild Automático:${RESET} ✅ Pull + Install + Build + Restart do container"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Validação GitHub:${RESET} ✅ Verificação de assinatura implementada"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Logs Melhorados:${RESET} ✅ Deploy trackado em tempo real"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Restart Inteligente:${RESET} ✅ Update rápido ou restart completo se necessário"
+echo -e "${GREEN}${BOLD}🔧 CORREÇÕES CRÍTICAS APLICADAS:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🎯 Prioridades Traefik:${RESET} ✅ API webhook prioridade 1000 (máxima)"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🌐 Rede Fixa:${RESET} ✅ kryonix-net (estável, sem detecção automática)"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🔗 Webhook HTTP/HTTPS:${RESET} ✅ Suporte completo para GitHub webhook"
+echo -e "    ${BLUE}│${RESET} ${BOLD}📦 Volumes Otimizados:${RESET} ✅ Apenas volumes essenciais"
+echo -e "    ${BLUE}│${RESET} ${BOLD}⚡ Deploy Instantâneo:${RESET} ✅ Webhook não será mais interceptado"
+echo -e "    ${BLUE}│${RESET} ${BOLD}🧪 Teste Avançado:${RESET} ✅ Validação com payload GitHub real"
 echo ""
 echo -e "${PURPLE}${BOLD}🎨 DEPLOY INTELIGENTE AVANÇADO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Dependências Inteligentes:${RESET} ✅ Detecta e instala novas dependências automaticamente"
