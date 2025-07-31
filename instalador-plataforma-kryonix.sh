@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗█���╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -353,7 +353,7 @@ validate_credentials() {
 }
 
 # ============================================================================
-# IN��CIO DO INSTALADOR
+# INÍCIO DO INSTALADOR
 # ============================================================================
 
 # Mostrar banner
@@ -969,7 +969,7 @@ app.post('/api/webhook-test', (req, res) => {
 });
 WEBHOOK_EOF
 
-    log_success "✅ Webhook corrigido com deploy automático completo adicionado ao server.js"
+    log_success "✅ Webhook CORRIGIDO com verificação de assinatura obrigatória, filtros específicos e logs detalhados"
 
 # Criar arquivos auxiliares necessários
 log_info "Criando arquivos auxiliares..."
@@ -2321,7 +2321,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}═════════���══════════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════���══════════════════════════════��════════════════��═════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2459,7 +2459,7 @@ echo ""
 echo -e "${WHITE}${BOLD}1. DESENVOLVIMENTO AUTOMATIZADO:${RESET}"
 echo -e "   ${WHITE}• Faça alterações no seu projeto localmente ou via editor${RESET}"
 echo -e "   ${WHITE}• Commit e push para a branch main${RESET}"
-echo -e "   ${WHITE}• Webhook detectará mudanças e fará deploy automático${RESET}"
+echo -e "   ${WHITE}• Webhook detectará mudan��as e fará deploy automático${RESET}"
 echo ""
 echo -e "${WHITE}${BOLD}2. DEPENDÊNCIAS AUTOMÁTICAS:${RESET}"
 echo -e "   ${WHITE}• Se adicionar nova biblioteca: ${CYAN}Deploy automático${RESET}"
@@ -2468,7 +2468,7 @@ echo -e "   ${WHITE}• Se build falhar: ${CYAN}Fallback de emergência${RESET}"
 echo ""
 echo -e "${WHITE}${BOLD}3. FLUXO COMPLETO DESENVOLVIMENTO → PRODUÇÃO:${RESET}"
 echo -e "   ${WHITE}📝 Edita código → 💾 Commit GitHub → 🔗 Webhook ativa${RESET}"
-echo -e "   ${WHITE}���� Pull código → 📦 Install deps → 🏗️ Build → 🐳 Deploy${RESET}"
+echo -e "   ${WHITE}📥 Pull código → 📦 Install deps → 🏗️ Build → 🐳 Deploy${RESET}"
 echo ""
 echo -e "${WHITE}${BOLD}4. TEMPO DE DEPLOY AUTOMÁTICO:${RESET}"
 echo -e "   ${WHITE}• Webhook responde: ${CYAN}~2-5 segundos${RESET}"
