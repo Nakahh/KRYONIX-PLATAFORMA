@@ -744,6 +744,28 @@
 
         // Atualizar meta tags a cada mudança de status
         setTimeout(updateMetaTags, 2000);
+
+        // Função para atualizar título dinamicamente baseado na página
+        function updatePageTitle() {
+            const path = window.location.pathname;
+            let pageTitle = 'Kryonix';
+
+            if (path.includes('progresso')) {
+                pageTitle = 'Kryonix - Progresso';
+            } else if (path.includes('status')) {
+                pageTitle = 'Kryonix - Status';
+            } else if (path.includes('monitor')) {
+                pageTitle = 'Kryonix - Monitor';
+            }
+
+            document.title = pageTitle;
+        }
+
+        // Atualizar título na carga da página
+        updatePageTitle();
+
+        // Atualizar título quando navegar (para SPAs futuras)
+        window.addEventListener('popstate', updatePageTitle);
     </script>
 </body>
 </html>
