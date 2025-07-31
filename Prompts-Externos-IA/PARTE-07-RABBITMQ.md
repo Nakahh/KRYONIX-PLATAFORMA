@@ -277,7 +277,7 @@ class KryonixRabbitMQClientManager:
                 host='localhost',
                 port=5672,
                 virtual_host='/kryonix-master',
-                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456'),
+                credentials=pika.PlainCredentials('kryonix', '8ed56dd2b7dc80f9dd205a348e1dd303'),
                 heartbeat=300,
                 connection_attempts=5,
                 retry_delay=2
@@ -1222,7 +1222,7 @@ class AIConsumer {
             });
             console.log('✅ NLP completed');
         } catch (error) {
-            console.error('❌ NLP failed:', error.message);
+            console.error('��� NLP failed:', error.message);
         }
     }
 
