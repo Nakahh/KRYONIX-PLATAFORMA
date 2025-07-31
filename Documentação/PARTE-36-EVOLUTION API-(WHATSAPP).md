@@ -12,7 +12,9 @@ SAAS_MODULE_WHATSAPP:
   portuguese_ui: "Interface em português para leigos"
   
   EVOLUTION_API_INTEGRATION:
-    endpoint: "https://evolution.kryonix.com.br"
+    manager_url: "https://api.kryonix.com.br/manager"
+    api_url: "https://api.kryonix.com.br"
+    global_api_key: "2f4d6967043b87b5ebee57b872e0223a"
     auto_scaling: "IA escala conforme demanda"
     multi_instance: "Múltiplas instâncias WhatsApp"
     webhook_intelligent: "IA processa webhooks automaticamente"
