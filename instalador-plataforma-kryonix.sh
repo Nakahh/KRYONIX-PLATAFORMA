@@ -83,7 +83,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║���█╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -602,7 +602,7 @@ SERVER_JS_EOF
     log_success "✅ server.js criado automaticamente com funcionalidades completas"
 fi
 
-# Verificar se webhook já está integrado no server.js
+# Verificar se webhook já est�� integrado no server.js
 # Sempre atualizar o webhook para a versão corrigida
 log_info "🔗 Atualizando endpoint webhook para versão corrigida com deploy automático..."
 
@@ -720,6 +720,28 @@ app.post('/api/github-webhook', (req, res) => {
             reason: !isValidEvent ? 'invalid_event' : 'invalid_ref'
         });
     }
+});
+
+// Endpoint de teste para debug do webhook
+app.get('/api/github-webhook', (req, res) => {
+    res.json({
+        message: 'KRYONIX Webhook Endpoint',
+        status: 'online',
+        timestamp: new Date().toISOString(),
+        webhook_secret_configured: !!process.env.WEBHOOK_SECRET,
+        accepted_methods: ['POST'],
+        test_url: 'POST /api/github-webhook com payload GitHub'
+    });
+});
+
+// Endpoint para testar webhook manualmente
+app.post('/api/webhook-test', (req, res) => {
+    console.log('🧪 Teste manual do webhook:', req.body);
+    res.json({
+        message: 'Teste do webhook recebido',
+        timestamp: new Date().toISOString(),
+        payload: req.body
+    });
 });
 WEBHOOK_EOF
 
@@ -2075,7 +2097,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════���════════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2126,7 +2148,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Gerenciadores:${RESET} ✅ NPM, Yarn e PN
 echo -e "    ${BLUE}│${RESET} ${BOLD}Fallbacks Seguros:${RESET} ✅ Build de emergência se algo falhar"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Frameworks:${RESET} ✅ React, Vue, Angular, Next.js compatíveis"
 echo ""
-echo -e "${YELLOW}${BOLD}���� CONFIGURAÇÃO DO WEBHOOK GITHUB:${RESET}"
+echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO DO WEBHOOK GITHUB:${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -2232,7 +2254,7 @@ echo -e "   ${WHITE}• Total aproximado: ${CYAN}2-3 minutos${RESET}"
 echo ""
 echo -e "${RED}${BOLD}🔥 TROUBLESHOOTING WEBHOOK:${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}HTTP 401:${RESET} Configure o secret no GitHub webhook"
-echo -e "   ${WHITE}• ${YELLOW}HTTP 500:${RESET} Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
+echo -e "   ${WHITE}��� ${YELLOW}HTTP 500:${RESET} Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Deploy não executou:${RESET} Teste manual: ${CYAN}./webhook-deploy.sh test${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Endpoint offline:${RESET} Verifique: ${CYAN}curl http://localhost:8080/health${RESET}"
 echo -e "   ${WHITE}• ${YELLOW}Push não deployou:${RESET} Verifique branch main e evento push no GitHub"
