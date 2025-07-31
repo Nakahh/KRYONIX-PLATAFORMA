@@ -94,7 +94,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔═══════════════════════════════════��═════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -514,10 +514,9 @@ sudo mkdir -p "$PROJECT_DIR"
 sudo chown -R $USER:$USER "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
-# Configurar repositório Git com credenciais automáticas
-log_info "🔗 Configurando acesso ao GitHub com credenciais..."
-REPO_WITH_TOKEN="https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-sync_git_repository "$REPO_WITH_TOKEN"
+# Configurar repositório Git com credenciais automáticas (ou público)
+log_info "🔗 Configurando acesso ao GitHub..."
+sync_git_repository "$REPO_WITH_AUTH"
 
 # Verificar arquivos essenciais
 if [ ! -f "package.json" ]; then
@@ -614,7 +613,7 @@ app.post('/api/github-webhook', (req, res) => {
         deployScript.unref();
 
         res.json({
-            message: 'Deploy automático iniciado',
+            message: 'Deploy autom��tico iniciado',
             status: 'accepted',
             ref: payload.ref,
             sha: payload.after || payload.head_commit?.id,
@@ -949,7 +948,7 @@ if docker service ls | grep -q "traefik"; then
     if [ "$network_confirmed" = false ]; then
         log_warning "⚠�� Traefik não está na rede $DOCKER_NETWORK"
         log_info "🔄 Traefik em rede diferente, continuando com $DOCKER_NETWORK"
-        log_info "�� Usando rede detectada: $DOCKER_NETWORK (pode precisar de ajustes manuais)"
+        log_info "📝 Usando rede detectada: $DOCKER_NETWORK (pode precisar de ajustes manuais)"
     fi
 
     # Detectar resolver SSL
@@ -1042,7 +1041,7 @@ next_step
 processing_step
 log_info "Criando docker-stack.yml otimizado..."
 
-# CORRE��ÃO CRÍTICA: Usar rede fixa e prioridades otimizadas
+# CORREÇÃO CRÍTICA: Usar rede fixa e prioridades otimizadas
 FIXED_NETWORK="kryonix-net"
 
 cat > docker-stack.yml << STACK_EOF
@@ -1793,9 +1792,9 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═════════════════════════════════════════════════════��═════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════��═══��══════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
