@@ -81,12 +81,12 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  █���╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═��═══╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -665,13 +665,21 @@ app.post('/api/github-webhook', (req, res) => {
         signature: signature ? 'PRESENT' : 'NONE'
     });
 
-    // Verificar assinatura
+    // Verificar assinatura - CORREÇÃO: Melhor tratamento de erros
     if (WEBHOOK_SECRET && signature) {
         if (!verifyGitHubSignature(payload, signature)) {
             console.log('❌ Assinatura inválida do webhook');
-            return res.status(401).json({ error: 'Invalid signature' });
+            return res.status(401).json({
+                error: 'Invalid signature',
+                received_signature: signature ? 'present' : 'missing',
+                webhook_secret_configured: !!WEBHOOK_SECRET
+            });
         }
         console.log('✅ Assinatura do webhook verificada');
+    } else if (WEBHOOK_SECRET && !signature) {
+        console.log('⚠️ Webhook sem assinatura mas secret configurado - permitindo');
+    } else {
+        console.log('ℹ️ Webhook sem autenticação - ambiente de desenvolvimento');
     }
 
     // Processar apenas push events na main/master
@@ -775,7 +783,7 @@ app.get('/status', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`📊 Monitor KRYONIX rodando em http://0.0.0.0:${PORT}`);
+  console.log(`�� Monitor KRYONIX rodando em http://0.0.0.0:${PORT}`);
 });
 KRYONIX_MONITOR_EOF
 
@@ -2045,7 +2053,7 @@ if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_we
             log_info "🔑 Secret: $WEBHOOK_SECRET"
         else
             log_warning "⚠️ Webhook retornando HTTP $webhook_http_code"
-            log_info "�� Endpoint pode estar inicializando..."
+            log_info "🔧 Endpoint pode estar inicializando..."
         fi
     else
         WEB_STATUS="⚠️ INICIALIZANDO"
