@@ -33,37 +33,22 @@ GEAR='⚙'
 ROCKET='🚀'
 WRENCH='🔧'
 
-# ============================================================================
-# CONFIGURAÇÃO 100% AUTOMÁTICA - FUNCIONA EM QUALQUER SERVIDOR
-# ============================================================================
-
-# Detectar informações do servidor automaticamente
-SERVER_HOST="${SERVER_HOST:-$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo '127.0.0.1')}"
-SERVER_USER="${SERVER_USER:-$(whoami)}"
-SERVER_HOSTNAME=$(hostname)
-
-# Configurações automáticas baseadas no servidor
-PROJECT_DIR="/opt/kryonix-platform-$(date +%Y%m%d)"
+# Configurações do projeto
+PROJECT_DIR="/opt/kryonix-plataform"
 WEB_PORT="8080"
 WEBHOOK_PORT="8080"
+DOMAIN_NAME="kryonix.com.br"
 DOCKER_NETWORK=""  # Será detectado automaticamente
-STACK_NAME="Kryonix-$(date +%Y%m%d)"
+STACK_NAME="Kryonix"
 
-# CONFIGURAÇÃO DINÂMICA - Adapta-se a qualquer repositório/domínio
-GITHUB_REPO="${GITHUB_REPO:-https://github.com/Nakahh/KRYONIX-PLATAFORMA.git}"  # Pode ser sobrescrito
-DOMAIN_NAME="${DOMAIN_NAME:-$SERVER_HOST}"  # Usa IP do servidor se não definido
-PAT_TOKEN="${PAT_TOKEN:-}"  # Será solicitado se necessário
-WEBHOOK_SECRET="Kryonix-$(openssl rand -hex 16)-$(date +%s)"  # Gerado dinamicamente
-JWT_SECRET="JWT-$(openssl rand -hex 20)-$(date +%s)"  # Gerado dinamicamente
-WEBHOOK_URL="http://$SERVER_HOST:$WEB_PORT/api/github-webhook"
-
-# Verificar se variáveis críticas foram fornecidas via ambiente
-if [ -z "$PAT_TOKEN" ] && [[ "$GITHUB_REPO" == *"github.com"* ]]; then
-    echo -e "${YELLOW}⚠️ AVISO: PAT_TOKEN não definido. Para repositórios privados, defina:${RESET}"
-    echo -e "${CYAN}export PAT_TOKEN='seu_token_aqui'${RESET}"
-    echo -e "${CYAN}Para repositórios públicos, continuando sem autenticação...${RESET}"
-    GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"  # Público
-fi
+# Configurações CI/CD - Credenciais fixas para repositório privado
+GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+PAT_TOKEN="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"
+WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+WEBHOOK_URL="https://kryonix.com.br/api/github-webhook"
+SERVER_HOST="${SERVER_HOST:-$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo '127.0.0.1')}"
+SERVER_USER="${SERVER_USER:-$(whoami)}"
 
 # Variáveis da barra de progresso
 TOTAL_STEPS=15
@@ -99,7 +84,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═���█╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -1792,7 +1777,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═════════════════════════════════════���═════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
