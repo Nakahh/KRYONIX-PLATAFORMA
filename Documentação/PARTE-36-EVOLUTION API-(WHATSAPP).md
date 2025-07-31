@@ -385,7 +385,7 @@ http:
       service: evolution-api
 EOF
 
-echo "🌐 Proxy configurado: https://evolution.kryonix.com.br"
+echo "🌐 Proxy configurado: https://api.kryonix.com.br"
 
 # 3. IA configura instâncias automaticamente
 python3 /opt/kryonix/ai/setup-whatsapp-instances.py
