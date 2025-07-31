@@ -79,13 +79,13 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔═════════════════���═══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚���███║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -406,7 +406,7 @@ fi
 # Verificar outras dependências críticas
 for cmd in curl git openssl; do
     if ! command -v $cmd >/dev/null 2>&1; then
-        log_info "�� Instalando $cmd..."
+        log_info "📦 Instalando $cmd..."
         sudo apt-get update >/dev/null 2>&1 || sudo yum update >/dev/null 2>&1 || true
         sudo apt-get install -y $cmd >/dev/null 2>&1 || sudo yum install -y $cmd >/dev/null 2>&1 || true
     fi
@@ -1640,7 +1640,7 @@ deploy() {
     # Sempre instalar dependências completas (podem ter sido adicionadas novas)
     info "📦 Instalando/Atualizando TODAS as dependências..."
 
-    # Limpar cache e node_modules para garantir instalação limpa
+    # Limpar cache e node_modules para garantir instala��ão limpa
     if [ "$DEPENDENCIES_CHANGED" = true ]; then
         info "🧹 Limpando cache de dependências para instalação limpa..."
         rm -rf node_modules 2>/dev/null || true
@@ -2034,7 +2034,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════��═══════════════════════��══${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA REALIZADA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2062,9 +2062,9 @@ echo ""
 echo -e "${CYAN}${BOLD}🛠️ COMANDOS ÚTEIS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${RESET} - Ver logs"
-echo -e "    ${BLUE}│${RESET} ${YELLOW}docker network ls${RESET} - Ver redes (rede: $DOCKER_NETWORK)"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
-echo -e "    ${BLUE}│${RESET} ${YELLOW}cat .kryonix-network-config${RESET} - Ver configuração de rede"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}curl -X POST http://localhost:8080/api/github-webhook -d '{\"test\":true}'${RESET} - Testar webhook"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh test${RESET} - Testar deploy"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - Deploy manual"
 echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada e funcionando!${RESET}"
