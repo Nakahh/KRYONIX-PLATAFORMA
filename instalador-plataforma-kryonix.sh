@@ -85,7 +85,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║��█╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -406,7 +406,7 @@ fi
 
 # Verificar e ativar Docker Swarm automaticamente
 if ! docker info | grep -q "Swarm: active"; then
-    log_info "🔄 Docker Swarm não ativo, inicializando automaticamente..."
+    log_info "🔄 Docker Swarm n��o ativo, inicializando automaticamente..."
     docker swarm init --advertise-addr $(curl -s -4 ifconfig.me 2>/dev/null || echo '127.0.0.1') >/dev/null 2>&1
     if docker info | grep -q "Swarm: active"; then
         log_success "Docker Swarm ativado automaticamente"
@@ -751,10 +751,9 @@ app.post('\''/api/webhook-test'\'', (req, res) => {\
 
 log_success "✅ Webhook inserido corretamente ANTES do fallback route"
 
-# Não usar o método cat >> que estava causando problemas
-# cat >> server.js << 'WEBHOOK_EOF'
+# Webhook foi inserido corretamente na posição adequada usando sed
 
-// Webhook do GitHub configurado automaticamente pelo instalador - VERSÃO CORRIGIDA COMPLETA
+# Criar arquivos auxiliares necessários
 const crypto = require('crypto');
 const { spawn } = require('child_process');
 const fs = require('fs');
