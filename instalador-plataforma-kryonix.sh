@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  █���╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -659,10 +659,14 @@ app.post('/api/github-webhook', (req, res) => {
     const event = req.get('X-GitHub-Event');
 
     console.log('🔗 Webhook recebido:', {
+        timestamp: new Date().toISOString(),
         event: event || 'NONE',
         ref: payload.ref || 'N/A',
         repository: payload.repository?.name || 'N/A',
-        signature: signature ? 'PRESENT' : 'NONE'
+        signature: signature ? 'PRESENT' : 'NONE',
+        user_agent: req.get('User-Agent') || 'N/A',
+        content_type: req.get('Content-Type') || 'N/A',
+        payload_size: JSON.stringify(payload).length
     });
 
     // Verificar assinatura - CORREÇÃO: Melhor tratamento de erros
@@ -783,7 +787,7 @@ app.get('/status', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`�� Monitor KRYONIX rodando em http://0.0.0.0:${PORT}`);
+  console.log(`📊 Monitor KRYONIX rodando em http://0.0.0.0:${PORT}`);
 });
 KRYONIX_MONITOR_EOF
 
@@ -2122,7 +2126,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Gerenciadores:${RESET} ✅ NPM, Yarn e PN
 echo -e "    ${BLUE}│${RESET} ${BOLD}Fallbacks Seguros:${RESET} ✅ Build de emergência se algo falhar"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Frameworks:${RESET} ✅ React, Vue, Angular, Next.js compatíveis"
 echo ""
-echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO DO WEBHOOK GITHUB:${RESET}"
+echo -e "${YELLOW}${BOLD}���� CONFIGURAÇÃO DO WEBHOOK GITHUB:${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
