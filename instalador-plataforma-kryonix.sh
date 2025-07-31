@@ -82,7 +82,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║��█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -323,34 +323,32 @@ sync_git_repository() {
     return 0
 }
 
-# Função para validar e gerar credenciais automaticamente
+# Função para validar credenciais pré-configuradas
 validate_credentials() {
-    log_info "🔐 Validando e gerando credenciais automaticamente..."
+    log_info "🔐 Validando credenciais pré-configuradas..."
 
-    # Validar/gerar Webhook Secret
-    if [ -z "$WEBHOOK_SECRET" ] || [ ${#WEBHOOK_SECRET} -lt 20 ]; then
-        WEBHOOK_SECRET="Kryonix-$(openssl rand -hex 16)-$(date +%s)"
-        log_info "🔑 Webhook Secret gerado automaticamente"
-    fi
-    log_success "✅ Webhook Secret configurado (${#WEBHOOK_SECRET} chars)"
-
-    # Validar/configurar Webhook URL
-    if [ -z "$WEBHOOK_URL" ]; then
-        WEBHOOK_URL="http://$SERVER_HOST:$WEB_PORT/api/github-webhook"
-        log_info "🔗 Webhook URL gerada automaticamente"
-    fi
-    log_success "✅ Webhook URL: $WEBHOOK_URL"
-
-    # Validar PAT Token (opcional para repos públicos)
     if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == ghp_* ]]; then
-        log_success "✅ GitHub PAT Token fornecido via ambiente"
-        REPO_WITH_AUTH="https://$(echo $PAT_TOKEN | cut -d'_' -f1-2):${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+        log_success "✅ GitHub PAT Token configurado"
     else
-        log_info "ℹ️ PAT Token não fornecido - usando repositório público"
-        REPO_WITH_AUTH="$GITHUB_REPO"
+        log_error "❌ GitHub PAT Token inválido"
+        return 1
     fi
 
-    log_success "✅ Configuração automática concluída"
+    if [ ! -z "$WEBHOOK_SECRET" ] && [ ${#WEBHOOK_SECRET} -gt 20 ]; then
+        log_success "✅ Webhook Secret configurado"
+    else
+        log_error "❌ Webhook Secret inválido"
+        return 1
+    fi
+
+    if [ ! -z "$WEBHOOK_URL" ] && [[ "$WEBHOOK_URL" == https://* ]]; then
+        log_success "✅ Webhook URL configurado: $WEBHOOK_URL"
+    else
+        log_error "❌ Webhook URL inválido"
+        return 1
+    fi
+
+    log_success "✅ Todas as credenciais validadas - instalação 100% automática"
     return 0
 }
 
@@ -1777,7 +1775,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══���════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO AUTOMÁTICA CONCLUÍDA                 ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════��══════════════════════════${RESET}"
 echo ""
