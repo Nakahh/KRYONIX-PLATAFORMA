@@ -72,7 +72,7 @@ STEP_DESCRIPTIONS=(
 )
 
 # ============================================================================
-# FUNÇÕES DE INTERFACE E PROGRESSO
+# FUN��ÕES DE INTERFACE E PROGRESSO
 # ============================================================================
 
 # Função para mostrar banner da Plataforma Kryonix
@@ -93,7 +93,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════��═══════════════╝"
+    echo    "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -330,7 +330,7 @@ validate_credentials() {
     if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == ghp_* ]]; then
         log_success "✅ GitHub PAT Token configurado"
     else
-        log_error "❌ GitHub PAT Token inválido"
+        log_error "❌ GitHub PAT Token inv��lido"
         return 1
     fi
 
@@ -1285,25 +1285,21 @@ services:
         # Configuração do serviço
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
-        # Router para API (PRIORIDADE MÁXIMA) - webhook/api com prioridade 2000 (ULTRA ALTA)
+        # Router específico para webhook (PRIORIDADE MÁXIMA)
+        - "traefik.http.routers.kryonix-webhook.rule=Host(\`$DOMAIN_NAME\`) && Path(\`/api/github-webhook\`)"
+        - "traefik.http.routers.kryonix-webhook.entrypoints=websecure"
+        - "traefik.http.routers.kryonix-webhook.tls=true"
+        - "traefik.http.routers.kryonix-webhook.tls.certresolver=$CERT_RESOLVER"
+        - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
+        - "traefik.http.routers.kryonix-webhook.priority=2000"
+
+        # Router para API (alta prioridade)
         - "traefik.http.routers.kryonix-api.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
         - "traefik.http.routers.kryonix-api.entrypoints=websecure"
         - "traefik.http.routers.kryonix-api.tls=true"
         - "traefik.http.routers.kryonix-api.tls.certresolver=$CERT_RESOLVER"
         - "traefik.http.routers.kryonix-api.service=kryonix-web"
-        - "traefik.http.routers.kryonix-api.priority=2000"
-
-        # Router para API HTTP também (ULTRA PRIORIDADE para webhook HTTP)
-        - "traefik.http.routers.kryonix-api-http.rule=Host(\`$DOMAIN_NAME\`) && PathPrefix(\`/api/\`)"
-        - "traefik.http.routers.kryonix-api-http.entrypoints=web"
-        - "traefik.http.routers.kryonix-api-http.service=kryonix-web"
-        - "traefik.http.routers.kryonix-api-http.priority=2000"
-
-        # Router específico para webhook (PRIORIDADE ABSOLUTA)
-        - "traefik.http.routers.kryonix-webhook.rule=Host(\`$DOMAIN_NAME\`) && Path(\`/api/github-webhook\`)"
-        - "traefik.http.routers.kryonix-webhook.entrypoints=websecure,web"
-        - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
-        - "traefik.http.routers.kryonix-webhook.priority=3000"
+        - "traefik.http.routers.kryonix-api.priority=1000"
 
         # Router HTTP (prioridade baixa)
         - "traefik.http.routers.kryonix-http.rule=Host(\`$DOMAIN_NAME\`) || Host(\`www.$DOMAIN_NAME\`)"
@@ -2080,7 +2076,7 @@ echo -e "   ${WHITE}• Se adicionar nova biblioteca: ${CYAN}Deploy automático$
 echo -e "   ${WHITE}• Se package.json mudar: ${CYAN}Reinstalação completa${RESET}"
 echo -e "   ${WHITE}• Se build falhar: ${CYAN}Fallback de emergência${RESET}"
 echo ""
-echo -e "${WHITE}${BOLD}3. FLUXO COMPLETO DESENVOLVIMENTO ��� PRODUÇÃO:${RESET}"
+echo -e "${WHITE}${BOLD}3. FLUXO COMPLETO DESENVOLVIMENTO → PRODUÇÃO:${RESET}"
 echo -e "   ${WHITE}📝 Edita código → 💾 Commit GitHub → 🔗 Webhook ativa${RESET}"
 echo -e "   ${WHITE}��� Pull código → 📦 Install deps → 🏗️ Build → 🐳 Deploy${RESET}"
 echo ""
