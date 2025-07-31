@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔═════════════════════════════════════════════════════════════��═══╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -125,7 +125,7 @@ animate_progress_bar() {
             ;;
         "concluido")
             bar_color="$GREEN"
-            status_icon="✅"
+            status_icon="��"
             ;;
         "erro")
             bar_color="$RED"
@@ -498,7 +498,7 @@ sudo chown -R $USER:$USER "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
 # Configurar repositório Git com credenciais automáticas
-log_info "🔗 Configurando acesso ao GitHub com credenciais..."
+log_info "��� Configurando acesso ao GitHub com credenciais..."
 REPO_WITH_TOKEN="https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 sync_git_repository "$REPO_WITH_TOKEN"
 
@@ -1494,7 +1494,7 @@ check_dependency_changes() {
             return 1
         fi
     else
-        info "📦 Primeira execuç��o - backup será criado"
+        info "📦 Primeira execução - backup será criado"
         return 0
     fi
 }
@@ -1928,7 +1928,7 @@ log_info "🧪 Testando script de deploy..."
 if ./webhook-deploy.sh manual &>/dev/null; then
     log_success "✅ Script de deploy testado e funcionando"
 else
-    log_warning "⚠️ Script de deploy pode precisar de ajustes, mas está criado"
+    log_warning "⚠️ Script de deploy pode precisar de ajustes, mas est�� criado"
 fi
 
 log_success "✅ Webhook deploy ultra-avançado criado com deploy automático completo"
@@ -2072,13 +2072,17 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Gerenciadores:${RESET} ✅ NPM, Yarn e PN
 echo -e "    ${BLUE}│${RESET} ${BOLD}Fallbacks Seguros:${RESET} ✅ Build de emergência se algo falhar"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Frameworks:${RESET} ✅ React, Vue, Angular, Next.js compatíveis"
 echo ""
-echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO DO WEBHOOK GITHUB (se necessário):${RESET}"
+echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO DO WEBHOOK GITHUB:${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
 echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
+echo -e "${CYAN}${BOLD}SSL verification:${RESET} Enable SSL verification"
 echo ""
 echo -e "${BLUE}${BOLD}🔗 Configurar em: GitHub → Settings → Webhooks → Add webhook${RESET}"
+echo ""
+echo -e "${RED}${BOLD}⚠️ IMPORTANTE: Configure o webhook no GitHub para ativar deploy automático!${RESET}"
+echo -e "${YELLOW}${BOLD}🔥 SEM o webhook configurado = SEM deploy automático!${RESET}"
 echo ""
 echo -e "${CYAN}${BOLD}🚀 COMO USAR O DEPLOY AUTOMÁTICO:${RESET}"
 echo ""
