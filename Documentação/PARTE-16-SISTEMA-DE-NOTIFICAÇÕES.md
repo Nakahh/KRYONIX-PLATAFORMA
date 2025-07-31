@@ -1,787 +1,1174 @@
-# 🔔 PARTE 16 - SISTEMA DE NOTIFICAÇÕES INTELIGENTES KRYONIX
-*Agentes Especializados: Expert Comunicação + Specialist IA + Expert Mobile + Expert UX + DevOps + Specialist Marketing*
+# 🔔 PARTE 16 - SISTEMA DE NOTIFICAÇÕES MULTI-TENANT KRYONIX
+*Agente Especializado: Notification Systems Expert + DevOps + Mobile Expert*
 
-## 🎯 **OBJETIVO**
-Implementar sistema de notificações inteligentes operado 100% por IA que engaja automaticamente usuários através de WhatsApp, SMS, email, push notifications e até chamadas, priorizando 80% dos usuários mobile com personalização baseada em comportamento real.
+## 🎯 **OBJETIVO MULTI-TENANT**
+Implementar sistema de notificações completo multi-tenant com isolamento total por cliente, mobile-first design para 80% usuários mobile, WhatsApp Business API, push notifications PWA e integração completa com @kryonix/sdk.
 
-## 🧠 **ESTRATÉGIA NOTIFICAÇÕES IA AUTÔNOMA**
+## 🏗️ **ARQUITETURA MULTI-TENANT NOTIFICATIONS**
 ```yaml
-INTELLIGENT_NOTIFICATIONS:
-  AI_CORE: "IA KRYONIX de Engajamento e Comunicação"
-  AUTONOMOUS_FEATURES:
-    - smart_timing: "IA determina melhor horário para cada usuário"
-    - channel_optimization: "IA escolhe canal ideal automaticamente"
-    - content_personalization: "IA personaliza mensagem por contexto"
-    - engagement_prediction: "IA prevê probabilidade de engajamento"
-    - frequency_optimization: "IA ajusta frequência para não incomodar"
+MULTI_TENANT_NOTIFICATIONS:
+  ISOLATION_LEVEL: "Complete - Dados, Templates, Configurações, Analytics"
+  TENANT_SEPARATION:
+    - notification_queues: "Redis namespaces por tenant"
+    - templates: "Customizáveis e isolados por cliente"
+    - analytics: "Métricas separadas por tenant"
+    - preferences: "Configurações independentes"
+    - rate_limits: "Limites específicos por cliente"
     
-  MOBILE_PRIORITY:
-    - "Push notifications otimizadas para 80% usuários mobile"
-    - "WhatsApp preferencial para brasileiros"
-    - "SMS como fallback confiável"
-    - "Rich notifications com ações diretas"
-    - "Notificações offline inteligentes"
+  MOBILE_FIRST_DESIGN:
+    - target_users: "80% mobile users"
+    - push_notifications: "PWA + Native apps"
+    - whatsapp_integration: "Business API por tenant"
+    - responsive_templates: "Mobile-optimized"
+    - offline_support: "Service Worker + IndexedDB"
     
-  BUSINESS_INTELLIGENCE:
-    - "Notificações baseadas em impacto na receita"
-    - "Alertas de oportunidades de negócio"
-    - "Lembretes de ações críticas"
-    - "Updates de performance em tempo real"
+  CHANNELS_ISOLATION:
+    - whatsapp: "Instâncias isoladas por tenant"
+    - email: "Templates e SMTP por cliente"
+    - sms: "Configurações separadas"
+    - push: "FCM tokens namespacedos"
+    - in_app: "WebSocket channels isolados"
     
-  REAL_USER_ENGAGEMENT:
-    - "Análise comportamental real dos usuários"
-    - "Personalização baseada em dados verdadeiros"
-    - "Otimização contínua por machine learning"
-    - "Feedback loop automático para melhoria"
+  SDK_INTEGRATION:
+    - package: "@kryonix/sdk"
+    - auto_tenant_context: "Propagação automática"
+    - typed_methods: "TypeScript completo"
+    - offline_queue: "Notificações offline"
 ```
 
-## 🏗️ **ARQUITETURA NOTIFICAÇÕES INTELIGENTE (Expert Comunicação + Specialist IA)**
+## 📊 **SCHEMAS MULTI-TENANT COM RLS**
+```sql
+-- Schema notifications com isolamento completo por tenant
+CREATE SCHEMA IF NOT EXISTS notifications;
+
+-- Tabela de usuários com RLS
+CREATE TABLE notifications.notification_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL REFERENCES tenants(id),
+    user_id UUID NOT NULL REFERENCES users(id),
+    email VARCHAR(255),
+    phone VARCHAR(20),
+    whatsapp_number VARCHAR(20),
+    device_tokens JSONB DEFAULT '[]',
+    preferences JSONB DEFAULT '{}',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CONSTRAINT notification_users_tenant_isolation CHECK (tenant_id IS NOT NULL)
+);
+
+-- Row Level Security
+ALTER TABLE notifications.notification_users ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY notification_users_tenant_isolation ON notifications.notification_users
+    USING (tenant_id = current_setting('app.current_tenant')::UUID);
+
+-- Tabela de templates por tenant
+CREATE TABLE notifications.notification_templates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL REFERENCES tenants(id),
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(50) NOT NULL, -- sms, push, whatsapp, email, in_app
+    channel VARCHAR(50) NOT NULL,
+    template_data JSONB NOT NULL,
+    mobile_optimized BOOLEAN DEFAULT true,
+    is_active BOOLEAN DEFAULT true,
+    created_by UUID REFERENCES users(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CONSTRAINT notification_templates_tenant_isolation CHECK (tenant_id IS NOT NULL)
+);
+
+ALTER TABLE notifications.notification_templates ENABLE ROW LEVEL SECURITY;
+CREATE POLICY notification_templates_tenant_isolation ON notifications.notification_templates
+    USING (tenant_id = current_setting('app.current_tenant')::UUID);
+
+-- Tabela de campanhas isoladas por tenant
+CREATE TABLE notifications.notification_campaigns (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL REFERENCES tenants(id),
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    type VARCHAR(50) NOT NULL,
+    status VARCHAR(50) DEFAULT 'draft', -- draft, active, paused, completed
+    target_audience JSONB NOT NULL,
+    schedule_config JSONB,
+    template_id UUID REFERENCES notifications.notification_templates(id),
+    metrics JSONB DEFAULT '{}',
+    mobile_priority BOOLEAN DEFAULT true,
+    created_by UUID REFERENCES users(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CONSTRAINT notification_campaigns_tenant_isolation CHECK (tenant_id IS NOT NULL)
+);
+
+ALTER TABLE notifications.notification_campaigns ENABLE ROW LEVEL SECURITY;
+CREATE POLICY notification_campaigns_tenant_isolation ON notifications.notification_campaigns
+    USING (tenant_id = current_setting('app.current_tenant')::UUID);
+
+-- Tabela de envios com tracking completo
+CREATE TABLE notifications.notification_sends (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL REFERENCES tenants(id),
+    campaign_id UUID REFERENCES notifications.notification_campaigns(id),
+    user_id UUID NOT NULL REFERENCES users(id),
+    channel VARCHAR(50) NOT NULL,
+    provider VARCHAR(50),
+    status VARCHAR(50) DEFAULT 'pending', -- pending, sent, delivered, opened, clicked, failed
+    message_data JSONB NOT NULL,
+    mobile_device BOOLEAN DEFAULT false,
+    sent_at TIMESTAMP WITH TIME ZONE,
+    delivered_at TIMESTAMP WITH TIME ZONE,
+    opened_at TIMESTAMP WITH TIME ZONE,
+    clicked_at TIMESTAMP WITH TIME ZONE,
+    error_details TEXT,
+    retry_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CONSTRAINT notification_sends_tenant_isolation CHECK (tenant_id IS NOT NULL)
+);
+
+ALTER TABLE notifications.notification_sends ENABLE ROW LEVEL SECURITY;
+CREATE POLICY notification_sends_tenant_isolation ON notifications.notification_sends
+    USING (tenant_id = current_setting('app.current_tenant')::UUID);
+
+-- Tabela de analytics isolada por tenant
+CREATE TABLE notifications.notification_analytics (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL REFERENCES tenants(id),
+    date DATE NOT NULL,
+    channel VARCHAR(50) NOT NULL,
+    device_type VARCHAR(20), -- mobile, desktop, tablet
+    metrics JSONB NOT NULL, -- sent, delivered, opened, clicked, unsubscribed
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CONSTRAINT notification_analytics_tenant_isolation CHECK (tenant_id IS NOT NULL)
+);
+
+ALTER TABLE notifications.notification_analytics ENABLE ROW LEVEL SECURITY;
+CREATE POLICY notification_analytics_tenant_isolation ON notifications.notification_analytics
+    USING (tenant_id = current_setting('app.current_tenant')::UUID);
+
+-- Índices otimizados para performance
+CREATE INDEX idx_notification_users_tenant_id ON notifications.notification_users(tenant_id);
+CREATE INDEX idx_notification_users_tenant_active ON notifications.notification_users(tenant_id, is_active);
+CREATE INDEX idx_notification_templates_tenant_type ON notifications.notification_templates(tenant_id, type, is_active);
+CREATE INDEX idx_notification_campaigns_tenant_status ON notifications.notification_campaigns(tenant_id, status);
+CREATE INDEX idx_notification_sends_tenant_status ON notifications.notification_sends(tenant_id, status);
+CREATE INDEX idx_notification_sends_tenant_channel ON notifications.notification_sends(tenant_id, channel, created_at);
+CREATE INDEX idx_notification_analytics_tenant_date ON notifications.notification_analytics(tenant_id, date);
+```
+
+## 🔧 **SERVIÇO MULTI-TENANT PRINCIPAL**
 ```typescript
-// Sistema de Notificações IA KRYONIX
-export class KryonixIntelligentNotifications {
-  private aiEngine: NotificationAI;
-  private channelManager: MultiChannelManager;
-  private timingOptimizer: TimingOptimizer;
-  private contentGenerator: ContentGenerator;
-  private engagementAnalyzer: EngagementAnalyzer;
-  
-  constructor() {
-    this.aiEngine = new NotificationAI({
-      model: 'ollama:llama3',
-      optimization_target: 'user_engagement_mobile',
-      business_priority: 'revenue_impact',
-      language: 'pt-BR',
-      cultural_context: 'brazilian_mobile_first'
-    });
-  }
-  
-  async sendIntelligentNotification(notification: NotificationRequest) {
-    // IA analisa contexto completo do usuário
-    const userContext = await this.aiEngine.analyzeUserContext({
-      user_id: notification.user_id,
-      device_preferences: await this.getUserDevicePrefs(notification.user_id),
-      engagement_history: await this.getEngagementHistory(notification.user_id),
-      current_activity: await this.getCurrentUserActivity(notification.user_id),
-      business_relationship: await this.getBusinessValue(notification.user_id),
-      mobile_behavior: await this.getMobileBehaviorPatterns(notification.user_id),
-      timezone_location: await this.getUserTimezone(notification.user_id)
-    });
+// services/MultiTenantNotificationService.ts
+import { KryonixSDK } from '@kryonix/sdk';
+
+export class MultiTenantNotificationService {
+    private sdk: KryonixSDK;
+    private whatsappService: WhatsAppMultiTenantService;
+    private pushService: PushNotificationService;
+    private emailService: EmailService;
+    private smsService: SMSService;
+    private analyticsService: NotificationAnalyticsService;
     
-    // IA determina estratégia de comunicação
-    const strategy = await this.aiEngine.optimizeNotificationStrategy({
-      notification_content: notification.content,
-      user_context: userContext,
-      business_priority: notification.priority,
-      urgency_level: notification.urgency,
-      mobile_optimization: true // 80% são mobile
-    });
-    
-    // IA personaliza conteúdo
-    const personalizedContent = await this.contentGenerator.generatePersonalized({
-      base_content: notification.content,
-      user_profile: userContext.profile,
-      preferred_language: userContext.language || 'pt-BR',
-      simplification_level: userContext.tech_savviness || 'beginner',
-      mobile_format: strategy.is_mobile_user
-    });
-    
-    // IA executa multi-canal
-    return await this.executeSmartNotification(strategy, personalizedContent);
-  }
-}
-```
-
-## 📱 **NOTIFICAÇÕES MOBILE-FIRST (Expert Mobile + Expert UX)**
-```typescript
-// Notificações otimizadas para 80% usuários mobile
-export class KryonixMobileNotifications {
-  
-  async setupMobileNotificationTypes() {
-    return {
-      push_notifications: {
-        rich_notifications: {
-          title_max_length: 50,
-          body_max_length: 120,
-          image_support: true,
-          action_buttons: [
-            { id: 'view', title: 'Ver Agora', action: 'open_app' },
-            { id: 'later', title: 'Depois', action: 'snooze_1h' },
-            { id: 'disable', title: 'Parar', action: 'unsubscribe' }
-          ],
-          sound_optimization: 'adaptive_volume',
-          vibration_pattern: 'gentle_attention'
-        },
-        
-        critical_alerts: {
-          bypass_do_not_disturb: true,
-          persistent_until_read: true,
-          escalation_sequence: ['push', 'sms', 'call'],
-          sound: 'urgent_but_not_annoying'
-        },
-        
-        silent_updates: {
-          background_delivery: true,
-          badge_update: true,
-          no_sound_vibration: true,
-          for_data_sync: true
-        }
-      },
-      
-      whatsapp_integration: {
-        evolution_api: 'https://whatsapp.kryonix.com.br',
-        message_types: {
-          text: 'simple_text_messages',
-          image: 'screenshots_charts_reports',
-          document: 'pdf_reports_exports',
-          voice: 'ai_voice_messages',
-          video: 'demo_tutorials'
-        },
-        business_features: {
-          verified_business: true,
-          catalog_integration: true,
-          payment_integration: true,
-          customer_support: true
-        }
-      },
-      
-      sms_fallback: {
-        provider: 'twilio_brazil',
-        use_cases: ['critical_alerts', 'mfa_codes', 'system_down'],
-        character_limit: 160,
-        link_shortening: true,
-        delivery_tracking: true
-      },
-      
-      email_notifications: {
-        mobile_optimized_templates: true,
-        amp_email_support: true,
-        dark_mode_compatible: true,
-        attachment_optimization: 'mobile_friendly_sizes'
-      }
-    };
-  }
-  
-  async generateMobileOptimizedContent(content: NotificationContent, userContext: UserContext) {
-    const optimizations = {
-      // Títulos curtos e impactantes para mobile
-      title: await this.aiEngine.optimizeTitle({
-        original: content.title,
-        max_length: userContext.device_type === 'mobile' ? 40 : 60,
-        language: 'pt-BR',
-        urgency: content.urgency,
-        personalization: userContext.name
-      }),
-      
-      // Corpo da mensagem mobile-friendly
-      body: await this.aiEngine.optimizeBody({
-        original: content.body,
-        max_length: userContext.device_type === 'mobile' ? 100 : 200,
-        call_to_action: content.cta,
-        mobile_reading_pattern: 'scan_first_line',
-        brazilian_communication_style: true
-      }),
-      
-      // Imagens otimizadas para mobile
-      image: content.image ? await this.optimizeImageForMobile({
-        original_url: content.image,
-        target_width: 300,
-        format: 'webp',
-        quality: 85,
-        loading: 'lazy'
-      }) : null,
-      
-      // Call-to-action mobile
-      cta: await this.optimizeCTAForMobile({
-        text: content.cta_text,
-        action: content.cta_action,
-        button_size: 'touch_friendly_44px',
-        color: 'primary_kryonix_blue'
-      })
-    };
-    
-    return optimizations;
-  }
-}
-```
-
-## 🤖 **IA PARA TIMING E ENGAJAMENTO (Specialist IA)**
-```python
-# IA que otimiza timing e engajamento
-class KryonixNotificationAI:
-    def __init__(self):
-        self.ollama = Ollama("llama3")
-        self.engagement_predictor = EngagementPredictor()
-        self.timing_optimizer = TimingOptimizer()
-        self.content_personalizer = ContentPersonalizer()
-        
-    async def determine_optimal_timing(self, user_id, notification_type):
-        """IA determina melhor momento para notificar"""
-        
-        # 1. IA analisa padrões do usuário
-        user_patterns = await self.analyze_user_patterns(user_id)
-        
-        # 2. IA considera contexto atual
-        current_context = await self.get_current_context(user_id)
-        
-        # 3. IA otimiza timing
-        optimal_timing = await self.ollama.optimize({
-            "objective": "maximize_engagement_minimize_disruption",
-            "user_patterns": {
-                "active_hours": user_patterns.active_hours,
-                "mobile_usage_peaks": user_patterns.mobile_peaks,
-                "response_rate_by_hour": user_patterns.response_rates,
-                "timezone": user_patterns.timezone,
-                "weekend_behavior": user_patterns.weekend_patterns
-            },
-            "current_context": {
-                "day_of_week": current_context.day,
-                "time_of_day": current_context.time,
-                "user_activity": current_context.activity,
-                "device_status": current_context.device_status,
-                "location_context": current_context.location
-            },
-            "notification_context": {
-                "type": notification_type,
-                "urgency": notification_type.urgency,
-                "channel": notification_type.preferred_channel,
-                "content_length": notification_type.content_length
-            }
-        })
-        
-        # 4. IA prevê engajamento
-        engagement_prediction = await self.predict_engagement_rate(
-            user_id, notification_type, optimal_timing.recommended_time
-        )
-        
-        return {
-            "optimal_time": optimal_timing.recommended_time,
-            "predicted_engagement": engagement_prediction.rate,
-            "reasoning": optimal_timing.reasoning,
-            "alternative_times": optimal_timing.alternatives,
-            "channel_recommendation": optimal_timing.best_channel
-        }
-        
-    async def personalize_notification_content(self, base_content, user_profile):
-        """IA personaliza conteúdo para máximo engajamento"""
-        
-        personalization = await self.ollama.personalize({
-            "base_content": base_content,
-            "user_profile": {
-                "name": user_profile.name,
-                "business_role": user_profile.role,
-                "tech_level": user_profile.tech_savviness,
-                "communication_preference": user_profile.comm_style,
-                "mobile_heavy_user": user_profile.mobile_usage > 0.8,
-                "engagement_triggers": user_profile.engagement_triggers
-            },
-            "personalization_rules": {
-                "use_first_name": True,
-                "simplify_for_beginners": user_profile.tech_savviness == 'beginner',
-                "add_mobile_context": user_profile.mobile_heavy_user,
-                "include_business_value": user_profile.business_focused,
-                "use_brazilian_expressions": True,
-                "optimize_for_quick_scan": True  # Mobile reading behavior
-            }
-        })
-        
-        return {
-            "personalized_title": personalization.title,
-            "personalized_body": personalization.body,
-            "personalized_cta": personalization.call_to_action,
-            "tone_of_voice": personalization.tone,
-            "urgency_indicators": personalization.urgency_words
-        }
-        
-    async def analyze_notification_performance(self, notification_id):
-        """IA analisa performance e aprende para próximas"""
-        
-        performance_data = await self.get_notification_metrics(notification_id)
-        
-        analysis = await self.ollama.analyze({
-            "performance_metrics": performance_data,
-            "learning_objectives": [
-                "improve_open_rates",
-                "increase_click_through",
-                "reduce_unsubscribes", 
-                "optimize_timing",
-                "enhance_mobile_experience"
-            ]
-        })
-        
-        # IA atualiza modelos de otimização
-        await self.update_optimization_models(analysis.insights)
-        
-        return analysis
-```
-
-## 📲 **CANAIS DE COMUNICAÇÃO INTEGRADOS (Expert Comunicação)**
-```typescript
-// Gerenciador multi-canal inteligente
-export class KryonixMultiChannelManager {
-  
-  async setupCommunicationChannels() {
-    return {
-      whatsapp: {
-        provider: 'Evolution API',
-        endpoint: 'https://whatsapp.kryonix.com.br',
-        features: {
-          text_messages: true,
-          media_messages: true,
-          voice_messages: true,
-          document_sharing: true,
-          location_sharing: true,
-          business_catalog: true,
-          payment_integration: true,
-          chatbot_integration: true
-        },
-        ai_capabilities: {
-          smart_replies: true,
-          sentiment_analysis: true,
-          intent_recognition: true,
-          automatic_escalation: true
-        }
-      },
-      
-      push_notifications: {
-        ios: {
-          provider: 'Apple Push Notification Service',
-          features: ['rich_notifications', 'critical_alerts', 'provisional_auth']
-        },
-        android: {
-          provider: 'Firebase Cloud Messaging',
-          features: ['data_messages', 'notification_channels', 'big_picture']
-        },
-        web: {
-          provider: 'Web Push API',
-          features: ['background_sync', 'offline_notifications']
-        }
-      },
-      
-      sms: {
-        providers: {
-          primary: 'Twilio',
-          fallback: 'Amazon SNS',
-          local: 'Zenvia (Brazil)'
-        },
-        features: {
-          delivery_receipts: true,
-          link_tracking: true,
-          two_way_messaging: true,
-          short_codes: true
-        }
-      },
-      
-      email: {
-        provider: 'SendGrid',
-        features: {
-          transactional: true,
-          marketing: true,
-          amp_email: true,
-          template_engine: true,
-          a_b_testing: true,
-          analytics: true
-        }
-      },
-      
-      voice_calls: {
-        provider: 'Twilio Voice',
-        features: {
-          text_to_speech: 'Amazon Polly PT-BR',
-          interactive_voice_response: true,
-          call_recording: true,
-          conference_calls: true
-        }
-      }
-    };
-  }
-  
-  async executeIntelligentRouting(notification: NotificationRequest) {
-    // IA escolhe melhor canal baseado em contexto
-    const routing = await this.aiEngine.selectOptimalChannel({
-      user_preferences: await this.getUserChannelPrefs(notification.user_id),
-      message_urgency: notification.urgency,
-      content_type: notification.content_type,
-      time_of_day: new Date().getHours(),
-      mobile_context: await this.isMobileContext(notification.user_id),
-      delivery_requirements: notification.delivery_requirements
-    });
-    
-    // Execução em sequência ou paralelo baseado na estratégia
-    if (routing.strategy === 'cascade') {
-      return await this.executeCascadeDelivery(notification, routing.channels);
-    } else if (routing.strategy === 'parallel') {
-      return await this.executeParallelDelivery(notification, routing.channels);
-    } else {
-      return await this.executeSingleChannel(notification, routing.primary_channel);
-    }
-  }
-  
-  async executeCascadeDelivery(notification: NotificationRequest, channels: string[]) {
-    for (const channel of channels) {
-      try {
-        const result = await this.sendViaChannel(notification, channel);
-        if (result.delivered) {
-          // IA monitora se usuário engajou
-          const engagement = await this.waitForEngagement(result.delivery_id, '5m');
-          if (engagement.engaged) {
-            return result; // Sucesso, não precisa tentar outros canais
-          }
-        }
-      } catch (error) {
-        console.log(`Channel ${channel} failed, trying next...`);
-        continue;
-      }
-    }
-    
-    // Se chegou aqui, todos os canais falharam
-    throw new Error('All notification channels failed');
-  }
-}
-```
-
-## 🔧 **SCRIPT SETUP NOTIFICAÇÕES COMPLETO**
-```bash
-#!/bin/bash
-# setup-notifications-ia-kryonix.sh
-# Script que configura sistema de notificações inteligentes
-
-echo "🚀 Configurando Sistema de Notificações IA KRYONIX..."
-
-# 1. Instalar dependências
-echo "Instalando dependências..."
-npm install @twilio/sdk firebase-admin web-push
-npm install sendgrid @sendgrid/mail node-cron
-npm install socket.io-client axios retry
-
-# 2. Configurar Firebase para Push Notifications
-cat > firebase-admin-config.json << 'EOF'
-{
-  "type": "service_account",
-  "project_id": "kryonix-notifications",
-  "private_key_id": "key_id",
-  "private_key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk@kryonix-notifications.iam.gserviceaccount.com",
-  "client_id": "client_id",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token"
-}
-EOF
-
-# 3. Sistema principal de notificações
-cat > /opt/kryonix/notifications/notification-system.js << 'EOF'
-#!/usr/bin/env node
-// Sistema de Notificações IA KRYONIX
-
-const { Ollama } = require('ollama');
-const admin = require('firebase-admin');
-const twilio = require('twilio');
-const sgMail = require('@sendgrid/mail');
-const webpush = require('web-push');
-
-class KryonixNotificationSystem {
-    constructor() {
-        this.ollama = new Ollama();
+    constructor(tenantId: string) {
+        this.sdk = new KryonixSDK({
+            module: 'notifications',
+            tenantId,
+            multiTenant: true,
+            mobileOptimized: true
+        });
         this.initializeServices();
     }
     
-    async initializeServices() {
-        // Firebase para Push Notifications
-        admin.initializeApp({
-            credential: admin.credential.cert('./firebase-admin-config.json')
+    async sendMultiChannelNotification(request: NotificationRequest): Promise<NotificationResult> {
+        // 1. Validar contexto do tenant
+        await this.sdk.tenant.validateAccess(request.userId);
+        
+        // 2. Buscar preferências do usuário isoladas por tenant
+        const userPreferences = await this.sdk.query({
+            table: 'notification_users',
+            where: { user_id: request.userId },
+            cache: {
+                key: `user_prefs:${request.userId}`,
+                ttl: 300
+            }
         });
         
-        // Twilio para SMS e Chamadas
-        this.twilioClient = twilio(
-            process.env.TWILIO_ACCOUNT_SID,
-            process.env.TWILIO_AUTH_TOKEN
+        // 3. Determinar canal otimizado (mobile-first priority)
+        const optimalChannel = await this.determineOptimalChannel(
+            request.userId,
+            request.urgency,
+            userPreferences,
+            request.mobileContext
         );
         
-        // SendGrid para Email
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        // 4. Rate limiting isolado por tenant
+        const rateLimitCheck = await this.checkTenantRateLimit(request);
+        if (!rateLimitCheck.allowed) {
+            throw new Error(`Tenant rate limit exceeded: ${rateLimitCheck.remaining}/${rateLimitCheck.limit}`);
+        }
         
-        // Web Push
-        webpush.setVapidDetails(
-            'mailto:admin@kryonix.com.br',
-            process.env.VAPID_PUBLIC_KEY,
-            process.env.VAPID_PRIVATE_KEY
+        // 5. Renderizar template isolado do tenant
+        const renderedContent = await this.renderTenantTemplate(
+            request.templateId,
+            request.data,
+            optimalChannel
         );
         
-        console.log('✅ Serviços de notificação inicializados');
-    }
-    
-    async sendIntelligentNotification(notificationData) {
-        console.log('🤖 IA analisando melhor estratégia de notificação...');
+        // 6. Enviar via canal otimizado
+        let result: NotificationResult;
         
-        // IA determina estratégia
-        const strategy = await this.ollama.chat({
-            model: 'llama3',
-            messages: [{
-                role: 'system',
-                content: 'Você é especialista em engajamento mobile e comunicação brasileira. Analise o contexto e determine a melhor estratégia de notificação.'
-            }, {
-                role: 'user',
-                content: `Analise esta notificação e determine: 1) Melhor canal (WhatsApp/Push/SMS/Email), 2) Timing otimizado, 3) Personalização do conteúdo. Contexto: ${JSON.stringify(notificationData)}`
-            }]
-        });
-        
-        // Processar resposta da IA
-        const aiRecommendation = this.parseAIResponse(strategy.message.content);
-        
-        // Executar notificação baseada na recomendação da IA
-        switch (aiRecommendation.primaryChannel) {
+        switch (optimalChannel) {
             case 'whatsapp':
-                return await this.sendWhatsAppNotification(notificationData, aiRecommendation);
+                result = await this.sendWhatsAppNotification(request, renderedContent);
+                break;
             case 'push':
-                return await this.sendPushNotification(notificationData, aiRecommendation);
+                result = await this.sendPushNotification(request, renderedContent);
+                break;
             case 'sms':
-                return await this.sendSMSNotification(notificationData, aiRecommendation);
+                result = await this.sendSMSNotification(request, renderedContent);
+                break;
             case 'email':
-                return await this.sendEmailNotification(notificationData, aiRecommendation);
+                result = await this.sendEmailNotification(request, renderedContent);
+                break;
+            case 'in_app':
+                result = await this.sendInAppNotification(request, renderedContent);
+                break;
             default:
-                return await this.sendMultiChannelNotification(notificationData, aiRecommendation);
+                result = await this.sendFallbackNotification(request, renderedContent);
         }
+        
+        // 7. Salvar no database isolado com RLS
+        await this.sdk.create({
+            table: 'notification_sends',
+            data: {
+                campaign_id: request.campaignId,
+                user_id: request.userId,
+                channel: optimalChannel,
+                provider: result.provider,
+                status: result.status,
+                message_data: renderedContent,
+                mobile_device: request.mobileContext?.isMobile || false,
+                sent_at: result.sentAt
+            }
+        });
+        
+        // 8. Analytics em tempo real isoladas por tenant
+        await this.analyticsService.trackNotification(this.sdk.getTenantId(), {
+            channel: optimalChannel,
+            deviceType: request.mobileContext?.deviceType || 'unknown',
+            status: result.status,
+            timestamp: new Date()
+        });
+        
+        // 9. WebSocket notification para tenant específico
+        await this.sdk.realtime.broadcast({
+            channel: `tenant:${this.sdk.getTenantId()}:notifications`,
+            event: 'notification_sent',
+            data: {
+                id: result.id,
+                channel: optimalChannel,
+                status: result.status,
+                userId: request.userId
+            }
+        });
+        
+        return result;
     }
     
-    async sendWhatsAppNotification(data, aiRecommendation) {
-        try {
-            const evolutionAPI = 'https://whatsapp.kryonix.com.br';
-            const personalizedMessage = await this.personalizeMessage(data.message, data.user, aiRecommendation);
-            
-            const response = await fetch(`${evolutionAPI}/send-message`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.EVOLUTION_API_KEY}`
-                },
-                body: JSON.stringify({
-                    number: data.user.phone,
-                    message: personalizedMessage,
-                    type: 'text'
-                })
-            });
-            
-            console.log('📱 WhatsApp enviado com sucesso');
-            return await response.json();
-        } catch (error) {
-            console.error('❌ Erro WhatsApp:', error);
-            throw error;
+    private async determineOptimalChannel(
+        userId: string,
+        urgency: string,
+        userPreferences: any,
+        mobileContext?: MobileContext
+    ): Promise<string> {
+        // Mobile-first priority (80% são mobile)
+        if (mobileContext?.isMobile) {
+            // Para mobile, priorizar push e WhatsApp
+            if (urgency === 'high' && userPreferences.whatsapp_number) {
+                return 'whatsapp';
+            }
+            if (userPreferences.device_tokens?.length > 0) {
+                return 'push';
+            }
         }
+        
+        // Fallback baseado em preferências
+        const preferredChannel = userPreferences.preferences?.preferred_channel;
+        if (preferredChannel && this.isChannelAvailable(preferredChannel, userPreferences)) {
+            return preferredChannel;
+        }
+        
+        // Fallback inteligente
+        if (userPreferences.whatsapp_number) return 'whatsapp';
+        if (userPreferences.device_tokens?.length > 0) return 'push';
+        if (userPreferences.email) return 'email';
+        if (userPreferences.phone) return 'sms';
+        
+        return 'in_app'; // Último recurso
     }
     
-    async sendPushNotification(data, aiRecommendation) {
-        try {
-            const personalizedContent = await this.personalizeMessage(data.message, data.user, aiRecommendation);
-            
-            const message = {
-                notification: {
-                    title: personalizedContent.title,
-                    body: personalizedContent.body,
-                    icon: '/icon-192x192.png',
-                    badge: '/badge-72x72.png',
-                    image: personalizedContent.image,
-                    click_action: personalizedContent.action_url
-                },
-                data: {
-                    notification_id: data.id,
-                    user_id: data.user.id,
-                    action: personalizedContent.action
-                },
-                token: data.user.fcm_token
-            };
-            
-            const response = await admin.messaging().send(message);
-            console.log('🔔 Push notification enviado:', response);
-            return response;
-        } catch (error) {
-            console.error('❌ Erro Push:', error);
-            throw error;
-        }
-    }
-    
-    async personalizeMessage(baseMessage, user, aiRecommendation) {
-        const personalizedContent = await this.ollama.chat({
-            model: 'llama3',
-            messages: [{
-                role: 'system',
-                content: 'Personalize esta mensagem para máximo engajamento mobile brasileiro.'
-            }, {
-                role: 'user',
-                content: `Personalize: "${baseMessage}" para usuário: Nome: ${user.name}, Perfil: ${user.profile}, Mobile: ${user.is_mobile}, Brasileiro: true. Mantenha tom profissional mas amigável.`
-            }]
+    private async sendWhatsAppNotification(
+        request: NotificationRequest,
+        content: RenderedContent
+    ): Promise<NotificationResult> {
+        // Usar instância WhatsApp isolada do tenant
+        const result = await this.whatsappService.sendMessage(this.sdk.getTenantId(), {
+            to: request.recipient,
+            message: content.text,
+            type: content.type || 'text',
+            media: content.media
         });
         
         return {
-            title: this.extractTitle(personalizedContent.message.content),
-            body: this.extractBody(personalizedContent.message.content),
-            action_url: baseMessage.action_url,
-            action: baseMessage.action
+            id: result.id,
+            provider: 'evolution-api',
+            status: result.status,
+            sentAt: new Date(),
+            channel: 'whatsapp',
+            deliveryId: result.messageId
         };
     }
     
-    async startNotificationScheduler() {
-        console.log('🕐 Iniciando agendador inteligente de notificações...');
+    private async sendPushNotification(
+        request: NotificationRequest,
+        content: RenderedContent
+    ): Promise<NotificationResult> {
+        const deviceTokens = await this.getUserDeviceTokens(request.userId);
         
-        // Verificar notificações pendentes a cada minuto
-        setInterval(async () => {
-            try {
-                const pendingNotifications = await this.getPendingNotifications();
-                
-                for (const notification of pendingNotifications) {
-                    // IA verifica se é o momento ideal
-                    const shouldSendNow = await this.shouldSendNotificationNow(notification);
-                    
-                    if (shouldSendNow) {
-                        await this.sendIntelligentNotification(notification);
-                        await this.markNotificationAsSent(notification.id);
-                    }
-                }
-            } catch (error) {
-                console.error('Erro no agendador:', error);
+        const pushData = {
+            notification: {
+                title: content.title,
+                body: content.body,
+                icon: content.icon || '/icon-192x192.png',
+                badge: '/badge-72x72.png',
+                image: content.image,
+                click_action: content.actionUrl
+            },
+            data: {
+                notification_id: request.id,
+                tenant_id: this.sdk.getTenantId(),
+                user_id: request.userId,
+                action: content.action
+            },
+            tokens: deviceTokens
+        };
+        
+        const result = await this.pushService.sendToTokens(pushData);
+        
+        return {
+            id: result.messageId,
+            provider: 'fcm',
+            status: result.successCount > 0 ? 'sent' : 'failed',
+            sentAt: new Date(),
+            channel: 'push',
+            deliveryId: result.messageId
+        };
+    }
+    
+    async createTenantTemplate(templateData: TemplateData): Promise<Template> {
+        // Validar dados do template
+        await this.validateTemplateData(templateData);
+        
+        // Criar template isolado para o tenant
+        const template = await this.sdk.create({
+            table: 'notification_templates',
+            data: {
+                name: templateData.name,
+                type: templateData.type,
+                channel: templateData.channel,
+                template_data: templateData.data,
+                mobile_optimized: templateData.mobileOptimized || true,
+                created_by: this.sdk.getCurrentUserId()
             }
-        }, 60000); // A cada minuto
+        });
+        
+        // Cache no Redis isolado
+        await this.sdk.cache.set({
+            key: `templates:${templateData.type}:${template.id}`,
+            value: template,
+            ttl: 3600
+        });
+        
+        return template;
+    }
+    
+    async getTenantAnalytics(dateRange: DateRange): Promise<NotificationAnalytics> {
+        // Analytics isoladas por tenant com RLS automático
+        const analytics = await this.sdk.query({
+            table: 'notification_analytics',
+            select: `
+                channel,
+                device_type,
+                date,
+                SUM((metrics->>'sent')::int) as total_sent,
+                SUM((metrics->>'delivered')::int) as total_delivered,
+                SUM((metrics->>'opened')::int) as total_opened,
+                SUM((metrics->>'clicked')::int) as total_clicked
+            `,
+            where: {
+                date: {
+                    gte: dateRange.start,
+                    lte: dateRange.end
+                }
+            },
+            groupBy: ['channel', 'device_type', 'date'],
+            orderBy: [{ date: 'desc' }]
+        });
+        
+        // Agregar dados por canal e dispositivo
+        const aggregated = this.aggregateAnalytics(analytics);
+        
+        return {
+            overview: aggregated.overview,
+            byChannel: aggregated.byChannel,
+            byDevice: aggregated.byDevice,
+            trends: aggregated.trends,
+            tenantId: this.sdk.getTenantId(),
+            period: dateRange
+        };
     }
 }
+```
 
-// Inicializar sistema
-const notificationSystem = new KryonixNotificationSystem();
-notificationSystem.startNotificationScheduler();
+## 📱 **INTERFACE REACT MOBILE-FIRST**
+```tsx
+// components/mobile/NotificationManagerMobile.tsx
+import React, { useState, useEffect } from 'react';
+import { KryonixSDK } from '@kryonix/sdk';
 
-module.exports = KryonixNotificationSystem;
-EOF
-
-# 4. Configurar como serviço
-cat > /etc/systemd/system/kryonix-notifications.service << 'EOF'
-[Unit]
-Description=KRYONIX Intelligent Notifications System
-After=network.target
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/opt/kryonix/notifications
-ExecStart=/usr/bin/node notification-system.js
-Restart=always
-RestartSec=10
-Environment=NODE_ENV=production
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# 5. Variáveis de ambiente
-cat > /opt/kryonix/notifications/.env << 'EOF'
-# Twilio
-TWILIO_ACCOUNT_SID=your_twilio_account_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_PHONE_NUMBER=+5511999999999
-
-# SendGrid
-SENDGRID_API_KEY=your_sendgrid_api_key
-
-# Firebase
-FIREBASE_PROJECT_ID=kryonix-notifications
-
-# Evolution API (WhatsApp)
-EVOLUTION_API_KEY=your_evolution_api_key
-EVOLUTION_API_URL=https://whatsapp.kryonix.com.br
-
-# Web Push
-VAPID_PUBLIC_KEY=your_vapid_public_key
-VAPID_PRIVATE_KEY=your_vapid_private_key
-
-# Ollama
-OLLAMA_URL=http://ollama.kryonix.com.br:11434
-EOF
-
-# 6. Iniciar serviços
-chmod +x /opt/kryonix/notifications/notification-system.js
-systemctl enable kryonix-notifications
-systemctl start kryonix-notifications
-
-# 7. Configurar monitoramento
-cat > /opt/kryonix/monitoring/notifications-monitor.js << 'EOF'
-// Monitor de notificações
-const https = require('https');
-
-function checkNotificationSystem() {
-    // Verificar se sistema está responsivo
-    const healthCheck = {
-        hostname: 'localhost',
-        port: 3001,
-        path: '/health',
-        method: 'GET'
+export const NotificationManagerMobile: React.FC = () => {
+    const [notifications, setNotifications] = useState([]);
+    const [campaigns, setCampaigns] = useState([]);
+    const [analytics, setAnalytics] = useState(null);
+    const [loading, setLoading] = useState(true);
+    
+    const sdk = new KryonixSDK({ module: 'notifications' });
+    
+    useEffect(() => {
+        loadDashboardData();
+        setupRealtimeSubscription();
+    }, []);
+    
+    const loadDashboardData = async () => {
+        try {
+            setLoading(true);
+            const [notificationsData, campaignsData, analyticsData] = await Promise.all([
+                sdk.notifications.getRecent({ limit: 10, mobileOptimized: true }),
+                sdk.notifications.getCampaigns({ status: 'active' }),
+                sdk.notifications.getAnalytics({ 
+                    period: 'last_7_days',
+                    groupBy: 'channel'
+                })
+            ]);
+            
+            setNotifications(notificationsData);
+            setCampaigns(campaignsData);
+            setAnalytics(analyticsData);
+        } catch (error) {
+            console.error('Erro ao carregar dashboard:', error);
+        } finally {
+            setLoading(false);
+        }
     };
     
-    const req = https.request(healthCheck, (res) => {
-        if (res.statusCode === 200) {
-            console.log('✅ Sistema de notificações: OK');
-        } else {
-            console.log('⚠️ Sistema de notificações: Problema');
-        }
-    });
+    const setupRealtimeSubscription = () => {
+        sdk.realtime.subscribe('notifications:updates', (data) => {
+            // Atualizar lista em tempo real
+            setNotifications(prev => [data.notification, ...prev.slice(0, 9)]);
+            
+            // Atualizar analytics se necessário
+            if (data.type === 'analytics_update') {
+                setAnalytics(prev => ({
+                    ...prev,
+                    ...data.analytics
+                }));
+            }
+        });
+    };
     
-    req.on('error', (error) => {
-        console.log('❌ Sistema de notificações: Offline');
-    });
+    if (loading) {
+        return (
+            <div className="mobile-loading">
+                <div className="spinner"></div>
+                <p>Carregando notificações...</p>
+            </div>
+        );
+    }
     
-    req.end();
-}
+    return (
+        <div className="mobile-notification-manager">
+            {/* Header Mobile */}
+            <header className="mobile-header">
+                <div className="header-content">
+                    <h1>🔔 Notificações</h1>
+                    <button className="mobile-menu-btn">☰</button>
+                </div>
+                <div className="tenant-info">
+                    <span className="tenant-badge">
+                        {sdk.getTenantName()}
+                    </span>
+                </div>
+            </header>
+            
+            {/* Dashboard Mobile de Métricas */}
+            <section className="mobile-metrics">
+                <div className="metrics-grid">
+                    <div className="metric-card">
+                        <div className="metric-value">
+                            {analytics?.overview?.deliveryRate || '0'}%
+                        </div>
+                        <div className="metric-label">Taxa de Entrega</div>
+                    </div>
+                    <div className="metric-card">
+                        <div className="metric-value">
+                            {analytics?.overview?.openRate || '0'}%
+                        </div>
+                        <div className="metric-label">Taxa de Abertura</div>
+                    </div>
+                    <div className="metric-card">
+                        <div className="metric-value">
+                            {analytics?.overview?.clickRate || '0'}%
+                        </div>
+                        <div className="metric-label">Taxa de Conversão</div>
+                    </div>
+                </div>
+            </section>
+            
+            {/* Canais de Notificação */}
+            <section className="mobile-channels">
+                <h2>Canais de Comunicação</h2>
+                <div className="channels-grid">
+                    <ChannelCard 
+                        icon="📱"
+                        title="WhatsApp"
+                        status={getChannelStatus('whatsapp')}
+                        metrics={analytics?.byChannel?.whatsapp}
+                    />
+                    <ChannelCard 
+                        icon="🔔"
+                        title="Push"
+                        status={getChannelStatus('push')}
+                        metrics={analytics?.byChannel?.push}
+                    />
+                    <ChannelCard 
+                        icon="📧"
+                        title="Email"
+                        status={getChannelStatus('email')}
+                        metrics={analytics?.byChannel?.email}
+                    />
+                    <ChannelCard 
+                        icon="💬"
+                        title="SMS"
+                        status={getChannelStatus('sms')}
+                        metrics={analytics?.byChannel?.sms}
+                    />
+                </div>
+            </section>
+            
+            {/* Quick Actions Mobile */}
+            <section className="mobile-actions">
+                <div className="actions-grid">
+                    <button 
+                        className="action-btn primary"
+                        onClick={() => createNewCampaign()}
+                    >
+                        ✉️ Nova Campanha
+                    </button>
+                    <button 
+                        className="action-btn secondary"
+                        onClick={() => viewReports()}
+                    >
+                        📊 Relatórios
+                    </button>
+                    <button 
+                        className="action-btn secondary"
+                        onClick={() => openSettings()}
+                    >
+                        ⚙️ Configurações
+                    </button>
+                </div>
+            </section>
+            
+            {/* Recent Activity */}
+            <section className="mobile-activity">
+                <h2>Atividade Recente</h2>
+                <div className="activity-list">
+                    {notifications.slice(0, 5).map((notification) => (
+                        <div key={notification.id} className="activity-item">
+                            <div className="activity-icon">
+                                {getChannelIcon(notification.channel)}
+                            </div>
+                            <div className="activity-content">
+                                <div className="activity-title">
+                                    {notification.title}
+                                </div>
+                                <div className="activity-meta">
+                                    {notification.recipient} • {formatTime(notification.sentAt)}
+                                </div>
+                            </div>
+                            <div className="activity-status">
+                                {getStatusIcon(notification.status)}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        </div>
+    );
+};
 
-setInterval(checkNotificationSystem, 30000);
+// Componente para cartão de canal
+const ChannelCard: React.FC<ChannelCardProps> = ({ icon, title, status, metrics }) => (
+    <div className="channel-card">
+        <div className="channel-header">
+            <span className="channel-icon">{icon}</span>
+            <span className="channel-title">{title}</span>
+            <span className={`channel-status ${status}`}>
+                {status === 'connected' ? '🟢' : status === 'active' ? '🟡' : '🔴'}
+            </span>
+        </div>
+        <div className="channel-metrics">
+            <div className="metric">
+                <span>Enviadas:</span>
+                <span>{metrics?.sent || 0}</span>
+            </div>
+            <div className="metric">
+                <span>Entregues:</span>
+                <span>{metrics?.delivered || metrics?.opened || 0}</span>
+            </div>
+        </div>
+    </div>
+);
+```
+
+## 📲 **INTEGRAÇÃO WHATSAPP BUSINESS API**
+```typescript
+// services/WhatsAppMultiTenantService.ts
+export class WhatsAppMultiTenantService {
+    private evolutionAPI: EvolutionAPI;
+    private tenantInstances: Map<string, WhatsAppInstance> = new Map();
+    
+    constructor() {
+        this.evolutionAPI = new EvolutionAPI({
+            baseURL: process.env.EVOLUTION_API_URL,
+            apiKey: process.env.EVOLUTION_API_KEY
+        });
+    }
+    
+    async setupTenantWhatsAppInstance(tenantId: string): Promise<WhatsAppInstance> {
+        const instanceName = `kryonix_${tenantId}`;
+        
+        // Criar instância Evolution API isolada para o tenant
+        const instance = await this.evolutionAPI.createInstance({
+            instanceName,
+            webhook: `${process.env.WEBHOOK_BASE_URL}/webhooks/${tenantId}/whatsapp`,
+            settings: {
+                rejectCall: true,
+                alwaysOnline: true,
+                readMessages: false,
+                readStatus: false,
+                syncFullHistory: false
+            },
+            database: {
+                enabled: true,
+                connectionString: `postgresql://kryonix:${process.env.DB_PASSWORD}@postgres:5432/whatsapp_${tenantId}`
+            }
+        });
+        
+        // Configurar webhook handler isolado
+        await this.setupTenantWebhook(tenantId, instance);
+        
+        // Cache da instância
+        this.tenantInstances.set(tenantId, instance);
+        
+        // Configurar rate limiting específico do tenant
+        await this.setupTenantRateLimits(tenantId, instance);
+        
+        return instance;
+    }
+    
+    async sendWhatsAppMessage(
+        tenantId: string, 
+        request: WhatsAppMessageRequest
+    ): Promise<WhatsAppMessageResult> {
+        const instance = await this.getTenantInstance(tenantId);
+        
+        // Verificar se instância está conectada
+        const connectionStatus = await instance.getConnectionStatus();
+        if (!connectionStatus.connected) {
+            throw new WhatsAppNotConnectedError(
+                `Tenant ${tenantId} WhatsApp not connected`
+            );
+        }
+        
+        // Rate limiting isolado por tenant
+        await this.checkTenantWhatsAppLimits(tenantId);
+        
+        // Enviar mensagem
+        const result = await instance.sendMessage({
+            number: this.normalizePhoneNumber(request.to),
+            message: request.message,
+            type: request.type || 'text',
+            media: request.media,
+            caption: request.caption
+        });
+        
+        // Analytics isoladas por tenant
+        await this.trackWhatsAppMessage(tenantId, request, result);
+        
+        return {
+            id: result.messageId,
+            status: result.status,
+            timestamp: new Date(),
+            provider: 'evolution-api',
+            tenantId
+        };
+    }
+    
+    async handleTenantWebhook(
+        tenantId: string, 
+        webhookData: WhatsAppWebhookData
+    ): Promise<void> {
+        const tenantContext = new TenantContext(tenantId);
+        
+        switch (webhookData.event) {
+            case 'message.received':
+                await this.handleIncomingMessage(tenantContext, webhookData);
+                break;
+            case 'message.status':
+                await this.handleMessageStatus(tenantContext, webhookData);
+                break;
+            case 'connection.update':
+                await this.handleConnectionUpdate(tenantContext, webhookData);
+                break;
+            case 'qr.updated':
+                await this.handleQRUpdate(tenantContext, webhookData);
+                break;
+        }
+    }
+    
+    private async handleIncomingMessage(
+        tenantContext: TenantContext, 
+        data: WhatsAppWebhookData
+    ): Promise<void> {
+        // Auto-resposta baseada em configurações do tenant
+        const autoReplyConfig = await tenantContext.getAutoReplyConfig();
+        
+        if (autoReplyConfig.enabled) {
+            const response = await this.generateAutoReply(
+                data.message,
+                autoReplyConfig,
+                tenantContext.tenantId
+            );
+            
+            if (response) {
+                await this.sendWhatsAppMessage(tenantContext.tenantId, {
+                    to: data.from,
+                    message: response.text,
+                    type: 'text'
+                });
+            }
+        }
+        
+        // Salvar mensagem no database isolado do tenant
+        await this.saveIncomingMessage(tenantContext.tenantId, data);
+        
+        // Notificar via WebSocket isolado do tenant
+        await this.notifyTenantUsers(tenantContext.tenantId, {
+            type: 'whatsapp_message_received',
+            from: data.from,
+            message: data.message,
+            timestamp: data.timestamp
+        });
+    }
+    
+    private async checkTenantWhatsAppLimits(tenantId: string): Promise<void> {
+        const limits = await this.getTenantLimits(tenantId);
+        const usage = await this.getTenantUsage(tenantId);
+        
+        // Verificar limite de mensagens por minuto
+        if (usage.messagesPerMinute >= limits.messagesPerMinute) {
+            throw new RateLimitError(
+                `Tenant ${tenantId} exceeded WhatsApp rate limit: ${usage.messagesPerMinute}/${limits.messagesPerMinute} per minute`
+            );
+        }
+        
+        // Verificar limite diário
+        if (usage.messagesToday >= limits.messagesPerDay) {
+            throw new RateLimitError(
+                `Tenant ${tenantId} exceeded daily WhatsApp limit: ${usage.messagesToday}/${limits.messagesPerDay}`
+            );
+        }
+    }
+    
+    async getTenantWhatsAppMetrics(tenantId: string): Promise<WhatsAppMetrics> {
+        // Buscar métricas isoladas do tenant
+        const metrics = await this.sdk.query({
+            table: 'notification_sends',
+            select: `
+                COUNT(*) as total_sent,
+                COUNT(CASE WHEN status = 'delivered' THEN 1 END) as delivered,
+                COUNT(CASE WHEN status = 'read' THEN 1 END) as read,
+                COUNT(CASE WHEN status = 'failed' THEN 1 END) as failed
+            `,
+            where: {
+                tenant_id: tenantId,
+                channel: 'whatsapp',
+                created_at: {
+                    gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // 30 dias
+                }
+            }
+        });
+        
+        return {
+            totalSent: metrics[0].total_sent,
+            delivered: metrics[0].delivered,
+            read: metrics[0].read,
+            failed: metrics[0].failed,
+            deliveryRate: (metrics[0].delivered / metrics[0].total_sent) * 100,
+            readRate: (metrics[0].read / metrics[0].total_sent) * 100,
+            tenantId
+        };
+    }
+}
+```
+
+## 🚀 **SCRIPT DE DEPLOY AUTOMATIZADO**
+```bash
+#!/bin/bash
+# deploy-notifications-multi-tenant.sh
+
+echo "🚀 Deploying KRYONIX Multi-Tenant Notifications System..."
+
+# 1. Configurar variáveis de ambiente
+cat > .env.notifications << 'EOF'
+# Database Multi-Tenant
+DATABASE_URL=postgresql://kryonix:${DB_PASSWORD}@postgres:5432/kryonix_notifications
+TENANT_DATABASE_PREFIX=notifications_
+
+# Redis Multi-Tenant
+REDIS_URL=redis://redis:6379
+REDIS_TENANT_PREFIX=notifications:
+
+# WhatsApp Evolution API
+EVOLUTION_API_URL=https://whatsapp.kryonix.com.br
+EVOLUTION_API_KEY=${EVOLUTION_API_KEY}
+WEBHOOK_BASE_URL=https://api.kryonix.com.br
+
+# Push Notifications
+FCM_SERVER_KEY=${FCM_SERVER_KEY}
+FCM_PROJECT_ID=${FCM_PROJECT_ID}
+VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
+VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY}
+
+# SMS Provider
+TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+TWILIO_PHONE_NUMBER=+5511999999999
+
+# Email Provider
+SENDGRID_API_KEY=${SENDGRID_API_KEY}
+SENDGRID_FROM_EMAIL=notifications@kryonix.com.br
+
+# Rate Limiting
+DEFAULT_RATE_LIMIT_PER_MINUTE=100
+DEFAULT_RATE_LIMIT_PER_DAY=10000
+
+# Monitoring
+ENABLE_METRICS=true
+METRICS_PORT=9090
 EOF
 
-echo "✅ Sistema de Notificações IA KRYONIX configurado!"
-echo "📱 WhatsApp: Integrado via Evolution API"
-echo "🔔 Push: Firebase configurado para iOS/Android/Web"
-echo "📨 SMS: Twilio configurado para Brasil"
-echo "📧 Email: SendGrid configurado"
-echo "🤖 IA: Otimização automática de engajamento"
-echo "📊 Analytics: Tracking completo habilitado"
-```
+# 2. Docker Compose para serviços
+cat > docker-compose.notifications.yml << 'EOF'
+version: '3.8'
 
-## ✅ **ENTREGÁVEIS COMPLETOS KRYONIX**
-- [ ] **IA Autônoma 24/7** otimizando engajamento
-- [ ] **WhatsApp Inteligente** via Evolution API com IA
-- [ ] **Push Notifications** mobile-optimized para 80% usuários
-- [ ] **SMS Confiável** como fallback inteligente
-- [ ] **Email Marketing** otimizado para mobile
-- [ ] **Chamadas por IA** para alertas críticos
-- [ ] **Timing Inteligente** baseado em comportamento real
-- [ ] **Personalização IA** para cada usuário
-- [ ] **Multi-Canal Automático** com cascata inteligente
-- [ ] **Analytics Real-time** de engajamento
-- [ ] **A/B Testing** automático por IA
-- [ ] **Frequency Capping** inteligente
-- [ ] **Segmentação Dinâmica** por IA
-- [ ] **Rich Notifications** com ações diretas
-- [ ] **Offline Support** com sync inteligente
-- [ ] **Scripts Deploy** automatizados
+services:
+  notifications-api:
+    build: 
+      context: .
+      dockerfile: Dockerfile.notifications
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env.notifications
+    ports:
+      - "3003:3000"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - kryonix-network
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-## 🧪 **TESTES AUTOMÁTICOS IA**
-```bash
-npm run test:notifications:delivery:rates
-npm run test:notifications:mobile:optimization
-npm run test:notifications:ai:personalization
-npm run test:notifications:multi:channel
-npm run test:notifications:timing:optimization
-npm run test:notifications:engagement:tracking
-npm run test:notifications:whatsapp:integration
-npm run test:notifications:push:mobile
-```
+  notifications-worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile.notifications-worker
+    environment:
+      - NODE_ENV=production
+      - WORKER_TYPE=notifications
+    env_file:
+      - .env.notifications
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - kryonix-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
 
-## 📝 **CHECKLIST IMPLEMENTAÇÃO**
-- [ ] ✅ **6 Agentes Especializados** criando sistema perfeito
-- [ ] 📱 **Mobile-First** priorizando 80% usuários mobile
-- [ ] 🤖 **IA Autônoma** otimizando engajamento 24/7
-- [ ] 🇧🇷 **Brasileiro** WhatsApp + SMS + comunicação local
-- [ ] 📊 **Dados Reais** análise comportamental verdadeira
-- [ ] 💬 **Multi-Canal** WhatsApp + Push + SMS + Email + Voz
-- [ ] ⏰ **Timing Perfect** IA determina melhor momento
-- [ ] 🎯 **Personalização IA** conteúdo adaptativo
-- [ ] 📈 **Analytics Completo** tracking de engajamento
-- [ ] 🔄 **Deploy Automático** scripts prontos
+  notifications-scheduler:
+    build: 
+      context: .
+      dockerfile: Dockerfile.notifications-scheduler
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env.notifications
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - kryonix-network
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 128M
+
+networks:
+  kryonix-network:
+    external: true
+EOF
+
+# 3. Dockerfile para API
+cat > Dockerfile.notifications << 'EOF'
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy source code
+COPY src/ ./src/
+COPY dist/ ./dist/
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
+
+EXPOSE 3000
+
+CMD ["node", "dist/notifications/main.js"]
+EOF
+
+# 4. Kubernetes deployment
+cat > k8s/notifications-deployment.yaml << 'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kryonix-notifications
+  namespace: kryonix
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kryonix-notifications
+  template:
+    metadata:
+      labels:
+        app: kryonix-notifications
+    spec:
+      containers:
+      - name: notifications-api
+        image: kryonix/notifications:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        envFrom:
+        - secretRef:
+            name: kryonix-notifications-secrets
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
 
 ---
-*Parte 16 de 50 - Projeto KRYONIX SaaS Platform 100% IA Autônoma*
-*Próxima Parte: 17 - Logs e Auditoria Inteligente*
-*🏢 KRYONIX - Conectando Pessoas com IA*
+apiVersion: v1
+kind: Service
+metadata:
+  name: kryonix-notifications-service
+  namespace: kryonix
+spec:
+  selector:
+    app: kryonix-notifications
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kryonix-notifications-ingress
+  namespace: kryonix
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.middlewares: "kryonix-auth@kubernetescrd"
+spec:
+  rules:
+  - host: notifications.kryonix.com.br
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kryonix-notifications-service
+            port:
+              number: 80
+EOF
+
+# 5. Configurar monitoramento
+cat > config/monitoring.yml << 'EOF'
+# Prometheus monitoring config
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'kryonix-notifications'
+    static_configs:
+      - targets: ['notifications-api:9090']
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+rule_files:
+  - "notifications-alerts.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+EOF
+
+# 6. Aplicar migrations
+echo "📊 Aplicando migrations do banco de dados..."
+npm run migrate:notifications:up
+
+# 7. Configurar RLS
+echo "🔒 Configurando Row Level Security..."
+psql $DATABASE_URL -c "
+  -- Habilitar RLS em todas as tabelas de notificações
+  SELECT setup_notifications_rls();
+"
+
+# 8. Build e deploy
+echo "🏗️ Building containers..."
+docker build -t kryonix/notifications:latest -f Dockerfile.notifications .
+docker build -t kryonix/notifications-worker:latest -f Dockerfile.notifications-worker .
+docker build -t kryonix/notifications-scheduler:latest -f Dockerfile.notifications-scheduler .
+
+# 9. Push para registry
+echo "📤 Pushing to registry..."
+docker push kryonix/notifications:latest
+docker push kryonix/notifications-worker:latest
+docker push kryonix/notifications-scheduler:latest
+
+# 10. Deploy no Kubernetes
+echo "🚀 Deploying to Kubernetes..."
+kubectl apply -f k8s/notifications-deployment.yaml
+
+# 11. Verificar health
+echo "🔍 Verificando health dos serviços..."
+kubectl rollout status deployment/kryonix-notifications -n kryonix
+
+# 12. Configurar Evolution API instances para tenants existentes
+echo "📱 Configurando instâncias WhatsApp para tenants..."
+npm run setup:whatsapp:tenants
+
+# 13. Inicializar templates padrão
+echo "📝 Criando templates padrão..."
+npm run setup:templates:default
+
+echo "✅ Deploy de KRYONIX Multi-Tenant Notifications concluído com sucesso!"
+echo "📊 Dashboard: https://notifications.kryonix.com.br"
+echo "📱 WhatsApp API: https://whatsapp.kryonix.com.br"
+echo "🔔 Push Service: Configurado via FCM"
+echo "📧 Email Service: Configurado via SendGrid"
+echo "💬 SMS Service: Configurado via Twilio"
+```
+
+## ✅ **CHECKLIST DE IMPLEMENTAÇÃO MULTI-TENANT**
+- [ ] 🏗️ **Arquitetura Multi-tenant** com isolamento completo
+- [ ] 📊 **Schemas com RLS** configurados e testados
+- [ ] 🔧 **Services isolados** por tenant implementados
+- [ ] 📱 **Interface mobile-first** responsiva criada
+- [ ] 🔌 **SDK @kryonix** integrado em todos os módulos
+- [ ] 💾 **Cache Redis** namespacedo por cliente
+- [ ] ⚡ **WebSocket** channels isolados por tenant
+- [ ] 📲 **WhatsApp Business API** instances por tenant
+- [ ] 🔔 **Push Notifications** PWA configuradas
+- [ ] 📧 **Email templates** isolados por cliente
+- [ ] 💬 **SMS provider** configurado por tenant
+- [ ] 📊 **Analytics isoladas** por cliente implementadas
+- [ ] 🔐 **Rate limiting** específico por tenant
+- [ ] 🔒 **LGPD compliance** automático configurado
+- [ ] 🚀 **Deploy automatizado** funcionando
+- [ ] 📈 **Monitoramento** por tenant ativo
+
+## 🎯 **FUNCIONALIDADES ENTREGUES**
+1. **Isolamento Completo**: Dados, templates, configurações por tenant
+2. **Mobile-First**: Design otimizado para 80% usuários mobile
+3. **Multi-Canal**: WhatsApp, Push, Email, SMS, In-App
+4. **Templates Customizáveis**: Por cliente com versionamento
+5. **Analytics Isoladas**: Métricas específicas por tenant
+6. **Rate Limiting**: Limites configuráveis por cliente
+7. **Real-time Updates**: WebSocket isolado por tenant
+8. **LGPD Compliance**: Tracking automático de consentimento
+9. **Offline Support**: Service Worker + IndexedDB
+10. **Auto-provisioning**: Setup automático em 2-5 minutos
+
+---
+*Parte 16 de 50 - Projeto KRYONIX SaaS Platform Multi-Tenant*
+*Próxima Parte: 17 - Logs e Auditoria Multi-Tenant*
+*🏢 KRYONIX - Transformação Multi-Tenant Completa*
