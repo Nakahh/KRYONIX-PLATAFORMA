@@ -55,7 +55,7 @@ TOTAL_STEPS=15
 CURRENT_STEP=0
 STEP_DESCRIPTIONS=(
     "Verificando Docker Swarm ⚙"
-    "Limpando ambiente anterior 🧹"
+    "Limpando ambiente anterior ���"
     "Configurando credenciais 🔐"
     "Preparando projeto 📁"
     "Instalando dependências 📦"
@@ -82,7 +82,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔��██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -744,7 +744,35 @@ if [ ! -f "public/index.html" ]; then
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRYONIX - Plataforma SaaS Autônoma</title>
+    <title>🚀 KRYONIX - IA Autônoma Brasileira</title>
+    <meta name="description" content="🤖 KRYONIX é a revolução em SaaS! Plataforma 100% autônoma com 15 agentes de IA, 8 módulos integrados e deploy automático. Mobile-first, desenvolvida em português para empresas brasileiras. ✨">
+
+    <!-- Favicon com Foguete 🚀 -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="shortcut icon" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+
+    <!-- Meta tags para compartilhamento (Open Graph) -->
+    <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS 100% Autônoma por IA">
+    <meta property="og:description" content="🤖 Revolução em SaaS: 15 agentes de IA autônomos, 8 módulos integrados, tecnologia 100% brasileira. Mobile-first para 80% dos usuários. Deploy automático com GitHub! 📱✨">
+    <meta property="og:image" content="https://kryonix.com.br/logo kryonix.png">
+    <meta property="og:url" content="https://kryonix.com.br">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="🚀 KRYONIX - IA Autônoma">
+
+    <!-- WhatsApp específico -->
+    <meta property="og:image:alt" content="KRYONIX - Logo da plataforma SaaS autônoma brasileira com IA">
+    <meta name="whatsapp:title" content="🚀 KRYONIX - IA Autônoma">
+    <meta name="whatsapp:description" content="🤖 A revolução do SaaS chegou! 15 agentes IA + 8 módulos + Deploy automático. 100% brasileiro! 📱✨">
+
+    <!-- Meta tags para Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="🚀 KRYONIX - IA Autônoma Brasileira">
+    <meta name="twitter:description" content="🤖 15 agentes IA + 8 módulos SaaS + Deploy automático. A revolução tecnológica 100% brasileira chegou! 📱✨">
+    <meta name="twitter:image" content="https://kryonix.com.br/logo kryonix.png">
+
+    <meta name="theme-color" content="#667eea">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
