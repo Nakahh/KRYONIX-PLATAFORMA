@@ -1,10 +1,14 @@
-const express = require('express');
-const path = require('path');
-const cors = require('cors');
-const helmet = require('helmet');
-const compression = require('compression');
-const { exec } = require('child_process');
-const fs = require('fs');
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import { exec, spawn } from 'child_process';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -82,7 +86,7 @@ app.get('/api/logs', (req, res) => {
 });
 
 // Webhook GitHub para deploy automático
-const crypto = require('crypto');
+import crypto from 'crypto';
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
 
 // Função para verificar assinatura do GitHub
@@ -135,7 +139,6 @@ app.post('/api/github-webhook', (req, res) => {
       console.log('🚀 Executando script de deploy webhook...');
 
       // Usar spawn para melhor controle do processo
-      const spawn = require('child_process').spawn;
       const deployProcess = spawn('bash', [deployScript, 'webhook', JSON.stringify(payload)], {
         cwd: '/opt/kryonix-plataform',
         stdio: 'pipe'
