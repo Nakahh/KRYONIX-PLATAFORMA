@@ -5,11 +5,11 @@
 Implementar sistema completo de notificações multicanal (email, push, in-app, WhatsApp) integrado com Ntfy, SendGrid e Evolution API.
 
 ## 🏗️ **ARQUITETURA DE NOTIFICAÇÕES**
-```yaml
+
 Notification System:
   Channels:
     - Email: SendGrid + Mautic
-    - Push: Ntfy (ntfy.kryonix.com.br)
+    - Push: Ntfy (https://ntfy.kryonix.com.br) - Login: kryonix / Vitor@123456
     - In-App: WebSocket + React
     - WhatsApp: Evolution API
     - SMS: Twilio (opcional)
