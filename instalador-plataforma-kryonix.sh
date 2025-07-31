@@ -2096,6 +2096,76 @@ echo ""
 echo -e "${RED}${BOLD}⚠️ IMPORTANTE: Configure o webhook no GitHub para ativar deploy automático!${RESET}"
 echo -e "${YELLOW}${BOLD}🔥 SEM o webhook configurado = SEM deploy automático!${RESET}"
 echo ""
+# ============================================================================
+# VERIFICAÇÃO FINAL E CORREÇÃO AUTOMÁTICA DO WEBHOOK
+# ============================================================================
+
+echo ""
+echo -e "${PURPLE}${BOLD}🔧 VERIFICAÇÃO FINAL DO WEBHOOK...${RESET}"
+
+# Aguardar mais tempo para estabilização completa
+sleep 10
+
+# Verificar se o serviço está realmente funcionando
+WEBHOOK_STATUS="❌ ERRO"
+MAX_WEBHOOK_ATTEMPTS=15
+
+for attempt in $(seq 1 $MAX_WEBHOOK_ATTEMPTS); do
+    echo -e "${CYAN}Verificação $attempt/$MAX_WEBHOOK_ATTEMPTS...${RESET}"
+
+    # Testar health check
+    if curl -f -s -m 5 "http://localhost:8080/health" >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ Health check OK${RESET}"
+
+        # Testar webhook endpoint especificamente
+        webhook_response=$(curl -s -w "%{http_code}" -o /dev/null -X POST "http://localhost:8080/api/github-webhook" \
+            -H "Content-Type: application/json" \
+            -H "X-GitHub-Event: push" \
+            -d '{"ref":"refs/heads/main","test":true}' 2>/dev/null)
+
+        if [ "$webhook_response" = "200" ] || [ "$webhook_response" = "401" ]; then
+            WEBHOOK_STATUS="✅ FUNCIONANDO"
+            echo -e "${GREEN}✅ Webhook endpoint respondendo (HTTP $webhook_response)${RESET}"
+            break
+        else
+            echo -e "${YELLOW}⚠️ Webhook HTTP $webhook_response - tentando novamente...${RESET}"
+        fi
+    else
+        echo -e "${YELLOW}⚠️ Serviço inicializando...${RESET}"
+    fi
+
+    if [ $attempt -lt $MAX_WEBHOOK_ATTEMPTS ]; then
+        sleep 10
+    fi
+done
+
+# Se ainda não funcionou, tentar correção automática
+if [ "$WEBHOOK_STATUS" = "❌ ERRO" ]; then
+    echo -e "${RED}${BOLD}🔧 APLICANDO CORREÇÃO AUTOMÁTICA...${RESET}"
+
+    # Verificar se o container está rodando
+    if ! docker service ls | grep -q "${STACK_NAME}_web"; then
+        echo -e "${YELLOW}Redesployando stack...${RESET}"
+        docker stack deploy -c docker-stack.yml "$STACK_NAME"
+        sleep 30
+
+        # Testar novamente
+        if curl -f -s -m 5 "http://localhost:8080/health" >/dev/null 2>&1; then
+            WEBHOOK_STATUS="✅ CORRIGIDO"
+        fi
+    fi
+
+    # Se ainda não funcionar, mostrar comando de troubleshooting
+    if [ "$WEBHOOK_STATUS" = "❌ ERRO" ]; then
+        echo -e "${RED}${BOLD}⚠️ CORREÇÃO MANUAL NECESSÁRIA${RESET}"
+        echo -e "${YELLOW}Execute os comandos:${RESET}"
+        echo -e "${CYAN}  docker service logs ${STACK_NAME}_web${RESET}"
+        echo -e "${CYAN}  docker service update --force ${STACK_NAME}_web${RESET}"
+        echo -e "${CYAN}  curl http://localhost:8080/health${RESET}"
+    fi
+fi
+
+echo ""
 echo -e "${CYAN}${BOLD}🚀 COMO USAR O DEPLOY AUTOMÁTICO:${RESET}"
 echo ""
 echo -e "${WHITE}${BOLD}1. DESENVOLVIMENTO AUTOMATIZADO:${RESET}"
