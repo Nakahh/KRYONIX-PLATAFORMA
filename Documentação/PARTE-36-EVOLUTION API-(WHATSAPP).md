@@ -363,6 +363,7 @@ docker run -d \
   -e REDIS_URI="redis://redis.kryonix.com.br:6379" \
   -e WEBHOOK_GLOBAL_URL="https://api.kryonix.com.br/webhooks/whatsapp" \
   -e CONFIG_SESSION_PHONE_CLIENT="KRYONIX SaaS" \
+  -e GLOBAL_API_KEY="2f4d6967043b87b5ebee57b872e0223a" \
   atendai/evolution-api:latest
 
 echo "✅ Evolution API configurado para KRYONIX"
