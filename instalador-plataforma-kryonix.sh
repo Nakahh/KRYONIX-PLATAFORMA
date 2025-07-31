@@ -79,7 +79,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔═════════════════════════════════���═══════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -365,7 +365,7 @@ echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
-echo -e "${BLUE}├�� SO: $(uname -s) $(uname -r)${RESET}"
+echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
 echo -e "${GREEN}${BOLD}✅ Configuração automática ativada - sem interação necessária!${RESET}\n"
@@ -1122,7 +1122,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Criar usuário não-root
+# Criar usu��rio não-root
 RUN groupadd -r kryonix && useradd -r -g kryonix kryonix
 
 WORKDIR /app
@@ -2059,7 +2059,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 fi
 echo ""
 echo -e "${CYAN}${BOLD}🛠️ COMANDOS ÚTEIS:${RESET}"
-echo -e "    ${BLUE}��${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${RESET} - Ver logs"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker network ls${RESET} - Ver redes (rede: $DOCKER_NETWORK)"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
@@ -2117,4 +2117,11 @@ echo -e "   ${WHITE}• Webhook responde: ${CYAN}~2-5 segundos${RESET}"
 echo -e "   ${WHITE}• Deploy completo: ${CYAN}~60-90 segundos${RESET}"
 echo -e "   ${WHITE}• Site atualizado: ${CYAN}~30 segundos após deploy${RESET}"
 echo -e "   ${WHITE}• Total aproximado: ${CYAN}2-3 minutos${RESET}"
+echo ""
+echo -e "${RED}${BOLD}🔥 TROUBLESHOOTING WEBHOOK:${RESET}"
+echo -e "   ${WHITE}• ${YELLOW}HTTP 401:${RESET} Configure o secret no GitHub webhook"
+echo -e "   ${WHITE}• ${YELLOW}HTTP 500:${RESET} Verifique logs: ${CYAN}docker service logs Kryonix_web${RESET}"
+echo -e "   ${WHITE}• ${YELLOW}Deploy não executou:${RESET} Teste manual: ${CYAN}./webhook-deploy.sh test${RESET}"
+echo -e "   ${WHITE}• ${YELLOW}Endpoint offline:${RESET} Verifique: ${CYAN}curl http://localhost:8080/health${RESET}"
+echo -e "   ${WHITE}• ${YELLOW}Push não deployou:${RESET} Verifique branch main e evento push no GitHub"
 echo ""
