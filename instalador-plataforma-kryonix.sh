@@ -81,7 +81,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██��  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -871,13 +871,13 @@ if [ ! -f "public/index.html" ]; then
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 KRYONIX - IA Autônoma Brasileira</title>
-    <meta name="description" content="🤖 KRYONIX é a revolução em SaaS! Plataforma 100% autônoma com 15 agentes de IA, 8 módulos integrados e deploy automático. Mobile-first, desenvolvida em português para empresas brasileiras. ✨">
+    <title>🚀 KRYONIX - Plataforma SaaS</title>
+    <meta name="description" content="🚀 KRYONIX - Plataforma SaaS completa com 15 agentes de IA, 8 módulos integrados e deploy automático. Mobile-first, desenvolvida em português para empresas brasileiras. ✨">
 
-    <!-- Favicon com Foguete 🚀 -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="shortcut icon" href="/favicon.svg">
-    <link rel="apple-touch-icon" href="/favicon.svg">
+    <!-- Favicon Logo Oficial KRYONIX -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <!-- Meta tags para compartilhamento (Open Graph) -->
     <meta property="og:title" content="🚀 KRYONIX - Plataforma SaaS 100% Autônoma por IA">
@@ -1653,7 +1653,7 @@ deploy() {
     cp package.json package.json.old 2>/dev/null || true
 
     # Pull das mudanças com verificação automática
-    info "📥 Fazendo pull do repositório..."
+    info "�� Fazendo pull do repositório..."
 
     # Verificar se origin existe e está configurado
     if ! git remote get-url origin >/dev/null 2>&1; then
@@ -2126,7 +2126,7 @@ echo -e "${CYAN}${BOLD}🛠️ COMANDOS ÚTEIS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service ls${RESET} - Ver serviços"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}docker service logs ${STACK_NAME}_web${RESET} - Ver logs"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}curl http://localhost:8080/health${RESET} - Testar saúde"
-echo -e "    ${BLUE}���${RESET} ${YELLOW}curl -X POST http://localhost:8080/api/github-webhook -d '{\"test\":true}'${RESET} - Testar webhook"
+echo -e "    ${BLUE}│${RESET} ${YELLOW}curl -X POST http://localhost:8080/api/github-webhook -d '{\"test\":true}'${RESET} - Testar webhook"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh test${RESET} - Testar deploy"
 echo -e "    ${BLUE}│${RESET} ${YELLOW}./webhook-deploy.sh manual${RESET} - Deploy manual"
 echo ""
@@ -2268,7 +2268,7 @@ echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK:${RESET}"
 echo -e "   ${WHITE}• URL: ${CYAN}https://kryonix.com.br/api/github-webhook${RESET}"
 echo -e "   ${WHITE}• Secret: ${CYAN}(opcional - verificação desabilitada)${RESET}"
-echo -e "   ${WHITE}�� Content-Type: ${CYAN}application/json${RESET}"
+echo -e "   ${WHITE}• Content-Type: ${CYAN}application/json${RESET}"
 echo -e "   ${WHITE}• Events: ${CYAN}Push events${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}🔧 OUTROS PROBLEMAS:${RESET}"
