@@ -55,7 +55,7 @@ TOTAL_STEPS=15
 CURRENT_STEP=0
 STEP_DESCRIPTIONS=(
     "Verificando Docker Swarm ⚙"
-    "Limpando ambiente anterior ���"
+    "Limpando ambiente anterior 🧹"
     "Configurando credenciais 🔐"
     "Preparando projeto 📁"
     "Instalando dependências 📦"
@@ -82,9 +82,9 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔��██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██���██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -844,6 +844,7 @@ if [ ! -f "public/index.html" ]; then
     </div>
 
     <script>
+        console.log('🚀 KRYONIX Platform Ready - Favicon com foguete ativo!');
         fetch('/api/status')
             .then(response => response.json())
             .then(data => console.log('✅ Plataforma KRYONIX funcionando:', data))
@@ -1305,7 +1306,7 @@ cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 #!/bin/bash
 
 # ==============================================================================
-# WEBHOOK DE DEPLOY AUTOMÁTICO ULTRA-AVANÇADO E ROBUSTO
+# WEBHOOK DE DEPLOY AUTOMÁTICO ULTRA-AVAN��ADO E ROBUSTO
 # Versão: 2.0.0 - Compatível com qualquer stack de desenvolvimento moderno
 # ==============================================================================
 
@@ -1517,7 +1518,7 @@ deploy() {
     fi
 
     # Sempre instalar dependências completas (podem ter sido adicionadas novas)
-    info "📦 Instalando/Atualizando TODAS as dependências..."
+    info "�� Instalando/Atualizando TODAS as dependências..."
 
     # Limpar cache e node_modules para garantir instalação limpa
     if [ "$DEPENDENCIES_CHANGED" = true ]; then
@@ -1867,7 +1868,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Local:${RESET} http://localhost:8080"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Health:${RESET} http://localhost:8080/health"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook:${RESET} http://localhost:8080/api/github-webhook"
 if docker service ls | grep -q "traefik"; then
-echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
+echo -e "    ${BLUE}���${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 fi
 echo ""
 echo -e "${CYAN}${BOLD}🛠️ COMANDOS ÚTEIS:${RESET}"
