@@ -797,7 +797,7 @@ if ! grep -q "/api/github-webhook" server.js; then
     # Backup
     cp server.js server.js.backup
 
-    # Adicionar endpoint webhook para deploy autom█tico
+    # Adicionar endpoint webhook para deploy automático
     cat >> server.js << WEBHOOK_EOF
 
 // ============================================================================
