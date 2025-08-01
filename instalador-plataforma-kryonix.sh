@@ -44,7 +44,7 @@ STACK_NAME="Kryonix"
 
 # Configurações CI/CD - Credenciais configuradas para operação 100% automática
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PAT_TOKEN="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"
+PAT_TOKEN="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"
 WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
 JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
 WEBHOOK_URL="https://kryonix.com.br/api/github-webhook"
@@ -87,7 +87,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ��████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -112,7 +112,7 @@ animate_progress_bar() {
 
     # Cores baseadas no status
     local bar_color="$GREEN"
-    local status_icon="����"
+    local status_icon="🔄"
 
     case $status in
         "iniciando")
@@ -669,7 +669,7 @@ fi
 # Mostrar informações finais do commit
 final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8)
 final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
-log_success "✅ Clone fresh concluído - Commit: $final_commit"
+log_success "�� Clone fresh concluído - Commit: $final_commit"
 log_info "📝 Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22
@@ -1624,7 +1624,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════════════════════���═════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
