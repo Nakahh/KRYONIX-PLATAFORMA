@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚══���════════════���═��═══════════════════════════════════════════════╝"
+    echo "╚══���════════════���═��══���════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1425,6 +1425,10 @@ COPY webhook-deploy.sh ./
 
 # Build Next.js application
 ENV NEXT_TELEMETRY_DISABLED=1
+# ANTI-CORRUPÇÃO: Limpar qualquer build anterior antes de começar
+RUN rm -rf .next && npm cache clean --force
+# Configurar Node.js para builds mais estáveis
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 # Production image, copy all the files and run next
@@ -2519,7 +2523,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🧪 Testando webhook e preparando relatório final..."
+log_info "�� Testando webhook e preparando relatório final..."
 
 # Testar webhook local
 if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
