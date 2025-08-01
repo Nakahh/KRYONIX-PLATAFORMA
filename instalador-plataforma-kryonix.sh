@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚══���════════════���═��══���═════════════════════════════��══════════════╝"
+    echo "╚══���═══���════════���═��══���═════════════════════════════��══════════════╝"
     echo -e "${RESET}\n"
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
     echo -e "${CYAN}🛠️ Auto-detecção e correção de erros de módulos './734.js' e similares${RESET}\n"
@@ -1662,7 +1662,7 @@ if [ -d ".next" ]; then
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "���️ Nenhum build anterior encontrado - continuando"
+    log_info "����️ Nenhum build anterior encontrado - continuando"
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -2075,6 +2075,11 @@ services:
         condition: on-failure
         max_attempts: 3
         delay: 10s
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
     networks:
       - $DOCKER_NETWORK
     ports:
@@ -2187,7 +2192,7 @@ deps.forEach(dep => {
 });
 
 if (missing.length === 0) {
-    console.log('🎉 Todas as dependências críticas instaladas!');
+    console.log('�� Todas as dependências críticas instaladas!');
     process.exit(0);
 } else {
     console.error('❌ Dependências faltando: ' + missing.join(', '));
@@ -2495,7 +2500,7 @@ DIAGNOSTIC_EOF
     fi
 
     # Verificar health de todos os serviços
-    log "🔍 Verificando health final dos serviços KRYONIX..."
+    log "🔍 Verificando health final dos servi��os KRYONIX..."
 
     services_ok=0
     total_services=3
