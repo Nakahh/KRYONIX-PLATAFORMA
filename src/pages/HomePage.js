@@ -104,7 +104,7 @@ const HomePage = () => {
             <Zap size={16} className="mr-2" />
             100% Autônomo por IA
           </div>
-          
+
           {/* Title */}
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             Transforme seu Negócio com
@@ -112,13 +112,13 @@ const HomePage = () => {
               Inteligência Artificial
             </span>
           </h1>
-          
+
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-            A primeira plataforma SaaS brasileira 100% autônoma. 
+            A primeira plataforma SaaS brasileira 100% autônoma.
             WhatsApp Business, CRM, Analytics e mais, tudo automatizado por IA.
           </p>
-          
+
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <button
@@ -128,7 +128,10 @@ const HomePage = () => {
               <Play size={20} className="mr-2" />
               Começar Grátis
             </button>
-            <button className="btn-secondary flex items-center justify-center text-lg px-8 py-4">
+            <button
+              onClick={() => navigate('/test')}
+              className="btn-secondary flex items-center justify-center text-lg px-8 py-4"
+            >
               Ver Demo
               <ArrowRight size={20} className="ml-2" />
             </button>
