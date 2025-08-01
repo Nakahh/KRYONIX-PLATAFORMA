@@ -121,7 +121,7 @@ show_banner() {
 
     # Informações essenciais compactas
     echo ""
-    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────────────────────────────────────────────────────────────╮${RESET}"
+    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]──────────���──────────────────────────────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
     echo -e "${GOLD}╰───────────────────────────────────────���──────────────────────────────────────╯${RESET}"
 
@@ -630,7 +630,7 @@ echo -e "${BLUE}��─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
-echo -e "${GREEN}${BOLD}✅ Nuclear cleanup + Clone fresh + Garantia versão mais recente!${RESET}\n"
+echo -e "${GREEN}${BOLD}✅ Ambiente preparado para instalação completa!${RESET}\n"
 
 # Inicializar primeira etapa
 next_step
@@ -2058,7 +2058,7 @@ echo -e "${CYAN}║${RESET} ${WHITE}📧 Email:${RESET} ${TURQUOISE}admin@kryoni
 echo -e "${CYAN}║${RESET} ${WHITE}💻 GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${BLINK}${YELLOW}⚡ AGORA TODA ALTERAÇÃO NO GITHUB ATUALIZA O SITE AUTOMATICAMENTE! ⚡${RESET}  ${CYAN}║${RESET}"
-echo -e "${CYAN}╚═══════════���════════════════════════════════════════════════════════════════════��══╝${RESET}"
+echo -e "${CYAN}╚═══════════���═════════════════��══════════════════════════════════════════════════��══╝${RESET}"
 echo ""
 
 # Instalador KRYONIX finalizado com sucesso
