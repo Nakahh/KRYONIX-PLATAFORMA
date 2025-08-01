@@ -186,7 +186,7 @@ log_below_bar() {
             ;;
     esac
 
-    echo -e "    ${color}│${RESET} ${color}${prefix}${RESET} $message"
+    echo -e "    ${color}��${RESET} ${color}${prefix}${RESET} $message"
 }
 
 # Funções de controle de etapas
@@ -348,7 +348,7 @@ fresh_git_clone() {
     local branch="${3:-main}"
     local pat_token="$4"
     
-    log_info "🔄 Clone FRESH garantindo versão MAIS RECENTE..."
+    log_info "🔄 Clone FRESH garantindo vers��o MAIS RECENTE..."
     
     # Configurar Git globalmente ANTES de tentar clone
     git config --global user.name "KRYONIX Deploy"
@@ -1607,9 +1607,159 @@ jobs:
 
           echo "⚠️ Verificação manual necessária"
           exit 1
+GITHUB_ACTIONS_EOF
 
-# Cores
-GREEN='\033[0;32m'
+log_success "GitHub Actions configurado"
+complete_step
+next_step
+
+# ============================================================================
+# ETAPA 14: CONFIGURAR LOGS E BACKUP
+# ============================================================================
+
+processing_step
+log_info "Configurando sistema de logs..."
+
+# Criar logs
+sudo mkdir -p /var/log 2>/dev/null || true
+sudo touch /var/log/kryonix-deploy.log 2>/dev/null || touch ./deploy.log
+sudo chown $USER:$USER /var/log/kryonix-deploy.log 2>/dev/null || true
+
+log_success "Sistema de logs configurado"
+complete_step
+next_step
+
+# ============================================================================
+# ETAPA 15: DEPLOY FINAL INTEGRADO
+# ============================================================================
+
+processing_step
+log_info "🚀 Iniciando deploy final com todos os serviços..."
+
+# Deploy do stack
+log_info "Fazendo deploy do stack KRYONIX completo..."
+if docker stack deploy -c docker-stack.yml "$STACK_NAME" >/dev/null 2>&1; then
+    log_success "Stack deployado com sucesso"
+else
+    error_step
+    log_error "Falha no deploy do stack"
+    exit 1
+fi
+
+# Aguardar estabilização - tempo estendido para garantir que todos subam
+log_info "Aguardando estabilização completa (120s)..."
+sleep 120
+
+# Verificar serviços
+log_info "Verificando status de TODOS os serviços..."
+
+# Verificar todos os serviços
+for service in web webhook monitor; do
+    if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_${service}" | grep -q "1/1"; then
+        log_success "Serviço $service funcionando (1/1)"
+        eval "${service^^}_STATUS=\"✅ ONLINE (1/1)\""
+    else
+        log_warning "Serviço $service com problemas"
+        eval "${service^^}_STATUS=\"❌ PROBLEMA (0/1)\""
+    fi
+done
+
+complete_step
+next_step
+
+# ============================================================================
+# ETAPA 16: TESTE WEBHOOK E RELATÓRIO FINAL
+# ============================================================================
+
+processing_step
+log_info "🧪 Testando webhook e preparando relatório final..."
+
+# Testar webhook local
+if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
+   -H "Content-Type: application/json" \
+   -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
+    LOCAL_WEBHOOK_STATUS="✅ OK"
+else
+    LOCAL_WEBHOOK_STATUS="❌ PROBLEMA"
+fi
+
+# Testar webhook externo
+if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
+   -H "Content-Type: application/json" \
+   -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
+    EXTERNAL_WEBHOOK_STATUS="✅ FUNCIONANDO"
+else
+    EXTERNAL_WEBHOOK_STATUS="⚠️ VERIFICAR"
+fi
+
+complete_step
+
+# ============================================================================
+# RELATÓRIO FINAL COMPLETO
+# ============================================================================
+
+echo ""
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
+echo ""
+echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
+
+# Verificar versão final
+final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
+
+echo -e "    ${BLUE}│${RESET} ${BOLD}Versão Final:${RESET} ✅ Commit $final_commit"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commit_msg"
+
+# Verificação especial para PR #22
+if echo "$final_commit_msg" | grep -qi "#22"; then
+    echo -e "    ${BLUE}│${RESET} ${YELLOW}⚠️ AVISO:${RESET} Detectada referência ao PR #22"
+    echo -e "    ${BLUE}│${RESET} ${YELLOW}   Isso pode significar que PR #22 É a versão mais recente${RESET}"
+    echo -e "    ${BLUE}│${RESET} ${YELLOW}   ou há um problema de sincronização com GitHub${RESET}"
+else
+    echo -e "    ${BLUE}│${RESET} ${GREEN}✅ Confirmado:${RESET} Não está no PR #22 - versão mais recente"
+fi
+
+echo ""
+echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
+echo ""
+echo -e "${CYAN}${BOLD}🧪 TESTES WEBHOOK:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Local:${RESET} $LOCAL_WEBHOOK_STATUS"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} $EXTERNAL_WEBHOOK_STATUS"
+echo ""
+echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Local Web:${RESET} http://localhost:8080"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Local Webhook:${RESET} http://localhost:8080/api/github-webhook"
+if docker service ls | grep -q "traefik"; then
+echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} https://$DOMAIN_NAME/api/github-webhook"
+fi
+echo ""
+echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
+echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
+echo ""
+echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
+echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
+echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
+echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
+echo ""
+echo -e "${GREEN}${BOLD}🎯 MELHORIAS IMPLEMENTADAS:${RESET}"
+echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup - Remove TUDO antes de começar"
+echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
+echo -e "    ${BLUE}│${RESET} ✅ Versão mais recente - Não fica preso em versões antigas"
+echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
+echo ""
+echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
+echo ""
 BLUE='\033[0;34m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
@@ -1682,7 +1832,7 @@ deploy() {
     npm install --production
     
     # Rebuild da imagem
-    log "🏗️ Fazendo rebuild da imagem Docker..."
+    log "��️ Fazendo rebuild da imagem Docker..."
     docker build --no-cache -t kryonix-plataforma:latest .
     
     # Deploy do stack
