@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚═════════════════════════════════════════════════════════════════╝"
+    echo "╚════════════════════════════���════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -722,7 +722,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🔍 Executando verificação avançada de depend��ncias..."
+log_info "🔍 Executando verificação avançada de dependências..."
 
 # Executar verificação avançada
 if ! advanced_dependency_check; then
@@ -1631,7 +1631,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════��═══════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 DEPENDÊNCIAS SEMPRE ATUALIZADAS + CLONE FRESH:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -1673,7 +1673,12 @@ echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
 echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
 echo ""
-echo -e "${GREEN}${BOLD}🎯 NOVAS FUNCIONALIDADES IMPLEMENTADAS:${RESET}"
+echo -e "${GREEN}${BOLD}🎯 CORREÇÕES E MELHORIAS IMPLEMENTADAS:${RESET}"
+echo -e "    ${BLUE}│${RESET} ✅ Dockerfile multi-stage com build Next.js adequado"
+echo -e "    ${BLUE}│${RESET} ✅ Docker-stack.yml otimizado (sem portas desnecessárias)"
+echo -e "    ${BLUE}│${RESET} ✅ Health checks estendidos (120s start_period)"
+echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização Next.js"
+echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional com prioridade máxima no Traefik"
 echo -e "    ${BLUE}│${RESET} ✅ Atualização automática de dependências a cada deploy"
 echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
