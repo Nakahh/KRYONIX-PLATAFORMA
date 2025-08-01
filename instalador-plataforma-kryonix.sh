@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo "╔���═══════════════���════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
-    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -935,7 +935,7 @@ if (missing.length === 0) {
     console.log('   Instaladas com sucesso: ' + installed);
     try {
         console.log('   Módulos no node_modules: ' + require('fs').readdirSync('node_modules').length);
-        console.log('   Package.json v��lido: ✅');
+        console.log('   Package.json v���lido: ✅');
     } catch(e) {}
     process.exit(0);
 } else {
@@ -1096,7 +1096,7 @@ const nextConfig = {
     maxInactiveAge: 25 * 1000,
     pagesBufferLength: 2,
   },
-  // Configuração para produção
+  // Configura��ão para produção
   distDir: '.next',
   cleanDistDir: true,
 }
@@ -1652,41 +1652,17 @@ else
     log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
 fi
 
-# CORREÇÃO PROATIVA: Verificar e limpar builds corrompidos antes do Docker build
+# CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
 log_info "🔍 Verificação proativa de builds corrompidos..."
 
 if [ -d ".next" ]; then
-    log_info "⚠️ Diretório .next existe - verificando integridade..."
-
-    # Verificar se existem arquivos suspeitos de corrupção
-    corrupted_files=0
-
-    # Verificar webpack-runtime.js
-    if [ -f ".next/server/webpack-runtime.js" ]; then
-        if grep -q "Cannot find module" .next/server/webpack-runtime.js 2>/dev/null; then
-            log_warning "⚠️ webpack-runtime.js contém erros"
-            ((corrupted_files++))
-        fi
-    fi
-
-    # Verificar se há arquivos .js faltando referenciados
-    if find .next -name "*.js" -exec grep -l "Cannot find module.*\.js" {} \; 2>/dev/null | grep -q .; then
-        log_warning "⚠️ Detectados arquivos .js com referências quebradas"
-        ((corrupted_files++))
-    fi
-
-    # Se encontrou corrupção, limpar
-    if [ $corrupted_files -gt 0 ]; then
-        log_warning "🧹 Build corrompido detectado - limpando antes do Docker build..."
-        rm -rf .next
-        rm -rf node_modules/.cache
-        npm cache clean --force
-        log_success "✅ Build corrompido limpo"
-    else
-        log_info "✅ Build atual parece íntegro"
-    fi
+    log_info "⚠️ Diretório .next existe - removendo para garantir build limpo..."
+    rm -rf .next
+    rm -rf node_modules/.cache 2>/dev/null || true
+    npm cache clean --force >/dev/null 2>&1 || true
+    log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "ℹ️ Nenhum build anterior encontrado - continuando"
+    log_info "���️ Nenhum build anterior encontrado - continuando"
 fi
 
 # Build com logs detalhados para diagnóstico
