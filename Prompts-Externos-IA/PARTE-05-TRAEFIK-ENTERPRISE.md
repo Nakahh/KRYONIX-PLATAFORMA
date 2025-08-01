@@ -650,7 +650,7 @@ volumes:
       device: /opt/kryonix/logs/traefik
 
 networks:
-  kryonix-net:
+  kryonix-enterprise-network:
     external: true
 EOF
 
@@ -718,7 +718,7 @@ services:
       retries: 3
 
 networks:
-  kryonix-net:
+  kryonix-enterprise-network:
     external: true
 EOF
 
@@ -1366,7 +1366,7 @@ Após executar, confirme se:
 1. Substitua 'sua_chave_evolution_api_aqui' pela chave real da Evolution API
 2. Configure CLOUDFLARE_API_KEY para SSL wildcard automático
 3. Sistema agora é enterprise multi-tenant com isolamento total
-4. Integraç��o completa com PARTE-04 Redis e PARTE-20 Performance
+4. Integração completa com PARTE-04 Redis e PARTE-20 Performance
 5. IA otimiza performance por tenant automaticamente
 6. Load balancing inteligente com health checks e circuit breakers
 
