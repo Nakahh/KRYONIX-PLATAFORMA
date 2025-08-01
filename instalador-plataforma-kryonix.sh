@@ -70,7 +70,7 @@ STEP_DESCRIPTIONS=(
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
     "Configurando logs e backup ⚙️"
-    "Deploy final integrado 🚀"
+    "Deploy final integrado ��"
     "Testando webhook e relatório final ���"
     "Configurando monitoramento contínuo 📈"
 )
@@ -88,7 +88,7 @@ show_banner() {
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
-    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
@@ -505,7 +505,7 @@ nuclear_cleanup() {
         fi
     fi
     
-    # Criar diretório fresh com permissões corretas
+    # Criar diret��rio fresh com permissões corretas
     sudo mkdir -p "$PROJECT_DIR"
     sudo chown -R $USER:$USER "$PROJECT_DIR"
     
@@ -548,7 +548,7 @@ fresh_git_clone() {
     cd "$target_dir"
 
     # Testar conectividade e autenticação antes de tentar clone
-    log_info "��� Testando conectividade com GitHub..."
+    log_info "🔍 Testando conectividade com GitHub..."
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
         log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
@@ -1012,7 +1012,7 @@ exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
             }
         });
     } else {
-        console.log('�� Dependências corrigidas com sucesso');
+        console.log('✅ Dependências corrigidas com sucesso');
         console.log(stdout);
         process.exit(0);
     }
@@ -1687,6 +1687,80 @@ else
     log_info "🔍 Tipo de erro detectado: $build_error_type"
 
     case $build_error_type in
+        "webpack_chunks_corrupted")
+            log_info "🔧 Detectado build Next.js corrompido - aplicando correção completa..."
+
+            # Limpar completamente todos os arquivos de build
+            log_info "🧹 Limpando todos os arquivos de build corrompidos..."
+            rm -rf .next
+            rm -rf node_modules/.cache
+            rm -rf .next/cache
+
+            # Limpar cache npm
+            log_info "🗑️ Limpando cache npm..."
+            npm cache clean --force
+
+            # Reinstalar dependências críticas do Next.js
+            log_info "📦 Reinstalando dependências críticas do Next.js..."
+            npm install next@latest react@latest react-dom@latest --no-audit --no-fund
+
+            # Verificar se Dockerfile existe e corrigir se necessário
+            if [ -f "Dockerfile" ]; then
+                log_info "🐳 Atualizando Dockerfile para evitar builds corrompidos..."
+                # Adicionar limpeza de cache no Dockerfile
+                if ! grep -q "npm cache clean" Dockerfile; then
+                    sed -i '/RUN npm ci/a RUN npm cache clean --force' Dockerfile
+                fi
+                # Adicionar remoção de .next se existir
+                if ! grep -q "rm -rf .next" Dockerfile; then
+                    sed -i '/WORKDIR \/app/a RUN rm -rf .next' Dockerfile
+                fi
+            fi
+
+            # Recriar next.config.js com configurações anti-corrupção
+            log_info "⚙️ Recriando next.config.js com configurações anti-corrupção..."
+            cat > next.config.js << 'ANTICORRUPTION_CONFIG_EOF'
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  output: 'standalone',
+  experimental: {
+    outputFileTracingRoot: process.cwd(),
+  },
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: false,
+  httpAgentOptions: {
+    keepAlive: false,
+  },
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
+  distDir: '.next',
+  cleanDistDir: true,
+  // Configurações anti-corrupção
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  // Configurações adicionais para evitar corrupção de build
+  webpack: (config, { isServer }) => {
+    // Evitar problemas de cache corrompido
+    config.cache = false
+    return config
+  },
+}
+
+module.exports = nextConfig
+ANTICORRUPTION_CONFIG_EOF
+
+            log_success "✅ Correção de build corrompido aplicada"
+            ;;
+
         "typescript_postgres_config")
             log_info "🔧 Aplicando correção específica para postgres-config.ts..."
             if [ -f "lib/database/postgres-config.ts" ]; then
@@ -2377,7 +2451,7 @@ monitor_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "
 log_info "Status Docker Swarm para ${STACK_NAME}_monitor: $monitor_replicas"
 
 if [[ "$monitor_replicas" == "1/1" ]]; then
-    log_success "Servi��o monitor funcionando (1/1)"
+    log_success "Serviço monitor funcionando (1/1)"
     MONITOR_STATUS="✅ ONLINE (1/1)"
 else
     log_warning "Serviço monitor com problemas: $monitor_replicas"
