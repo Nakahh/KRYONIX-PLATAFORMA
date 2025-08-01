@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚��╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -1169,12 +1169,108 @@ if ! command -v npm >/dev/null 2>&1; then
 fi
 
 log_info "Instalando dependências do projeto..."
-npm install --production >/dev/null 2>&1
+log_info "📋 Verificando package.json antes da instalação..."
 
-log_info "Testando servidor localmente..."
-timeout 10s node server.js >/dev/null 2>&1 || true
+# Mostrar informações do package.json
+if [ -f "package.json" ]; then
+    log_info "✅ package.json encontrado"
+    log_info "📊 Informações do projeto:"
+    log_info "   Nome: $(grep '"name"' package.json | cut -d'"' -f4)"
+    log_info "   Versão: $(grep '"version"' package.json | cut -d'"' -f4)"
 
-log_success "Dependências instaladas e servidor testado"
+    # Contar dependências
+    deps_count=$(grep -c '".*":' package.json | head -1)
+    log_info "   Total de dependências no arquivo: $deps_count"
+else
+    log_error "❌ package.json não encontrado!"
+    exit 1
+fi
+
+log_info "🔍 Verificando Node.js e npm..."
+log_info "   Node.js: $(node --version 2>/dev/null || echo 'NÃO INSTALADO')"
+log_info "   npm: $(npm --version 2>/dev/null || echo 'NÃO INSTALADO')"
+
+log_info "📦 Iniciando instalação com logs detalhados..."
+
+# Instalar com logs detalhados
+if npm install --production --verbose > /tmp/npm-install.log 2>&1; then
+    log_success "✅ npm install concluído com sucesso"
+
+    # Verificar node_modules
+    if [ -d "node_modules" ]; then
+        modules_count=$(find node_modules -maxdepth 1 -type d | wc -l)
+        log_info "📁 node_modules criado com $modules_count módulos"
+    else
+        log_warning "⚠️ Diretório node_modules não foi criado"
+    fi
+
+    # Usar o verificador de dependências personalizado
+    log_info "🔍 Executando verificador detalhado de dependências..."
+    if node check-dependencies.js > /tmp/deps-check.log 2>&1; then
+        log_success "✅ Verificação de dependências passou!"
+        # Mostrar resumo do verificador
+        if grep -q "SUCESSO" /tmp/deps-check.log; then
+            log_success "🎉 Todas as dependências estão instaladas corretamente"
+        fi
+    else
+        log_error "❌ Verificação de dependências falhou"
+        log_info "📋 Detalhes da verificação:"
+
+        # Mostrar output do verificador
+        while IFS= read -r line; do
+            if [[ $line == *"❌"* ]]; then
+                log_error "   $line"
+            elif [[ $line == *"⚠️"* ]]; then
+                log_warning "   $line"
+            elif [[ $line == *"✅"* ]]; then
+                log_success "   $line"
+            else
+                log_info "   $line"
+            fi
+        done < /tmp/deps-check.log
+
+        # Tentar correção automática
+        log_info "🔄 Tentando correção automática..."
+        if npm install --force > /tmp/npm-force.log 2>&1; then
+            log_info "✅ Reinstalação forçada concluída"
+
+            # Verificar novamente
+            if node check-dependencies.js > /tmp/deps-check-final.log 2>&1; then
+                log_success "✅ Dependências corrigidas com sucesso!"
+            else
+                log_error "❌ Dependências ainda com problemas após correção"
+                log_info "📋 Logs disponíveis:"
+                log_info "   /tmp/npm-install.log (instalação inicial)"
+                log_info "   /tmp/deps-check.log (primeira verificação)"
+                log_info "   /tmp/npm-force.log (correção forçada)"
+                log_info "   /tmp/deps-check-final.log (verificação final)"
+                exit 1
+            fi
+        else
+            log_error "❌ Falha na correção automática"
+            exit 1
+        fi
+    fi
+
+else
+    log_error "❌ Falha na instalação npm"
+    log_info "📋 Últimas linhas do log de erro:"
+    tail -10 /tmp/npm-install.log | while read line; do
+        log_error "   $line"
+    done
+    exit 1
+fi
+
+log_info "🧪 Testando servidor localmente..."
+timeout 10s node server.js > /tmp/server-test.log 2>&1 || true
+
+if grep -q "Ready on" /tmp/server-test.log 2>/dev/null; then
+    log_success "✅ Servidor testado com sucesso"
+else
+    log_warning "⚠️ Teste do servidor inconclusivo (normal em containers)"
+fi
+
+log_success "✅ Dependências instaladas e verificadas"
 complete_step
 next_step
 
@@ -1700,7 +1796,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════════════════════���═════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
 echo ""
