@@ -12,8 +12,19 @@ const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.HOSTNAME || '0.0.0.0';
 const port = process.env.PORT || 8080;
 
-// Initialize Next.js app
-const nextApp = next({ dev, hostname, port });
+// Initialize Next.js app with optimizations
+const nextApp = next({
+  dev,
+  hostname,
+  port,
+  quiet: !dev,
+  customServer: true,
+  conf: {
+    distDir: '.next',
+    compress: true,
+    poweredByHeader: false
+  }
+});
 const handle = nextApp.getRequestHandler();
 
 // Initialize Express app
