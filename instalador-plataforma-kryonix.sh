@@ -121,14 +121,14 @@ show_banner() {
 
     # Seção de informações com badges coloridos
     echo ""
-    echo -e "${PURPLE}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
+    echo -e "${PURPLE}${BOLD}╭────────────��────────────────────────────────────────────────────────────────╮${RESET}"
     echo -e "${PURPLE}│${RESET} ${MAGENTA}🎯 FUNCIONALIDADES PRINCIPAIS:${RESET}                                           ${PURPLE}│${RESET}"
     echo -e "${PURPLE}│${RESET}                                                                             ${PURPLE}│${RESET}"
     echo -e "${PURPLE}│${RESET}   ${BG_GREEN}${BLACK} 🧠 15 AGENTES IA ${RESET} ${BG_BLUE}${WHITE} ☁️ 8 MÓDULOS SAAS ${RESET} ${BG_PURPLE}${WHITE} 🔄 100% AUTÔNOMO ${RESET}   ${PURPLE}│${RESET}"
     echo -e "${PURPLE}│${RESET}                                                                             ${PURPLE}│${RESET}"
     echo -e "${PURPLE}│${RESET}   ${BG_YELLOW}${BLACK} 📱 MOBILE-FIRST ${RESET} ${BG_CYAN}${BLACK} 🇧🇷 PORTUGUÊS ${RESET} ${BG_RED}${WHITE} 🚀 DEPLOY AUTO ${RESET}   ${PURPLE}│${RESET}"
     echo -e "${PURPLE}│${RESET}                                                                             ${PURPLE}│${RESET}"
-    echo -e "${PURPLE}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
+    echo -e "${PURPLE}╰──────────────────────────────────────────────��──────────────────────────────╯${RESET}"
 
     # Informações do servidor
     echo ""
@@ -243,28 +243,34 @@ log_below_bar() {
     local type="$1"
     local message="$2"
     local color=""
+    local icon=""
     local prefix=""
+    local timestamp=$(date '+%H:%M:%S')
 
     case $type in
         "info")
             color="$CYAN"
-            prefix="[INFO]"
+            icon="ℹ️"
+            prefix="${BG_BLUE}${WHITE} INFO ${RESET}"
             ;;
         "success")
             color="$GREEN"
-            prefix="[SUCESSO]"
+            icon="✅"
+            prefix="${BG_GREEN}${BLACK} SUCCESS ${RESET}"
             ;;
         "warning")
             color="$YELLOW"
-            prefix="[AVISO]"
+            icon="⚠️"
+            prefix="${BG_YELLOW}${BLACK} WARNING ${RESET}"
             ;;
         "error")
             color="$RED"
-            prefix="[ERRO]"
+            icon="❌"
+            prefix="${BG_RED}${WHITE} ERROR ${RESET}"
             ;;
     esac
 
-    echo -e "    ${color}��${RESET} ${color}${prefix}${RESET} $message"
+    echo -e "    ${SILVER}[$timestamp]${RESET} $prefix ${icon} ${color}$message${RESET}"
 }
 
 # Funções de controle de etapas
@@ -1954,7 +1960,7 @@ jobs:
 
       - name: 🏗️ Verify deployment
         run: |
-          echo "⏳ Aguardando deployment automático KRYONIX..."
+          echo "��� Aguardando deployment automático KRYONIX..."
           sleep 60
 
           # Verificar múltiplas vezes
@@ -2063,7 +2069,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════���══════════��═════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
