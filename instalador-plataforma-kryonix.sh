@@ -83,10 +83,10 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔���═══════════════���════════════════════════════════════════════════╗"
+    echo "╔���═══════════════���════════════════════════════════════���═══════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗█��╗██╗  ██╗     ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═���═██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -257,7 +257,7 @@ auto_update_dependencies() {
     log_info "📦 Backup do package.json criado"
     
     # Atualizar para versões mais recentes (mantendo compatibilidade)
-    log_info "📥 Atualizando dependências para versões mais recentes..."
+    log_info "📥 Atualizando depend��ncias para versões mais recentes..."
     
     # Usar npm-check-updates se disponível, senão instalar
     if ! command -v ncu >/dev/null 2>&1; then
@@ -738,7 +738,7 @@ show_banner
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
-echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
+echo -e "${BLUE}��─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
@@ -2016,11 +2016,11 @@ services:
         - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.path=/health"
         - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=30s"
 
-        # WEBHOOK - PRIORIDADE EXTREMA (50000) para resolver 404
+        # WEBHOOK - PRIORIDADE MÁXIMA (10000)
         - "traefik.http.routers.kryonix-webhook.rule=Host(\`$DOMAIN_NAME\`) && Path(\`/api/github-webhook\`)"
         - "traefik.http.routers.kryonix-webhook.entrypoints=web,websecure"
         - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
-        - "traefik.http.routers.kryonix-webhook.priority=50000"
+        - "traefik.http.routers.kryonix-webhook.priority=10000"
         - "traefik.http.routers.kryonix-webhook.tls=true"
         - "traefik.http.routers.kryonix-webhook.tls.certresolver=$CERT_RESOLVER"
 
@@ -2145,7 +2145,7 @@ jobs:
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
 
-      - name: ����️ Verify deployment
+      - name: 🏗️ Verify deployment
         run: |
           echo "⏳ Aguardando deployment automático KRYONIX com auto-update..."
           sleep 60
