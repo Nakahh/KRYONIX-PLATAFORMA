@@ -605,7 +605,7 @@ services:
       - "traefik.http.routers.metrics.rule=Host(`traefik.kryonix.com.br`) && Path(`/metrics`)"
       - "traefik.http.routers.metrics.service=prometheus@internal"
     networks:
-      - kryonix-net
+      - kryonix-enterprise-network
     deploy:
       mode: global
       placement:
@@ -703,7 +703,7 @@ services:
       - DATABASE_URL=postgresql://postgres:password@postgresql-kryonix:5432/kryonix_saas
       - LOG_LEVEL=INFO
     networks:
-      - kryonix-net
+      - kryonix-enterprise-network
     deploy:
       replicas: 2
       resources:
@@ -1366,7 +1366,7 @@ Após executar, confirme se:
 1. Substitua 'sua_chave_evolution_api_aqui' pela chave real da Evolution API
 2. Configure CLOUDFLARE_API_KEY para SSL wildcard automático
 3. Sistema agora é enterprise multi-tenant com isolamento total
-4. Integração completa com PARTE-04 Redis e PARTE-20 Performance
+4. Integraç��o completa com PARTE-04 Redis e PARTE-20 Performance
 5. IA otimiza performance por tenant automaticamente
 6. Load balancing inteligente com health checks e circuit breakers
 
