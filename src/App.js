@@ -14,6 +14,7 @@ import HomePage from './pages/HomePage';
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import KryonixDashboard from './pages/KryonixDashboard';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import WhatsApp from './pages/WhatsApp';
