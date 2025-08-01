@@ -89,7 +89,7 @@ show_banner() {
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo "║     ██║  ██╗██║  ██║   █��║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -1065,7 +1065,8 @@ COPY package.json package-lock.json* ./
 COPY check-dependencies.js ./
 COPY validate-dependencies.js ./
 COPY fix-dependencies.js ./
-RUN npm ci --only=production && npm cache clean --force
+# Instalar sem executar scripts para evitar problema com check-dependencies
+RUN npm ci --only=production --ignore-scripts && npm cache clean --force
 
 # Rebuild the source code only when needed
 FROM base AS builder
