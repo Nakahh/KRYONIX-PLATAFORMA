@@ -1,4 +1,7 @@
 /* App.css - Estilos principais da aplicação KRYONIX */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .App {
   text-align: center;
