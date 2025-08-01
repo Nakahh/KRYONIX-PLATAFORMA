@@ -99,6 +99,8 @@ show_banner() {
     echo "║                                                                 ║"
     echo "╚══���════════════���═��══���════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
+    echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
+    echo -e "${CYAN}🛠️ Auto-detecção e correção de erros de módulos './734.js' e similares${RESET}\n"
 }
 
 # Sistema unificado de barra animada - CORRIGIDO
