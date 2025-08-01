@@ -87,7 +87,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █���███╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -1125,9 +1125,9 @@ else
     log_warning "Next.js não encontrado no package.json - verificar se é projeto Next.js"
 fi
 
-# Verificação completa de arquivos necessários (do instalador antigo)
+# Verificação completa de arquivos necessários (do instalador antigo + correções do agente)
 log_info "🔍 Verificando TODOS os arquivos necessários para Docker build..."
-required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "public/index.html")
+required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js" "public/index.html")
 missing_files=()
 
 for file in "${required_files[@]}"; do
@@ -1157,7 +1157,7 @@ fi
 # Verificar se arquivos de serviços têm health check
 for service_file in webhook-listener.js kryonix-monitor.js; do
     if [ -f "$service_file" ] && grep -q "/health" "$service_file"; then
-        log_success "�� Health check encontrado em $service_file"
+        log_success "✅ Health check encontrado em $service_file"
     else
         log_warning "⚠️ Health check pode estar faltando em $service_file"
     fi
@@ -1835,7 +1835,7 @@ echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
-echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
+echo -e "${YELLOW}${BOLD}��� CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
 echo -e "${CYAN}════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
