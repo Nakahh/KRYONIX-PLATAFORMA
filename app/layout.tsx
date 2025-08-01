@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/logo-kryonix.png',
+        url: '/logo-kryonix.svg',
         width: 1200,
         height: 630,
         alt: 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
     description: 'Plataforma empresarial multi-tenant com 32 stacks integradas e automação completa por IA.',
-    images: ['/logo-kryonix.png'],
+    images: ['/logo-kryonix.svg'],
   },
   robots: {
     index: true,
