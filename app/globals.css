@@ -10,13 +10,12 @@
   body {
     background-color: white;
     color: rgb(17 24 39);
-    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
 @layer components {
-  .container-custom {
-    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
   }
   
   .btn-primary {
@@ -25,25 +24,6 @@
   
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors duration-200;
-  }
-  
-  .btn-success {
-    @apply inline-flex items-center justify-center rounded-lg bg-green-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-green-600 transition-colors duration-200;
-  }
-  
-  .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
-  }
-  
-  .gradient-bg {
-    background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
-  }
-  
-  .gradient-text {
-    background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
   
   .status-online {
@@ -60,20 +40,5 @@
   
   .badge-info {
     @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800;
-  }
-}
-
-/* Mobile-first optimizations */
-@media (max-width: 768px) {
-  .container-custom {
-    @apply px-4;
-  }
-  
-  .btn-primary, .btn-secondary, .btn-success {
-    @apply w-full justify-center;
-  }
-  
-  .card {
-    @apply p-4;
   }
 }
