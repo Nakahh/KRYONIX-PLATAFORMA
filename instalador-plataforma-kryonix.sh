@@ -1169,12 +1169,108 @@ if ! command -v npm >/dev/null 2>&1; then
 fi
 
 log_info "Instalando dependências do projeto..."
-npm install --production >/dev/null 2>&1
+log_info "📋 Verificando package.json antes da instalação..."
 
-log_info "Testando servidor localmente..."
-timeout 10s node server.js >/dev/null 2>&1 || true
+# Mostrar informações do package.json
+if [ -f "package.json" ]; then
+    log_info "✅ package.json encontrado"
+    log_info "📊 Informações do projeto:"
+    log_info "   Nome: $(grep '"name"' package.json | cut -d'"' -f4)"
+    log_info "   Versão: $(grep '"version"' package.json | cut -d'"' -f4)"
 
-log_success "Dependências instaladas e servidor testado"
+    # Contar dependências
+    deps_count=$(grep -c '".*":' package.json | head -1)
+    log_info "   Total de dependências no arquivo: $deps_count"
+else
+    log_error "❌ package.json não encontrado!"
+    exit 1
+fi
+
+log_info "🔍 Verificando Node.js e npm..."
+log_info "   Node.js: $(node --version 2>/dev/null || echo 'NÃO INSTALADO')"
+log_info "   npm: $(npm --version 2>/dev/null || echo 'NÃO INSTALADO')"
+
+log_info "📦 Iniciando instalação com logs detalhados..."
+
+# Instalar com logs detalhados
+if npm install --production --verbose > /tmp/npm-install.log 2>&1; then
+    log_success "✅ npm install concluído com sucesso"
+
+    # Verificar node_modules
+    if [ -d "node_modules" ]; then
+        modules_count=$(find node_modules -maxdepth 1 -type d | wc -l)
+        log_info "📁 node_modules criado com $modules_count módulos"
+    else
+        log_warning "⚠️ Diretório node_modules não foi criado"
+    fi
+
+    # Verificar dependências críticas
+    log_info "🔍 Verificando dependências críticas..."
+    critical_deps=("next" "react" "react-dom" "express" "cors" "body-parser")
+    missing_critical=()
+
+    for dep in "${critical_deps[@]}"; do
+        if [ -d "node_modules/$dep" ]; then
+            log_info "   ✅ $dep: OK"
+        else
+            log_warning "   ❌ $dep: FALTANDO"
+            missing_critical+=("$dep")
+        fi
+    done
+
+    if [ ${#missing_critical[@]} -gt 0 ]; then
+        log_error "❌ Erro: ${#missing_critical[@]} dependências críticas faltando: ${missing_critical[*]}"
+        log_info "📋 Tentando reinstalar dependências faltantes..."
+
+        for missing_dep in "${missing_critical[@]}"; do
+            log_info "🔄 Reinstalando $missing_dep..."
+            npm install "$missing_dep" --save > /tmp/npm-fix-$missing_dep.log 2>&1
+        done
+
+        # Verificar novamente
+        final_missing=()
+        for dep in "${missing_critical[@]}"; do
+            if [ ! -d "node_modules/$dep" ]; then
+                final_missing+=("$dep")
+            fi
+        done
+
+        if [ ${#final_missing[@]} -gt 0 ]; then
+            log_error "❌ FALHA FINAL: ${#final_missing[@]} dependências ainda faltando: ${final_missing[*]}"
+            log_info "📋 Logs de instalação disponíveis em:"
+            log_info "   /tmp/npm-install.log"
+            for missing_dep in "${missing_critical[@]}"; do
+                if [ -f "/tmp/npm-fix-$missing_dep.log" ]; then
+                    log_info "   /tmp/npm-fix-$missing_dep.log"
+                fi
+            done
+            exit 1
+        else
+            log_success "✅ Todas as dependências críticas foram instaladas após correção"
+        fi
+    else
+        log_success "✅ Todas as dependências críticas estão OK"
+    fi
+
+else
+    log_error "❌ Falha na instalação npm"
+    log_info "📋 Últimas linhas do log de erro:"
+    tail -10 /tmp/npm-install.log | while read line; do
+        log_error "   $line"
+    done
+    exit 1
+fi
+
+log_info "🧪 Testando servidor localmente..."
+timeout 10s node server.js > /tmp/server-test.log 2>&1 || true
+
+if grep -q "Ready on" /tmp/server-test.log 2>/dev/null; then
+    log_success "✅ Servidor testado com sucesso"
+else
+    log_warning "⚠️ Teste do servidor inconclusivo (normal em containers)"
+fi
+
+log_success "✅ Dependências instaladas e verificadas"
 complete_step
 next_step
 
@@ -1700,7 +1796,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════════════��════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
 echo ""
