@@ -86,7 +86,7 @@ show_banner() {
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██��╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -1697,16 +1697,31 @@ else
     docker service update --force "${STACK_NAME}_web" >/dev/null 2>&1 || true
 fi
 
-# Verificar outros serviços
-for service in webhook monitor; do
-    if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_${service}" | grep -q "1/1"; then
-        log_success "Serviço $service funcionando (1/1)"
-        eval "${service^^}_STATUS=\"✅ ONLINE (1/1)\""
-    else
-        log_warning "Serviço $service com problemas"
-        eval "${service^^}_STATUS=\"❌ PROBLEMA (0/1)\""
-    fi
-done
+# Verificar serviço monitor (webhook removido pois é redundante)
+monitor_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_monitor" | awk '{print $2}' || echo "0/1")
+log_info "Status Docker Swarm para ${STACK_NAME}_monitor: $monitor_replicas"
+
+if [[ "$monitor_replicas" == "1/1" ]]; then
+    log_success "Serviço monitor funcionando (1/1)"
+    MONITOR_STATUS="✅ ONLINE (1/1)"
+else
+    log_warning "Serviço monitor com problemas: $monitor_replicas"
+    MONITOR_STATUS="❌ PROBLEMA ($monitor_replicas)"
+
+    # Mostrar logs do monitor se houver problema
+    log_info "📋 Logs do monitor:"
+    docker service logs "${STACK_NAME}_monitor" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
+fi
+
+# Webhook agora está integrado no serviço web, então testar diretamente
+log_info "Testando webhook integrado no serviço web..."
+if timeout 10s curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
+   -H "Content-Type: application/json" \
+   -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
+    WEBHOOK_STATUS="✅ FUNCIONANDO (integrado no web)"
+else
+    WEBHOOK_STATUS="❌ PROBLEMA (verificar endpoint)"
+fi
 
 complete_step
 next_step
@@ -1801,7 +1816,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════��════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -1846,7 +1861,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}═════════��══════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
