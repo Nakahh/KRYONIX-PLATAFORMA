@@ -83,7 +83,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔═════════════════════════════════════════════════════════════════╗"
+    echo "╔════════���════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -849,6 +849,12 @@ log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 if grep -q '"type": "module"' package.json; then
     log_info "Removendo type: module do package.json para compatibilidade"
     sed -i '/"type": "module",/d' package.json
+fi
+
+# Corrigir postinstall para funcionar durante Docker build
+if grep -q '"postinstall": "npm run check-deps"' package.json; then
+    log_info "Corrigindo postinstall para compatibilidade com Docker build"
+    sed -i 's/"postinstall": "npm run check-deps"/"postinstall": "node -e \\"try { require(\\'\''.\\/check-dependencies.js\\'\''†); } catch(e) { console.log(\\'⚠️ check-dependencies.js não encontrado, pulando verificação durante build\\'); }\\""/g' package.json
 fi
 
 # Verificar se webhook já está integrado no server.js
@@ -1807,7 +1813,7 @@ if command -v ncu >/dev/null 2>&1; then
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
         if [ "$current_hour" = "03" ]; then  # 3:00 AM
-            log_monitor "�� Iniciando auto-update programado..."
+            log_monitor "🔄 Iniciando auto-update programado..."
             bash webhook-deploy.sh manual >> "$LOG_FILE" 2>&1
         fi
     else
@@ -1838,7 +1844,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════════════��════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
