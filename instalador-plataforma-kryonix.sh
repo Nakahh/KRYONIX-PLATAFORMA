@@ -55,7 +55,7 @@ SERVER_USER="${SERVER_USER:-$(whoami)}"
 TOTAL_STEPS=16
 CURRENT_STEP=0
 STEP_DESCRIPTIONS=(
-    "Verificando Docker Swarm ���"
+    "Verificando Docker Swarm ⚙"
     "NUCLEAR cleanup completo 🧹"
     "Configurando credenciais 🔐"
     "Clone FRESH da versão mais recente 🔄"
@@ -83,9 +83,9 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ��█████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚█��█╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -349,10 +349,7 @@ fresh_git_clone() {
     
     log_info "🔄 Clone FRESH garantindo versão MAIS RECENTE..."
     
-    # URL autenticada
-    local auth_url="https://Nakahh:${pat_token}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-    
-    # Configurar Git globalmente
+    # Configurar Git globalmente ANTES de tentar clone
     git config --global user.name "KRYONIX Deploy"
     git config --global user.email "deploy@kryonix.com.br"
     git config --global pull.rebase false
@@ -360,9 +357,19 @@ fresh_git_clone() {
     git config --global --add safe.directory "$target_dir"
     git config --global http.postBuffer 524288000
     git config --global core.compression 0
-    
-    # Limpar cache/credenciais Git
+    git config --global http.sslVerify true
+
+    # CORREÇÃO: Limpar TODAS as credenciais antigas
     git config --global --unset-all credential.helper 2>/dev/null || true
+    git credential-manager-core erase <<< "url=https://github.com" 2>/dev/null || true
+    git credential erase <<< "url=https://github.com" 2>/dev/null || true
+
+    # CORREÇÃO: Configurar credenciais para repositório privado
+    git config --global credential.helper store
+    echo "https://Nakahh:${pat_token}@github.com" > ~/.git-credentials
+
+    # URL para repositório privado
+    local auth_url="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
     
     cd "$target_dir"
     
@@ -441,7 +448,7 @@ verify_fresh_clone() {
     commit_date=$(git log -1 --pretty=format:"%ci" 2>/dev/null || echo "N/A")
     author=$(git log -1 --pretty=format:"%an" 2>/dev/null || echo "N/A")
     
-    log_info "📊 Informações do repositório:"
+    log_info "�� Informações do repositório:"
     log_info "   Commit: $commit_hash"
     log_info "   Mensagem: $commit_msg"
     log_info "   Data: $commit_date"
@@ -537,7 +544,7 @@ echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
-echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
+echo -e "${BLUE}���─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
 echo -e "${GREEN}${BOLD}✅ Nuclear cleanup + Clone fresh + Garantia versão mais recente!${RESET}\n"
 
@@ -1574,7 +1581,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════��═══════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════���══════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
@@ -1598,7 +1605,7 @@ else
 fi
 
 echo ""
-echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
+echo -e "${CYAN}${BOLD}��� STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
@@ -1633,5 +1640,5 @@ echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
 echo -e "    ${BLUE}│${RESET} ✅ Versão mais recente - Não fica preso em versões antigas"
 echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
 echo ""
-echo -e "${PURPLE}${BOLD}��� KRYONIX PLATFORM READY! 🚀${RESET}"
+echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
 echo ""
