@@ -86,8 +86,8 @@ show_banner() {
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███�����      ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██��╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -1664,38 +1664,37 @@ sleep 15
 # Verificar serviços com validação específica para Next.js
 log_info "Verificando status de TODOS os serviços..."
 
-# Verificar serviço web principal
-if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_web" | grep -q "1/1"; then
-    log_success "Serviço web funcionando (1/1)"
+# Verificar serviço web principal com validação aprimorada
+web_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_web" | awk '{print $2}' || echo "0/1")
+log_info "Status Docker Swarm para ${STACK_NAME}_web: $web_replicas"
 
-    # Validação adicional: verificar se Next.js está respondendo
-    log_info "Validando inicialização do Next.js..."
-    sleep 30
+if [[ "$web_replicas" == "1/1" ]]; then
+    log_success "Serviço web funcionando no Docker Swarm (1/1)"
 
-    if curl -f -s -m 15 "http://localhost:8080/health" >/dev/null 2>&1; then
-        log_success "Next.js inicializado e respondendo"
-        WEB_STATUS="✅ ONLINE (1/1) + Next.js OK"
+    # Validação de conectividade rápida
+    log_info "Testando conectividade HTTP..."
+    if timeout 15s curl -f -s "http://localhost:8080/health" >/dev/null 2>&1; then
+        log_success "✅ HTTP respondendo - Next.js funcionando"
+        WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
-        log_warning "Serviço rodando mas Next.js ainda inicializando..."
-        # Aguardar mais 60s para Next.js completar
-        log_info "Aguardando mais 60s para Next.js completar inicialização..."
-        sleep 60
+        log_warning "⚠️ Docker rodando mas HTTP não responde"
+        WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
 
-        if curl -f -s -m 15 "http://localhost:8080/health" >/dev/null 2>&1; then
-            log_success "Next.js agora está respondendo"
-            WEB_STATUS="✅ ONLINE (1/1) + Next.js OK"
-        else
-            log_warning "Next.js ainda com problemas - verificar logs"
-            WEB_STATUS="⚠️ ONLINE (1/1) mas Next.js com problemas"
-        fi
+        # Mostrar logs para diagnóstico
+        log_info "📋 Logs do serviço web (últimas 10 linhas):"
+        docker service logs "${STACK_NAME}_web" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
     fi
 else
-    log_warning "Serviço web com problemas"
-    WEB_STATUS="❌ PROBLEMA (0/1)"
+    log_error "❌ Serviço web com problemas no Docker Swarm: $web_replicas"
+    WEB_STATUS="❌ FAILED ($web_replicas)"
 
-    # Mostrar logs para diagnóstico
-    log_info "Mostrando logs do serviço web para diagnóstico:"
-    docker service logs "${STACK_NAME}_web" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
+    # Mostrar logs detalhados para diagnóstico
+    log_info "📋 Logs detalhados do serviço com problema:"
+    docker service logs "${STACK_NAME}_web" --tail 20 2>/dev/null || log_warning "Logs não disponíveis"
+
+    # Tentar restart forçado
+    log_info "🔄 Tentando restart forçado do serviço..."
+    docker service update --force "${STACK_NAME}_web" >/dev/null 2>&1 || true
 fi
 
 # Verificar outros serviços
@@ -1789,7 +1788,7 @@ MONITOR_EOF
 
 chmod +x dependency-monitor.sh
 
-# Adicionar ao crontab para execuç��o a cada hora
+# Adicionar ao crontab para execução a cada hora
 (crontab -l 2>/dev/null || true; echo "0 * * * * cd $PROJECT_DIR && ./dependency-monitor.sh") | crontab -
 
 log_success "✅ Monitoramento contínuo configurado"
@@ -1802,7 +1801,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════��════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
