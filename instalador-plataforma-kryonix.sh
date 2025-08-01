@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo "╔���═══════════════���════════════════════════════════════���═══════════╗"
     echo "║                                                                 ║"
-    echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗█��╗██╗  ██╗     ║"
+    echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██���███╗ ███╗   ██╗█��╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚══���════════════���═��══���═══════════════════���═════════��══════════════╝"
+    echo "╚══���════════════���═��══���═════════════════════════════��══════════════╝"
     echo -e "${RESET}\n"
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
     echo -e "${CYAN}🛠️ Auto-detecção e correção de erros de módulos './734.js' e similares${RESET}"
@@ -1881,7 +1881,7 @@ EMERGENCY_CHECK_EOF
             ;;
 
         "npm_install_failed"|"postinstall_failed")
-            log_info "�� Aplicando correção para problemas de npm/postinstall..."
+            log_info "🔧 Aplicando correção para problemas de npm/postinstall..."
             # Corrigir package.json para build mode
             cp package.json package.json.emergency-backup
             cat > /tmp/emergency-fix.js << 'EOF'
@@ -1926,7 +1926,7 @@ EOF
         fi
     else
         # Se ainda falhar, tentar método de emergência
-        log_warning "⚠️ Build ainda falha - aplicando método de emergência..."
+        log_warning "⚠️ Build ainda falha - aplicando m��todo de emergência..."
 
         # Dockerfile simplificado de emergência
         log_info "🚨 Criando Dockerfile de emergência..."
@@ -2079,15 +2079,20 @@ services:
     command: ["node", "kryonix-monitor.js"]
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
       restart_policy:
         condition: on-failure
         max_attempts: 3
-        delay: 10s
+        delay: 15s
       resources:
         limits:
           memory: 256M
+          cpus: '0.25'
         reservations:
           memory: 128M
+          cpus: '0.1'
     networks:
       - $DOCKER_NETWORK
     ports:
@@ -2749,7 +2754,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���═════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════��═���════════════════════════════════════������══${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════��═���════════════════════════════════════��������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2772,7 +2777,7 @@ fi
 
 echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç��o Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç����o Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook (integrado):${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
