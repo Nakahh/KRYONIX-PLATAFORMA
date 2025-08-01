@@ -112,7 +112,7 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}���█║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
@@ -121,7 +121,7 @@ show_banner() {
 
     # Informações essenciais compactas
     echo ""
-    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────────────────────────────────────────────────────────────╮${RESET}"
+    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]───────────────────────────────────���─────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
     echo -e "${GOLD}╰──────────────────────────────────────────────────────────────────────────────╯${RESET}"
 
@@ -291,7 +291,7 @@ log_error() {
 # FUNÇÕES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
-# Funç��o para detectar rede do Traefik automaticamente
+# Função para detectar rede do Traefik automaticamente
 detect_traefik_network_automatically() {
     local detected_network=""
 
@@ -1419,7 +1419,7 @@ deploy() {
     docker service update --force "${STACK_NAME}_kryonix-monitor" 2>/dev/null || true
 
     # Aguardar estabilização
-    log "�� Aguardando estabilização dos serviços..."
+    log "⏳ Aguardando estabilização dos serviços..."
     sleep 45
 
     # Verificação completa de health
@@ -1994,7 +1994,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GOLD}${BOLD}███████████████████████████████��████████████████████████████████████████████████${RESET}"
+echo -e "${GOLD}${BOLD}███████████████████████████████��████████████████████████████████��███████████████${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
@@ -2002,7 +2002,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 KRYONIX PLATFORM - INSTALAÇÃO COMPLETA${RESET}                          ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰─��───────────────────────────────────────────────────���───────────────────────╯${RESET}"
+echo -e "${MAGENTA}╰─��──────────────────────────────��────────────────────���───────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar instalação
@@ -2070,7 +2070,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Segurança avançada - Assinatura criptográ
 echo -e "    ${BLUE}│${RESET} ✅ Controle de branch - Deploy apenas da branch principal"
 echo -e "    ${BLUE}│${RESET} ✅ Ambiente limpo - Instalação completa e organizada"
 echo ""
-echo -e "${CYAN}${BOLD}╔═════════════════��═════════════════��═══════════════��═════���═════════════════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔═════════════════��═════════════════��═════════════════════���═════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
