@@ -77,9 +77,9 @@ export default function HomePage() {
   ]
 
   const progress = [
-    { part: 1, title: 'Autenticação Keycloak', status: 'in_progress', description: 'Sistema multi-tenant com biometria' },
-    { part: 2, title: 'Base de Dados PostgreSQL', status: 'pending', description: 'Database isolado por cliente' },
-    { part: 3, title: 'Storage MinIO', status: 'pending', description: 'Armazenamento de arquivos' },
+    { part: 1, title: 'Autenticação Keycloak', status: 'completed', description: 'Sistema multi-tenant com biometria' },
+    { part: 2, title: 'Base de Dados PostgreSQL', status: 'completed', description: 'Database isolado por cliente' },
+    { part: 3, title: 'Storage MinIO', status: 'in_progress', description: 'Armazenamento de arquivos' },
     { part: 4, title: 'Cache Redis', status: 'pending', description: 'Cache distribuído' },
     { part: 5, title: 'Proxy Traefik', status: 'pending', description: 'Balanceamento e SSL' }
   ]
