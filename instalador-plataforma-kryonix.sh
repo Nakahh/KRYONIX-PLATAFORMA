@@ -99,6 +99,8 @@ show_banner() {
     echo "║                                                                 ║"
     echo "╚═══════════════���═════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
+    echo -e "${GREEN}🔧 VERSÃO ATUALIZADA: Inclui correções automáticas para erros de TypeScript${RESET}"
+    echo -e "${CYAN}📦 Clone fresh + Dependências atualizadas + Correções de build integradas${RESET}\n"
 }
 
 # Sistema unificado de barra animada - CORRIGIDO
@@ -999,7 +1001,7 @@ exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
     if (error) {
         console.error('❌ Erro na correção:', error.message);
 
-        // Tentar método alternativo
+        // Tentar m��todo alternativo
         console.log('🔄 Tentando método alternativo...');
         exec('npm ci --only=production', (error2, stdout2, stderr2) => {
             if (error2) {
