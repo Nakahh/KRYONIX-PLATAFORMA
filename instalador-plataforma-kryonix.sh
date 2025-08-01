@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  █���╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -722,7 +722,7 @@ app.post('/webhook', (req, res) => {
       if (error) {
         console.error('❌ Erro no deploy KRYONIX:', error);
       } else {
-        console.log('��� Deploy KRYONIX executado:', stdout);
+        console.log('✅ Deploy KRYONIX executado:', stdout);
       }
     });
   }
@@ -1333,19 +1333,39 @@ deploy() {
     git config user.name "KRYONIX Deploy" 2>/dev/null || true
     git config user.email "deploy@kryonix.com.br" 2>/dev/null || true
     
-    # CORREÇÃO CRÍTICA: Pull FORÇADO da main mais atualizada
-    log "📡 FORÇANDO pull da main mais atualizada..."
+    # CORREÇÃO CRÍTICA: Pull FORÇADO da main MAIS ATUALIZADA
+    log "📡 FORÇANDO pull da main MAIS ATUALIZADA..."
     git remote set-url origin "$GITHUB_REPO"
-    
+
+    # Limpar estado local
+    git clean -fd 2>/dev/null || true
+    git reset --hard HEAD 2>/dev/null || true
+
     # Mostrar commit atual antes
     current_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
-    log "📌 Commit atual: $current_commit"
-    
-    # Forçar fetch e reset para versão mais recente
-    git fetch origin --force --prune
-    git reset --hard origin/main || git reset --hard origin/master
-    git clean -fd
-    
+    log "📌 Commit local atual: $current_commit"
+
+    # Fetch com todas as opções para garantir versão mais recente
+    git fetch origin --force --prune --tags 2>/dev/null || true
+    git fetch origin main --force 2>/dev/null || true
+    git fetch origin master --force 2>/dev/null || true
+
+    # Mostrar commit remoto
+    remote_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
+    log "🌐 Commit remoto: $remote_commit"
+
+    # Forçar reset para versão mais recente
+    if git reset --hard origin/main 2>/dev/null; then
+        log "✅ Reset para origin/main"
+    elif git reset --hard origin/master 2>/dev/null; then
+        log "✅ Reset para origin/master"
+    else
+        log "❌ Falha no reset"
+        return 1
+    fi
+
+    git clean -fd 2>/dev/null || true
+
     # Mostrar novo commit
     new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
     log "🎯 Novo commit: $new_commit"
