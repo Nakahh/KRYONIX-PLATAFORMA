@@ -87,7 +87,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║█���╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚════════════���════════════════════════════════════════════════════╝"
+    echo "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1288,10 +1288,10 @@ services:
       - AUTO_UPDATE_DEPS=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 15s
 
   monitor:
     image: kryonix-plataforma:latest
