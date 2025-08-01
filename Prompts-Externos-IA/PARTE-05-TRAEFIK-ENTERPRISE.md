@@ -92,7 +92,7 @@ providers:
     endpoint: "unix:///var/run/docker.sock"
     swarmMode: true
     exposedByDefault: false
-    network: kryonix-net
+    network: kryonix-enterprise-network
     watch: true
   
   file:
