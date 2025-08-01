@@ -106,7 +106,7 @@ show_banner() {
 
     # Banner KRYONIX alinhado e responsivo (80 caracteres exatos)
     echo -e "${BOLD}${TURQUOISE}"
-    echo "███████████████���████████████████████████████████████████████████████████████████"
+    echo "████████████████████████████████████████████████████████████████████████████████"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
@@ -123,7 +123,7 @@ show_banner() {
     echo ""
     echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────────────────────────────────────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
-    echo -e "${GOLD}╰───────────────────────────────────────────────────────────────────────────────╯${RESET}"
+    echo -e "${GOLD}╰──────────────────────────────────��────────────────────────────────────────────╯${RESET}"
 
     # Funcionalidades em linha única
     echo ""
@@ -342,7 +342,7 @@ test_service_health() {
         fi
     done
     
-    log_warning "Conectividade não confirmada após $max_attempts tentativas"
+    log_warning "Conectividade não confirmada ap��s $max_attempts tentativas"
     return 1
 }
 
@@ -1184,7 +1184,7 @@ if [ ! -f "public/index.html" ]; then
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327<br>
+            ���� https://kryonix.com.br | 📱 +55 17 98180-5327<br>
             🚀 Deploy automático ativo - Sempre versão mais recente
         </p>
     </div>
@@ -1263,7 +1263,7 @@ deploy() {
 
         if [ "$local_commit" = "$remote_commit" ] && [ "$local_commit" != "unknown" ]; then
             log "✅ Já estamos na versão mais recente - deploy desnecessário"
-            log "ℹ️ Deploy abortado para evitar rebuild desnecessário"
+            log "ℹ�� Deploy abortado para evitar rebuild desnecessário"
             return 0
         fi
     fi
