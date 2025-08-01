@@ -1238,7 +1238,7 @@ deploy() {
 
     # FAZER BACKUP antes de qualquer coisa
     if [ -d "$DEPLOY_PATH" ]; then
-        log "💾 Criando backup da vers█o atual..."
+        log "💾 Criando backup da versão atual..."
         sudo cp -r "$DEPLOY_PATH" "$BACKUP_DIR" 2>/dev/null || true
         log "📁 Backup criado em: $BACKUP_DIR"
     fi
