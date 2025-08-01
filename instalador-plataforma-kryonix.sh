@@ -90,7 +90,7 @@ show_banner() {
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo "║     ╚═╝  ╚═╝╚═��  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -1373,9 +1373,16 @@ deploy() {
         fi
     fi
 
-    # Rebuild da imagem
-    log "🏗️ Fazendo rebuild da imagem Docker..."
-    docker build --no-cache -t kryonix-plataforma:latest .
+    # Rebuild da imagem com validação
+    log "🏗️ Fazendo rebuild da imagem Docker com build Next.js..."
+    if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-rebuild.log; then
+        log "✅ Rebuild da imagem concluído com sucesso"
+    else
+        log "❌ Falha no rebuild da imagem"
+        log "📋 Últimas linhas do log de build:"
+        tail -10 /tmp/docker-rebuild.log || true
+        return 1
+    fi
 
     # Deploy do stack
     log "🚀 Fazendo deploy do stack KRYONIX..."
@@ -1637,7 +1644,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada com DEPENDÊNCIAS SEMPR
 echo -e "${PURPLE}🚀 Deploy automático + Auto-update + Monitoramento contínuo!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}════════════════════════════════════════���═══${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
