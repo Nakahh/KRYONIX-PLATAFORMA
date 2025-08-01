@@ -145,7 +145,7 @@ const HomePage = () => {
               }`}
             >
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-card border border-gray-100 dark:border-gray-700">
-                <div className="text-3xl font-bold text-kryonix-600 mb-2">
+                <div className="text-3xl font-bold text-blue-600 mb-2">
                   {stat.value}
                 </div>
                 <div className="text-gray-600 dark:text-gray-400 text-sm">
@@ -207,7 +207,7 @@ const HomePage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => navigate('/login')}
-              className="bg-white text-kryonix-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center"
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center"
             >
               <CheckCircle size={20} className="mr-2" />
               Criar Conta Grátis
