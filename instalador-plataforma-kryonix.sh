@@ -417,7 +417,7 @@ fresh_git_clone() {
             log_info "🔍 Remoto mais recente: $latest_remote_commit"
             log_info "🔍 Local atual: $current_local_commit"
             
-            # Forçar atualização para absoluto mais recente se diferente
+            # Forçar atualizaç��o para absoluto mais recente se diferente
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
                 log_info "🔄 Atualizando para commit absoluto mais recente..."
                 git fetch origin HEAD 2>/dev/null || true
@@ -830,7 +830,7 @@ app.post('/webhook', (req, res) => {
     console.log('🚀 Iniciando deploy automático KRYONIX...');
     exec('bash /app/webhook-deploy.sh webhook', (error, stdout, stderr) => {
       if (error) {
-        console.error('��� Erro no deploy KRYONIX:', error);
+        console.error('❌ Erro no deploy KRYONIX:', error);
       } else {
         console.log('✅ Deploy KRYONIX executado:', stdout);
       }
@@ -1298,7 +1298,11 @@ RUN npm install --production && npm cache clean --force
 COPY server.js ./
 COPY webhook-listener.js ./
 COPY kryonix-monitor.js ./
+COPY webhook-deploy.sh ./
 COPY public/ ./public/
+
+# Tornar script executável
+RUN chmod +x webhook-deploy.sh
 
 # Configurar permissões
 RUN chown -R kryonix:kryonix /app
@@ -1788,9 +1792,9 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════��═════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════���══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
