@@ -1156,11 +1156,17 @@ cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 
 set -euo pipefail
 
+# ============================================================================
+# SCRIPT DE DEPLOY KRYONIX - VERSÃO CORRIGIDA E MELHORADA
+# ============================================================================
+
 # Configurações KRYONIX
 STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
-GITHUB_REPO="https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+PAT_TOKEN="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"
+BACKUP_DIR="/opt/kryonix-backup-$(date +%Y%m%d_%H%M%S)"
 
 # Cores
 GREEN='\033[0;32m'
@@ -1563,7 +1569,7 @@ services:
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
-        # Middleware de Segurança para API
+        # Middleware de Seguran��a para API
         - "traefik.http.middlewares.api-security.headers.customrequestheaders.X-Forwarded-Proto=https"
         - "traefik.http.middlewares.api-security.headers.customresponseheaders.X-Frame-Options=SAMEORIGIN"
         - "traefik.http.routers.kryonix-webhook.middlewares=api-security"
