@@ -88,14 +88,14 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚��╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "���═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -531,7 +531,7 @@ verify_fresh_clone() {
     return 0
 }
 
-# Função para validar credenciais pré-configuradas
+# Função para validar credenciais pr��-configuradas
 validate_credentials() {
     log_info "🔐 Validando credenciais pré-configuradas..."
 
@@ -570,7 +570,7 @@ show_banner
 # Detecção automática do ambiente
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
-echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
+echo -e "${BLUE}├�� Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
@@ -831,7 +831,7 @@ app.post('/webhook', (req, res) => {
       if (error) {
         console.error('❌ Erro no deploy KRYONIX:', error);
       } else {
-        console.log('�� Deploy KRYONIX executado:', stdout);
+        console.log('✅ Deploy KRYONIX executado:', stdout);
       }
     });
   }
@@ -1178,13 +1178,39 @@ CMD ["node", "server.js"]
 DOCKERFILE_EOF
 
 log_info "Fazendo build da imagem Docker..."
-if docker build --no-cache -t kryonix-plataforma:latest . >/dev/null 2>&1; then
+
+# Verificar se arquivos necessários existem antes do build
+log_info "Verificando arquivos necessários para Docker build..."
+required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "public/index.html")
+missing_files=()
+
+for file in "${required_files[@]}"; do
+    if [ ! -f "$file" ]; then
+        missing_files+=("$file")
+    else
+        log_info "✅ $file encontrado"
+    fi
+done
+
+if [ ${#missing_files[@]} -gt 0 ]; then
+    error_step
+    log_error "❌ Arquivos obrigatórios faltando para Docker build: ${missing_files[*]}"
+    exit 1
+fi
+
+# Build com logs detalhados para diagnóstico
+log_info "Iniciando Docker build com logs detalhados..."
+if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build.log; then
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
     log_success "Imagem criada: kryonix-plataforma:$TIMESTAMP"
 else
     error_step
-    log_error "Falha no build da imagem Docker"
+    log_error "❌ Falha no build da imagem Docker"
+    log_info "📋 Últimas linhas do log de build:"
+    tail -10 /tmp/docker-build.log | while read line; do
+        log_error "   $line"
+    done
     exit 1
 fi
 
