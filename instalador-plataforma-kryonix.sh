@@ -303,7 +303,51 @@ auto_update_dependencies() {
         npm install --no-audit --no-fund 2>/dev/null || true
         log_warning "✅ Package.json restaurado com dependências originais"
     fi
-    
+
+    # Correção proativa para dependências de build do Next.js
+    log_info "🔧 Aplicando correção proativa para dependências de build..."
+    cat > /tmp/proactive-build-fix.js << 'EOF'
+const fs = require('fs');
+try {
+    const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
+    // Dependências críticas para build do Next.js que devem estar em dependencies
+    const criticalBuildDeps = {
+        'autoprefixer': '^10.0.1',
+        'postcss': '^8',
+        'tailwindcss': '^3.4.0',
+        'typescript': '^5'
+    };
+
+    let changed = false;
+
+    Object.entries(criticalBuildDeps).forEach(([dep, version]) => {
+        if (pkg.devDependencies && pkg.devDependencies[dep]) {
+            console.log(`Movendo ${dep} para dependencies (necessário para build)`);
+            pkg.dependencies[dep] = pkg.devDependencies[dep];
+            delete pkg.devDependencies[dep];
+            changed = true;
+        } else if (!pkg.dependencies[dep]) {
+            console.log(`Adicionando ${dep} em dependencies (necessário para build)`);
+            pkg.dependencies[dep] = version;
+            changed = true;
+        }
+    });
+
+    if (changed) {
+        fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+        console.log('✅ Dependências de build corrigidas proativamente');
+    } else {
+        console.log('✅ Dependências de build já estão corretas');
+    }
+} catch (error) {
+    console.log('⚠️ Erro na correção proativa, continuando...');
+}
+EOF
+
+    node /tmp/proactive-build-fix.js
+    rm -f /tmp/proactive-build-fix.js
+
     return 0
 }
 
