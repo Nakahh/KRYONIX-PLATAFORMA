@@ -1566,15 +1566,47 @@ log_info "Configurando CI/CD com GitHub Actions..."
 mkdir -p .github/workflows
 
 cat > .github/workflows/deploy.yml << 'GITHUB_ACTIONS_EOF'
-#!/bin/bash
+name: 🚀 Deploy KRYONIX Platform
 
-set -euo pipefail
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
 
-# Configurações KRYONIX
-STACK_NAME="Kryonix"
-DEPLOY_PATH="/opt/kryonix-plataform"
-LOG_FILE="/var/log/kryonix-deploy.log"
-GITHUB_REPO="https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+jobs:
+  deploy:
+    name: 🚀 Deploy to Production
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🚀 Deploy via webhook
+        run: |
+          echo "ℹ️ GitHub webhook automático KRYONIX configurado"
+          echo "🔗 Webhook URL: https://kryonix.com.br/api/github-webhook"
+
+          # Verificar se o webhook está respondendo
+          curl -f "https://kryonix.com.br/health" || exit 1
+
+      - name: 🏗️ Verify deployment
+        run: |
+          echo "⏳ Aguardando deployment automático KRYONIX..."
+          sleep 60
+
+          # Verificar múltiplas vezes
+          for i in {1..10}; do
+            if curl -f "https://kryonix.com.br/health"; then
+              echo "✅ Deployment KRYONIX verificado com sucesso!"
+              exit 0
+            fi
+            echo "⏳ Tentativa $i/10 - aguardando..."
+            sleep 30
+          done
+
+          echo "⚠️ Verificação manual necessária"
+          exit 1
 
 # Cores
 GREEN='\033[0;32m'
@@ -1796,7 +1828,7 @@ complete_step
 
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
-echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
+echo -e "${GREEN}${BOLD}                ���� INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
