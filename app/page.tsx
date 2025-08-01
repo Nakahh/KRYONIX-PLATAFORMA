@@ -326,9 +326,13 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-success-500 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
+                <Image
+                  src="/logo-kryonix.png"
+                  alt="KRYONIX Logo"
+                  width={32}
+                  height={32}
+                  className="rounded-lg"
+                />
                 <span className="text-xl font-bold">KRYONIX</span>
               </div>
               <p className="text-gray-400 text-sm">
