@@ -108,11 +108,11 @@ show_banner() {
     echo -e "${BOLD}${TURQUOISE}"
     echo "████████████████████████████████████████████████████████████████████████████████"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}��${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚���███╔╝ ${LIME}██║   ██║${GREEN}██╔██�� ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}█���║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
@@ -121,7 +121,7 @@ show_banner() {
 
     # Informações essenciais compactas
     echo ""
-    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]────────────────────────���────────────────────────────────────────╮${RESET}"
+    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]────────────────────────��────────────────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
     echo -e "${GOLD}╰───────────────────────────────────────────────────────────────────────────────╯${RESET}"
 
@@ -624,7 +624,7 @@ show_banner
 # Detecção automática do ambiente
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
-echo -e "${BLUE}����� Servidor: $(hostname)${RESET}"
+echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
@@ -1345,7 +1345,7 @@ deploy() {
     final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
     final_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 
-    log "�� Commit final: $final_commit"
+    log "📌 Commit final: $final_commit"
     log "📝 Mensagem: $final_msg"
 
     # VERIFICAR arquivos críticos
@@ -1539,7 +1539,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "���� Detectando rede do Traefik automaticamente..."
+log_info "🔍 Detectando rede do Traefik automaticamente..."
 
 # Detectar automaticamente a rede do Traefik
 DOCKER_NETWORK=$(detect_traefik_network_automatically)
@@ -1920,7 +1920,7 @@ jobs:
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
 
-      - name: 🏗️ Verify deployment
+      - name: 🏗��� Verify deployment
         run: |
           echo "��� Aguardando deployment automático KRYONIX..."
           sleep 60
@@ -2060,7 +2060,7 @@ echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-���️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
@@ -2080,7 +2080,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}══════════════════════════════════════���═════════════════${RESET}"
+echo -e "${CYAN}═════════════════════════════════════════��══════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
