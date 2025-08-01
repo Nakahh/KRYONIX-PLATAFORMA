@@ -89,7 +89,7 @@ show_banner() {
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo "║     ██║  ██╗��█║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo "║     ██║  ██╗██║  ██║   ██║   ╚█████��╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -658,7 +658,7 @@ validate_credentials() {
     if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == ghp_* ]]; then
         log_success "✅ GitHub PAT Token configurado"
     else
-        log_error "��� GitHub PAT Token inválido"
+        log_error "❌ GitHub PAT Token inválido"
         return 1
     fi
 
@@ -1000,7 +1000,7 @@ log_info "🎯 Rede detectada: $DOCKER_NETWORK"
 
 # Verificar se rede já existe
 if docker network ls --format "{{.Name}}" | grep -q "^${DOCKER_NETWORK}$" 2>/dev/null; then
-    log_success "✅ Rede $DOCKER_NETWORK já existe"
+    log_success "✅ Rede $DOCKER_NETWORK j�� existe"
 elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 2>&1; then
     log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
@@ -1378,6 +1378,94 @@ next_step
 # ============================================================================
 
 processing_step
+
+# Criar arquivos de dependências necessários (identificado pelo agente)
+log_info "🔧 Criando arquivos de dependências necessários para Docker build..."
+
+# check-dependencies.js (arquivo obrigatório referenciado no package.json)
+if [ ! -f "check-dependencies.js" ]; then
+    log_info "Criando check-dependencies.js..."
+    cat > check-dependencies.js << 'CHECK_DEPS_EOF'
+#!/usr/bin/env node
+
+// KRYONIX - Verificador de dependências críticas
+console.log('🔍 KRYONIX - Verificando dependências críticas...');
+
+const deps = ['next', 'react', 'react-dom', 'express', 'cors', 'helmet', 'body-parser', 'morgan'];
+let missing = [];
+
+deps.forEach(dep => {
+    try {
+        require(dep);
+        console.log('✅ ' + dep + ': OK');
+    } catch(e) {
+        console.error('❌ ' + dep + ': FALTANDO');
+        missing.push(dep);
+    }
+});
+
+if (missing.length === 0) {
+    console.log('🎉 Todas as dependências críticas instaladas!');
+    process.exit(0);
+} else {
+    console.error('❌ Dependências faltando: ' + missing.join(', '));
+    process.exit(1);
+}
+CHECK_DEPS_EOF
+fi
+
+# validate-dependencies.js
+if [ ! -f "validate-dependencies.js" ]; then
+    log_info "Criando validate-dependencies.js..."
+    cat > validate-dependencies.js << 'VALIDATE_DEPS_EOF'
+#!/usr/bin/env node
+
+const fs = require('fs');
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const deps = Object.keys(pkg.dependencies);
+
+console.log('📦 Validando ' + deps.length + ' dependências...');
+
+let installed = 0;
+deps.forEach(dep => {
+    try {
+        require.resolve(dep);
+        installed++;
+    } catch(e) {
+        console.error('❌ Falta: ' + dep);
+    }
+});
+
+console.log('✅ Instaladas: ' + installed + '/' + deps.length);
+
+if (installed !== deps.length) {
+    process.exit(1);
+}
+VALIDATE_DEPS_EOF
+fi
+
+# fix-dependencies.js
+if [ ! -f "fix-dependencies.js" ]; then
+    log_info "Criando fix-dependencies.js..."
+    cat > fix-dependencies.js << 'FIX_DEPS_EOF'
+#!/usr/bin/env node
+
+console.log('🔧 KRYONIX - Corrigindo dependências...');
+
+const { exec } = require('child_process');
+
+// Tentar instalação de dependências faltando
+exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
+    if (error) {
+        console.error('❌ Erro na correção:', error.message);
+        process.exit(1);
+    }
+    console.log('✅ Dependências corrigidas');
+    console.log(stdout);
+});
+FIX_DEPS_EOF
+fi
+
 log_info "Criando webhook-deploy.sh com auto-update de dependências..."
 
 cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
@@ -1666,7 +1754,7 @@ if command -v ncu >/dev/null 2>&1; then
     updates_available=$(ncu --jsonUpgraded 2>/dev/null | jq -r 'keys | length' 2>/dev/null || echo "0")
     
     if [ "$updates_available" -gt 0 ]; then
-        log_monitor "�� $updates_available atualizações de dependências disponíveis"
+        log_monitor "📦 $updates_available atualizações de dependências disponíveis"
         
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
