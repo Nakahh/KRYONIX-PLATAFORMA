@@ -1262,8 +1262,8 @@ deploy() {
         log "🌐 Commit remoto mais recente: $remote_commit"
 
         if [ "$local_commit" = "$remote_commit" ] && [ "$local_commit" != "unknown" ]; then
-            log "✅ Já estamos na versão mais recente - deploy desnecessário"
-            log "ℹ️ Deploy abortado para evitar rebuild desnecessário"
+            log "✅ Sistema já está atualizado - deploy desnecessário"
+            log "ℹ️ Deploy não necessário"
             return 0
         fi
     fi
@@ -1979,7 +1979,7 @@ echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCL
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GOLD}${BOLD}█████████████████████████████████████████████████████████████████████���██████████${RESET}"
 echo ""
-echo -e "${MAGENTA}${BOLD}╭─────────────────────────────���─────────────────��──────────────────�����─────────╮${RESET}"
+echo -e "${MAGENTA}${BOLD}╭─────────────────────────────���───���─────────────��──────────────────�����─────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
 echo -e "${MAGENTA}╰──────────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
