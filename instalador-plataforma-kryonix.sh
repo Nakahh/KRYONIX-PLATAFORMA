@@ -2427,7 +2427,7 @@ deploy() {
                     # Verificar memória disponível
                     available_memory=$(free -m | awk '/^Mem:/ {print $7}' 2>/dev/null || echo "2048")
                     if [ "$available_memory" -lt 1024 ]; then
-                        log "⚠️ Memória baixa ($available_memory MB), ajustando limites"
+                        log "��️ Memória baixa ($available_memory MB), ajustando limites"
                         docker service update --limit-memory=512M "$service_name" >/dev/null 2>&1 || true
                     fi
 
@@ -2454,7 +2454,11 @@ deploy() {
                         docker service create \
                             --name "$service_name" \
                             --replicas 1 \
+                            --constraint "node.role==manager" \
                             --limit-memory 512M \
+                            --limit-cpu 0.5 \
+                            --reserve-memory 256M \
+                            --reserve-cpu 0.25 \
                             --restart-condition on-failure \
                             --restart-max-attempts 3 \
                             --restart-delay 15s \
@@ -2465,16 +2469,20 @@ deploy() {
                             --health-interval 30s \
                             --health-timeout 10s \
                             --health-retries 3 \
-                            --health-start-period 60s \
+                            --health-start-period 40s \
                             kryonix-plataforma:latest >/dev/null 2>&1 || true
                     elif [[ "$service_name" == *"_monitor"* ]]; then
                         docker service create \
                             --name "$service_name" \
                             --replicas 1 \
+                            --constraint "node.role==manager" \
                             --limit-memory 256M \
+                            --limit-cpu 0.25 \
+                            --reserve-memory 128M \
+                            --reserve-cpu 0.1 \
                             --restart-condition on-failure \
                             --restart-max-attempts 3 \
-                            --restart-delay 10s \
+                            --restart-delay 15s \
                             --network "${DOCKER_NETWORK}" \
                             --env NODE_ENV=production \
                             --env PORT=8084 \
@@ -2482,8 +2490,29 @@ deploy() {
                             --health-interval 30s \
                             --health-timeout 10s \
                             --health-retries 3 \
-                            --health-start-period 60s \
+                            --health-start-period 40s \
                             kryonix-plataforma:latest node kryonix-monitor.js >/dev/null 2>&1 || true
+                    elif [[ "$service_name" == *"_webhook"* ]]; then
+                        docker service create \
+                            --name "$service_name" \
+                            --replicas 1 \
+                            --constraint "node.role==manager" \
+                            --limit-memory 256M \
+                            --limit-cpu 0.25 \
+                            --reserve-memory 128M \
+                            --reserve-cpu 0.1 \
+                            --restart-condition on-failure \
+                            --restart-max-attempts 3 \
+                            --restart-delay 15s \
+                            --network "${DOCKER_NETWORK}" \
+                            --env NODE_ENV=production \
+                            --env PORT=8082 \
+                            --health-cmd "curl -f http://localhost:8082/health || exit 1" \
+                            --health-interval 30s \
+                            --health-timeout 10s \
+                            --health-retries 3 \
+                            --health-start-period 40s \
+                            kryonix-plataforma:latest node webhook-listener.js >/dev/null 2>&1 || true
                     fi
                     ;;
             esac
