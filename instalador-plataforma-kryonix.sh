@@ -83,12 +83,12 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗█��████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══���╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -364,7 +364,7 @@ fresh_git_clone() {
     git credential-manager-core erase <<< "url=https://github.com" 2>/dev/null || true
     git credential erase <<< "url=https://github.com" 2>/dev/null || true
 
-    # CORREÇÃO: Configurar credenciais para reposit��rio privado
+    # CORREÇÃO: Configurar credenciais para repositório privado
     git config --global credential.helper store
     echo "https://Nakahh:${pat_token}@github.com" > ~/.git-credentials
 
@@ -1434,8 +1434,14 @@ deploy() {
     if git clone --single-branch --branch main --depth 1 "https://github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
         log "✅ Clone fresh concluído"
     else
-        log "❌ Falha no clone fresh"
-        return 1
+        log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
+        # Fallback: token diretamente na URL
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+            log "✅ Clone fresh concluído com fallback"
+        else
+            log "❌ Falha no clone fresh com todos os métodos"
+            return 1
+        fi
     fi
     
     cd "$DEPLOY_PATH"
