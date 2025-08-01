@@ -83,7 +83,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔════════════════���════════════════════════════════════════════════╗"
+    echo "╔���═══════════════���════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -1658,7 +1658,13 @@ else
 
     # Análise detalhada do erro
     build_error_type=""
-    if grep -q "Cannot find module.*autoprefixer" /tmp/docker-build.log; then
+    if grep -q "Type error.*postgres-config.ts" /tmp/docker-build.log; then
+        build_error_type="typescript_postgres_config"
+    elif grep -q "no-assign-module-variable" /tmp/docker-build.log; then
+        build_error_type="eslint_module_variable"
+    elif grep -q "Failed to compile" /tmp/docker-build.log && grep -q "Type error" /tmp/docker-build.log; then
+        build_error_type="typescript_error"
+    elif grep -q "Cannot find module.*autoprefixer" /tmp/docker-build.log; then
         build_error_type="missing_autoprefixer"
     elif grep -q "Cannot find module.*postcss" /tmp/docker-build.log; then
         build_error_type="missing_postcss"
@@ -1727,7 +1733,7 @@ EMERGENCY_CHECK_EOF
             cat > /tmp/emergency-fix.js << 'EOF'
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-pkg.scripts.postinstall = 'echo "Build mode - verificação pulada"';
+pkg.scripts.postinstall = 'echo "Build mode - verifica��ão pulada"';
 if (pkg.scripts.preinstall) pkg.scripts.preinstall = 'echo "Build mode - preinstall pulado"';
 fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
 console.log('Emergency package.json fix applied');
@@ -2473,7 +2479,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}═══════════════════════════════���════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
