@@ -350,7 +350,7 @@ test_service_health() {
 nuclear_cleanup() {
     log_info "🧹 Limpeza completa - preparando ambiente..."
     
-    # Parar e remover todos os containers/serviços KRYONIX
+    # Parar e remover todos os containers/servi��os KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
     sleep 15
     
@@ -934,7 +934,7 @@ app.post('/api/github-webhook', (req, res) => {
         if (code === 0) {
             console.log('✅ Deploy automático KRYONIX concluído com SUCESSO');
         } else {
-            console.error('❌ Deploy automático KRYONIX falhou');
+            console.error('��� Deploy automático KRYONIX falhou');
         }
     });
 
@@ -2049,7 +2049,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Segurança avançada - Assinatura criptográ
 echo -e "    ${BLUE}│${RESET} ✅ Controle de branch - Deploy apenas da branch principal"
 echo -e "    ${BLUE}│${RESET} ✅ Ambiente limpo - Instalação completa e organizada"
 echo ""
-echo -e "${CYAN}${BOLD}╔���═══════════════════════════════════════════════════════���══���══��═════════���════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔═══════════════════════════════════════════════════════════════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}���� Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
