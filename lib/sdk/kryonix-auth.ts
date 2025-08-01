@@ -143,6 +143,9 @@ export class KryonixAuth {
       this.refreshToken = tokenData.refresh_token
       
       // Decodificar token para obter informações do usuário
+      if (!this.token) {
+        throw new Error('Token não foi definido')
+      }
       const tokenInfo = AuthUtils.decodeToken(this.token)
       if (!tokenInfo) {
         throw new Error('Token inválido recebido')
