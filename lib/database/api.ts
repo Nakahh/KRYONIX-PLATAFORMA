@@ -140,13 +140,13 @@ export async function apiGetAllModulesStatus(): Promise<ApiResponse<{ [key in Da
     const initStatus = await getDatabaseInitializationStatus()
     const moduleStatuses: any = {}
     
-    for (const [module, status] of Object.entries(initStatus)) {
-      const moduleResponse = await apiGetModuleStatus(module as DatabaseModule)
+    for (const [dbModule, status] of Object.entries(initStatus)) {
+      const moduleResponse = await apiGetModuleStatus(dbModule as DatabaseModule)
       if (moduleResponse.success && moduleResponse.data) {
-        moduleStatuses[module] = moduleResponse.data
+        moduleStatuses[dbModule] = moduleResponse.data
       } else {
-        moduleStatuses[module] = {
-          module: module as DatabaseModule,
+        moduleStatuses[dbModule] = {
+          module: dbModule as DatabaseModule,
           connected: false,
           schemas: [],
           tables: [],
