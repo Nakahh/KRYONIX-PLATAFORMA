@@ -2105,7 +2105,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 40s
 
 networks:
   $DOCKER_NETWORK:
