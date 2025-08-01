@@ -83,7 +83,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔═════════════════════════════════════════════════════════════════╗"
+    echo "╔═══════════════════════════��═════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -507,7 +507,7 @@ fresh_git_clone() {
     log_info "🔍 Testando conectividade com GitHub..."
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
-        log_info "💡 Verifique se o PAT token tem permiss��es 'repo' para repositórios privados"
+        log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
         return 1
     fi
     log_success "✅ Conectividade e token validados"
@@ -566,7 +566,7 @@ fresh_git_clone() {
                 break
             fi
 
-            log_warning "⚠️ Tentativa de clone $clone_attempts falhou"
+            log_warning "⚠��� Tentativa de clone $clone_attempts falhou"
             if [ $clone_attempts -lt $max_attempts ]; then
                 sleep 5
             fi
@@ -1061,6 +1061,10 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
+# CORREÇÃO CRÍTICA: Copiar arquivos de dependências ANTES do npm ci
+COPY check-dependencies.js ./
+COPY validate-dependencies.js ./
+COPY fix-dependencies.js ./
 RUN npm ci --only=production && npm cache clean --force
 
 # Rebuild the source code only when needed
@@ -1171,7 +1175,7 @@ if [ ${#missing_files[@]} -gt 0 ]; then
     exit 1
 fi
 
-# Verifica��ão adicional específica do instalador antigo
+# Verificação adicional específica do instalador antigo
 log_info "🔍 Verificação adicional de integridade dos arquivos..."
 
 # Verificar se server.js tem o endpoint webhook
@@ -1677,7 +1681,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         log_success "✅ HTTP respondendo - Next.js funcionando"
         WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
-        log_warning "⚠️ Docker rodando mas HTTP n��o responde"
+        log_warning "⚠️ Docker rodando mas HTTP não responde"
         WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
@@ -1706,14 +1710,14 @@ if [[ "$monitor_replicas" == "1/1" ]]; then
     MONITOR_STATUS="✅ ONLINE (1/1)"
 else
     log_warning "Serviço monitor com problemas: $monitor_replicas"
-    MONITOR_STATUS="❌ PROBLEMA ($monitor_replicas)"
+    MONITOR_STATUS="�� PROBLEMA ($monitor_replicas)"
 
     # Mostrar logs do monitor se houver problema
     log_info "📋 Logs do monitor:"
     docker service logs "${STACK_NAME}_monitor" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
 fi
 
-# Webhook agora está integrado no serviço web, então testar diretamente
+# Webhook agora est�� integrado no serviço web, então testar diretamente
 log_info "Testando webhook integrado no serviço web..."
 if timeout 10s curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
    -H "Content-Type: application/json" \
@@ -1876,7 +1880,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Verificação específica PR #22"
 echo -e "    ${BLUE}│${RESET} ✅ Dockerfile multi-stage com build adequado"
 echo -e "    ${BLUE}│${RESET} ✅ Docker-stack.yml com prioridade máxima para webhook"
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
-echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
+echo -e "    ${BLUE}│${RESET} ✅ Validaç��o específica de inicialização"
 echo -e "    ${BLUE}│${RESET} ✅ Atualização automática de dependências a cada deploy"
 echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
