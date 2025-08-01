@@ -88,9 +88,9 @@ show_banner() {
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
-    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo "║     ██╔═██╗ ██╔══██╗  ╚█���╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ���"
+    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -845,27 +845,186 @@ next_step
 processing_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
+# CORREÇÃO CRÍTICA: Criar arquivos de dependências ANTES de qualquer build
+log_info "🔧 Criando arquivos de dependências críticas para Docker build..."
+
+# 1. check-dependencies.js (OBRIGATÓRIO para package.json postinstall)
+if [ ! -f "check-dependencies.js" ]; then
+    log_info "Criando check-dependencies.js..."
+    cat > check-dependencies.js << 'CHECK_DEPS_EOF'
+#!/usr/bin/env node
+// KRYONIX - Verificador de dependências críticas
+console.log('🔍 KRYONIX - Verificando dependências críticas...');
+
+const deps = ['next', 'react', 'react-dom', 'express', 'cors', 'helmet', 'body-parser', 'morgan', 'multer', 'pg', 'bcryptjs', 'jsonwebtoken', 'ioredis', 'aws-sdk', 'socket.io', 'node-cron', 'axios', 'dotenv', 'ws'];
+let missing = [];
+let installed = 0;
+
+deps.forEach(dep => {
+    try {
+        require(dep);
+        console.log('✅ ' + dep + ': OK');
+        installed++;
+    } catch(e) {
+        console.error('❌ ' + dep + ': FALTANDO');
+        missing.push(dep);
+    }
+});
+
+// Estatísticas adicionais
+try {
+    const fs = require('fs');
+    const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+    console.log('📦 Módulos instalados: ' + (require('fs').readdirSync('node_modules').length || 0));
+    console.log('📋 Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
+} catch(e) {
+    console.log('📊 Estatísticas não disponíveis');
+}
+
+if (missing.length === 0) {
+    console.log('🎉 Todas as dependências críticas instaladas!');
+    console.log('✅ Instaladas: ' + installed + '/' + deps.length);
+    console.log('📊 Resumo da verificação:');
+    console.log('   Dependências críticas: ' + deps.length);
+    console.log('   Instaladas com sucesso: ' + installed);
+    try {
+        console.log('   Módulos no node_modules: ' + require('fs').readdirSync('node_modules').length);
+        console.log('   Package.json válido: ✅');
+    } catch(e) {}
+    process.exit(0);
+} else {
+    console.error('❌ Dependências faltando: ' + missing.join(', '));
+    process.exit(1);
+}
+CHECK_DEPS_EOF
+    log_success "✅ check-dependencies.js criado"
+fi
+
+# 2. validate-dependencies.js
+if [ ! -f "validate-dependencies.js" ]; then
+    log_info "Criando validate-dependencies.js..."
+    cat > validate-dependencies.js << 'VALIDATE_DEPS_EOF'
+#!/usr/bin/env node
+// KRYONIX - Validador avançado de dependências
+
+const fs = require('fs');
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const deps = Object.keys(pkg.dependencies || {});
+
+console.log('📦 Validando ' + deps.length + ' dependências...');
+
+let installed = 0;
+let missing = [];
+
+deps.forEach(dep => {
+    try {
+        require.resolve(dep);
+        installed++;
+    } catch(e) {
+        console.error('❌ Falta: ' + dep);
+        missing.push(dep);
+    }
+});
+
+console.log('✅ Instaladas: ' + installed + '/' + deps.length);
+
+if (missing.length > 0) {
+    console.error('❌ Faltando: ' + missing.join(', '));
+    process.exit(1);
+} else {
+    console.log('🎉 Todas as dependências validadas!');
+    process.exit(0);
+}
+VALIDATE_DEPS_EOF
+    log_success "✅ validate-dependencies.js criado"
+fi
+
+# 3. fix-dependencies.js
+if [ ! -f "fix-dependencies.js" ]; then
+    log_info "Criando fix-dependencies.js..."
+    cat > fix-dependencies.js << 'FIX_DEPS_EOF'
+#!/usr/bin/env node
+// KRYONIX - Corretor automático de dependências
+
+console.log('🔧 KRYONIX - Corrigindo dependências...');
+
+const { exec } = require('child_process');
+
+// Tentar instalação de dependências faltando
+exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
+    if (error) {
+        console.error('❌ Erro na correção:', error.message);
+
+        // Tentar método alternativo
+        console.log('🔄 Tentando método alternativo...');
+        exec('npm ci --only=production', (error2, stdout2, stderr2) => {
+            if (error2) {
+                console.error('❌ Correção alternativa também falhou:', error2.message);
+                process.exit(1);
+            } else {
+                console.log('✅ Dependências corrigidas com método alternativo');
+                console.log(stdout2);
+                process.exit(0);
+            }
+        });
+    } else {
+        console.log('✅ Dependências corrigidas com sucesso');
+        console.log(stdout);
+        process.exit(0);
+    }
+});
+FIX_DEPS_EOF
+    log_success "✅ fix-dependencies.js criado"
+fi
+
 # Corrigir package.json se necessário
 if grep -q '"type": "module"' package.json; then
     log_info "Removendo type: module do package.json para compatibilidade"
     sed -i '/"type": "module",/d' package.json
 fi
 
-# Corrigir postinstall para funcionar durante Docker build
+# CORREÇÃO CRÍTICA: Corrigir postinstall para funcionar durante Docker build
+log_info "🔧 Aplicando correção crítica no package.json..."
 if grep -q '"postinstall": "npm run check-deps"' package.json; then
     log_info "Corrigindo postinstall para compatibilidade com Docker build"
     # Criar backup
     cp package.json package.json.backup-postinstall
-    # Aplicar correção usando cat para evitar problemas com aspas
+
+    # Aplicar correção usando Node.js para evitar problemas com aspas
     cat > /tmp/postinstall-fix.js << 'EOF'
 const fs = require('fs');
-const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-pkg.scripts.postinstall = 'node -e "try { require(\'./check-dependencies.js\'); } catch(e) { console.log(\'⚠️ check-dependencies.js não encontrado, pulando verificação durante build\'); }"';
-fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-console.log('✅ postinstall corrigido para Docker build');
+console.log('🔧 Aplicando correção crítica no package.json...');
+
+try {
+    const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
+    // Corrigir postinstall para ser compatível com Docker build
+    if (pkg.scripts && pkg.scripts.postinstall === 'npm run check-deps') {
+        pkg.scripts.postinstall = 'node -e "try { require(\'./check-dependencies.js\'); } catch(e) { console.log(\'⚠️ check-dependencies.js não encontrado durante build, continuando...\'); }"';
+        console.log('✅ postinstall corrigido para Docker build');
+    }
+
+    // Adicionar script de fallback para build
+    if (!pkg.scripts['build-deps-check']) {
+        pkg.scripts['build-deps-check'] = 'node -e "console.log(\'✅ Build mode - verificação de dependências pulada\')"';
+        console.log('✅ Script build-deps-check adicionado');
+    }
+
+    // Salvar arquivo corrigido
+    fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+    console.log('✅ package.json atualizado com sucesso');
+
+} catch (error) {
+    console.error('❌ Erro na correção:', error.message);
+    process.exit(1);
+}
 EOF
+
     node /tmp/postinstall-fix.js
     rm -f /tmp/postinstall-fix.js
+    log_success "✅ Correção do package.json aplicada"
+else
+    log_info "package.json já está correto"
 fi
 
 # Verificar se webhook já está integrado no server.js
@@ -1024,7 +1183,7 @@ elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 
     log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
-    log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
+    log_error "�� Falha ao criar rede $DOCKER_NETWORK"
     exit 1
 fi
 
@@ -1162,7 +1321,7 @@ DOCKERFILE_EOF
 
 log_info "Fazendo build da imagem Docker..."
 
-# Verifica��ão pré-build para Next.js
+# Verificação pré-build para Next.js
 log_info "🔍 Verificando requisitos específicos para Next.js..."
 
 # Verificar se arquivos Next.js essenciais existem
@@ -1879,9 +2038,9 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}════════════════��══════════════════════════════════════════════════${RESET}"
-echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════��═════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
