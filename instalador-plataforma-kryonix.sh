@@ -87,7 +87,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ���█║██║ ╚███���╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚═════════════════════════════════════════════════════════════════╝"
+    echo "╚═══════════════════════════════════════════════════════════════���═╝"
     echo -e "${RESET}\n"
 }
 
@@ -1508,7 +1508,13 @@ else
 
     # Análise detalhada do erro
     build_error_type=""
-    if grep -q "Cannot find module.*check-dependencies.js" /tmp/docker-build.log; then
+    if grep -q "Cannot find module.*autoprefixer" /tmp/docker-build.log; then
+        build_error_type="missing_autoprefixer"
+    elif grep -q "Cannot find module.*postcss" /tmp/docker-build.log; then
+        build_error_type="missing_postcss"
+    elif grep -q "Cannot find module.*tailwindcss" /tmp/docker-build.log; then
+        build_error_type="missing_tailwind"
+    elif grep -q "Cannot find module.*check-dependencies.js" /tmp/docker-build.log; then
         build_error_type="missing_check_deps"
     elif grep -q "npm.*failed" /tmp/docker-build.log; then
         build_error_type="npm_install_failed"
