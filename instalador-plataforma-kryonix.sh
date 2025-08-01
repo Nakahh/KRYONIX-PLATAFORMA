@@ -417,7 +417,7 @@ fresh_git_clone() {
             log_info "🔍 Remoto mais recente: $latest_remote_commit"
             log_info "🔍 Local atual: $current_local_commit"
             
-            # Forçar atualizaç��o para absoluto mais recente se diferente
+            # Forçar atualização para absoluto mais recente se diferente
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
                 log_info "🔄 Atualizando para commit absoluto mais recente..."
                 git fetch origin HEAD 2>/dev/null || true
@@ -1556,13 +1556,16 @@ complete_step
 next_step
 
 # ============================================================================
-# ETAPA 13: CRIAR WEBHOOK DEPLOY COM NUCLEAR CLEANUP
+# ETAPA 13: CONFIGURAR GITHUB ACTIONS
 # ============================================================================
 
 processing_step
-log_info "🚀 Criando webhook deploy com nuclear cleanup + clone fresh..."
+log_info "Configurando CI/CD com GitHub Actions..."
 
-cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
+# Criar GitHub Actions workflow
+mkdir -p .github/workflows
+
+cat > .github/workflows/deploy.yml << 'GITHUB_ACTIONS_EOF'
 #!/bin/bash
 
 set -euo pipefail
@@ -1792,7 +1795,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═════════════════��═════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
