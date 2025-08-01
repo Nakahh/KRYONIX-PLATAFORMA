@@ -3,761 +3,461 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📊 KRYONIX - Progresso em Tempo Real</title>
-    <meta name="description" content="Acompanhe o progresso de implementação da plataforma KRYONIX em tempo real">
+    <title>Progresso KRYONIX - Construindo sua Plataforma IA</title>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <!-- PWA Configuration -->
+    <meta name="theme-color" content="#0066FF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json">
     
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0066FF 0%, #00D4FF 100%);
             min-height: 100vh;
-            line-height: 1.6;
-        }
-        
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        
-        /* Banner KRYONIX Épico */
-        .kryonix-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #a8c0ff 100%);
-            border-radius: 20px;
-            padding: 50px 30px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            color: white;
+            overflow-x: hidden;
         }
 
-        .kryonix-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
-        }
-
-        .kryonix-banner::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .banner-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }
-
-        .kryonix-logo {
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
+            flex-direction: column;
         }
-
-        .kryonix-logo img {
-            max-width: 200px;
-            height: auto;
-            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
-            animation: pulse-glow 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.05); filter: brightness(1.2); }
-        }
-
-        .kryonix-tagline {
-            font-size: 1.4em;
-            font-weight: 300;
-            opacity: 0.9;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .banner-badges {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 25px;
-        }
-
-        .badge {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-size: 0.9em;
-            font-weight: 500;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .badge:hover {
-            background: rgba(76, 175, 80, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .badge.ai { background: rgba(33, 150, 243, 0.3); }
-        .badge.saas { background: rgba(156, 39, 176, 0.3); }
-        .badge.autonomous { background: rgba(255, 152, 0, 0.3); }
-        .badge.mobile { background: rgba(76, 175, 80, 0.3); }
 
         /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .logo {
-            font-size: 2.2em;
-            font-weight: bold;
-        }
-        
-        .title {
-            font-size: 1.8em;
-            font-weight: 600;
-        }
-        
-        .subtitle {
-            opacity: 0.8;
-            font-size: 1em;
-        }
-        
-        .last-update {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9em;
-        }
-        
-        /* Progress Overview */
-        .progress-overview {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .progress-title {
-            font-size: 2em;
-            font-weight: 600;
-            margin-bottom: 30px;
             text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease-out;
         }
-        
-        .progress-stats {
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            flex: 1;
+            margin-bottom: 30px;
+        }
+
+        .current-phase {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideInUp 0.8s ease-out 0.2s both;
+        }
+
+        .phase-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .phase-progress {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .phase-progress-bar {
+            background: linear-gradient(90deg, #00FF88, #00D4FF);
+            height: 100%;
+            border-radius: 12px;
+            transition: width 2s ease-out;
+            animation: progressPulse 2s infinite;
+        }
+
+        .phase-description {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Parts Grid */
+        .parts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-        
+
+        .part-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            animation: slideInUp 0.8s ease-out 0.4s both;
+        }
+
+        .part-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .part-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .part-number {
+            font-size: 14px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .part-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00FF88;
+            animation: statusPulse 1.5s infinite;
+        }
+
+        .part-status.pending {
+            background: #FFB800;
+        }
+
+        .part-status.completed {
+            background: #00FF88;
+        }
+
+        .part-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .part-description {
+            font-size: 13px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
         .stat-card {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 20px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            animation: slideInUp 0.8s ease-out 0.6s both;
         }
-        
+
         .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
+            font-size: 32px;
+            font-weight: 700;
             margin-bottom: 5px;
-            background: linear-gradient(45deg, #4CAF50, #45a049);
+            background: linear-gradient(45deg, #00FF88, #00D4FF);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .stat-label {
-            opacity: 0.9;
-            font-size: 0.9em;
-        }
-        
-        .main-progress {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-        
-        .progress-text {
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .progress-bar {
-            background: rgba(255, 255, 255, 0.2);
-            height: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 15px;
-            position: relative;
-        }
-        
-        .progress-fill {
-            background: linear-gradient(90deg, #4CAF50, #45a049, #66BB6A);
-            height: 100%;
-            border-radius: 10px;
-            width: 2%;
-            transition: width 1s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 2s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .progress-details {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-        
-        /* Parts Grid */
-        .parts-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .section-title {
-            font-size: 1.8em;
-            font-weight: 600;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .parts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .part-card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .part-card:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-        
-        .part-card.completed {
-            border-color: #4CAF50;
-            background: rgba(76, 175, 80, 0.2);
-        }
-        
-        .part-card.in-progress {
-            border-color: #FF9800;
-            background: rgba(255, 152, 0, 0.2);
-            animation: pulse 2s infinite;
-        }
-        
-        .part-card.pending {
-            border-color: rgba(255, 255, 255, 0.3);
-            opacity: 0.7;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .part-number {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        
-        .part-title {
-            font-size: 0.85em;
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
-        
-        .part-status {
-            font-size: 1.2em;
-            margin-bottom: 5px;
-        }
-        
-        .part-eta {
-            font-size: 0.75em;
+            font-size: 12px;
             opacity: 0.8;
-        }
-        
-        /* Current Task */
-        .current-task {
-            background: rgba(255, 152, 0, 0.2);
-            border: 2px solid #FF9800;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-        
-        .task-title {
-            font-size: 1.5em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .task-description {
-            margin-bottom: 15px;
-            opacity: 0.9;
-        }
-        
-        .task-agents {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .agent-tag {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8em;
-        }
-        
-        /* Logs Section */
-        .logs-section {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-        
-        .logs-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .logs-title {
-            font-size: 1.3em;
-            font-weight: 600;
-        }
-        
-        .logs-controls {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s ease;
-        }
-        
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .btn.active {
-            background: #4CAF50;
-            border-color: #4CAF50;
-        }
-        
-        .logs-container {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            padding: 20px;
-            height: 300px;
-            overflow-y: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85em;
-            line-height: 1.4;
-        }
-        
-        .log-entry {
-            margin-bottom: 8px;
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .log-timestamp {
-            color: #4CAF50;
-            margin-right: 10px;
-        }
-        
-        .log-level {
-            margin-right: 10px;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.8em;
-        }
-        
-        .log-info { background: #2196F3; }
-        .log-success { background: #4CAF50; }
-        .log-warning { background: #FF9800; }
-        .log-error { background: #f44336; }
-        
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .container { padding: 10px; }
-            .kryonix-banner { padding: 30px 20px; margin-bottom: 20px; }
-            .kryonix-logo img { max-width: 150px; }
-            .kryonix-tagline { font-size: 1.1em; }
-            .banner-badges { gap: 8px; }
-            .badge { padding: 6px 12px; font-size: 0.8em; }
-            .header-content { flex-direction: column; text-align: center; }
-            .progress-overview { padding: 20px; }
-            .parts-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-            .part-card { padding: 10px; }
-            .part-number { font-size: 1.3em; }
-            .part-title { font-size: 0.8em; }
-            .logs-container { height: 200px; font-size: 0.8em; }
+            font-weight: 500;
         }
 
-        @media (max-width: 480px) {
-            .kryonix-logo img { max-width: 120px; }
-            .kryonix-tagline { font-size: 1em; }
-            .banner-badges { flex-direction: column; align-items: center; }
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+            animation: fadeIn 0.8s ease-out 0.8s both;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .logo {
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+            }
+
+            .parts-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 24px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes progressPulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes statusPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Banner KRYONIX Épico -->
-        <div class="kryonix-banner">
-            <div class="banner-content">
-                <div class="kryonix-logo">
-                    <img src="/logo kryonix.png" alt="KRYONIX - Plataforma SaaS IA" />
-                </div>
-                <div class="kryonix-tagline">🤖 Plataforma SaaS 100% Autônoma por Inteligência Artificial</div>
-                <div class="banner-badges">
-                    <div class="badge ai">🧠 15 Agentes IA</div>
-                    <div class="badge saas">☁️ 8 Módulos SaaS</div>
-                    <div class="badge autonomous">🔄 100% Autônomo</div>
-                    <div class="badge mobile">📱 Mobile-First</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Header de Status -->
+        <!-- Header -->
         <div class="header">
-            <div class="header-content">
-                <div class="logo-section">
-                    <div class="logo">📊</div>
-                    <div>
-                        <div class="title">Dashboard de Progresso</div>
-                        <div class="subtitle">Monitoramento em Tempo Real</div>
-                    </div>
+            <div class="logo">🚀</div>
+            <h1 class="title">KRYONIX em Construção</h1>
+            <p class="subtitle">Sua Plataforma de IA está sendo construída com tecnologia de última geração</p>
+        </div>
+
+        <!-- Current Phase -->
+        <div class="progress-section">
+            <div class="current-phase">
+                <div class="phase-title">
+                    <span>🔐 Etapa Atual: Sistema de Login</span>
+                    <span class="loading"></span>
                 </div>
-                <div class="last-update" id="last-update">
-                    Última atualização: Carregando...
+                <div class="phase-progress">
+                    <div class="phase-progress-bar" style="width: 25%"></div>
                 </div>
+                <p class="phase-description">
+                    Estamos configurando seu sistema de login seguro com autenticação inteligente. 
+                    Em breve você poderá acessar sua plataforma pessoal.
+                </p>
             </div>
         </div>
 
-        <!-- Progress Overview -->
-        <div class="progress-overview">
-            <h2 class="progress-title">📊 Visão Geral do Progresso</h2>
-            
-            <div class="progress-stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="completed-parts">1</div>
-                    <div class="stat-label">Partes Concluídas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="total-parts">50</div>
-                    <div class="stat-label">Total de Partes</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="active-modules">0</div>
-                    <div class="stat-label">Módulos Ativos</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="agents-working">15</div>
-                    <div class="stat-label">Agentes IA</div>
-                </div>
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="partsCompleted">1</div>
+                <div class="stat-label">Partes Concluídas</div>
             </div>
-
-            <div class="main-progress">
-                <div class="progress-text">
-                    <strong>Progresso Geral:</strong> <span id="progress-percentage">2%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill"></div>
-                </div>
-                <div class="progress-details">
-                    <span>Parte 01/50 - Autenticação e Keycloak</span>
-                    <span id="eta">ETA: Em desenvolvimento</span>
-                </div>
+            <div class="stat-card">
+                <div class="stat-number">50</div>
+                <div class="stat-label">Total de Partes</div>
             </div>
-        </div>
-
-        <!-- Current Task -->
-        <div class="current-task">
-            <div class="task-title">
-                🔄 <span>Tarefa Atual: Implementação da Parte 01</span>
+            <div class="stat-card">
+                <div class="stat-number" id="progressPercent">2%</div>
+                <div class="stat-label">Progresso Geral</div>
             </div>
-            <div class="task-description">
-                Configurando sistema de autenticação com Keycloak, criando página de acompanhamento e estabelecendo deploy automático para www.kryonix.com.br
-            </div>
-            <div class="task-agents">
-                <span class="agent-tag">🏗️ Arquiteto Software</span>
-                <span class="agent-tag">🔧 DevOps</span>
-                <span class="agent-tag">🔐 Expert Segurança</span>
-                <span class="agent-tag">🎨 Designer UX/UI</span>
-                <span class="agent-tag">�� Expert Mobile</span>
-                <span class="agent-tag">💬 Expert Comunicação</span>
+            <div class="stat-card">
+                <div class="stat-number" id="timeRemaining">49 dias</div>
+                <div class="stat-label">Tempo Estimado</div>
             </div>
         </div>
 
         <!-- Parts Grid -->
-        <div class="parts-section">
-            <h2 class="section-title">📋 Mapa das 50 Partes</h2>
-            <div class="parts-grid" id="parts-grid">
-                <!-- Parts will be generated by JavaScript -->
+        <div class="parts-grid">
+            <div class="part-card">
+                <div class="part-header">
+                    <span class="part-number">Parte 1</span>
+                    <div class="part-status completed"></div>
+                </div>
+                <h3 class="part-title">Sistema de Login</h3>
+                <p class="part-description">Autenticação segura com tecnologia moderna e interface amigável para celular.</p>
+            </div>
+
+            <div class="part-card">
+                <div class="part-header">
+                    <span class="part-number">Parte 2</span>
+                    <div class="part-status pending"></div>
+                </div>
+                <h3 class="part-title">Base de Dados</h3>
+                <p class="part-description">Banco de dados ultra-rápido para armazenar todas as informações da sua empresa.</p>
+            </div>
+
+            <div class="part-card">
+                <div class="part-header">
+                    <span class="part-number">Parte 3</span>
+                    <div class="part-status pending"></div>
+                </div>
+                <h3 class="part-title">Armazenamento</h3>
+                <p class="part-description">Sistema de arquivos na nuvem para documentos, imagens e vídeos.</p>
             </div>
         </div>
 
-        <!-- Logs Section -->
-        <div class="logs-section">
-            <div class="logs-header">
-                <div class="logs-title">📝 Logs em Tempo Real</div>
-                <div class="logs-controls">
-                    <button class="btn active" onclick="filterLogs('all')">Todos</button>
-                    <button class="btn" onclick="filterLogs('info')">Info</button>
-                    <button class="btn" onclick="filterLogs('success')">Sucesso</button>
-                    <button class="btn" onclick="filterLogs('warning')">Avisos</button>
-                </div>
-            </div>
-            <div class="logs-container" id="logs-container">
-                <!-- Logs will be populated by JavaScript -->
-            </div>
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-text">
+                © 2025 KRYONIX - Plataforma construída com IA para o futuro dos negócios
+            </p>
         </div>
     </div>
 
     <script>
-        // Dados das 50 partes
-        const parts = [
-            { id: 1, title: "Autenticação e Keycloak", status: "in-progress", eta: "Hoje" },
-            { id: 2, title: "Base de Dados PostgreSQL", status: "pending", eta: "Amanhã" },
-            { id: 3, title: "Storage MinIO", status: "pending", eta: "2-3 dias" },
-            { id: 4, title: "Cache Redis", status: "pending", eta: "3-4 dias" },
-            { id: 5, title: "Proxy Reverso Traefik", status: "pending", eta: "4-5 dias" },
-            { id: 6, title: "Monitoramento (Grafana/Prometheus)", status: "pending", eta: "5-6 dias" },
-            { id: 7, title: "Sistema de Mensageria RabbitMQ", status: "pending", eta: "6-7 dias" },
-            { id: 8, title: "Backup Automático", status: "pending", eta: "7-8 dias" },
-            { id: 9, title: "Segurança Básica", status: "pending", eta: "8-9 dias" },
-            { id: 10, title: "API Gateway", status: "pending", eta: "9-10 dias" },
-            { id: 11, title: "Interface Principal", status: "pending", eta: "10-12 dias" },
-            // ... continuaria com todas as 50 partes
-        ];
-
-        // Gerar grid das partes
-        function generatePartsGrid() {
-            const grid = document.getElementById('parts-grid');
-            
-            for (let i = 1; i <= 50; i++) {
-                const part = parts.find(p => p.id === i) || { 
-                    id: i, 
-                    title: `Parte ${i}`, 
-                    status: "pending", 
-                    eta: "A definir" 
-                };
-
-                const statusEmoji = {
-                    'completed': '✅',
-                    'in-progress': '🔄',
-                    'pending': '⏳'
-                };
-
-                const card = document.createElement('div');
-                card.className = `part-card ${part.status}`;
-                card.innerHTML = `
-                    <div class="part-number">${i.toString().padStart(2, '0')}</div>
-                    <div class="part-title">${part.title}</div>
-                    <div class="part-status">${statusEmoji[part.status] || '⏳'}</div>
-                    <div class="part-eta">${part.eta}</div>
-                `;
-                
-                card.addEventListener('click', () => showPartDetails(part));
-                grid.appendChild(card);
-            }
-        }
-
-        // Mostrar detalhes da parte
-        function showPartDetails(part) {
-            alert(`Parte ${part.id}: ${part.title}\nStatus: ${part.status}\nETA: ${part.eta}`);
-        }
-
-        // Sistema de logs
-        let logs = [];
+        // Simular atualizações em tempo real
+        let partsCompleted = 1;
+        let progressPercent = 2;
         
-        function addLog(level, message) {
-            const timestamp = new Date().toLocaleTimeString('pt-BR');
-            logs.unshift({ timestamp, level, message });
-            
-            // Manter apenas os últimos 100 logs
-            if (logs.length > 100) logs = logs.slice(0, 100);
-            
-            renderLogs();
-        }
-
-        function renderLogs(filter = 'all') {
-            const container = document.getElementById('logs-container');
-            const filteredLogs = filter === 'all' ? logs : logs.filter(log => log.level === filter);
-            
-            container.innerHTML = filteredLogs.map(log => `
-                <div class="log-entry">
-                    <span class="log-timestamp">[${log.timestamp}]</span>
-                    <span class="log-level log-${log.level}">${log.level.toUpperCase()}</span>
-                    ${log.message}
-                </div>
-            `).join('');
-            
-            container.scrollTop = 0;
-        }
-
-        function filterLogs(filter) {
-            // Atualizar botões ativos
-            document.querySelectorAll('.logs-controls .btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            renderLogs(filter);
-        }
-
-        // Simulação de logs em tempo real
-        function simulateLogs() {
-            const messages = [
-                { level: 'info', text: '🚀 Sistema KRYONIX iniciado' },
-                { level: 'info', text: '📊 Carregando configurações...' },
-                { level: 'success', text: '✅ Documentação carregada (60+ arquivos)' },
-                { level: 'info', text: '👥 15 agentes especializados reunidos' },
-                { level: 'info', text: '🔍 Verificando status dos serviços...' },
-                { level: 'warning', text: '⚠️ Aguardando deploy inicial da Parte 01' },
-                { level: 'info', text: '📱 Interface mobile-first configurada' },
-                { level: 'info', text: '🇧🇷 Localização português brasileiro ativa' },
-                { level: 'success', text: '✅ GitHub Actions configurado' },
-                { level: 'info', text: '🤖 IA autônoma documentada e pronta' },
-                { level: 'info', text: '🌐 Domínio kryonix.com.br configurado' },
-                { level: 'info', text: '📋 Progresso: 1/50 partes (2%)' }
-            ];
-
-            let index = 0;
-            function addNextLog() {
-                if (index < messages.length) {
-                    addLog(messages[index].level, messages[index].text);
-                    index++;
-                    setTimeout(addNextLog, 2000);
-                } else {
-                    // Reiniciar simulação
-                    setTimeout(() => {
-                        addLog('info', '�� Monitoramento contínuo ativo...');
-                        setTimeout(() => {
-                            addLog('success', '✅ Todos os sistemas funcionando normalmente');
-                        }, 5000);
-                    }, 10000);
-                }
+        function updateProgress() {
+            // Simular progresso gradual
+            if (Math.random() < 0.3) {
+                progressPercent = Math.min(progressPercent + 1, 100);
+                document.getElementById('progressPercent').textContent = progressPercent + '%';
+                
+                // Atualizar barra de progresso
+                const progressBar = document.querySelector('.phase-progress-bar');
+                progressBar.style.width = (progressPercent / 2) + '%';
             }
-            addNextLog();
         }
 
-        // Atualizar timestamp
-        function updateTimestamp() {
-            document.getElementById('last-update').textContent = 
-                `Última atualização: ${new Date().toLocaleString('pt-BR')}`;
+        // Atualizar a cada 5 segundos
+        setInterval(updateProgress, 5000);
+
+        // Adicionar eventos de toque para mobile
+        document.addEventListener('touchstart', function() {}, {passive: true});
+        
+        // PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
         }
 
-        // Inicialização
+        // Animações de entrada
         document.addEventListener('DOMContentLoaded', function() {
-            generatePartsGrid();
-            simulateLogs();
-            updateTimestamp();
-            
-            // Animar progresso
-            setTimeout(() => {
-                document.getElementById('progress-fill').style.width = '2%';
-            }, 1000);
-            
-            // Atualizar timestamp a cada minuto
-            setInterval(updateTimestamp, 60000);
+            const cards = document.querySelectorAll('.part-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = (0.4 + index * 0.1) + 's';
+            });
         });
     </script>
 </body>
