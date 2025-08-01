@@ -46,7 +46,7 @@ STACK_NAME="Kryonix"
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PAT_TOKEN="${GITHUB_PAT_TOKEN:-$(read -s -p 'GitHub PAT Token: ' && echo)}"
 WEBHOOK_SECRET="${WEBHOOK_SECRET:-$(openssl rand -base64 32)}"
-JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+JWT_SECRET="${JWT_SECRET:-$(openssl rand -base64 32)}"
 WEBHOOK_URL="https://kryonix.com.br/api/github-webhook"
 SERVER_HOST="${SERVER_HOST:-$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo '127.0.0.1')}"
 SERVER_USER="${SERVER_USER:-$(whoami)}"
@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═��  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚���╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -517,7 +517,7 @@ verify_fresh_clone() {
         latest_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
         
         if [ "$commit_hash" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
-            log_warning "⚠�� Commit mais recente disponível: $latest_commit"
+            log_warning "⚠️ Commit mais recente disponível: $latest_commit"
             
             # Tentar atualizar para o mais recente
             log_info "🔄 Tentando atualizar para o commit mais recente..."
