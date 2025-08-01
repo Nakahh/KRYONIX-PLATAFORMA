@@ -92,7 +92,7 @@ providers:
     endpoint: "unix:///var/run/docker.sock"
     swarmMode: true
     exposedByDefault: false
-    network: kryonix-net
+    network: kryonix-enterprise-network
     watch: true
   
   file:
@@ -605,7 +605,7 @@ services:
       - "traefik.http.routers.metrics.rule=Host(`traefik.kryonix.com.br`) && Path(`/metrics`)"
       - "traefik.http.routers.metrics.service=prometheus@internal"
     networks:
-      - kryonix-net
+      - kryonix-enterprise-network
     deploy:
       mode: global
       placement:
@@ -650,7 +650,7 @@ volumes:
       device: /opt/kryonix/logs/traefik
 
 networks:
-  kryonix-net:
+  kryonix-enterprise-network:
     external: true
 EOF
 
@@ -703,7 +703,7 @@ services:
       - DATABASE_URL=postgresql://postgres:password@postgresql-kryonix:5432/kryonix_saas
       - LOG_LEVEL=INFO
     networks:
-      - kryonix-net
+      - kryonix-enterprise-network
     deploy:
       replicas: 2
       resources:
@@ -718,7 +718,7 @@ services:
       retries: 3
 
 networks:
-  kryonix-net:
+  kryonix-enterprise-network:
     external: true
 EOF
 

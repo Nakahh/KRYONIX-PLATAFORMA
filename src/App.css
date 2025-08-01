@@ -1,8 +1,92 @@
 /* App.css - Estilos principais da aplicação KRYONIX */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .App {
   text-align: center;
 }
+
+/* Custom Components */
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-all duration-200;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+  }
+
+  .shadow-card {
+    @apply shadow-lg shadow-gray-200/50;
+  }
+
+  .shadow-float {
+    @apply shadow-xl shadow-gray-200/50 transform scale-105;
+  }
+}
+
+/* Custom Colors */
+:root {
+  --kryonix-50: #eff6ff;
+  --kryonix-100: #dbeafe;
+  --kryonix-200: #bfdbfe;
+  --kryonix-300: #93c5fd;
+  --kryonix-400: #60a5fa;
+  --kryonix-500: #3b82f6;
+  --kryonix-600: #2563eb;
+  --kryonix-700: #1d4ed8;
+  --kryonix-800: #1e40af;
+  --kryonix-900: #1e3a8a;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Loading animations */
+.loading-dot {
+  animation: loading-wave 1.4s linear infinite;
+}
+
+.loading-dot:nth-child(2) {
+  animation-delay: -1.0s;
+}
+
+.loading-dot:nth-child(3) {
+  animation-delay: -0.6s;
+}
+
+@keyframes loading-wave {
+  0%, 60%, 100% {
+    transform: initial;
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Delay utilities */
+.delay-0 { animation-delay: 0ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
 
 .App-logo {
   height: 40vmin;

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Smartphone, 
-  Brain, 
-  Zap, 
-  Shield, 
-  Cloud, 
+import {
+  Smartphone,
+  Brain,
+  Zap,
+  Shield,
+  Cloud,
   MessageCircle,
   BarChart3,
-  Users,
   ArrowRight,
   Play,
   CheckCircle
@@ -76,7 +75,7 @@ const HomePage = () => {
         <div className="container mx-auto px-4 py-4">
           <nav className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-kryonix-600 to-kryonix-700 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold text-lg">K</span>
               </div>
               <div>
@@ -101,11 +100,11 @@ const HomePage = () => {
       <section className="container mx-auto px-4 py-12 text-center">
         <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           {/* Badge */}
-          <div className="inline-flex items-center px-4 py-2 bg-kryonix-100 dark:bg-kryonix-900/30 text-kryonix-700 dark:text-kryonix-300 rounded-full text-sm font-medium mb-6">
+          <div className="inline-flex items-center px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-6">
             <Zap size={16} className="mr-2" />
             100% Autônomo por IA
           </div>
-          
+
           {/* Title */}
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             Transforme seu Negócio com
@@ -113,13 +112,13 @@ const HomePage = () => {
               Inteligência Artificial
             </span>
           </h1>
-          
+
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-            A primeira plataforma SaaS brasileira 100% autônoma. 
+            A primeira plataforma SaaS brasileira 100% autônoma.
             WhatsApp Business, CRM, Analytics e mais, tudo automatizado por IA.
           </p>
-          
+
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <button
@@ -129,7 +128,10 @@ const HomePage = () => {
               <Play size={20} className="mr-2" />
               Começar Grátis
             </button>
-            <button className="btn-secondary flex items-center justify-center text-lg px-8 py-4">
+            <button
+              onClick={() => navigate('/test')}
+              className="btn-secondary flex items-center justify-center text-lg px-8 py-4"
+            >
               Ver Demo
               <ArrowRight size={20} className="ml-2" />
             </button>
@@ -146,7 +148,7 @@ const HomePage = () => {
               }`}
             >
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-card border border-gray-100 dark:border-gray-700">
-                <div className="text-3xl font-bold text-kryonix-600 mb-2">
+                <div className="text-3xl font-bold text-blue-600 mb-2">
                   {stat.value}
                 </div>
                 <div className="text-gray-600 dark:text-gray-400 text-sm">
@@ -180,7 +182,7 @@ const HomePage = () => {
                 }`}
               >
                 <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-card border border-gray-100 dark:border-gray-700 hover:shadow-float transition-all duration-300 group">
-                  <div className="w-12 h-12 bg-gradient-to-r from-kryonix-600 to-kryonix-700 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <Icon size={24} className="text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
@@ -197,7 +199,7 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-kryonix-600 to-kryonix-700 text-white py-16">
+      <section className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Pronto para Começar?
@@ -208,7 +210,7 @@ const HomePage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => navigate('/login')}
-              className="bg-white text-kryonix-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center"
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center"
             >
               <CheckCircle size={20} className="mr-2" />
               Criar Conta Grátis
@@ -229,7 +231,7 @@ const HomePage = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="w-10 h-10 bg-gradient-to-r from-kryonix-600 to-kryonix-700 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold text-lg">K</span>
               </div>
               <div>

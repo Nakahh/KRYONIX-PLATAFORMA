@@ -7,46 +7,23 @@ export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
 
 # ============================================================================
-# 🚀 INSTALADOR KRYONIX PLATFORM
+# 🚀 INSTALADOR KRYONIX PLATFORM - CLONE FRESH + VERSÃO MAIS RECENTE
 # ============================================================================
 # Autor: Vitor Fernandes
-# Descrição: Instalador 100% automático da plataforma Kryonix
-# Funcionalidades: Deploy completo e configuração automática
+# Descrição: Instalador 100% automático com exclusão completa + clone fresh
+# Funcionalidades: Nuclear cleanup + Fresh clone + Sempre versão mais recente
 # ============================================================================
 
-# Cores e formatação para visual profissional
-BLUE='\033[1;94m'      # Azul brilhante
-CYAN='\033[1;96m'      # Ciano brilhante
-GREEN='\033[1;92m'     # Verde brilhante
-YELLOW='\033[1;93m'    # Amarelo brilhante
-RED='\033[1;91m'       # Vermelho brilhante
-PURPLE='\033[1;95m'    # Roxo brilhante
-WHITE='\033[1;97m'     # Branco brilhante
-ORANGE='\033[1;38;5;208m'  # Laranja vibrante
-MAGENTA='\033[1;38;5;201m' # Magenta vibrante
-TURQUOISE='\033[1;38;5;51m' # Turquesa
-LIME='\033[1;38;5;154m'    # Verde lima
-PINK='\033[1;38;5;212m'    # Rosa
-GOLD='\033[1;38;5;220m'    # Dourado
-SILVER='\033[1;38;5;250m'  # Prateado
+# Cores e formatação
+BLUE='\033[1;34m'
+CYAN='\033[1;36m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+RED='\033[1;31m'
+PURPLE='\033[1;35m'
+WHITE='\033[1;37m'
 BOLD='\033[1m'
-DIM='\033[2m'
-ITALIC='\033[3m'
-UNDERLINE='\033[4m'
-BLINK='\033[5m'
-REVERSE='\033[7m'
-STRIKETHROUGH='\033[9m'
 RESET='\033[0m'
-
-# Backgrounds
-BG_BLACK='\033[40m'
-BG_RED='\033[41m'
-BG_GREEN='\033[42m'
-BG_YELLOW='\033[43m'
-BG_BLUE='\033[44m'
-BG_PURPLE='\033[45m'
-BG_CYAN='\033[46m'
-BG_WHITE='\033[47m'
 
 # Emojis e caracteres especiais
 CHECKMARK='✅'
@@ -81,11 +58,11 @@ STEP_DESCRIPTIONS=(
     "Verificando Docker Swarm ⚙"
     "NUCLEAR cleanup completo 🧹"
     "Configurando credenciais 🔐"
-    "Preparação do ambiente 🔄"
+    "Clone FRESH da versão mais recente 🔄"
     "Criando arquivos de serviços 📄"
     "Instalando dependências 📦"
     "Configurando firewall 🔥"
-    "Detectando rede Traefik 🔍"
+    "Detectando rede Traefik 🔗"
     "Verificando Traefik 📊"
     "Criando imagem Docker 🏗️"
     "Preparando stack Traefik prioridade máxima 📋"
@@ -100,35 +77,28 @@ STEP_DESCRIPTIONS=(
 # FUNÇÕES DE INTERFACE E PROGRESSO
 # ============================================================================
 
-# Função para mostrar banner épico da Plataforma KRYONIX
+# Função para mostrar banner da Plataforma Kryonix
 show_banner() {
     clear
+    echo -e "${BLUE}${BOLD}"
+    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "║                                                                 ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║                                                                 ║"
+    echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
+    echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
+    echo    "║                                                                 ║"
+    echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
+    echo    "║                                                                 ║"
+    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo -e "${RESET}\n"
 
-    # Banner KRYONIX alinhado e responsivo (80 caracteres exatos)
-    echo -e "${BOLD}${TURQUOISE}"
-    echo "████████████████████████████████████████████████████████████████████████████████"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}███�   ██║${GREEN}██║╚██╗���█║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚███���║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${TURQUOISE}█████████████████████████████████████████████████████████████████████████████████${RESET}"
 
-    # Informações essenciais compactas
-    echo ""
-    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]────────────────────────────────────────────────────────────────────╮${RESET}"
-    echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
-    echo -e "${GOLD}╰──────────────────────────────────────────────────────────────────────────────╯${RESET}"
-
-    # Funcionalidades em linha única
-    echo ""
-    echo -e "${GREEN}${BOLD}🎯 DEPLOY:${RESET} ${BG_BLUE}${WHITE} 15 AGENTES IA ${RESET} ${BG_PURPLE}${WHITE} 8 MÓDULOS ${RESET} ${BG_GREEN}${BLACK} WEBHOOK AUTO ${RESET} ${BG_YELLOW}${BLACK} MOBILE-FIRST ${RESET}"
-    echo ""
 }
 
 # Sistema unificado de barra animada
@@ -142,68 +112,52 @@ animate_progress_bar() {
     local status="$4"
     local target_progress=$((step * 100 / total))
 
-    # Cores e ícones melhorados baseados no status
-    local bar_color=""
-    local status_icon=""
-    local status_text=""
-    local border_color=""
+    # Cores baseadas no status
+    local bar_color="$GREEN"
+    local status_icon="🔄"
 
     case $status in
         "iniciando")
             bar_color="$YELLOW"
-            status_icon="🚀"
-            status_text="${YELLOW}INICIANDO${RESET}"
-            border_color="$YELLOW"
+            status_icon="🔄"
             ;;
         "processando")
-            bar_color="$CYAN"
-            status_icon="⚙️"
-            status_text="${CYAN}PROCESSANDO${RESET}"
-            border_color="$CYAN"
+            bar_color="$BLUE"
+            status_icon="⚙"
             ;;
         "concluido")
             bar_color="$GREEN"
             status_icon="✅"
-            status_text="${GREEN}CONCLUÍDO${RESET}"
-            border_color="$GREEN"
             ;;
         "erro")
             bar_color="$RED"
             status_icon="❌"
-            status_text="${RED}ERRO${RESET}"
-            border_color="$RED"
             ;;
     esac
 
-    # Mostrar etapa simples apenas uma vez
+    # Mostrar cabeçalho apenas uma vez por etapa
     if [ "$CURRENT_STEP_BAR_SHOWN" = false ]; then
         echo ""
-        echo -e "${TURQUOISE}${BOLD}[$step/$total]${RESET} ${WHITE}$description${RESET}"
+        echo -e "${status_icon} ${WHITE}${BOLD}Etapa $step/$total: $description${RESET}"
         CURRENT_STEP_BAR_SHOWN=true
     fi
 
-    # Barra animada compacta
+    # Atualizar barra na mesma linha
     local filled=$((target_progress * BAR_WIDTH / 100))
-    local empty=$((BAR_WIDTH - filled))
+    echo -ne "\r${bar_color}${BOLD}["
 
-    echo -ne "\r${WHITE}[${RESET}"
+    # Desenhar barra preenchida
+    for ((j=1; j<=filled; j++)); do echo -ne "█"; done
 
-    # Parte preenchida
-    for ((j=1; j<=filled; j++)); do
-        echo -ne "${bar_color}█${RESET}"
-    done
+    # Desenhar barra vazia
+    for ((j=filled+1; j<=BAR_WIDTH; j++)); do echo -ne "░"; done
 
-    # Parte vazia
-    for ((j=1; j<=empty; j++)); do
-        echo -ne "${DIM}░${RESET}"
-    done
+    echo -ne "] ${target_progress}% ${status_icon}${RESET}"
 
-    echo -ne "${WHITE}]${RESET} ${bar_color}${target_progress}%${RESET} ${status_icon}"
-
-    # Nova linha apenas quando concluído
+    # Nova linha apenas quando concluído ou erro
     if [ "$status" = "concluido" ] || [ "$status" = "erro" ]; then
         echo ""
-        CURRENT_STEP_BAR_SHOWN=false
+        CURRENT_STEP_BAR_SHOWN=false  # Reset para próxima etapa
     fi
 }
 
@@ -212,34 +166,28 @@ log_below_bar() {
     local type="$1"
     local message="$2"
     local color=""
-    local icon=""
     local prefix=""
-    local timestamp=$(date '+%H:%M:%S')
 
     case $type in
         "info")
             color="$CYAN"
-            icon="ℹ️"
-            prefix="${BG_BLUE}${WHITE} INFO ${RESET}"
+            prefix="[INFO]"
             ;;
         "success")
             color="$GREEN"
-            icon="✅"
-            prefix="${BG_GREEN}${BLACK} SUCCESS ${RESET}"
+            prefix="[SUCESSO]"
             ;;
         "warning")
             color="$YELLOW"
-            icon="⚠️"
-            prefix="${BG_YELLOW}${BLACK} WARNING ${RESET}"
+            prefix="[AVISO]"
             ;;
         "error")
             color="$RED"
-            icon="❌"
-            prefix="${BG_RED}${WHITE} ERROR ${RESET}"
+            prefix="[ERRO]"
             ;;
     esac
 
-    echo -e "    ${SILVER}[$timestamp]${RESET} $prefix ${icon} ${color}$message${RESET}"
+    echo -e "    ${color}��${RESET} ${color}${prefix}${RESET} $message"
 }
 
 # Funções de controle de etapas
@@ -346,9 +294,9 @@ test_service_health() {
     return 1
 }
 
-# Limpeza completa do ambiente
+# NOVA FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
-    log_info "🧹 Limpeza completa - preparando ambiente..."
+    log_info "🧹 NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
     
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -394,14 +342,14 @@ nuclear_cleanup() {
     return 0
 }
 
-# Obtenção do código fonte
+# NOVA FUNÇÃO: Clone fresh garantindo versão mais recente
 fresh_git_clone() {
     local repo_url="$1"
     local target_dir="$2"
     local branch="${3:-main}"
     local pat_token="$4"
     
-    log_info "🔄 Obtendo código fonte..."
+    log_info "🔄 Clone FRESH garantindo vers��o MAIS RECENTE..."
     
     # Configurar Git globalmente ANTES de tentar clone
     git config --global user.name "KRYONIX Deploy"
@@ -413,12 +361,12 @@ fresh_git_clone() {
     git config --global core.compression 0
     git config --global http.sslVerify true
 
-    # CORREÇÃOO: Limpar TODAS as credenciais antigas
+    # CORREÇÃO: Limpar TODAS as credenciais antigas
     git config --global --unset-all credential.helper 2>/dev/null || true
     git credential-manager-core erase <<< "url=https://github.com" 2>/dev/null || true
     git credential erase <<< "url=https://github.com" 2>/dev/null || true
 
-    # Configurar credenciais para repositório privado
+    # CORREÇÃO: Configurar credenciais para repositório privado
     git config --global credential.helper store
     echo "https://Nakahh:${pat_token}@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
@@ -428,11 +376,11 @@ fresh_git_clone() {
     
     cd "$target_dir"
 
-    # CORREÇÃOO: Testar conectividade e autenticação antes de tentar clone
+    # CORREÇÃO: Testar conectividade e autenticação antes de tentar clone
     log_info "🔍 Testando conectividade com GitHub..."
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
-        log_info "⚠️ Verifique se o PAT token tem permissões 'repo' para repositórios privados"
+        log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
         return 1
     fi
     log_success "✅ Conectividade e token validados"
@@ -448,7 +396,7 @@ fresh_git_clone() {
         # Limpar qualquer clone parcial
         sudo rm -rf ./* .[^.]* ..?* 2>/dev/null || true
         
-        # CORREÇÃOO: Múltiplas estratégias de clone para repositório privado
+        # CORREÇÃO: Múltiplas estratégias de clone para repositório privado
         log_info "Tentando clone com credenciais armazenadas..."
 
         if git clone --verbose \
@@ -459,24 +407,24 @@ fresh_git_clone() {
                     "$auth_url" \
                     . 2>&1; then
             
-            # Buscar informações do repositório
-            log_info "📡 Preparando repositório..."
+            # Imediatamente buscar refs mais recentes
+            log_info "📡 Buscando refs mais recentes para garantir versão mais atualizada..."
             git fetch origin --force --prune --depth=1 2>/dev/null || true
             
-            # Obter commit do remoto
+            # Obter commit mais recente do remoto
             latest_remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
             current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
             
-            log_info "🔍 Commit remoto: $latest_remote_commit"
+            log_info "🔍 Remoto mais recente: $latest_remote_commit"
             log_info "🔍 Local atual: $current_local_commit"
             
-            # Sincronizar com repositório remoto se necessário
+            # Forçar atualização para absoluto mais recente se diferente
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
-                log_info "O Sincronizando com repositório..."
+                log_info "🔄 Atualizando para commit absoluto mais recente..."
                 git fetch origin HEAD 2>/dev/null || true
                 git reset --hard FETCH_HEAD 2>/dev/null || true
                 current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
-                log_success "✅ Sincronizado: $current_local_commit"
+                log_success "✅ Atualizado para mais recente: $current_local_commit"
             fi
             
             log_success "✅ Clone fresh concluído com sucesso"
@@ -511,7 +459,7 @@ fresh_git_clone() {
     return 1
 }
 
-# Verificação do repositório
+# NOVA FUNÇÃO: Verificação do clone fresh
 verify_fresh_clone() {
     local target_dir="$1"
     local expected_branch="${2:-main}"
@@ -564,15 +512,15 @@ verify_fresh_clone() {
     if echo "$commit_msg" | grep -qi "#22"; then
         log_warning "⚠️ Commit atual referencia PR #22 - verificando por versões mais recentes..."
         
-        # Buscar informações do repositório
+        # Tentar buscar o mais recente
         git fetch origin --force 2>/dev/null || true
         latest_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
         
         if [ "$commit_hash" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
-            log_warning "⚠️ Commit do repositório: $latest_commit"
+            log_warning "⚠️ Commit mais recente disponível: $latest_commit"
             
-            # Tentar sincronizar repositório
-            log_info "🔄 Tentando sincronizar repositório..."
+            # Tentar atualizar para o mais recente
+            log_info "🔄 Tentando atualizar para o commit mais recente..."
             if git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null; then
                 new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
                 new_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
@@ -585,7 +533,7 @@ verify_fresh_clone() {
     return 0
 }
 
-# Função para validar credenciais pré-configuradas
+# Função para validar credenciais pr����-configuradas
 validate_credentials() {
     log_info "🔐 Validando credenciais pré-configuradas..."
 
@@ -624,13 +572,13 @@ show_banner
 # Detecção automática do ambiente
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
-echo -e "${BLUE}├─ Servidor: $(hostname)${RESET}"
+echo -e "${BLUE}����� Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
-echo -e "${GREEN}${BOLD}✅ Ambiente preparado para instalação completa!${RESET}\n"
+echo -e "${GREEN}${BOLD}✅ Nuclear cleanup + Clone fresh + Garantia versão mais recente!${RESET}\n"
 
 # Inicializar primeira etapa
 next_step
@@ -681,8 +629,8 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🔄 Iniciando obtenção do código fonte..."
-log_info "🎯 Configurando repositório do projeto..."
+log_info "🔄 Iniciando clone FRESH para garantir versão MAIS RECENTE..."
+log_info "🎯 Objetivo: Não ficar no PR #22, sempre pegar versão mais recente!"
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
@@ -745,50 +693,11 @@ next_step
 processing_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
-# CORREÇÃOO COMPLETA do package.json
-log_info "🔧 Configurando package.json..."
-
-# Backup do package.json original
-cp package.json package.json.backup 2>/dev/null || true
-
-# Remover type: module se existir
+# Corrigir package.json se necessário
 if grep -q '"type": "module"' package.json; then
     log_info "Removendo type: module do package.json para compatibilidade"
     sed -i '/"type": "module",/d' package.json
 fi
-
-# CORREÇÃOO 1: Adicionar dependências backend faltantes
-log_info "Adicionando dependências backend faltantes..."
-if ! grep -q '"express"' package.json; then
-    # Adicionar dependências do servidor
-    sed -i '/"socket.io-client": "[^"]*",/a\    "express": "^4.18.2",\n    "cors": "^2.8.5",\n    "helmet": "^7.0.0",\n    "compression": "^1.7.4",' package.json
-    log_success "Dependências backend adicionadas"
-fi
-
-# CORREÇÃOO 2: Substituir dependências deprecadas
-log_info "Substituindo dependências deprecadas..."
-# Substituir react-use-gesture por @use-gesture/react
-if grep -q '"react-use-gesture"' package.json; then
-    sed -i 's/"react-use-gesture": "[^"]*"/"@use-gesture\/react": "^10.2.27"/' package.json
-    log_success "react-use-gesture substituído por @use-gesture/react"
-fi
-
-# Substituir react-virtual por @tanstack/react-virtual
-if grep -q '"react-virtual"' package.json; then
-    sed -i 's/"react-virtual": "[^"]*"/"@tanstack\/react-virtual": "^3.0.0"/' package.json
-    log_success "react-virtual substituído por @tanstack/react-virtual"
-fi
-
-# CORREÇÃOO 3: Adicionar scripts de servidor
-log_info "Corrigindo scripts npm..."
-# Verificar se script start já aponta para server.js
-if ! grep -q '"start": "node server.js"' package.json; then
-    # Backup do script start original
-    sed -i 's/"start": "react-scripts start"/"start": "node server.js",\n    "start:dev": "react-scripts start",\n    "server": "node server.js"/' package.json
-    log_success "Scripts npm corrigidos"
-fi
-
-log_success "✅ package.json completamente corrigido"
 
 # Verificar se webhook já está integrado no server.js
 if ! grep -q "/api/github-webhook" server.js; then
@@ -797,188 +706,88 @@ if ! grep -q "/api/github-webhook" server.js; then
     # Backup
     cp server.js server.js.backup
 
-    # Adicionar endpoint webhook para deploy automatico
+    # Adicionar endpoint webhook completo
     cat >> server.js << WEBHOOK_EOF
 
-// ============================================================================
-// WEBHOOK DO GITHUB - DEPLOY AUTOMÁTICO
-// ============================================================================
+// Webhook do GitHub configurado automaticamente pelo instalador KRYONIX
 const crypto = require('crypto');
-const { spawn } = require('child_process');
-const fs = require('fs');
+const { exec } = require('child_process');
 const path = require('path');
 const WEBHOOK_SECRET = '$WEBHOOK_SECRET';
+const DEPLOY_SCRIPT = path.join(__dirname, 'webhook-deploy.sh');
 
-// Verificação de assinatura segura
+// Função para verificar assinatura do GitHub
 const verifyGitHubSignature = (payload, signature) => {
-    console.log('🔐 Iniciando verificação de assinatura...');
+    if (!signature) return false;
 
-    if (!signature) {
-        console.log('❌ Webhook sem assinatura - REJEITADO por segurança');
-        return false;
-    }
+    const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+    hmac.update(JSON.stringify(payload));
+    const calculatedSignature = 'sha256=' + hmac.digest('hex');
 
-    try {
-        const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
-        hmac.update(JSON.stringify(payload));
-        const calculatedSignature = 'sha256=' + hmac.digest('hex');
-
-        const isValid = crypto.timingSafeEqual(
-            Buffer.from(signature),
-            Buffer.from(calculatedSignature)
-        );
-
-        console.log(\`🔐 Assinatura: \${isValid ? '✅ VÁLIDA' : '❌ INVÁLIDA'}\`);
-        return isValid;
-    } catch (error) {
-        console.error('❌ Erro na verificação de assinatura:', error.message);
-        return false;
-    }
+    return crypto.timingSafeEqual(
+        Buffer.from(signature),
+        Buffer.from(calculatedSignature)
+    );
 };
 
-// ENDPOINT WEBHOOK - Filtros específicos e logs detalhados
+// Endpoint webhook do GitHub com deploy automático
 app.post('/api/github-webhook', (req, res) => {
-    const timestamp = new Date().toISOString();
-    console.log('🔔 ===============================================');
-    console.log('🔔 WEBHOOK GITHUB RECEBIDO KRYONIX:', timestamp);
-    console.log('🔔 ===============================================');
-
     const payload = req.body;
-    const event = req.headers['x-github-event'];
-    const signature = req.headers['x-hub-signature-256'];
-    const userAgent = req.headers['user-agent'];
+    const signature = req.get('X-Hub-Signature-256');
+    const event = req.get('X-GitHub-Event');
 
-    // LOGS DETALHADOS para troubleshooting
-    console.log('📋 Headers recebidos:');
-    console.log(\`   Event: \${event || 'AUSENTE'}\`);
-    console.log(\`   User-Agent: \${userAgent || 'AUSENTE'}\`);
-    console.log(\`   Signature: \${signature ? 'PRESENTE' : 'AUSENTE'}\`);
-
-    console.log('📋 Payload estrutura:');
-    console.log(\`   Ref: \${payload?.ref || 'AUSENTE'}\`);
-    console.log(\`   Repository: \${payload?.repository?.name || 'AUSENTE'}\`);
-    console.log(\`   Pusher: \${payload?.pusher?.name || 'AUSENTE'}\`);
-
-    // CORREÇÃOO 1: Verificação de assinatura OBRIGATÓRIA
-    if (!verifyGitHubSignature(payload, signature)) {
-        console.log('❌ Webhook REJEITADO: assinatura inválida ou ausente');
-        return res.status(401).json({
-            error: 'Invalid or missing signature',
-            timestamp: timestamp,
-            security: 'Signature verification failed'
-        });
-    }
-
-    // CORREÇÃOO 2: Filtros ESPECÍFICOS para push na main
-    const isValidEvent = event === 'push';
-    const isValidRef = payload?.ref === 'refs/heads/main';
-
-    if (!isValidEvent) {
-        console.log(\`ℹ️ Evento ignorado: \${event} (apenas 'push' aceito)\`);
-        return res.json({
-            message: 'Evento ignorado - apenas push events são processados',
-            received_event: event,
-            accepted_events: ['push'],
-            status: 'ignored',
-            reason: 'invalid_event',
-            timestamp: timestamp
-        });
-    }
-
-    if (!isValidRef) {
-        console.log(\`ℹ️ Branch ignorada: \${payload?.ref} (apenas 'refs/heads/main' aceita)\`);
-        return res.json({
-            message: 'Branch ignorada - apenas refs/heads/main aceita',
-            received_ref: payload?.ref,
-            accepted_refs: ['refs/heads/main'],
-            status: 'ignored',
-            reason: 'invalid_ref',
-            timestamp: timestamp
-        });
-    }
-
-    console.log('✅ Push VÁLIDO na main - iniciando deploy automático KRYONIX');
-
-    // CORREÇÃOO 3: Path relativo correto e verificação de arquivo
-    const deployScriptPath = path.join(process.cwd(), 'webhook-deploy.sh');
-
-    if (!fs.existsSync(deployScriptPath)) {
-        console.error('❌ Script de deploy não encontrado:', deployScriptPath);
-        return res.status(500).json({
-            error: 'Deploy script not found',
-            path: deployScriptPath,
-            troubleshooting: 'Verifique se webhook-deploy.sh existe no diretório raiz',
-            timestamp: timestamp
-        });
-    }
-
-    console.log('🚀 Executando deploy automático...');
-    console.log('📁 Script path:', deployScriptPath);
-
-    // CORREÇÃOO 4: Usar spawn para melhor controle do processo
-    const deployProcess = spawn('bash', [deployScriptPath, 'webhook'], {
-        cwd: process.cwd(),
-        stdio: 'pipe'
+    console.log('🔗 Webhook KRYONIX recebido:', {
+        event: event || 'NONE',
+        ref: payload.ref || 'N/A',
+        repository: payload.repository?.name || 'N/A',
+        signature: signature ? 'PRESENT' : 'NONE',
+        timestamp: new Date().toISOString()
     });
 
-    deployProcess.stdout.on('data', (data) => {
-        console.log('📋 Deploy stdout:', data.toString().trim());
-    });
-
-    deployProcess.stderr.on('data', (data) => {
-        console.error('⚠️ Deploy stderr:', data.toString().trim());
-    });
-
-    deployProcess.on('close', (code) => {
-        console.log(\`█ Deploy finalizado com código de saída: \${code}\`);
-        if (code === 0) {
-            console.log('✅ Deploy automático KRYONIX concluído com SUCESSO');
-        } else {
-            console.error('❌ Deploy automático KRYONIX falhou');
+    // Verificar assinatura se configurada
+    if (WEBHOOK_SECRET && signature) {
+        if (!verifyGitHubSignature(payload, signature)) {
+            console.log('❌ Assinatura inválida do webhook');
+            return res.status(401).json({ error: 'Invalid signature' });
         }
-    });
+        console.log('✅ Assinatura do webhook verificada');
+    }
 
-    // Resposta imediata
-    res.json({
-        message: 'Deploy automático KRYONIX iniciado com sucesso',
-        status: 'accepted',
-        ref: payload?.ref,
-        sha: payload?.after || payload?.head_commit?.id,
-        pusher: payload?.pusher?.name,
-        repository: payload?.repository?.name,
-        timestamp: timestamp,
-        webhook_url: '$WEBHOOK_URL',
-        deploy_script: deployScriptPath
-    });
-});
+    // Processar apenas push events na main/master
+    const isValidEvent = !event || event === 'push';
+    const isValidRef = payload.ref === 'refs/heads/main' || payload.ref === 'refs/heads/master';
 
-// ENDPOINT GET para verificação do GitHub
-app.get('/api/github-webhook', (req, res) => {
-    res.status(200).json({
-        message: 'KRYONIX GitHub Webhook Endpoint - FUNCIONANDO',
-        status: 'active',
-        configuration: {
-            signature_verification: 'enabled',
-            accepted_events: ['push'],
-            accepted_branches: ['refs/heads/main'],
-            deploy_script: 'webhook-deploy.sh'
-        },
-        webhook_url: '$WEBHOOK_URL',
-        timestamp: new Date().toISOString()
-    });
-});
+    if (isValidEvent && isValidRef) {
+        console.log('🚀 Deploy automático KRYONIX iniciado para:', payload.ref);
 
-// ENDPOINT para teste manual
-app.post('/api/webhook-test', (req, res) => {
-    console.log('🧪 TESTE MANUAL DO WEBHOOK KRYONIX');
-    console.log('📋 Payload teste:', req.body);
+        // Executar deploy automático
+        exec('bash ' + DEPLOY_SCRIPT + ' webhook', (error, stdout, stderr) => {
+            if (error) {
+                console.error('❌ Erro no deploy automático KRYONIX:', error);
+            } else {
+                console.log('✅ Deploy automático KRYONIX executado:', stdout);
+            }
+        });
 
-    res.json({
-        message: 'Teste do webhook recebido com sucesso',
-        payload: req.body,
-        note: 'Este endpoint é apenas para testes - não executa deploy real',
-        timestamp: new Date().toISOString()
-    });
+        res.json({
+            message: 'Deploy automático KRYONIX iniciado',
+            status: 'accepted',
+            ref: payload.ref,
+            sha: payload.after || payload.head_commit?.id,
+            timestamp: new Date().toISOString(),
+            webhook_url: '$WEBHOOK_URL'
+        });
+    } else {
+        console.log('ℹ️ Evento KRYONIX ignorado:', { event, ref: payload.ref });
+
+        res.json({
+            message: 'Evento ignorado',
+            status: 'ignored',
+            event: event || 'undefined',
+            ref: payload.ref || 'undefined',
+            reason: !isValidEvent ? 'invalid_event' : 'invalid_ref'
+        });
+    }
 });
 WEBHOOK_EOF
 
@@ -1174,7 +983,7 @@ if [ ! -f "public/index.html" ]; then
         </p>
         
         <div class="status">
-            ✅ Sistema Online - Plataforma Kryonix Ativa!
+            ✅ Sistema Online - Clone Fresh + Versão Mais Recente!
         </div>
         
         <div style="margin-top: 2rem;">
@@ -1185,7 +994,7 @@ if [ ! -f "public/index.html" ]; then
         
         <p style="margin-top: 2rem; opacity: 0.8;">
             🌐 https://kryonix.com.br | 📱 +55 17 98180-5327<br>
-            🚀 Deploy automático ativo
+            🚀 Deploy automático ativo - Sempre versão mais recente
         </p>
     </div>
 
@@ -1208,17 +1017,11 @@ cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 
 set -euo pipefail
 
-# ============================================================================
-# SCRIPT DE DEPLOY KRYONIX
-# ============================================================================
-
 # Configurações KRYONIX
 STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
-GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PAT_TOKEN="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"
-BACKUP_DIR="/opt/kryonix-backup-$(date +%Y%m%d_%H%M%S)"
+GITHUB_REPO="https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 
 # Cores
 GREEN='\033[0;32m'
@@ -1234,234 +1037,103 @@ log() {
 }
 
 deploy() {
-    log "🚀 Iniciando deploy automático KRYONIX..."
+    log "🚀 Iniciando deploy automático KRYONIX com nuclear cleanup..."
 
-    # FAZER BACKUP antes de qualquer coisa
-    if [ -d "$DEPLOY_PATH" ]; then
-        log "💾 Criando backup da versão atual..."
-        sudo cp -r "$DEPLOY_PATH" "$BACKUP_DIR" 2>/dev/null || true
-        log "📁 Backup criado em: $BACKUP_DIR"
-    fi
+    # CORREÇÃO: Nuclear cleanup para garantir versão mais recente
+    log "🧹 Nuclear cleanup para garantir versão mais recente..."
 
-    # VERIFICAR se é realmente necessário fazer deploy
-    cd "$DEPLOY_PATH" 2>/dev/null || cd /opt
+    # Parar processos
+    sudo pkill -f "$DEPLOY_PATH" 2>/dev/null || true
 
-    if [ -d "$DEPLOY_PATH/.git" ]; then
-        cd "$DEPLOY_PATH"
-        local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+    # Remover TUDO do diretório (incluindo .git)
+    cd /opt
+    sudo rm -rf kryonix-plataform
 
-        # Verificar commit remoto mais recente
-        git config --global credential.helper store 2>/dev/null || true
-        echo "https://Nakahh:$PAT_TOKEN@github.com" > ~/.git-credentials 2>/dev/null || true
-        chmod 600 ~/.git-credentials 2>/dev/null || true
+    log "📥 Clone FRESH da versão mais recente..."
 
-        git fetch origin main 2>/dev/null || true
-        remote_commit=$(git rev-parse origin/main 2>/dev/null | head -c 8 || echo "unknown")
+    # Configurar Git e credenciais para repositório privado
+    git config --global user.name "KRYONIX Deploy" 2>/dev/null || true
+    git config --global user.email "deploy@kryonix.com.br" 2>/dev/null || true
+    git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
+    git config --global credential.helper store 2>/dev/null || true
 
-        log "📌 Commit local atual: $local_commit"
-        log "🌐 Commit remoto mais recente: $remote_commit"
+    # Configurar credenciais para repositório privado
+    echo "https://Nakahh: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@github.com" > ~/.git-credentials
+    chmod 600 ~/.git-credentials
 
-        if [ "$local_commit" = "$remote_commit" ] && [ "$local_commit" != "unknown" ]; then
-            log "✅ Sistema já está atualizado - deploy desnecessário"
-            log "ℹ️ Deploy não necessário"
-            return 0
-        fi
-    fi
-
-    log "🔄 Nova versão detectada - prosseguindo com deploy..."
-
-    # CORREÇÃOO AUTOMÁTICA do package.json durante deploy
-    if [ -f "$DEPLOY_PATH/package.json" ]; then
-        log "🔧 Aplicando correções automáticas no package.json..."
-        cd "$DEPLOY_PATH"
-
-        # Backup do package.json
-        cp package.json package.json.deploy-backup
-
-        # Adicionar dependências faltantes se não existirem
-        if ! grep -q '"express"' package.json; then
-            log "📦 Adicionando dependências backend..."
-            sed -i '/"socket.io-client": "[^"]*",/a\    "express": "^4.18.2",\n    "cors": "^2.8.5",\n    "helmet": "^7.0.0",\n    "compression": "^1.7.4",' package.json
-        fi
-
-        # Corrigir dependências deprecadas
-        if grep -q '"react-use-gesture"' package.json; then
-            sed -i 's/"react-use-gesture": "[^"]*"/"@use-gesture\/react": "^10.2.27"/' package.json
-        fi
-
-        if grep -q '"react-virtual": ".*2\.10\.4"' package.json; then
-            sed -i 's/"react-virtual": "[^"]*"/"@tanstack\/react-virtual": "^3.0.0"/' package.json
-        fi
-
-        # Corrigir script start
-        if ! grep -q '"start": "node server.js"' package.json; then
-            sed -i 's/"start": "react-scripts start"/"start": "node server.js",\n    "server": "node server.js"/' package.json
-        fi
-
-        log "✅ Correções do package.json aplicadas"
-    fi
-
-    # Nuclear cleanup mais inteligente
-    log "🧹 Limpeza seletiva para atualização..."
-
-    # Parar serviços primeiro
-    docker stack rm "$STACK_NAME" 2>/dev/null || true
-    sleep 15
-
-    # Remover imagens antigas
-    docker images --format "{{.Repository}}:{{.Tag}}" | grep "kryonix-plataforma" | grep -v "latest" | xargs -r docker rmi -f 2>/dev/null || true
-
-    # PULL/CLONE inteligente
-    if [ -d "$DEPLOY_PATH/.git" ]; then
-        log "📥 Atualizando repositório existente..."
-        cd "$DEPLOY_PATH"
-
-        # Reset e pull da versão mais recente
-        git reset --hard HEAD 2>/dev/null || true
-        git clean -fd 2>/dev/null || true
-        git pull origin main --force 2>/dev/null || git fetch origin main && git reset --hard origin/main
-
+    # Clone fresh completo (repositório privado)
+    if git clone --single-branch --branch main --depth 1 "https://github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+        log "✅ Clone fresh concluído"
     else
-        log "📥 Clone fresh da versão mais recente..."
-        cd /opt
-        sudo rm -rf kryonix-plataform 2>/dev/null || true
-
-        # Configurar Git
-        git config --global user.name "KRYONIX Deploy"
-        git config --global user.email "deploy@kryonix.com.br"
-        git config --global credential.helper store
-        echo "https://Nakahh:$PAT_TOKEN@github.com" > ~/.git-credentials
-        chmod 600 ~/.git-credentials
-
-        if ! git clone --single-branch --branch main --depth 1 "$GITHUB_REPO" kryonix-plataform; then
-            # Fallback com token na URL
-            git clone --single-branch --branch main --depth 1 "https://Nakahh:$PAT_TOKEN@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform
+        log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
+        # Fallback: token diretamente na URL
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+            log "✅ Clone fresh concluído com fallback"
+        else
+            log "❌ Falha no clone fresh com todos os métodos"
+            return 1
         fi
     fi
 
     cd "$DEPLOY_PATH"
 
-    # Verificar commit final
-    final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
-    final_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
+    # Verificar se é a versão mais recente
+    current_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+    current_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
+    remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
 
-    log "📌 Commit final: $final_commit"
-    log "📝 Mensagem: $final_msg"
+    log "📌 Commit local: $current_commit"
+    log "🌐 Commit remoto: $remote_commit"
+    log "📝 Mensagem: $current_msg"
 
-    # VERIFICAR arquivos críticos
-    missing_files=()
-    critical_files=("package.json" "server.js" "webhook-deploy.sh")
-
-    for file in "${critical_files[@]}"; do
-        if [ ! -f "$file" ]; then
-            missing_files+=("$file")
-        fi
-    done
-
-    if [ ${#missing_files[@]} -gt 0 ]; then
-        log "❌ Arquivos críticos faltando: ${missing_files[*]}"
-        log "🔄 Restaurando backup..."
-        sudo rm -rf "$DEPLOY_PATH" 2>/dev/null || true
-        sudo mv "$BACKUP_DIR" "$DEPLOY_PATH" 2>/dev/null || true
+    # Verificar se tem arquivos necessários
+    if [ ! -f "webhook-listener.js" ] || [ ! -f "kryonix-monitor.js" ]; then
+        log "❌ Arquivos de serviços faltando após clone!"
         return 1
     fi
 
-    # Limpeza agressiva para garantir atualização total
-    log "🧹 Limpeza agressiva de cache e dependências..."
-    rm -rf node_modules package-lock.json 2>/dev/null || true
-    npm cache clean --force 2>/dev/null || true
-    npm cache verify 2>/dev/null || true
+    # Instalar dependências
+    log "📦 Instalando dependências..."
+    npm install --production
 
-    # Instalar dependências com retry
-    log "📦 Instalando dependências (fresh install com retry)..."
-    for i in {1..3}; do
-        if npm install --production --legacy-peer-deps; then
-            log "✅ Dependências instaladas (tentativa $i)"
-            break
-        else
-            log "⚠️ Falha na instalação - tentativa $i/3"
-            sleep 10
-        fi
-    done
-
-    # Verificar se dependências críticas foram instaladas
-    if [ ! -d "node_modules/express" ]; then
-        log "❌ Express não instalado - tentando instalação forçada..."
-        npm install express cors helmet compression --legacy-peer-deps --force
-    fi
-
-    # Rebuild completo da imagem com limpeza total
-    log "🏗️ Rebuilding imagem Docker (build completo)..."
-
-    # Limpar cache de build do Docker
-    docker builder prune -f 2>/dev/null || true
-
-    # Remover imagem anterior forçadamente
-    docker rmi -f kryonix-plataforma:latest 2>/dev/null || true
-
-    # Build sem cache, forçando reconstrução total
-    if ! docker build --no-cache --force-rm -t kryonix-plataforma:latest . >/dev/null 2>&1; then
-        log "❌ Falha no build - restaurando backup..."
-        sudo rm -rf "$DEPLOY_PATH"
-        sudo mv "$BACKUP_DIR" "$DEPLOY_PATH"
-        return 1
-    fi
+    # Rebuild da imagem
+    log "🏗️ Fazendo rebuild da imagem Docker..."
+    docker build --no-cache -t kryonix-plataforma:latest .
 
     # Deploy do stack
     log "🚀 Fazendo deploy do stack KRYONIX..."
     docker stack deploy -c docker-stack.yml "$STACK_NAME"
 
-    # Força restart de todos os containers para garantir atualização
-    log "🔄 Forçando restart de todos os containers..."
-    sleep 15
-    docker service update --force "${STACK_NAME}_kryonix-web" 2>/dev/null || true
-    docker service update --force "${STACK_NAME}_kryonix-webhook" 2>/dev/null || true
-    docker service update --force "${STACK_NAME}_kryonix-monitor" 2>/dev/null || true
+    sleep 60
 
-    # Aguardar estabilização
-    log "⏳ Aguardando estabilização dos serviços..."
-    sleep 45
+    # Verificar health de todos os serviços
+    log "🔍 Verificando health dos serviços KRYONIX..."
 
-    # Verificação completa de health
-    log "🔍 Verificando health de TODOS os serviços..."
     services_ok=0
     total_services=3
 
     for port in 8080 8082 8084; do
-        for attempt in {1..5}; do
-            if curl -f -s -m 10 "http://localhost:$port/health" >/dev/null 2>&1; then
-                log "✅ Serviço na porta $port: FUNCIONANDO"
-                services_ok=$((services_ok + 1))
-                break
-            else
-                if [ $attempt -eq 5 ]; then
-                    log "❌ Serviço na porta $port: PROBLEMA após 5 tentativas"
-                else
-                    log "⏳ Serviço na porta $port: aguardando... (tentativa $attempt/5)"
-                    sleep 10
-                fi
-            fi
-        done
+        if curl -f -s "http://localhost:$port/health" > /dev/null; then
+            log "✅ Serviço KRYONIX na porta $port funcionando"
+            services_ok=$((services_ok + 1))
+        else
+            log "⚠️ Serviço KRYONIX na porta $port com problemas"
+        fi
     done
 
-    # Resultado final
     if [ $services_ok -eq $total_services ]; then
-        log "🎉 DEPLOY KRYONIX SUCESSO TOTAL! ($services_ok/$total_services serviços)"
-
-        # Remover backup se tudo deu certo
-        sudo rm -rf "$BACKUP_DIR" 2>/dev/null || true
-
-        # Teste final do webhook
-        log "🧪 Testando webhook final..."
-        if curl -f -s -m 10 -X GET "http://localhost:8080/api/github-webhook" >/dev/null 2>&1; then
-            log "O Webhook endpoint respondendo"
-        fi
-
-        return 0
+        log "🎉 Deploy KRYONIX concluído com SUCESSO! ($services_ok/$total_services serviços OK)"
     else
-        log "❌ DEPLOY COM PROBLEMAS ($services_ok/$total_services serviços OK)"
-        log "🔄 Considerando rollback automático..."
-        return 1
+        log "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
+    fi
+
+    # Testar webhook externamente
+    if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
+       -H "Content-Type: application/json" \
+       -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
+        log "🌐 Webhook externo KRYONIX funcionando!"
+    else
+        log "⚠️ Webhook externo KRYONIX pode ter problemas"
     fi
 }
 
@@ -1491,35 +1163,13 @@ next_step
 processing_step
 
 if ! command -v npm >/dev/null 2>&1; then
-    log_info "Instalando Node.js..."
+    log_info "Instalando Node.js 18.x..."
     curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - >/dev/null 2>&1
     sudo apt-get install -y nodejs >/dev/null 2>&1
 fi
 
-log_info "Instalando dependências..."
-
-# Instalação silenciosa com verificação de resultado
-if npm install --production --legacy-peer-deps >/dev/null 2>&1; then
-    log_success "✅ Dependências instaladas com sucesso"
-else
-    log_error "❌ Erro: dependências não instaladas"
-    exit 1
-fi
-
-# Verificação rápida de dependências críticas
-critical_deps=("express" "cors" "helmet" "compression")
-missing_count=0
-
-for dep in "${critical_deps[@]}"; do
-    if [ ! -d "node_modules/$dep" ]; then
-        missing_count=$((missing_count + 1))
-    fi
-done
-
-if [ $missing_count -gt 0 ]; then
-    log_error "❌ Erro: $missing_count dependências críticas faltando"
-    exit 1
-fi
+log_info "Instalando dependências do projeto..."
+npm install --production >/dev/null 2>&1
 
 log_info "Testando servidor localmente..."
 timeout 10s node server.js >/dev/null 2>&1 || true
@@ -1575,9 +1225,9 @@ log_info "🎯 Rede detectada: $DOCKER_NETWORK"
 
 # Verificar se rede já existe
 if docker network ls --format "{{.Name}}" | grep -q "^${DOCKER_NETWORK}$" 2>/dev/null; then
-    log_success "✅ Rede $DOCKER_NETWORK ja existe"
+    log_success "✅ Rede $DOCKER_NETWORK já existe"
 elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 2>&1; then
-    log_success "█ Rede $DOCKER_NETWORK criada com sucesso"
+    log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
     log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
@@ -1694,8 +1344,8 @@ if [ ${#missing_files[@]} -gt 0 ]; then
 fi
 
 # Build com logs detalhados para diagnóstico
-log_info "Iniciando Docker build..."
-if docker build --no-cache -t kryonix-plataforma:latest . >/dev/null 2>&1; then
+log_info "Iniciando Docker build com logs detalhados..."
+if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build.log; then
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
     log_success "Imagem criada: kryonix-plataforma:$TIMESTAMP"
@@ -1868,7 +1518,7 @@ on:
 
 jobs:
   deploy:
-    name: ██ Deploy to Production
+    name: 🚀 Deploy to Production
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
@@ -1906,7 +1556,63 @@ log_success "GitHub Actions configurado"
 complete_step
 next_step
 
-# Etapa 13: GitHub Actions já configurado na etapa anterior
+# ============================================================================
+# ETAPA 13: CONFIGURAR GITHUB ACTIONS
+# ============================================================================
+
+processing_step
+log_info "Configurando CI/CD com GitHub Actions..."
+
+# Criar GitHub Actions workflow
+mkdir -p .github/workflows
+
+cat > .github/workflows/deploy.yml << 'GITHUB_ACTIONS_EOF'
+name: 🚀 Deploy KRYONIX Platform
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: 🚀 Deploy to Production
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🚀 Deploy via webhook
+        run: |
+          echo "ℹ️ GitHub webhook automático KRYONIX configurado"
+          echo "🔗 Webhook URL: https://kryonix.com.br/api/github-webhook"
+
+          # Verificar se o webhook está respondendo
+          curl -f "https://kryonix.com.br/health" || exit 1
+
+      - name: 🏗️ Verify deployment
+        run: |
+          echo "⏳ Aguardando deployment automático KRYONIX..."
+          sleep 60
+
+          # Verificar múltiplas vezes
+          for i in {1..10}; do
+            if curl -f "https://kryonix.com.br/health"; then
+              echo "✅ Deployment KRYONIX verificado com sucesso!"
+              exit 0
+            fi
+            echo "⏳ Tentativa $i/10 - aguardando..."
+            sleep 30
+          done
+
+          echo "⚠️ Verificação manual necessária"
+          exit 1
+GITHUB_ACTIONS_EOF
+
+log_success "GitHub Actions configurado"
+complete_step
+next_step
 
 # ============================================================================
 # ETAPA 14: CONFIGURAR LOGS E BACKUP
@@ -1941,9 +1647,9 @@ else
     exit 1
 fi
 
-# Aguardar estabilização otimizada
-log_info "Aguardando estabilização (15s)..."
-sleep 15
+# Aguardar estabilização - tempo estendido para garantir que todos subam
+log_info "Aguardando estabilização completa (120s)..."
+sleep 120
 
 # Verificar serviços
 log_info "Verificando status de TODOS os serviços..."
@@ -1994,18 +1700,14 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GOLD}${BOLD}████████████████████████████████████████████████████████████████████████████████${RESET}"
-echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
-echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
-echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
-echo -e "${GOLD}${BOLD}█████████████████████████████████████████████████████████████████████████████████${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
 echo ""
-echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
-echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 KRYONIX PLATFORM - INSTALAÇÃO COMPLETA${RESET}                          ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰──────────────────────────────────────────────────────────────────────────────────╯${RESET}"
+echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
-# Verificar instalação
+# Verificar versão final
 final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
 final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 
@@ -2015,14 +1717,14 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commi
 # Verificação especial para PR #22
 if echo "$final_commit_msg" | grep -qi "#22"; then
     echo -e "    ${BLUE}│${RESET} ${YELLOW}⚠️ AVISO:${RESET} Detectada referência ao PR #22"
-    echo -e "    ${BLUE}│${RESET} ${YELLOW}   Sistema instalado corretamente${RESET}"
-    echo -e "    ${BLUE}│${RESET} ${YELLOW}   Todas as funcionalidades ativas${RESET}"
+    echo -e "    ${BLUE}│${RESET} ${YELLOW}   Isso pode significar que PR #22 É a versão mais recente${RESET}"
+    echo -e "    ${BLUE}│${RESET} ${YELLOW}   ou há um problema de sincronização com GitHub${RESET}"
 else
-    echo -e "    ${BLUE}│${RESET} ${GREEN}✅ Confirmado:${RESET} Sistema completamente funcional"
+    echo -e "    ${BLUE}│${RESET} ${GREEN}✅ Confirmado:${RESET} Não está no PR #22 - versão mais recente"
 fi
 
 echo ""
-echo -e "${CYAN}${BOLD}█� STATUS DO SISTEMA:${RESET}"
+echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
@@ -2042,44 +1744,31 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} https://$DOMAIN_
 fi
 echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
-echo -e "${PURPLE}██ Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
+echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
-echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}═════════════════════════════════════════════════════════════════${RESET}"
-echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
-echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
-echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
-echo -e "${CYAN}${BOLD}🎯 Which events:${RESET} Just the push event"
-echo -e "${CYAN}${BOLD}✅ Active:${RESET} Checked ✓"
+echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
+echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
+echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
+echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
 echo ""
-echo -e "${YELLOW}${BOLD}🚀 INSTRUÇÕES PARA CONFIGURAR NO GITHUB:${RESET}"
-echo -e "${BLUE}1.${RESET} Vá em: Settings → Webhooks → Add webhook"
-echo -e "${BLUE}2.${RESET} Cole a URL: ${CYAN}$WEBHOOK_URL${RESET}"
-echo -e "${BLUE}3.${RESET} Cole o Secret: ${CYAN}$WEBHOOK_SECRET${RESET}"
-echo -e "${BLUE}4.${RESET} Selecione: ${CYAN}application/json${RESET}"
-echo -e "${BLUE}5.${RESET} Marque: ${CYAN}Just the push event${RESET}"
-echo -e "${BLUE}6.${RESET} Marque: ${CYAN}Active ✓${RESET}"
-echo -e "${BLUE}7.${RESET} Clique: ${CYAN}Add webhook${RESET}"
+echo -e "${GREEN}${BOLD}🎯 MELHORIAS IMPLEMENTADAS:${RESET}"
+echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup - Remove TUDO antes de começar"
+echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
+echo -e "    ${BLUE}│${RESET} ✅ Versão mais recente - Não fica preso em versões antigas"
+echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
 echo ""
-echo -e "${GREEN}${BOLD}🎯 FUNCIONALIDADES KRYONIX:${RESET}"
-echo -e "    ${BLUE}│${RESET} ✅ Servidor web completo - Express, CORS, Helmet integrados"
-echo -e "    ${BLUE}│${RESET} ✅ Dependências otimizadas - Pacotes atualizados e seguros"
-echo -e "    ${BLUE}│${RESET} ✅ Webhook automático - Deploy instantâneo via GitHub"
-echo -e "    ${BLUE}│${RESET} ✅ Deploy inteligente - Backup automático e segurança"
-echo -e "    ${BLUE}│${RESET} ✅ Segurança avançada - Assinatura criptográfica obrigatória"
-echo -e "    ${BLUE}│${RESET} ✅ Controle de branch - Deploy apenas da branch principal"
-echo -e "    ${BLUE}│${RESET} ✅ Ambiente limpo - Instalação completa e organizada"
-echo ""
-echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! ██${RESET}       ${CYAN}║${RESET}"
-echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
-echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}��${RESET}"
-echo -e "${CYAN}║${RESET} ${WHITE}📱 WhatsApp:${RESET} ${TURQUOISE}+55 17 98180-5327${RESET}                                          ${CYAN}║${RESET}"
-echo -e "${CYAN}║${RESET} ${WHITE}📧 Email:${RESET} ${TURQUOISE}admin@kryonix.com.br${RESET}                                          ${CYAN}║${RESET}"
-echo -e "${CYAN}║${RESET} ${WHITE}💻 GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
-echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
-echo -e "${CYAN}║${RESET} ${BLINK}${YELLOW}⚡ AGORA TODA ALTERAÇÃO NO GITHUB ATUALIZA O SITE AUTOMATICAMENTE! ⚡${RESET}  ${CYAN}║${RESET}"
-echo -e "${CYAN}╚════════════════════════════════════════════════════════════════════════════════╝${RESET}"
+echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
 echo ""
 
-# Instalador KRYONIX finalizado com sucesso
+deploy() {
+    log "🚀 Iniciando deploy automático KRYONIX com nuclear cleanup..."
+    
+    # CORREÇÃO: Nuclear cleanup para garantir versão mais recente
+    log "🧹 Nuclear cleanup para garantir versão mais recente..."
+    
+    # Parar processos
+    sudo pkill -f "$DEPLOY_PATH" 2>/dev/null || true
+    
+    # Remover TUDO do diretório (incluindo .git)

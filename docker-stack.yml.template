@@ -10,9 +10,9 @@ services:
       - PORT=8080
       - WEBHOOK_SECRET=${WEBHOOK_SECRET}
     networks:
-      - kryonix-net
+      - kryonix-enterprise-network
     volumes:
-      - /opt/kryonix-plataform:/opt/kryonix-plataform:rw
+      - /opt/kryonix-plataform:/app:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
       replicas: 1
@@ -23,7 +23,7 @@ services:
       labels:
         # Traefik básico
         - traefik.enable=true
-        - traefik.docker.network=kryonix-net
+        - traefik.docker.network=kryonix-enterprise-network
         
         # Configuração do serviço
         - traefik.http.services.kryonix-web.loadbalancer.server.port=8080
@@ -75,7 +75,7 @@ services:
       - NODE_ENV=production
       - PORT=8082
     networks:
-      - kryonix-net
+      - kryonix-enterprise-network
     volumes:
       - ./webhook-listener.js:/app/webhook-listener.js:ro
     command: ["node", "webhook-listener.js"]
@@ -94,7 +94,7 @@ services:
       - NODE_ENV=production
       - PORT=8084
     networks:
-      - kryonix-net
+      - kryonix-enterprise-network
     volumes:
       - ./kryonix-monitor.js:/app/kryonix-monitor.js:ro
     command: ["node", "kryonix-monitor.js"]
@@ -106,7 +106,7 @@ services:
         max_attempts: 3
       labels:
         - traefik.enable=true
-        - traefik.docker.network=kryonix-net
+        - traefik.docker.network=kryonix-enterprise-network
         - traefik.http.services.kryonix-monitor.loadbalancer.server.port=8084
         - traefik.http.routers.kryonix-monitor.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`/monitor`)
         - traefik.http.routers.kryonix-monitor.entrypoints=websecure
@@ -114,7 +114,7 @@ services:
         - traefik.http.routers.kryonix-monitor.service=kryonix-monitor
 
 networks:
-  kryonix-net:
+  kryonix-enterprise-network:
     external: true
 
 configs:

@@ -1,12 +1,11 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Home, 
-  BarChart3, 
-  MessageCircle, 
-  Settings,
-  User
+import {
+  Home,
+  BarChart3,
+  MessageCircle,
+  Settings
 } from 'lucide-react';
 
 const BottomNavigation = () => {

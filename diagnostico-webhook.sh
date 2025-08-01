@@ -37,7 +37,7 @@ echo ""
 echo "4. TESTE DO WEBHOOK (POST com secret simulado):"
 # Simular assinatura GitHub
 payload='{"ref":"refs/heads/main","test":true}'
-secret="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+secret="${WEBHOOK_SECRET:-$(echo 'WEBHOOK_SECRET not set' && exit 1)}"
 signature="sha256=$(echo -n "$payload" | openssl dgst -sha256 -hmac "$secret" | cut -d' ' -f2)"
 
 webhook_signed_response=$(curl -s -w "\nHTTP: %{http_code}" -X POST http://localhost:8080/api/github-webhook \
