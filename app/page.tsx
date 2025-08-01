@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 
 export default function HomePage() {
-  const [currentPart, setCurrentPart] = useState(1)
+  const [currentPart, setCurrentPart] = useState(2)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -77,9 +77,9 @@ export default function HomePage() {
   ]
 
   const progress = [
-    { part: 1, title: 'Autenticação Keycloak', status: 'in_progress', description: 'Sistema multi-tenant com biometria' },
-    { part: 2, title: 'Base de Dados PostgreSQL', status: 'pending', description: 'Database isolado por cliente' },
-    { part: 3, title: 'Storage MinIO', status: 'pending', description: 'Armazenamento de arquivos' },
+    { part: 1, title: 'Autenticação Keycloak', status: 'completed', description: 'Sistema multi-tenant com biometria' },
+    { part: 2, title: 'Base de Dados PostgreSQL', status: 'completed', description: 'Database isolado por cliente' },
+    { part: 3, title: 'Storage MinIO', status: 'in_progress', description: 'Armazenamento de arquivos' },
     { part: 4, title: 'Cache Redis', status: 'pending', description: 'Cache distribuído' },
     { part: 5, title: 'Proxy Traefik', status: 'pending', description: 'Balanceamento e SSL' }
   ]
@@ -124,9 +124,9 @@ export default function HomePage() {
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 text-primary-700 text-sm font-medium mb-6">
-                <Clock className="w-4 h-4 mr-2" />
-                PARTE {currentPart} DE 50 EM DESENVOLVIMENTO
+              <div className="inline-flex items-center px-4 py-2 rounded-full bg-success-100 text-success-700 text-sm font-medium mb-6">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                PARTE {currentPart} DE 50 CONCLUÍDA - PostgreSQL Mobile-First
               </div>
               
               <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-balance">
