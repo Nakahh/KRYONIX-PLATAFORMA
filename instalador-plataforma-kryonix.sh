@@ -317,7 +317,7 @@ detect_traefik_network_automatically() {
         return 0
     fi
 
-    # 4. FALLBACK: Usar traefik-public como padr��o
+    # 4. FALLBACK: Usar traefik-public como padrão
     echo "traefik-public"
     return 0
 }
@@ -482,7 +482,7 @@ fresh_git_clone() {
             log_success "✅ Clone fresh concluído com sucesso"
             return 0
         else
-            log_warning "��️ Clone com credenciais store falhou"
+            log_warning "⚠️ Clone com credenciais store falhou"
 
             # FALLBACK 1: Token diretamente na URL
             log_info "Tentando fallback com token na URL..."
@@ -797,7 +797,7 @@ if ! grep -q "/api/github-webhook" server.js; then
     # Backup
     cp server.js server.js.backup
 
-    # CORREÇÃO: Adicionar endpoint webhook CORRIGIDO com todas as melhorias
+    # CORREÇ��O: Adicionar endpoint webhook CORRIGIDO com todas as melhorias
     cat >> server.js << WEBHOOK_EOF
 
 // ============================================================================
@@ -1470,7 +1470,7 @@ next_step
 processing_step
 
 if ! command -v npm >/dev/null 2>&1; then
-    log_info "Instalando Node.js 18.x..."
+    log_info "Instalando Node.js..."
     curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - >/dev/null 2>&1
     sudo apt-get install -y nodejs >/dev/null 2>&1
 fi
@@ -2029,7 +2029,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GOLD}${BOLD}█████████████████████████████████████████████████████████████████████████████��█${RESET}"
+echo -e "${GOLD}${BOLD}███████████████████████████████████████████████████████████████████████████████${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
@@ -2037,7 +2037,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭──────────��──────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰────────────────────────────────────────────────��────────────────────────────╯${RESET}"
+echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
