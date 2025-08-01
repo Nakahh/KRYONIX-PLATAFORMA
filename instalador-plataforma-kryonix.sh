@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚══���════════════���═��══���═════════════════════════════��══════════════╝"
+    echo "╚══���════════════���═��══���═══════════════════���═════════��══════════════╝"
     echo -e "${RESET}\n"
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
     echo -e "${CYAN}🛠️ Auto-detecção e correção de erros de módulos './734.js' e similares${RESET}"
@@ -1881,7 +1881,7 @@ EMERGENCY_CHECK_EOF
             ;;
 
         "npm_install_failed"|"postinstall_failed")
-            log_info "🔧 Aplicando correção para problemas de npm/postinstall..."
+            log_info "�� Aplicando correção para problemas de npm/postinstall..."
             # Corrigir package.json para build mode
             cp package.json package.json.emergency-backup
             cat > /tmp/emergency-fix.js << 'EOF'
@@ -2070,9 +2070,9 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
-      timeout: 15s
+      timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 40s
 
   monitor:
     image: kryonix-plataforma:latest
