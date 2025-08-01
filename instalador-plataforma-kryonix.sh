@@ -746,7 +746,7 @@ processing_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
 # CORREÇÃO COMPLETA do package.json
-log_info "🔧 Corrigindo package.json completo..."
+log_info "🔧 Configurando package.json..."
 
 # Backup do package.json original
 cp package.json package.json.backup 2>/dev/null || true
@@ -915,7 +915,7 @@ app.post('/api/github-webhook', (req, res) => {
     console.log('🚀 Executando deploy automático...');
     console.log('📁 Script path:', deployScriptPath);
 
-    // CORREÇÃO 4: Usar spawn para melhor controle do processo
+    // CORREÇ��O 4: Usar spawn para melhor controle do processo
     const deployProcess = spawn('bash', [deployScriptPath, 'webhook'], {
         cwd: process.cwd(),
         stdio: 'pipe'
@@ -1979,7 +1979,7 @@ echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCL
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GOLD}${BOLD}█████████████████████████████████████████████████████████████████████���██████████${RESET}"
 echo ""
-echo -e "${MAGENTA}${BOLD}╭─────────────────────────────��────────────────────────────────────���──────────╮${RESET}"
+echo -e "${MAGENTA}${BOLD}╭─────────────────────────────��─────────────────��──────────────────���──────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
 echo -e "${MAGENTA}╰──────────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2049,7 +2049,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Verificação assinatura obrigatória - Segu
 echo -e "    ${BLUE}│${RESET} ✅ Filtros branch específicos - Apenas refs/heads/main"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup + Clone fresh - Sempre versão mais recente"
 echo ""
-echo -e "${CYAN}${BOLD}╔���══════════════════════════════════════════════════════════���══��══════════════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔���══════════════════════════════════════════════════════════���══��═════════���════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}���� Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
@@ -2058,7 +2058,7 @@ echo -e "${CYAN}║${RESET} ${WHITE}📧 Email:${RESET} ${TURQUOISE}admin@kryoni
 echo -e "${CYAN}║${RESET} ${WHITE}💻 GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${BLINK}${YELLOW}⚡ AGORA TODA ALTERAÇÃO NO GITHUB ATUALIZA O SITE AUTOMATICAMENTE! ⚡${RESET}  ${CYAN}║${RESET}"
-echo -e "${CYAN}╚═══════════���═════════════════��══════════════════════════════════════════════════��══╝${RESET}"
+echo -e "${CYAN}╚═══════════���══════════���══════��══════════════════════════════════════════════════��══╝${RESET}"
 echo ""
 
 # Instalador KRYONIX finalizado com sucesso
