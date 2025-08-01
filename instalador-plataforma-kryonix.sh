@@ -635,7 +635,7 @@ verify_fresh_clone() {
         latest_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
 
         if [ "$commit_hash" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
-            log_warning "���️ Commit mais recente disponível: $latest_commit"
+            log_warning "⚠️ Commit mais recente disponível: $latest_commit"
 
             # Tentar atualizar para o mais recente
             log_info "🔄 Tentando atualizar para o commit mais recente..."
@@ -1007,7 +1007,7 @@ elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 
     log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
-    log_error "�� Falha ao criar rede $DOCKER_NETWORK"
+    log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
     exit 1
 fi
 
@@ -1108,20 +1108,20 @@ RUN adduser --system --uid 1001 nextjs
 # Install runtime dependencies
 RUN apk add --no-cache curl bash dumb-init
 
-# Copy built application
+# Copy built application from builder stage
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy server files and scripts
-COPY --chown=nextjs:nodejs server.js ./
-COPY --chown=nextjs:nodejs webhook-listener.js ./
-COPY --chown=nextjs:nodejs kryonix-monitor.js ./
-COPY --chown=nextjs:nodejs webhook-deploy.sh ./
-COPY --chown=nextjs:nodejs check-dependencies.js ./
-COPY --chown=nextjs:nodejs validate-dependencies.js ./
-COPY --chown=nextjs:nodejs fix-dependencies.js ./
-COPY --chown=nextjs:nodejs package.json ./
+# Copy server files and scripts from builder stage
+COPY --from=builder --chown=nextjs:nodejs /app/server.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/webhook-listener.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/kryonix-monitor.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/webhook-deploy.sh ./
+COPY --from=builder --chown=nextjs:nodejs /app/check-dependencies.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/validate-dependencies.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/fix-dependencies.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
 
 # Make scripts executable
 RUN chmod +x webhook-deploy.sh
@@ -1173,7 +1173,7 @@ log_info "🔍 Verificando TODOS os arquivos necessários para Docker build..."
 required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js")
 missing_files=()
 
-# Criar public/index.html se n��o existir
+# Criar public/index.html se não existir
 if [ ! -f "public/index.html" ]; then
     mkdir -p public
     echo '<!DOCTYPE html><html><head><title>KRYONIX</title></head><body><h1>KRYONIX Platform</h1></body></html>' > public/index.html
@@ -1807,7 +1807,7 @@ if command -v ncu >/dev/null 2>&1; then
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
         if [ "$current_hour" = "03" ]; then  # 3:00 AM
-            log_monitor "🔄 Iniciando auto-update programado..."
+            log_monitor "�� Iniciando auto-update programado..."
             bash webhook-deploy.sh manual >> "$LOG_FILE" 2>&1
         fi
     else
