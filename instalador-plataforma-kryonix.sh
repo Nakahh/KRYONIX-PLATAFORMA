@@ -86,8 +86,8 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ���█║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██║  ██╗██║  ██║   ���█║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -1401,7 +1401,7 @@ set -euo pipefail
 STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
-GITHUB_REPO="https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+GITHUB_REPO="https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 
 # Cores
 GREEN='\033[0;32m'
