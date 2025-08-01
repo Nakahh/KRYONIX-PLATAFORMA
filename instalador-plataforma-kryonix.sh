@@ -108,7 +108,7 @@ show_banner() {
     echo -e "${BOLD}${TURQUOISE}"
     echo "████████████████████████████████████████████████████████████████████████████████"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}��${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚���███╔╝ ${LIME}██║   ██║${GREEN}██╔██�� ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
@@ -121,7 +121,7 @@ show_banner() {
 
     # Informações essenciais compactas
     echo ""
-    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────────────────────────────────────────────────────────────╮${RESET}"
+    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]────────────────────────���────────────────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
     echo -e "${GOLD}╰───────────────────────────────────────────────────────────────────────────────╯${RESET}"
 
@@ -585,7 +585,7 @@ verify_fresh_clone() {
     return 0
 }
 
-# Função para validar credenciais pr����-configuradas
+# Função para validar credenciais pré-configuradas
 validate_credentials() {
     log_info "🔐 Validando credenciais pré-configuradas..."
 
@@ -869,7 +869,7 @@ app.post('/api/github-webhook', (req, res) => {
         });
     }
 
-    // CORREÇ��O 2: Filtros ESPECÍFICOS para push na main
+    // CORREÇÃO 2: Filtros ESPECÍFICOS para push na main
     const isValidEvent = event === 'push';
     const isValidRef = payload?.ref === 'refs/heads/main';
 
@@ -1345,7 +1345,7 @@ deploy() {
     final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
     final_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 
-    log "📌 Commit final: $final_commit"
+    log "�� Commit final: $final_commit"
     log "📝 Mensagem: $final_msg"
 
     # VERIFICAR arquivos críticos
@@ -1539,7 +1539,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🔍 Detectando rede do Traefik automaticamente..."
+log_info "���� Detectando rede do Traefik automaticamente..."
 
 # Detectar automaticamente a rede do Traefik
 DOCKER_NETWORK=$(detect_traefik_network_automatically)
@@ -2080,7 +2080,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}═════════════════════════════════��══════════════════════${RESET}"
+echo -e "${CYAN}══════════════════════════════════════���═════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
