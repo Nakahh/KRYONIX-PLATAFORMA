@@ -82,7 +82,7 @@ STEP_DESCRIPTIONS=(
     "NUCLEAR cleanup completo 🧹"
     "Configurando credenciais 🔐"
     "Clone FRESH da versão mais recente 🔄"
-    "Criando arquivos de serviços 📄"
+    "Criando arquivos de serviços ��"
     "Instalando dependências 📦"
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
@@ -104,47 +104,30 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
 
-    # Banner principal com gradiente
+    # Banner KRYONIX alinhado e responsivo (80 caracteres exatos)
     echo -e "${BOLD}${TURQUOISE}"
-    echo "█████████���█████████████████████████████████████████████████████████████████████"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝${ORANGE} █████���╔╝${YELLOW} ╚████╔╝${LIME} ██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}   ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗${ORANGE} ██╔══██╗${YELLOW}  ╚██╔╝${LIME}  ██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}   ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║${LIME}   ╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝${LIME}    ╚═════╝${GREEN} ╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR INTELIGÊNCIA ARTIFICIAL 🚀${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
-    echo -e "${TURQUOISE}█████████████████████████���█████████████████████████████████████████████████████${RESET}"
+    echo "████████████████████████████████████████████████████████████████████████████████"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚════��╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
+    echo -e "${TURQUOISE}████████████████████████████████████████████████████████████████████████████████${RESET}"
 
-    # Seção de informações com badges coloridos
+    # Informações essenciais compactas
     echo ""
-    echo -e "${PURPLE}${BOLD}╭────────────��────────────────────────────────────────────────────────────────╮${RESET}"
-    echo -e "${PURPLE}│${RESET} ${MAGENTA}🎯 FUNCIONALIDADES PRINCIPAIS:${RESET}                                           ${PURPLE}│${RESET}"
-    echo -e "${PURPLE}│${RESET}                                                                             ${PURPLE}│${RESET}"
-    echo -e "${PURPLE}│${RESET}   ${BG_GREEN}${BLACK} 🧠 15 AGENTES IA ${RESET} ${BG_BLUE}${WHITE} ☁️ 8 MÓDULOS SAAS ${RESET} ${BG_PURPLE}${WHITE} 🔄 100% AUTÔNOMO ${RESET}   ${PURPLE}│${RESET}"
-    echo -e "${PURPLE}│${RESET}                                                                             ${PURPLE}│${RESET}"
-    echo -e "${PURPLE}│${RESET}   ${BG_YELLOW}${BLACK} 📱 MOBILE-FIRST ${RESET} ${BG_CYAN}${BLACK} 🇧🇷 PORTUGUÊS ${RESET} ${BG_RED}${WHITE} 🚀 DEPLOY AUTO ${RESET}   ${PURPLE}│${RESET}"
-    echo -e "${PURPLE}│${RESET}                                                                             ${PURPLE}│${RESET}"
-    echo -e "${PURPLE}╰──────────────────────────────────────────────��──────────────────────────────╯${RESET}"
+    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────────────────────────────────────────────────────────────╮${RESET}"
+    echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
+    echo -e "${GOLD}╰───────────────────────────────────────────────────────────────────────────────╯${RESET}"
 
-    # Informações do servidor
+    # Funcionalidades em linha única
     echo ""
-    echo -e "${GOLD}${BOLD}┌─[ 🖥️  INFORMAÇÕES DO SERVIDOR ]───────────────────────────────────────────┐${RESET}"
-    echo -e "${GOLD}│${RESET} ${SILVER}📍 Servidor:${RESET} ${WHITE}$(hostname)${RESET}                                                  ${GOLD}│${RESET}"
-    echo -e "${GOLD}│${RESET} ${SILVER}🌐 IP Público:${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}                                        ${GOLD}│${RESET}"
-    echo -e "${GOLD}│${RESET} ${SILVER}👤 Usuário:${RESET} ${WHITE}$(whoami)${RESET}                                                    ${GOLD}│${RESET}"
-    echo -e "${GOLD}│${RESET} ${SILVER}💻 Sistema:${RESET} ${WHITE}$(uname -s) $(uname -r | cut -d'-' -f1)${RESET}                              ${GOLD}│${RESET}"
-    echo -e "${GOLD}│${RESET} ${SILVER}🐳 Docker:${RESET} ${WHITE}$(docker --version 2>/dev/null | cut -d',' -f1 || echo 'Não detectado')${RESET}                        ${GOLD}│${RESET}"
-    echo -e "${GOLD}└─────────────────────────────────────────────────────────────────────────────┘${RESET}"
-
-    # Destaque especial
-    echo ""
-    echo -e "${BLINK}${RED}${BOLD}⚡ INSTALADOR REVOLUCIONÁRIO ⚡${RESET}"
-    echo -e "${GREEN}${BOLD}✨ Nuclear Cleanup + Clone Fresh + Versão Mais Recente ✨${RESET}"
-    echo -e "${YELLOW}${BOLD}🔥 Webhook Automático + Deploy Inteligente + Rollback Seguro 🔥${RESET}"
+    echo -e "${GREEN}${BOLD}🎯 DEPLOY:${RESET} ${BG_BLUE}${WHITE} 15 AGENTES IA ${RESET} ${BG_PURPLE}${WHITE} 8 MÓDULOS ${RESET} ${BG_GREEN}${BLACK} WEBHOOK AUTO ${RESET} ${BG_YELLOW}${BLACK} MOBILE-FIRST ${RESET}"
     echo ""
 }
 
@@ -198,7 +181,7 @@ animate_progress_bar() {
         echo -e "${border_color}╭────────────────────────────────────────────────────────────────────╮${RESET}"
         echo -e "${border_color}│${RESET} ${status_icon} ${WHITE}${BOLD}ETAPA $step/$total:${RESET} ${TURQUOISE}$description${RESET}"
         echo -e "${border_color}│${RESET} ${DIM}Status: $status_text${RESET}"
-        echo -e "${border_color}╰────────────────────────────────────────────────────────────────────╯${RESET}"
+        echo -e "${border_color}╰────────────────────────��───────────────────────────────────────────╯${RESET}"
         CURRENT_STEP_BAR_SHOWN=true
     fi
 
@@ -2075,7 +2058,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭──────────��──────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
+echo -e "${MAGENTA}╰────────────────────────────────────────────────────────────��────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
