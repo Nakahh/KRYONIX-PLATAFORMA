@@ -106,18 +106,18 @@ show_banner() {
 
     # Banner principal com gradiente
     echo -e "${BOLD}${TURQUOISE}"
-    echo "███████████████████████████████████████████████████████████████████████████████"
+    echo "█████████���█████████████████████████████████████████████████████████████████████"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝${ORANGE} █████���╔╝${YELLOW} ╚████╔╝${LIME} ██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗${ORANGE} ██╔══██╗${YELLOW}  ╚██╔╝${LIME}  ██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║${LIME}   ╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝${LIME}    ╚═════╝${GREEN} ╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}���═╝  ╚═╝${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝${LIME}    ╚═════╝${GREEN} ╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR INTELIGÊNCIA ARTIFICIAL 🚀${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
-    echo -e "${TURQUOISE}███████████████████████████████████████████████████████████████████████████████${RESET}"
+    echo -e "${TURQUOISE}█████████████████████████���█████████████████████████████████████████████████████${RESET}"
 
     # Seção de informações com badges coloridos
     echo ""
@@ -373,7 +373,7 @@ test_service_health() {
         fi
     done
     
-    log_warning "Conectividade não confirmada após $max_attempts tentativas"
+    log_warning "Conectividade não confirmada ap��s $max_attempts tentativas"
     return 1
 }
 
@@ -593,7 +593,7 @@ verify_fresh_clone() {
     
     # Verificar especificamente se está no PR #22 (preocupação do usuário)
     if echo "$commit_msg" | grep -qi "#22"; then
-        log_warning "⚠️ Commit atual referencia PR #22 - verificando por versões mais recentes..."
+        log_warning "⚠��� Commit atual referencia PR #22 - verificando por versões mais recentes..."
         
         # Tentar buscar o mais recente
         git fetch origin --force 2>/dev/null || true
@@ -1597,7 +1597,7 @@ elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 
     log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
-    log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
+    log_error "��� Falha ao criar rede $DOCKER_NETWORK"
     exit 1
 fi
 
@@ -2073,7 +2073,7 @@ echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCL
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GOLD}${BOLD}███████████████████████████████████████████████████████████████████████████████${RESET}"
 echo ""
-echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
+echo -e "${MAGENTA}${BOLD}╭──────────��──────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
 echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2118,7 +2118,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}═════════════════════════════════════���══════════════════${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
@@ -2143,7 +2143,16 @@ echo -e "    ${BLUE}│${RESET} ✅ Verificação assinatura obrigatória - Segu
 echo -e "    ${BLUE}│${RESET} ✅ Filtros branch específicos - Apenas refs/heads/main"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup + Clone fresh - Sempre versão mais recente"
 echo ""
-echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
+echo -e "${CYAN}${BOLD}╔═════════════════════════════════════════════════════��═════════════════════════╗${RESET}"
+echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET} ${WHITE}📱 WhatsApp:${RESET} ${TURQUOISE}+55 17 98180-5327${RESET}                                          ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET} ${WHITE}📧 Email:${RESET} ${TURQUOISE}admin@kryonix.com.br${RESET}                                          ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET} ${WHITE}💻 GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET} ${BLINK}${YELLOW}⚡ AGORA TODA ALTERAÇÃO NO GITHUB ATUALIZA O SITE AUTOMATICAMENTE! ⚡${RESET}  ${CYAN}║${RESET}"
+echo -e "${CYAN}╚══════════���════════════════════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
 deploy() {
