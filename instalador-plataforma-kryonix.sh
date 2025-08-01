@@ -298,7 +298,7 @@ auto_update_dependencies() {
     done
     
     if [ $install_attempts -eq $max_attempts ]; then
-        log_warning "⚠️ Restaurando package.json original..."
+        log_warning "���️ Restaurando package.json original..."
         cp package.json.backup package.json
         npm install --no-audit --no-fund 2>/dev/null || true
         log_warning "✅ Package.json restaurado com dependências originais"
@@ -518,7 +518,7 @@ fresh_git_clone() {
     
     while [ $clone_attempts -lt $max_attempts ]; do
         clone_attempts=$((clone_attempts + 1))
-        log_info "📥 Tentativa de clone $clone_attempts/$max_attempts..."
+        log_info "��� Tentativa de clone $clone_attempts/$max_attempts..."
         
         # Limpar qualquer clone parcial
         sudo rm -rf ./* .[^.]* ..?* 2>/dev/null || true
@@ -794,7 +794,7 @@ log_info "📝 Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22 (como no instalador antigo)
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    log_warning "⚠️ ATENÇÃO: Ainda detectando referência ao PR #22"
+    log_warning "⚠�� ATENÇÃO: Ainda detectando referência ao PR #22"
     log_info "Isso pode significar que o PR #22 É a versão mais recente no GitHub"
     log_info "Ou pode haver um problema de sincronização"
 else
@@ -947,7 +947,7 @@ WEBHOOK_EOF
     log_success "✅ Webhook completo adicionado ao server.js"
     WEBHOOK_EXISTS=false
 else
-    log_info "ℹ️ Webhook já existe no server.js - pulando criação"
+    log_info "ℹ️ Webhook j�� existe no server.js - pulando criação"
     WEBHOOK_EXISTS=true
 fi
 
@@ -1714,7 +1714,7 @@ else
 fi
 
 # Webhook agora está integrado no serviço web, então testar diretamente
-log_info "Testando webhook integrado no serviço web..."
+log_info "Testando webhook integrado no servi��o web..."
 if timeout 10s curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
    -H "Content-Type: application/json" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
@@ -1840,7 +1840,7 @@ fi
 echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook (integrado):${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
@@ -1861,7 +1861,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═════════��══════════════════════════════════${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
