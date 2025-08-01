@@ -86,7 +86,7 @@ show_banner() {
     echo "╔���═══════════════���════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗█��╗██╗  ██╗     ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═���═██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -94,7 +94,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
-    echo "║                                                                 ��"
+    echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
     echo "╚══���════════════���═��══���═════════════════════════════��══════════════╝"
@@ -369,7 +369,7 @@ advanced_dependency_check() {
             
             # Correção automática
             if node fix-dependencies.js 2>&1 | tee /tmp/deps-fix.log; then
-                log_success "✅ Corre��ão automática aplicada"
+                log_success "✅ Correção automática aplicada"
             else
                 log_warning "⚠️ Correção manual pode ser necessária"
             fi
@@ -487,7 +487,7 @@ nuclear_cleanup() {
     
     # REMOÇÃO COMPLETA - incluindo arquivos ocultos, .git, tudo
     if [ -d "$PROJECT_DIR" ]; then
-        log_info "🗑�� Removendo tudo de $PROJECT_DIR (incluindo .git)..."
+        log_info "🗑️ Removendo tudo de $PROJECT_DIR (incluindo .git)..."
         
         # Múltiplas estratégias de remoção
         sudo rm -rf "$PROJECT_DIR"/{*,.[^.]*,..?*} 2>/dev/null || true
@@ -1340,7 +1340,7 @@ elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 
     log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
-    log_error "��� Falha ao criar rede $DOCKER_NETWORK"
+    log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
     exit 1
 fi
 
@@ -1770,7 +1770,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Configurações adicionais para evitar corrupç��o de build
+  // Configurações adicionais para evitar corrupção de build
   webpack: (config, { isServer }) => {
     // Evitar problemas de cache corrompido
     config.cache = false
@@ -2011,8 +2011,10 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=$DOCKER_NETWORK"
 
-        # Configuração do serviço web
+        # Configuração do serviço web com health check
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
+        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.path=/health"
+        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=30s"
 
         # WEBHOOK - PRIORIDADE EXTREMA (50000) para resolver 404
         - "traefik.http.routers.kryonix-webhook.rule=Host(\`$DOMAIN_NAME\`) && Path(\`/api/github-webhook\`)"
@@ -2143,7 +2145,7 @@ jobs:
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
 
-      - name: 🏗️ Verify deployment
+      - name: ����️ Verify deployment
         run: |
           echo "⏳ Aguardando deployment automático KRYONIX com auto-update..."
           sleep 60
