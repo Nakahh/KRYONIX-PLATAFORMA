@@ -100,28 +100,52 @@ STEP_DESCRIPTIONS=(
 # FUNÇÕES DE INTERFACE E PROGRESSO
 # ============================================================================
 
-# Função para mostrar banner da Plataforma Kryonix
+# Função para mostrar banner épico da Plataforma KRYONIX
 show_banner() {
     clear
-    echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
-    echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
-    echo    "║                                                                 ║"
-    echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
-    echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
-    echo    "║                                                                 ║"
-    echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
-    echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
-    echo -e "${RESET}\n"
 
+    # Banner principal com gradiente
+    echo -e "${BOLD}${TURQUOISE}"
+    echo "███████████████████████████████████████████████████████████████████████████████"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝${ORANGE} ██████╔╝${YELLOW} ╚████╔���${LIME} ██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}   ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗${ORANGE} ██╔══██╗${YELLOW}  ╚██╔╝${LIME}  ██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}   ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║${LIME}   ╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝${LIME}    ╚═════╝${GREEN} ╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR INTELIGÊNCIA ARTIFICIAL 🚀${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
+    echo -e "${TURQUOISE}███████████████████████████████████████████████████████████████████████████████${RESET}"
 
+    # Seção de informações com badges coloridos
+    echo ""
+    echo -e "${PURPLE}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
+    echo -e "${PURPLE}│${RESET} ${MAGENTA}🎯 FUNCIONALIDADES PRINCIPAIS:${RESET}                                           ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${RESET}                                                                             ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${RESET}   ${BG_GREEN}${BLACK} 🧠 15 AGENTES IA ${RESET} ${BG_BLUE}${WHITE} ☁️ 8 MÓDULOS SAAS ${RESET} ${BG_PURPLE}${WHITE} 🔄 100% AUTÔNOMO ${RESET}   ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${RESET}                                                                             ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${RESET}   ${BG_YELLOW}${BLACK} 📱 MOBILE-FIRST ${RESET} ${BG_CYAN}${BLACK} 🇧🇷 PORTUGUÊS ${RESET} ${BG_RED}${WHITE} 🚀 DEPLOY AUTO ${RESET}   ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${RESET}                                                                             ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
+
+    # Informações do servidor
+    echo ""
+    echo -e "${GOLD}${BOLD}┌─[ 🖥️  INFORMAÇÕES DO SERVIDOR ]───────────────────────────────────────────┐${RESET}"
+    echo -e "${GOLD}│${RESET} ${SILVER}📍 Servidor:${RESET} ${WHITE}$(hostname)${RESET}                                                  ${GOLD}│${RESET}"
+    echo -e "${GOLD}│${RESET} ${SILVER}🌐 IP Público:${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}                                        ${GOLD}│${RESET}"
+    echo -e "${GOLD}│${RESET} ${SILVER}👤 Usuário:${RESET} ${WHITE}$(whoami)${RESET}                                                    ${GOLD}│${RESET}"
+    echo -e "${GOLD}│${RESET} ${SILVER}💻 Sistema:${RESET} ${WHITE}$(uname -s) $(uname -r | cut -d'-' -f1)${RESET}                              ${GOLD}│${RESET}"
+    echo -e "${GOLD}│${RESET} ${SILVER}🐳 Docker:${RESET} ${WHITE}$(docker --version 2>/dev/null | cut -d',' -f1 || echo 'Não detectado')${RESET}                        ${GOLD}│${RESET}"
+    echo -e "${GOLD}└─────────────────────────────────────────────────────────────────────────────┘${RESET}"
+
+    # Destaque especial
+    echo ""
+    echo -e "${BLINK}${RED}${BOLD}⚡ INSTALADOR REVOLUCIONÁRIO ⚡${RESET}"
+    echo -e "${GREEN}${BOLD}✨ Nuclear Cleanup + Clone Fresh + Versão Mais Recente ✨${RESET}"
+    echo -e "${YELLOW}${BOLD}🔥 Webhook Automático + Deploy Inteligente + Rollback Seguro 🔥${RESET}"
+    echo ""
 }
 
 # Sistema unificado de barra animada
@@ -406,7 +430,7 @@ fresh_git_clone() {
         log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
         return 1
     fi
-    log_success "��� Conectividade e token validados"
+    log_success "✅ Conectividade e token validados"
 
     # Clone com opções específicas para versão mais recente
     local clone_attempts=0
@@ -443,7 +467,7 @@ fresh_git_clone() {
             
             # Forçar atualização para absoluto mais recente se diferente
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
-                log_info "🔄 Atualizando para commit absoluto mais recente..."
+                log_info "���� Atualizando para commit absoluto mais recente..."
                 git fetch origin HEAD 2>/dev/null || true
                 git reset --hard FETCH_HEAD 2>/dev/null || true
                 current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
@@ -2043,7 +2067,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Local:${RESET} $LOCAL_WEBHOOK_STA
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} $EXTERNAL_WEBHOOK_STATUS"
 echo ""
 echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
-echo -e "    ${BLUE}��${RESET} ${BOLD}Local Web:${RESET} http://localhost:8080"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Local Web:${RESET} http://localhost:8080"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local Webhook:${RESET} http://localhost:8080/api/github-webhook"
 if docker service ls | grep -q "traefik"; then
 echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
@@ -2054,7 +2078,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}════���═══════════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
