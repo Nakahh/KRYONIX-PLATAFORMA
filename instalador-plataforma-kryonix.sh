@@ -548,7 +548,7 @@ fresh_git_clone() {
     cd "$target_dir"
 
     # Testar conectividade e autenticação antes de tentar clone
-    log_info "🔍 Testando conectividade com GitHub..."
+    log_info "��� Testando conectividade com GitHub..."
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
         log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
@@ -1012,7 +1012,7 @@ exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
             }
         });
     } else {
-        console.log('✅ Dependências corrigidas com sucesso');
+        console.log('�� Dependências corrigidas com sucesso');
         console.log(stdout);
         process.exit(0);
     }
@@ -1658,7 +1658,9 @@ else
 
     # Análise detalhada do erro
     build_error_type=""
-    if grep -q "Type error.*postgres-config.ts" /tmp/docker-build.log; then
+    if grep -q "Cannot find module.*\.js" /tmp/docker-build.log && grep -q "webpack-runtime" /tmp/docker-build.log; then
+        build_error_type="webpack_chunks_corrupted"
+    elif grep -q "Type error.*postgres-config.ts" /tmp/docker-build.log; then
         build_error_type="typescript_postgres_config"
     elif grep -q "no-assign-module-variable" /tmp/docker-build.log; then
         build_error_type="eslint_module_variable"
@@ -2375,7 +2377,7 @@ monitor_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "
 log_info "Status Docker Swarm para ${STACK_NAME}_monitor: $monitor_replicas"
 
 if [[ "$monitor_replicas" == "1/1" ]]; then
-    log_success "Serviço monitor funcionando (1/1)"
+    log_success "Servi��o monitor funcionando (1/1)"
     MONITOR_STATUS="✅ ONLINE (1/1)"
 else
     log_warning "Serviço monitor com problemas: $monitor_replicas"
