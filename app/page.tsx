@@ -147,7 +147,7 @@ export default function HomePage() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-              <div className="card text-center">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
                 <div className="text-2xl font-bold text-primary-600">32+</div>
                 <div className="text-sm text-gray-600">Stacks Tecnológicas</div>
               </div>
