@@ -121,7 +121,7 @@ show_banner() {
 
     # Informações essenciais compactas
     echo ""
-    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────────────��───────────────────────────────────────────────╮${RESET}"
+    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────��───────────────────────────────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
     echo -e "${GOLD}╰───────────────────────────────────────────────────────────────────────────────╯${RESET}"
 
@@ -930,7 +930,7 @@ app.post('/api/github-webhook', (req, res) => {
     });
 
     deployProcess.on('close', (code) => {
-        console.log(\`🔄 Deploy finalizado com código de sa��da: \${code}\`);
+        console.log(\`🔄 Deploy finalizado com código de saída: \${code}\`);
         if (code === 0) {
             console.log('✅ Deploy automático KRYONIX concluído com SUCESSO');
         } else {
@@ -1313,7 +1313,7 @@ deploy() {
 
     # PULL/CLONE inteligente
     if [ -d "$DEPLOY_PATH/.git" ]; then
-        log "�� Atualizando repositório existente..."
+        log "📥 Atualizando repositório existente..."
         cd "$DEPLOY_PATH"
 
         # Reset e pull da versão mais recente
@@ -2080,7 +2080,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}═════════════════════════════════════���══════════════════${RESET}"
+echo -e "${CYAN}══════════════════════════════��═════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
@@ -2099,9 +2099,9 @@ echo ""
 echo -e "${GREEN}${BOLD}🎯 CORREÇÕES WEBHOOK IMPLEMENTADAS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ✅ Dependências corrigidas - Express, CORS, Helmet adicionados"
 echo -e "    ${BLUE}│${RESET} ✅ Package.json corrigido - Dependências deprecadas substituídas"
-echo -e "    ${BLUE}│${RESET} ✅ Webhook endpoint melhorado - Logs detalhados e filtros específicos"
+echo -e "    ${BLUE}│${RESET} �� Webhook endpoint melhorado - Logs detalhados e filtros específicos"
 echo -e "    ${BLUE}│${RESET} ✅ Script deploy inteligente - Backup, verificações e rollback"
-echo -e "    ${BLUE}│${RESET} ✅ Verificação assinatura obrigatória - Segurança máxima"
+echo -e "    ${BLUE}│${RESET} ��� Verificação assinatura obrigatória - Segurança máxima"
 echo -e "    ${BLUE}│${RESET} ✅ Filtros branch específicos - Apenas refs/heads/main"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup + Clone fresh - Sempre versão mais recente"
 echo ""
@@ -2111,7 +2111,7 @@ echo -e "${CYAN}║${RESET}                                                     
 echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}📱 WhatsApp:${RESET} ${TURQUOISE}+55 17 98180-5327${RESET}                                          ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}📧 Email:${RESET} ${TURQUOISE}admin@kryonix.com.br${RESET}                                          ${CYAN}║${RESET}"
-echo -e "${CYAN}║${RESET} ${WHITE}���� GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
+echo -e "${CYAN}���${RESET} ${WHITE}💻 GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${BLINK}${YELLOW}⚡ AGORA TODA ALTERAÇÃO NO GITHUB ATUALIZA O SITE AUTOMATICAMENTE! ⚡${RESET}  ${CYAN}║${RESET}"
 echo -e "${CYAN}╚═══════════════════════════════════════════════════════════════════════════════════╝${RESET}"
