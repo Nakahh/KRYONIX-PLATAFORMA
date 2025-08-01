@@ -847,7 +847,7 @@ app.post('/api/github-webhook', (req, res) => {
 
     console.log('✅ Push VÁLIDO na main - iniciando deploy automático KRYONIX');
 
-    // CORREÇ��O 3: Path relativo correto e verificação de arquivo
+    // CORREÇÃO 3: Path relativo correto e verificação de arquivo
     const deployScriptPath = path.join(process.cwd(), 'webhook-deploy.sh');
 
     if (!fs.existsSync(deployScriptPath)) {
@@ -1132,7 +1132,7 @@ if [ ! -f "public/index.html" ]; then
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327<br>
+            🌐 https://kryonix.com.br | ���� +55 17 98180-5327<br>
             🚀 Deploy automático ativo - Sempre versão mais recente
         </p>
     </div>
@@ -1986,7 +1986,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════��══════════════════════════��═════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2030,12 +2030,22 @@ echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
-echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════${RESET}"
-echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
-echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
-echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
-echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
+echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
+echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
+echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
+echo -e "${CYAN}${BOLD}🎯 Which events:${RESET} Just the push event"
+echo -e "${CYAN}${BOLD}✅ Active:${RESET} Checked ✓"
+echo ""
+echo -e "${YELLOW}${BOLD}🚀 INSTRUÇÕES PARA CONFIGURAR NO GITHUB:${RESET}"
+echo -e "${BLUE}1.${RESET} Vá em: Settings → Webhooks → Add webhook"
+echo -e "${BLUE}2.${RESET} Cole a URL: ${CYAN}$WEBHOOK_URL${RESET}"
+echo -e "${BLUE}3.${RESET} Cole o Secret: ${CYAN}$WEBHOOK_SECRET${RESET}"
+echo -e "${BLUE}4.${RESET} Selecione: ${CYAN}application/json${RESET}"
+echo -e "${BLUE}5.${RESET} Marque: ${CYAN}Just the push event${RESET}"
+echo -e "${BLUE}6.${RESET} Marque: ${CYAN}Active ✓${RESET}"
+echo -e "${BLUE}7.${RESET} Clique: ${CYAN}Add webhook${RESET}"
 echo ""
 echo -e "${GREEN}${BOLD}🎯 CORREÇÕES WEBHOOK IMPLEMENTADAS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ✅ Dependências corrigidas - Express, CORS, Helmet adicionados"
