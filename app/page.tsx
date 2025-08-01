@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import {
   Shield,
   Bot,
@@ -9,7 +11,8 @@ import {
   BarChart3,
   CheckCircle,
   Clock,
-  Sparkles
+  Sparkles,
+  Globe
 } from 'lucide-react'
 
 export default function HomePage() {
@@ -96,9 +99,13 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-success-500 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
+              <Image
+                src="/logo-kryonix.png"
+                alt="KRYONIX Logo"
+                width={40}
+                height={40}
+                className="rounded-lg"
+              />
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">KRYONIX</h1>
                 <p className="text-xs text-gray-600">Plataforma SaaS 100% Autônoma por IA</p>
@@ -135,14 +142,14 @@ export default function HomePage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <button className="btn-primary">
+              <Link href="/whatsapp" className="btn-primary">
                 <MessageCircle className="w-5 h-5 mr-2" />
                 Acompanhar Desenvolvimento
-              </button>
-              <button className="btn-secondary">
+              </Link>
+              <Link href="/progresso" className="btn-secondary">
                 <BarChart3 className="w-5 h-5 mr-2" />
                 Ver Progresso Completo
-              </button>
+              </Link>
             </div>
 
             {/* Stats */}
@@ -319,9 +326,13 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-success-500 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
+                <Image
+                  src="/logo-kryonix.png"
+                  alt="KRYONIX Logo"
+                  width={32}
+                  height={32}
+                  className="rounded-lg"
+                />
                 <span className="text-xl font-bold">KRYONIX</span>
               </div>
               <p className="text-gray-400 text-sm">

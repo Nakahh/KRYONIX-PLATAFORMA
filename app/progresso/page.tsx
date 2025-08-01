@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowLeft, CheckCircle, Clock, AlertTriangle } from 'lucide-react'
+import Link from 'next/link'
 import MobileMenu from '../components/MobileMenu'
 
 export default function ProgressoPage() {
@@ -23,9 +24,9 @@ export default function ProgressoPage() {
       <header className="bg-white shadow-sm">
         <div className="container-custom py-6">
           <div className="flex items-center space-x-4">
-            <a href="/" className="p-2 hover:bg-gray-100 rounded-lg">
+            <Link href="/" className="p-2 hover:bg-gray-100 rounded-lg">
               <ArrowLeft className="w-5 h-5" />
-            </a>
+            </Link>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Progresso do Desenvolvimento</h1>
               <p className="text-gray-600">Acompanhe o desenvolvimento das 50 partes do projeto KRYONIX</p>
@@ -92,9 +93,9 @@ export default function ProgressoPage() {
 
           <div className="mt-8 text-center">
             <p className="text-gray-500">... e mais 42 partes em planejamento</p>
-            <a href="/" className="btn-primary mt-4 inline-flex">
+            <Link href="/" className="btn-primary mt-4 inline-flex">
               Voltar ao Início
-            </a>
+            </Link>
           </div>
         </div>
       </section>
