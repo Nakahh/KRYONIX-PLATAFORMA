@@ -317,7 +317,7 @@ detect_traefik_network_automatically() {
         return 0
     fi
 
-    # 4. FALLBACK: Usar traefik-public como padrão
+    # 4. FALLBACK: Usar traefik-public como padr��o
     echo "traefik-public"
     return 0
 }
@@ -482,7 +482,7 @@ fresh_git_clone() {
             log_success "✅ Clone fresh concluído com sucesso"
             return 0
         else
-            log_warning "⚠️ Clone com credenciais store falhou"
+            log_warning "��️ Clone com credenciais store falhou"
 
             # FALLBACK 1: Token diretamente na URL
             log_info "Tentando fallback com token na URL..."
@@ -1399,7 +1399,7 @@ deploy() {
 
     # Aguardar estabilização
     log "⏳ Aguardando estabilização dos serviços..."
-    sleep 90
+    sleep 30
 
     # Verificação completa de health
     log "🔍 Verificando health de TODOS os serviços..."
@@ -2029,7 +2029,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GOLD}${BOLD}█████████████████████████████████████████████████████████████████���█████████████${RESET}"
+echo -e "${GOLD}${BOLD}█████████████████████████████████████████████████████████████████████████████��█${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
@@ -2037,7 +2037,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭──────────��──────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰────────────────────────────────────���────────────────────────────────────────╯${RESET}"
+echo -e "${MAGENTA}╰────────────────────────────────────────────────��────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2060,7 +2060,7 @@ echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-���️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
@@ -2080,7 +2080,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}═══════════════════════════════════════��════════════════${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
