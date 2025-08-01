@@ -12,8 +12,19 @@ const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.HOSTNAME || '0.0.0.0';
 const port = process.env.PORT || 8080;
 
-// Initialize Next.js app
-const nextApp = next({ dev, hostname, port });
+// Initialize Next.js app with optimizations
+const nextApp = next({
+  dev,
+  hostname,
+  port,
+  quiet: !dev,
+  customServer: true,
+  conf: {
+    distDir: '.next',
+    compress: true,
+    poweredByHeader: false
+  }
+});
 const handle = nextApp.getRequestHandler();
 
 // Initialize Express app
@@ -38,15 +49,17 @@ expressApp.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 // Logging middleware
 expressApp.use(morgan('combined'));
 
-// Health check endpoint
+// Fast health check endpoint
 expressApp.get('/health', (req, res) => {
   res.json({
     status: 'healthy',
     service: 'kryonix-platform',
-    timestamp: new Date().toISOString(),
-    version: '1.0.0',
+    timestamp: Date.now(),
+    uptime: process.uptime(),
+    version: '2.0.0',
     port: port,
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    memory: Math.round(process.memoryUsage().rss / 1024 / 1024) + 'MB'
   });
 });
 

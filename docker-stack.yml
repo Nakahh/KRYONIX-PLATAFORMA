@@ -3,12 +3,32 @@ version: '3.8'
 services:
   web:
     image: kryonix-plataforma:latest
+    networks:
+      - traefik-public
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - AUTO_UPDATE_DEPS=true
+      - WEBHOOK_SECRET=Kr7$$n0x-V1t0r-2025-#Jwt$$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 120s
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
         max_attempts: 3
-        delay: 10s
+        delay: 15s
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
       labels:
         # Traefik básico
         - "traefik.enable=true"
@@ -58,66 +78,47 @@ services:
         - "traefik.http.routers.kryonix-webhook.middlewares=api-security"
         - "traefik.http.routers.kryonix-api.middlewares=api-security"
 
-    networks:
-      - traefik-public
-    ports:
-      - "8080:8080"
-    environment:
-      - NODE_ENV=production
-      - PORT=8080
-      - AUTO_UPDATE_DEPS=true
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
   webhook:
     image: kryonix-plataforma:latest
     command: ["node", "webhook-listener.js"]
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-        delay: 10s
     networks:
       - traefik-public
-    ports:
-      - "8082:8082"
     environment:
       - NODE_ENV=production
       - PORT=8082
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
-      interval: 30s
-      timeout: 10s
+      interval: 45s
+      timeout: 15s
       retries: 3
-      start_period: 60s
-
-  monitor:
-    image: kryonix-plataforma:latest
-    command: ["node", "kryonix-monitor.js"]
+      start_period: 90s
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
         max_attempts: 3
-        delay: 10s
+        delay: 15s
+
+  monitor:
+    image: kryonix-plataforma:latest
+    command: ["node", "kryonix-monitor.js"]
     networks:
       - traefik-public
-    ports:
-      - "8084:8084"
     environment:
       - NODE_ENV=production
       - PORT=8084
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
-      interval: 30s
-      timeout: 10s
+      interval: 45s
+      timeout: 15s
       retries: 3
-      start_period: 60s
+      start_period: 90s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 15s
 
 networks:
   traefik-public:
