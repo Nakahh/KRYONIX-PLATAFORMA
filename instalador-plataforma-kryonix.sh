@@ -86,9 +86,9 @@ show_banner() {
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚█��╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
-    echo "║     ██╔═██╗ ██╔══██╗  ╚█���╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
@@ -1027,6 +1027,116 @@ else
     log_info "package.json já está correto"
 fi
 
+# 4. Criar next.config.js otimizado se não existir
+if [ ! -f "next.config.js" ]; then
+    log_info "Criando next.config.js otimizado..."
+    cat > next.config.js << 'NEXTCONFIG_EOF'
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  output: 'standalone',
+  experimental: {
+    outputFileTracingRoot: process.cwd(),
+  },
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: false,
+  httpAgentOptions: {
+    keepAlive: false,
+  },
+  // Otimizações para startup rápido
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
+  // Configuração para produção
+  distDir: '.next',
+  cleanDistDir: true,
+}
+
+module.exports = nextConfig
+NEXTCONFIG_EOF
+    log_success "✅ next.config.js criado"
+fi
+
+# 5. Verificar e criar public/index.html se necessário
+if [ ! -f "public/index.html" ]; then
+    log_info "Criando public/index.html..."
+    mkdir -p public
+    cat > public/index.html << 'INDEXHTML_EOF'
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRYONIX Platform</title>
+    <meta name="description" content="Plataforma KRYONIX - SaaS 100% Autônomo">
+</head>
+<body>
+    <div id="root">
+        <h1>KRYONIX Platform</h1>
+        <p>Loading...</p>
+    </div>
+</body>
+</html>
+INDEXHTML_EOF
+    log_success "✅ public/index.html criado"
+fi
+
+# 6. Criar outros arquivos de serviços se não existirem
+if [ ! -f "webhook-listener.js" ]; then
+    log_info "Criando webhook-listener.js..."
+    cat > webhook-listener.js << 'WEBHOOK_EOF'
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 8082;
+
+app.use(express.json());
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    service: 'kryonix-webhook',
+    timestamp: Date.now(),
+    port: port
+  });
+});
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Webhook listener running on port ${port}`);
+});
+WEBHOOK_EOF
+    log_success "✅ webhook-listener.js criado"
+fi
+
+if [ ! -f "kryonix-monitor.js" ]; then
+    log_info "Criando kryonix-monitor.js..."
+    cat > kryonix-monitor.js << 'MONITOR_EOF'
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 8084;
+
+app.use(express.json());
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    service: 'kryonix-monitor',
+    timestamp: Date.now(),
+    port: port
+  });
+});
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Monitor running on port ${port}`);
+});
+MONITOR_EOF
+    log_success "✅ kryonix-monitor.js criado"
+fi
+
 # Verificar se webhook já está integrado no server.js
 if ! grep -q "/api/github-webhook" server.js; then
     log_info "🔗 Adicionando endpoint webhook completo ao server.js..."
@@ -1183,7 +1293,7 @@ elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 
     log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
-    log_error "�� Falha ao criar rede $DOCKER_NETWORK"
+    log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
     exit 1
 fi
 
@@ -2040,7 +2150,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═════════════════════��═════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════════════════════���════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
