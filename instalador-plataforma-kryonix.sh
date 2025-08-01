@@ -88,8 +88,8 @@ show_banner() {
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
-    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██���      ║"
-    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo "║     ██║  ██╗██║  ██║   █��║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -1117,8 +1117,8 @@ EXPOSE 8080 8082 8084
 HEALTHCHECK --interval=15s --timeout=10s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
-ENV PORT 8080
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=8080
+ENV HOSTNAME="0.0.0.0"
 
 # Comando de start otimizado
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
