@@ -1,0 +1,294 @@
+{
+  "realm": "KRYONIX",
+  "displayName": "KRYONIX - Plataforma IA",
+  "displayNameHtml": "<div class=\"kc-logo-text\"><span>KRYONIX</span></div>",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "rememberMe": true,
+  "verifyEmail": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "waitIncrementSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+  "failureFactor": 30,
+  "defaultLocale": "pt-BR",
+  "supportedLocales": ["pt-BR", "en"],
+  "internationalizationEnabled": true,
+  "loginTheme": "kryonix",
+  "accountTheme": "kryonix", 
+  "adminTheme": "kryonix",
+  "emailTheme": "kryonix",
+  "attributes": {
+    "frontendUrl": "https://kryonix.com.br",
+    "userInfoEndpoint": "true",
+    "displayName": "KRYONIX - Sua Plataforma de IA",
+    "displayNameHtml": "<strong>KRYONIX</strong> - Plataforma Inteligente"
+  },
+  "roles": {
+    "realm": [
+      {
+        "name": "administrador",
+        "description": "Administrador com acesso total à plataforma",
+        "composite": false,
+        "clientRole": false
+      },
+      {
+        "name": "gerente",
+        "description": "Gerente com acesso a gestão de equipe e relatórios",
+        "composite": false,
+        "clientRole": false
+      },
+      {
+        "name": "usuario",
+        "description": "Usuário padrão com acesso às funcionalidades básicas",
+        "composite": false,
+        "clientRole": false
+      },
+      {
+        "name": "visualizador",
+        "description": "Acesso apenas para visualização de dados",
+        "composite": false,
+        "clientRole": false
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "Administradores",
+      "path": "/Administradores",
+      "realmRoles": ["administrador"],
+      "attributes": {
+        "description": ["Grupo de administradores da plataforma"]
+      }
+    },
+    {
+      "name": "Gerentes",
+      "path": "/Gerentes", 
+      "realmRoles": ["gerente"],
+      "attributes": {
+        "description": ["Grupo de gerentes e supervisores"]
+      }
+    },
+    {
+      "name": "Usuários",
+      "path": "/Usuários",
+      "realmRoles": ["usuario"],
+      "attributes": {
+        "description": ["Grupo de usuários padrão"]
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "kryonix",
+      "email": "vitor.nakahh@gmail.com",
+      "firstName": "Vitor",
+      "lastName": "Fernandes",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Vitor@123456",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["administrador"],
+      "groups": ["/Administradores"],
+      "attributes": {
+        "empresa": ["KRYONIX"],
+        "departamento": ["TI"],
+        "cargo": ["CEO"],
+        "telefone": ["+5517981805327"]
+      }
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "kryonix-web",
+      "name": "KRYONIX - Aplicação Web",
+      "description": "Cliente principal da aplicação web KRYONIX",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "https://www.kryonix.com.br/*",
+        "https://kryonix.com.br/*",
+        "http://localhost:3000/*",
+        "http://localhost:8080/*"
+      ],
+      "webOrigins": [
+        "https://www.kryonix.com.br",
+        "https://kryonix.com.br",
+        "http://localhost:3000",
+        "http://localhost:8080"
+      ],
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "authorizationServicesEnabled": false,
+      "fullScopeAllowed": true,
+      "attributes": {
+        "saml.assertion.signature": "false",
+        "saml.multivalued.roles": "false",
+        "saml.force.post.binding": "false",
+        "saml.encrypt": "false",
+        "saml.server.signature": "false",
+        "saml.server.signature.keyinfo.ext": "false",
+        "exclude.session.state.from.auth.response": "false",
+        "saml_force_name_id_format": "false",
+        "saml.client.signature": "false",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "saml.authnstatement": "false",
+        "display.on.consent.screen": "false",
+        "saml.onetimeuse.condition": "false",
+        "pkce.code.challenge.method": "S256"
+      },
+      "protocolMappers": [
+        {
+          "name": "nome-completo",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "firstName",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "nome",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "sobrenome",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "lastName",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "sobrenome",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "empresa",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "empresa",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "empresa",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "funcoes",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "funcoes",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "kryonix-mobile",
+      "name": "KRYONIX - App Mobile",
+      "description": "Cliente para aplicação mobile KRYONIX",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [
+        "kryonix://login",
+        "https://www.kryonix.com.br/mobile/*"
+      ],
+      "webOrigins": ["+"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "kryonix-api",
+      "description": "Escopo para acesso à API KRYONIX",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "permissoes-api",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "access.token.claim": "true",
+            "claim.name": "api_permissoes"
+          }
+        }
+      ]
+    }
+  ],
+  "smtpServer": {
+    "host": "smtp.sendgrid.net",
+    "port": "465",
+    "from": "sistema@kryonix.com.br",
+    "fromDisplayName": "KRYONIX - Sistema",
+    "ssl": "true",
+    "starttls": "false",
+    "auth": "true",
+    "user": "apikey",
+    "password": "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"
+  },
+  "eventsEnabled": true,
+  "eventsListeners": ["jboss-logging"],
+  "enabledEventTypes": [
+    "LOGIN",
+    "LOGIN_ERROR", 
+    "REGISTER",
+    "REGISTER_ERROR",
+    "LOGOUT",
+    "CODE_TO_TOKEN",
+    "PASSWORD_RESET",
+    "UPDATE_PROFILE",
+    "UPDATE_PASSWORD"
+  ],
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": true,
+  "passwordPolicy": "length(8) and digits(1) and lowerCase(1) and upperCase(1) and specialChars(1) and notUsername",
+  "otpPolicyType": "totp",
+  "otpPolicyAlgorithm": "HmacSHA1",
+  "otpPolicyInitialCounter": 0,
+  "otpPolicyDigits": 6,
+  "otpPolicyLookAheadWindow": 1,
+  "otpPolicyPeriod": 30,
+  "browserSecurityHeaders": {
+    "contentSecurityPolicyReportOnly": "",
+    "xContentTypeOptions": "nosniff",
+    "xRobotsTag": "none",
+    "xFrameOptions": "SAMEORIGIN",
+    "contentSecurityPolicy": "frame-src 'self'; frame-ancestors 'self'; object-src 'none';",
+    "xXSSProtection": "1; mode=block",
+    "strictTransportSecurity": "max-age=31536000; includeSubDomains"
+  }
+}
