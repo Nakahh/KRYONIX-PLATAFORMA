@@ -244,7 +244,7 @@ export class BiometricAuth {
         success: true,
         credential: {
           id: credential.id,
-          type: credential.type,
+          type: 'public-key',
           rawId: credential.rawId,
           response: {
             authenticatorData: (credential.response as AuthenticatorAssertionResponse).authenticatorData,
