@@ -83,7 +83,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔���═══════════════���════════════════════════════════════���═══════════╗"
+    echo "╔���═══════════════���════════════════��═══════════════════���═══════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██���███╗ ███╗   ██╗█��╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -91,7 +91,7 @@ show_banner() {
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
-    echo "║                                                                 ║"
+    echo "║                                                                 ��"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
     echo "║                                                                 ║"
@@ -2069,6 +2069,37 @@ services:
       - AUTO_UPDATE_DEPS=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  webhook:
+    image: kryonix-plataforma:latest
+    command: ["node", "webhook-listener.js"]
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 15s
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+    networks:
+      - $DOCKER_NETWORK
+    environment:
+      - NODE_ENV=production
+      - PORT=8082
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
       interval: 30s
       timeout: 10s
       retries: 3
