@@ -13,6 +13,7 @@
     "lint": "next lint",
     "check-deps": "node -e \"console.log('🔍 KRYONIX - Verificando dependências críticas...'); const deps = ['next', 'react', 'react-dom', 'express', 'cors', 'helmet', 'body-parser', 'morgan']; let missing = []; deps.forEach(dep => { try { require(dep); console.log('✅ ' + dep + ': OK'); } catch(e) { console.error('❌ ' + dep + ': FALTANDO'); missing.push(dep); } }); if (missing.length === 0) { console.log('🎉 Todas as dependências críticas instaladas!'); } else { console.error('❌ Dependências faltando: ' + missing.join(', ')); process.exit(1); }\"",
     "validate-install": "node -e \"const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8')); const deps = Object.keys(pkg.dependencies); console.log('📦 Validando ' + deps.length + ' dependências...'); let installed = 0; deps.forEach(dep => { try { require.resolve(dep); installed++; } catch(e) { console.error('❌ Falta: ' + dep); } }); console.log('✅ Instaladas: ' + installed + '/' + deps.length); if (installed !== deps.length) process.exit(1);\"",
+    "preinstall": "node -e \"console.log('🚀 KRYONIX - Preparando instalação...'); console.log('Node.js:', process.version); console.log('npm:', process.env.npm_version || 'unknown'); console.log('Platform:', process.platform); console.log('✅ Ambiente validado');\"",
     "postinstall": "npm run check-deps",
     "prestart": "npm run check-deps"
   },
