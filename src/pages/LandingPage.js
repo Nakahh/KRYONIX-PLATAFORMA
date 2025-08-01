@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Smartphone, 
-  Brain, 
-  Zap, 
-  Shield, 
-  Cloud, 
+import {
+  Smartphone,
+  Brain,
+  Zap,
+  Shield,
+  Cloud,
   MessageCircle,
   BarChart3,
   ArrowRight,
   Play,
   CheckCircle,
-  Star
+  Star,
+  Activity
 } from 'lucide-react';
 
 const LandingPage = () => {
