@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚��╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -1204,52 +1204,52 @@ if npm install --production --verbose > /tmp/npm-install.log 2>&1; then
         log_warning "⚠️ Diretório node_modules não foi criado"
     fi
 
-    # Verificar dependências críticas
-    log_info "🔍 Verificando dependências críticas..."
-    critical_deps=("next" "react" "react-dom" "express" "cors" "body-parser")
-    missing_critical=()
-
-    for dep in "${critical_deps[@]}"; do
-        if [ -d "node_modules/$dep" ]; then
-            log_info "   ✅ $dep: OK"
-        else
-            log_warning "   ❌ $dep: FALTANDO"
-            missing_critical+=("$dep")
-        fi
-    done
-
-    if [ ${#missing_critical[@]} -gt 0 ]; then
-        log_error "❌ Erro: ${#missing_critical[@]} dependências críticas faltando: ${missing_critical[*]}"
-        log_info "📋 Tentando reinstalar dependências faltantes..."
-
-        for missing_dep in "${missing_critical[@]}"; do
-            log_info "🔄 Reinstalando $missing_dep..."
-            npm install "$missing_dep" --save > /tmp/npm-fix-$missing_dep.log 2>&1
-        done
-
-        # Verificar novamente
-        final_missing=()
-        for dep in "${missing_critical[@]}"; do
-            if [ ! -d "node_modules/$dep" ]; then
-                final_missing+=("$dep")
-            fi
-        done
-
-        if [ ${#final_missing[@]} -gt 0 ]; then
-            log_error "❌ FALHA FINAL: ${#final_missing[@]} dependências ainda faltando: ${final_missing[*]}"
-            log_info "📋 Logs de instalação disponíveis em:"
-            log_info "   /tmp/npm-install.log"
-            for missing_dep in "${missing_critical[@]}"; do
-                if [ -f "/tmp/npm-fix-$missing_dep.log" ]; then
-                    log_info "   /tmp/npm-fix-$missing_dep.log"
-                fi
-            done
-            exit 1
-        else
-            log_success "✅ Todas as dependências críticas foram instaladas após correção"
+    # Usar o verificador de dependências personalizado
+    log_info "🔍 Executando verificador detalhado de dependências..."
+    if node check-dependencies.js > /tmp/deps-check.log 2>&1; then
+        log_success "✅ Verificação de dependências passou!"
+        # Mostrar resumo do verificador
+        if grep -q "SUCESSO" /tmp/deps-check.log; then
+            log_success "🎉 Todas as dependências estão instaladas corretamente"
         fi
     else
-        log_success "✅ Todas as dependências críticas estão OK"
+        log_error "❌ Verificação de dependências falhou"
+        log_info "📋 Detalhes da verificação:"
+
+        # Mostrar output do verificador
+        while IFS= read -r line; do
+            if [[ $line == *"❌"* ]]; then
+                log_error "   $line"
+            elif [[ $line == *"⚠️"* ]]; then
+                log_warning "   $line"
+            elif [[ $line == *"✅"* ]]; then
+                log_success "   $line"
+            else
+                log_info "   $line"
+            fi
+        done < /tmp/deps-check.log
+
+        # Tentar correção automática
+        log_info "🔄 Tentando correção automática..."
+        if npm install --force > /tmp/npm-force.log 2>&1; then
+            log_info "✅ Reinstalação forçada concluída"
+
+            # Verificar novamente
+            if node check-dependencies.js > /tmp/deps-check-final.log 2>&1; then
+                log_success "✅ Dependências corrigidas com sucesso!"
+            else
+                log_error "❌ Dependências ainda com problemas após correção"
+                log_info "📋 Logs disponíveis:"
+                log_info "   /tmp/npm-install.log (instalação inicial)"
+                log_info "   /tmp/deps-check.log (primeira verificação)"
+                log_info "   /tmp/npm-force.log (correção forçada)"
+                log_info "   /tmp/deps-check-final.log (verificação final)"
+                exit 1
+            fi
+        else
+            log_error "❌ Falha na correção automática"
+            exit 1
+        fi
     fi
 
 else
@@ -1796,7 +1796,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}══════════════════════════════════��════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════════════════════���═════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
 echo ""
