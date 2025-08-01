@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
-    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo "║     ██╗  ██╗█���████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚════════════════════════════���════════════════════════════════════╝"
+    echo "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -575,6 +575,80 @@ fresh_git_clone() {
     
     log_error "❌ Todas as tentativas de clone falharam"
     return 1
+}
+
+# FUNÇÃO: Verificação do clone fresh (do instalador antigo que funcionava)
+verify_fresh_clone() {
+    local target_dir="$1"
+    local expected_branch="${2:-main}"
+
+    log_info "🔍 Verificando integridade do clone fresh..."
+
+    cd "$target_dir"
+
+    # Verificar repositório Git
+    if [ ! -d ".git" ]; then
+        log_error "❌ Repositório Git não encontrado"
+        return 1
+    fi
+
+    # Obter informações do commit
+    commit_hash=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+    commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
+    commit_date=$(git log -1 --pretty=format:"%ci" 2>/dev/null || echo "N/A")
+    author=$(git log -1 --pretty=format:"%an" 2>/dev/null || echo "N/A")
+
+    log_info "📊 Informações do repositório:"
+    log_info "   Commit: $commit_hash"
+    log_info "   Mensagem: $commit_msg"
+    log_info "   Data: $commit_date"
+    log_info "   Autor: $author"
+
+    # Verificar arquivos essenciais
+    essential_files=("package.json" "server.js")
+    missing_files=()
+
+    for file in "${essential_files[@]}"; do
+        if [ ! -f "$file" ]; then
+            missing_files+=("$file")
+        fi
+    done
+
+    if [ ${#missing_files[@]} -gt 0 ]; then
+        log_error "❌ Arquivos essenciais faltando: ${missing_files[*]}"
+        return 1
+    fi
+
+    # Verificar se temos o commit remoto mais recente
+    remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
+    if [ "$commit_hash" != "$remote_commit" ] && [ "$remote_commit" != "unknown" ]; then
+        log_warning "⚠️ Commit local ($commit_hash) difere do remoto ($remote_commit)"
+        return 2  # Warning, não erro
+    fi
+
+    # Verificação específica para PR #22 (preocupação do usuário)
+    if echo "$commit_msg" | grep -qi "#22"; then
+        log_warning "⚠️ Commit atual referencia PR #22 - verificando por versões mais recentes..."
+
+        # Tentar buscar o mais recente
+        git fetch origin --force 2>/dev/null || true
+        latest_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
+
+        if [ "$commit_hash" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
+            log_warning "⚠️ Commit mais recente disponível: $latest_commit"
+
+            # Tentar atualizar para o mais recente
+            log_info "🔄 Tentando atualizar para o commit mais recente..."
+            if git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null; then
+                new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+                new_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
+                log_success "✅ Atualizado para: $new_commit - $new_msg"
+            fi
+        fi
+    fi
+
+    log_success "✅ Verificação do clone passou"
+    return 0
 }
 
 # Função para validar credenciais pré-configuradas
@@ -1493,7 +1567,7 @@ sleep 180
 # Verificar serviços com validação específica para Next.js
 log_info "Verificando status de TODOS os serviços..."
 
-# Verificar serviço web principal
+# Verificar servi��o web principal
 if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_web" | grep -q "1/1"; then
     log_success "Serviço web funcionando (1/1)"
 
