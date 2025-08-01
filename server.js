@@ -1,163 +1,183 @@
 const express = require('express');
-const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
-const { exec } = require('child_process');
-const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Middleware de segurança
 app.use(helmet({
-  contentSecurityPolicy: false, // Desabilitar para desenvolvimento
+    contentSecurityPolicy: false
 }));
 
-// Middleware
+// Middleware básico
 app.use(cors());
 app.use(compression());
-app.use(express.json());
-app.use(express.static('public'));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rotas para as páginas HTML
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// Servir arquivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/progresso', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'progresso.html'));
-});
-
-// Health check endpoint
+// Rotas básicas
 app.get('/health', (req, res) => {
-  res.json({
-    status: 'healthy',
-    service: 'KRYONIX Platform',
-    version: '1.0.0',
-    timestamp: new Date().toISOString(),
-    message: 'Página temporária - Parte 01 em desenvolvimento'
-  });
-});
-
-// API endpoints básicos (serão expandidos nas próximas partes)
-app.get('/api/status', (req, res) => {
-  res.json({
-    project: 'KRYONIX',
-    progress: {
-      current_part: 1,
-      total_parts: 50,
-      percentage: 2,
-      status: 'Configurando estrutura básica'
-    },
-    modules: {
-      completed: 0,
-      total: 8,
-      active: []
-    },
-    last_update: new Date().toISOString()
-  });
-});
-
-app.get('/api/logs', (req, res) => {
-  res.json({
-    logs: [
-      {
-        timestamp: new Date().toISOString(),
-        level: 'info',
-        message: 'Servidor KRYONIX iniciado'
-      },
-      {
-        timestamp: new Date().toISOString(),
-        level: 'success',
-        message: '✅ Estrutura básica configurada'
-      },
-      {
-        timestamp: new Date().toISOString(),
-        level: 'info',
-        message: '📋 Parte 01/50 em desenvolvimento'
-      }
-    ]
-  });
-});
-
-// Webhook GitHub para deploy automático
-app.post('/api/github-webhook', (req, res) => {
-  console.log('🔔 Webhook GitHub recebido:', new Date().toISOString());
-
-  const payload = req.body;
-  const event = req.headers['x-github-event'];
-  const signature = req.headers['x-hub-signature-256'];
-
-  // Log do payload para debug
-  console.log('📋 Event:', event);
-  console.log('📦 Payload ref:', payload?.ref);
-  console.log('🏷️ Repository:', payload?.repository?.name);
-
-  // Verificar se é push na branch main
-  if (event === 'push' && payload?.ref === 'refs/heads/main') {
-    console.log('✅ Push detectado na branch main - iniciando deploy automático');
-
-    // Executar script de deploy
-    const deployScript = '/opt/kryonix-plataform/webhook-deploy.sh';
-
-    if (fs.existsSync(deployScript)) {
-      exec(`bash ${deployScript} auto`, (error, stdout, stderr) => {
-        if (error) {
-          console.error('❌ Erro no deploy automático:', error);
-          return;
-        }
-        console.log('📋 Deploy output:', stdout);
-        if (stderr) console.log('⚠️ Deploy stderr:', stderr);
-      });
-
-      res.json({
-        message: 'Deploy automático iniciado',
-        status: 'accepted',
-        ref: payload.ref,
-        timestamp: new Date().toISOString(),
-        deploy_method: 'webhook_script'
-      });
-    } else {
-      // Fallback para rebuild interno
-      console.log('📋 Script não encontrado, usando rebuild interno');
-
-      exec('cd /opt/kryonix-plataform && docker build -t kryonix-plataforma:latest . && docker service update --image kryonix-plataforma:latest Kryonix_web', (error, stdout, stderr) => {
-        if (error) {
-          console.error('❌ Erro no rebuild:', error);
-          return;
-        }
-        console.log('✅ Rebuild completado');
-      });
-
-      res.json({
-        message: 'Deploy automático iniciado',
-        status: 'accepted',
-        ref: payload.ref,
-        timestamp: new Date().toISOString(),
-        deploy_method: 'internal_docker_rebuild'
-      });
-    }
-  } else {
-    console.log('ℹ️ Evento ignorado - não é push na main');
     res.json({
-      message: 'Evento recebido mas ignorado',
-      status: 'ignored',
-      event: event,
-      ref: payload?.ref,
-      timestamp: new Date().toISOString()
+        status: 'healthy',
+        service: 'KRYONIX',
+        timestamp: new Date().toISOString(),
+        environment: NODE_ENV,
+        port: PORT,
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        version: '1.0.0'
     });
-  }
 });
 
-// Fallback para SPA
+app.get('/api/status', (req, res) => {
+    res.json({
+        service: 'KRYONIX',
+        status: 'operational',
+        timestamp: new Date().toISOString(),
+        environment: NODE_ENV
+    });
+});
+
+// Webhook do GitHub - APENAS AS CORREÇÕES MÍNIMAS NECESSÁRIAS
+const crypto = require('crypto');
+const { spawn } = require('child_process');
+const fs = require('fs');
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
+
+// Função para verificar assinatura (CORRIGIDA)
+const verifyGitHubSignature = (payload, signature) => {
+    if (!signature) {
+        console.log('⚠️ Webhook sem assinatura - rejeitando por segurança');
+        return false;
+    }
+
+    try {
+        const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+        hmac.update(JSON.stringify(payload));
+        const calculatedSignature = 'sha256=' + hmac.digest('hex');
+
+        const isValid = crypto.timingSafeEqual(
+            Buffer.from(signature),
+            Buffer.from(calculatedSignature)
+        );
+
+        console.log(`🔐 Assinatura: ${isValid ? '✅ Válida' : '❌ Inválida'}`);
+        return isValid;
+    } catch (error) {
+        console.error('❌ Erro na verificação:', error.message);
+        return false;
+    }
+};
+
+// Endpoint webhook (CORRIGIDO com filtros específicos)
+app.post('/api/github-webhook', (req, res) => {
+    console.log('🔔 Webhook recebido:', new Date().toISOString());
+
+    const payload = req.body;
+    const event = req.headers['x-github-event'];
+    const signature = req.headers['x-hub-signature-256'];
+
+    console.log(`📋 Event: ${event || 'NONE'}, Ref: ${payload?.ref || 'N/A'}`);
+
+    // CORREÇÃO 1: Verificação de assinatura obrigatória
+    if (!verifyGitHubSignature(payload, signature)) {
+        console.log('❌ Webhook rejeitado: assinatura inválida');
+        return res.status(401).json({ 
+            error: 'Invalid signature',
+            timestamp: new Date().toISOString()
+        });
+    }
+
+    // CORREÇÃO 2: Filtros específicos para push na main
+    const isValidEvent = event === 'push';
+    const isValidRef = payload?.ref === 'refs/heads/main';
+
+    if (!isValidEvent) {
+        console.log(`ℹ️ Evento ignorado: ${event} (esperado: push)`);
+        return res.json({
+            message: 'Evento ignorado - apenas push aceito',
+            event: event,
+            status: 'ignored'
+        });
+    }
+
+    if (!isValidRef) {
+        console.log(`ℹ️ Branch ignorada: ${payload?.ref} (esperado: main)`);
+        return res.json({
+            message: 'Branch ignorada - apenas main aceita',
+            ref: payload?.ref,
+            status: 'ignored'
+        });
+    }
+
+    console.log('✅ Push válido na main - iniciando deploy');
+
+    // CORREÇÃO 3: Usar path relativo correto
+    const deployScriptPath = './webhook-deploy.sh';
+    
+    if (!fs.existsSync(deployScriptPath)) {
+        console.error('❌ Script não encontrado:', deployScriptPath);
+        return res.status(500).json({
+            error: 'Deploy script not found',
+            path: deployScriptPath
+        });
+    }
+
+    console.log('🚀 Executando deploy...');
+
+    const deployProcess = spawn('bash', [deployScriptPath, 'webhook'], {
+        cwd: process.cwd(),
+        stdio: 'pipe'
+    });
+
+    deployProcess.stdout.on('data', (data) => {
+        console.log('📋 Deploy:', data.toString().trim());
+    });
+
+    deployProcess.stderr.on('data', (data) => {
+        console.error('⚠️ Deploy stderr:', data.toString().trim());
+    });
+
+    deployProcess.on('close', (code) => {
+        console.log(`🔄 Deploy finalizado com código: ${code}`);
+    });
+
+    // Resposta imediata
+    res.json({
+        message: 'Deploy iniciado com sucesso',
+        status: 'accepted',
+        ref: payload?.ref,
+        sha: payload?.after,
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Endpoint para teste
+app.post('/api/webhook-test', (req, res) => {
+    console.log('🧪 Teste webhook:', req.body);
+    res.json({
+        message: 'Teste recebido',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Fallback para SPA (DEVE SER O ÚLTIMO)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`KRYONIX Platform rodando em http://0.0.0.0:${PORT}`);
-  console.log(`📊 Progresso em: http://0.0.0.0:${PORT}/progresso`);
-  console.log(`🔍 Health check: http://0.0.0.0:${PORT}/health`);
-  console.log(`📱 Mobile-first otimizado para 80% usuários mobile`);
+    console.log(`🚀 KRYONIX server running on port ${PORT}`);
+    console.log(`🌐 Environment: ${NODE_ENV}`);
+    console.log(`🔗 Health check: http://localhost:${PORT}/health`);
 });
+
+module.exports = app;

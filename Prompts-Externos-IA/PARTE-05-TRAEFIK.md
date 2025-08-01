@@ -5,9 +5,10 @@
 
 ## 🎯 **CONTEXTO**
 - **Servidor**: 144.202.90.55
-- **Objetivo**: Otimizar Traefik para performance mobile e SSL automático
-- **Dependências**: Redis, PostgreSQL, MinIO funcionando
+- **Objetivo**: Configurar Traefik para roteamento multi-tenant e subdomínios automáticos
+- **Dependências**: Redis multi-tenant, PostgreSQL, MinIO funcionando
 - **Login Master**: kryonix / Vitor@123456
+- **Novo foco**: Roteamento automático para *.kryonix.com.br (FLUXO COMPLETO)
 
 ---
 
@@ -29,8 +30,8 @@ mkdir -p /opt/kryonix/backups/traefik/$(date +%Y%m%d_%H%M%S)
 docker exec traefik cp -r /etc/traefik /tmp/traefik-backup
 docker cp traefik:/tmp/traefik-backup /opt/kryonix/backups/traefik/$(date +%Y%m%d_%H%M%S)/
 
-# === CONFIGURAR TRAEFIK OTIMIZADO PARA MOBILE ===
-echo "⚡ Configurando Traefik otimizado para mobile..."
+# === CONFIGURAR TRAEFIK PARA MULTI-TENANCY E SUBDOMÍNIOS AUTOMÁTICOS ===
+echo "⚡ Configurando Traefik para multi-tenancy e subdomínios automáticos..."
 mkdir -p /opt/kryonix/config/traefik
 
 cat > /opt/kryonix/config/traefik/traefik.yml << 'EOF'
@@ -81,7 +82,7 @@ providers:
     filename: /etc/traefik/dynamic.yml
     watch: true
 
-# Certificados SSL automáticos
+# Certificados SSL automáticos para multi-tenancy
 certificatesResolvers:
   letsencrypt:
     acme:
@@ -89,12 +90,18 @@ certificatesResolvers:
       storage: /data/acme.json
       httpChallenge:
         entryPoint: web
-      # Usar DNS challenge para wildcards
+
+  # Wildcard para subdomínios automáticos (FLUXO COMPLETO)
+  letsencrypt-wildcard:
+    acme:
+      email: admin@kryonix.com.br
+      storage: /data/acme-wildcard.json
       dnsChallenge:
         provider: cloudflare
         resolvers:
           - "1.1.1.1:53"
           - "8.8.8.8:53"
+        delayBeforeCheck: 60
 
 # API e Dashboard
 api:
@@ -239,14 +246,315 @@ http:
         accessControlMaxAge: 3600
         addVaryHeader: true
 
-  # Serviços personalizados
+    # === MIDDLEWARES MULTI-TENANT E SDK ===
+
+    # Middleware para roteamento multi-tenant automático (ARQUITETURA SDK)
+    tenant-routing:
+      forwardAuth:
+        address: "http://kryonix-tenant-router:8080/validate-tenant"
+        trustForwardHeader: true
+        authRequestHeaders:
+          - "Host"
+          - "X-Forwarded-Host"
+          - "X-Real-IP"
+        authResponseHeaders:
+          - "X-Tenant-ID"
+          - "X-Client-Database"
+          - "X-Allowed-Modules"
+          - "X-Subdomain"
+          - "X-Plan-Type"
+          - "X-Payment-Status"
+          - "X-Rate-Limit"
+
+    # Middleware para criação automática de subdomínios (FLUXO COMPLETO)
+    auto-subdomain-creator:
+      forwardAuth:
+        address: "http://kryonix-provisioner:8080/auto-create"
+        trustForwardHeader: true
+        authRequestHeaders:
+          - "Host"
+          - "User-Agent"
+          - "X-Forwarded-For"
+        authResponseHeaders:
+          - "X-Auto-Created"
+          - "X-Tenant-Status"
+          - "X-Creation-Time"
+          - "X-Provisioning-Progress"
+          - "X-Database-Created"
+          - "X-Modules-Enabled"
+
+    # Middleware para validação de pagamento por cliente (ARQUITETURA SDK)
+    payment-validator:
+      forwardAuth:
+        address: "http://kryonix-payment-service:8080/validate-payment"
+        trustForwardHeader: true
+        authRequestHeaders:
+          - "X-Tenant-ID"
+          - "X-API-Key"
+        authResponseHeaders:
+          - "X-Payment-Valid"
+          - "X-Subscription-Status"
+          - "X-Plan-Limits"
+          - "X-Usage-Quota"
+
+    # Middleware para headers multi-tenant
+    multi-tenant-headers:
+      headers:
+        customRequestHeaders:
+          X-Tenant-Isolation: "enabled"
+          X-Data-Encryption: "active"
+        customResponseHeaders:
+          X-Tenant-Served: "{{.Request.Header.Get \"X-Tenant-ID\"}}"
+          X-API-Version: "v1.0"
+          X-Powered-By: "KRYONIX Multi-Tenant"
+          X-Instance-ID: "{{.Request.Header.Get \"X-Instance-ID\"}}"
+
+    # Middleware para SDK identification (SDK HOSPEDAGEM)
+    sdk-headers:
+      headers:
+        customRequestHeaders:
+          X-SDK-Platform: "auto-detect"
+          X-Client-Version: "{{.Request.Header.Get \"User-Agent\"}}"
+        customResponseHeaders:
+          X-SDK-Endpoints: "https://api.kryonix.com.br/v1/endpoints"
+          X-SDK-Documentation: "https://sdk.kryonix.com.br"
+          X-Rate-Limit-Remaining: "{{.Request.Header.Get \"X-Rate-Limit\"}}"
+          X-NPM-Package: "@kryonix/sdk@latest"
+
+    # Middleware para otimização mobile (APPS MOBILE)
+    mobile-optimization:
+      headers:
+        customResponseHeaders:
+          # PWA Support
+          X-UA-Compatible: "IE=edge"
+          # Performance mobile
+          Server-Timing: "processing;dur={{.Request.ProcessingTime}}"
+          # Caching otimizado mobile
+          Cache-Control: "public, max-age=31536000, immutable"
+          # Service Worker support
+          Service-Worker-Allowed: "/"
+          # App Cache
+          X-Mobile-Cache: "enabled"
+          X-PWA-Installable: "true"
+
+    # Middleware para detecção mobile automática (APPS MOBILE)
+    mobile-detector:
+      plugin:
+        mobile_user_agents:
+          - "Mobile"
+          - "Android"
+          - "iPhone"
+          - "iPad"
+          - "Opera Mini"
+        redirect_mobile: false
+        add_headers: true
+        mobile_subdomain: false
+
+    # Middleware para cache inteligente por tenant
+    tenant-cache:
+      plugin:
+        cache_key_template: "tenant:{{.Request.Header.Get \"X-Tenant-ID\"}}:path:{{.Request.URL.Path}}:query:{{.Request.URL.RawQuery}}"
+        ttl_by_path:
+          "/api/": "5m"
+          "/static/": "1h"
+          "/app/": "15m"
+          "/downloads/": "24h"
+        vary_headers: ["X-Tenant-ID", "User-Agent", "Accept-Language"]
+
+    # Middleware para métricas por tenant
+    tenant-metrics:
+      plugin:
+        metrics_prefix: "kryonix_tenant"
+        labels:
+          - "tenant_id"
+          - "api_module"
+          - "plan_type"
+          - "request_path"
+        export_to: "prometheus:9090"
+        custom_metrics:
+          - "tenant_requests_total"
+          - "tenant_response_time"
+          - "tenant_errors_total"
+
+  # Rotas específicas para multi-tenancy e APIs modulares
+  routers:
+    # Rota principal para subdomínios automáticos (FLUXO COMPLETO)
+    tenant-subdomain:
+      rule: "Host(`{tenant:[a-z0-9-]+}.kryonix.com.br`)"
+      service: "kryonix-tenant-app"
+      middlewares:
+        - "auto-subdomain-creator@file"
+        - "tenant-routing@file"
+        - "payment-validator@file"
+        - "multi-tenant-headers@file"
+        - "mobile-optimization@file"
+        - "tenant-cache@file"
+      tls:
+        certResolver: "letsencrypt-wildcard"
+      priority: 100
+
+    # Rotas para as 8 APIs modulares (ARQUITETURA SDK)
+    api-crm:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/crm`)"
+      service: "kryonix-api-crm"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-whatsapp:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/whatsapp`)"
+      service: "kryonix-api-whatsapp"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-agendamento:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/agendamento`)"
+      service: "kryonix-api-agendamento"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-financeiro:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/financeiro`)"
+      service: "kryonix-api-financeiro"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-marketing:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/marketing`)"
+      service: "kryonix-api-marketing"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-analytics:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/analytics`)"
+      service: "kryonix-api-analytics"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-portal:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/portal`)"
+      service: "kryonix-api-portal"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    api-whitelabel:
+      rule: "Host(`api.kryonix.com.br`) && PathPrefix(`/whitelabel`)"
+      service: "kryonix-api-whitelabel"
+      middlewares:
+        - "api-cors@file"
+        - "api-rate-limit@file"
+        - "tenant-routing@file"
+        - "sdk-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    # Rota para SDK unificado (SDK HOSPEDAGEM)
+    sdk-unified:
+      rule: "Host(`sdk.kryonix.com.br`)"
+      service: "kryonix-sdk-server"
+      middlewares:
+        - "compression@file"
+        - "sdk-headers@file"
+        - "security-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+    # Rota para downloads de apps mobile (APPS MOBILE)
+    app-downloads:
+      rule: "Host(`downloads.kryonix.com.br`)"
+      service: "kryonix-app-downloads"
+      middlewares:
+        - "mobile-optimization@file"
+        - "tenant-routing@file"
+        - "security-headers@file"
+      tls:
+        certResolver: "letsencrypt"
+
+  # Serviços personalizados multi-tenant e APIs modulares
   services:
-    # Load balancer para múltiplas instâncias
-    kryonix-app-lb:
+    # === SERVIÇOS CORE MULTI-TENANT ===
+
+    # Tenant Router - Roteamento automático por cliente (ARQUITETURA SDK)
+    kryonix-tenant-router:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-tenant-router-1:8080"
+          - url: "http://kryonix-tenant-router-2:8080"
+        healthCheck:
+          path: "/health"
+          interval: "15s"
+          timeout: "5s"
+        sticky:
+          cookie:
+            name: "tenant-session"
+            secure: true
+            httpOnly: true
+
+    # Provisioner - Criação automática de subdomínios (FLUXO COMPLETO)
+    kryonix-provisioner:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-provisioner:8080"
+        healthCheck:
+          path: "/provisioner/health"
+          interval: "30s"
+          timeout: "10s"
+        circuitBreaker:
+          expression: "LatencyAtQuantileMS(50.0) > 1000"
+
+    # Payment Service - Validação de pagamentos (ARQUITETURA SDK)
+    kryonix-payment-service:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-payment-service:8080"
+        healthCheck:
+          path: "/payment/health"
+          interval: "20s"
+          timeout: "5s"
+
+    # === APLICAÇÃO TENANT (APPS MOBILE) ===
+
+    # Aplicação principal multi-tenant
+    kryonix-tenant-app:
       loadBalancer:
         servers:
           - url: "http://kryonix-app-1:3000"
           - url: "http://kryonix-app-2:3000"
+          - url: "http://kryonix-app-3:3000"
         healthCheck:
           path: "/health"
           interval: "30s"
@@ -258,19 +566,120 @@ http:
             name: "kryonix-server"
             secure: true
             httpOnly: true
-    
-    # API Gateway com circuit breaker
-    kryonix-api-lb:
+
+    # === 8 APIS MODULARES (ARQUITETURA SDK) ===
+
+    # API CRM - Gestão de leads e vendas
+    kryonix-api-crm:
       loadBalancer:
         servers:
-          - url: "http://kryonix-api-1:8000"
-          - url: "http://kryonix-api-2:8000"
+          - url: "http://kryonix-api-crm-1:8000"
+          - url: "http://kryonix-api-crm-2:8000"
         healthCheck:
-          path: "/api/health"
+          path: "/api/crm/health"
           interval: "15s"
           timeout: "5s"
-        # Circuit breaker para resiliência
-        passHostHeader: true
+          headers:
+            X-Health-Check: "traefik"
+        circuitBreaker:
+          expression: "NetworkErrorRatio() > 0.30"
+          recoveryDuration: "30s"
+
+    # API WhatsApp - Integração Evolution + N8N
+    kryonix-api-whatsapp:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-whatsapp-1:8000"
+          - url: "http://kryonix-api-whatsapp-2:8000"
+        healthCheck:
+          path: "/api/whatsapp/status"
+          interval: "10s"
+          timeout: "5s"
+        circuitBreaker:
+          expression: "NetworkErrorRatio() > 0.20"
+          recoveryDuration: "20s"
+
+    # API Agendamento - Sistema de agendas
+    kryonix-api-agendamento:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-agendamento-1:8000"
+        healthCheck:
+          path: "/api/agendamento/health"
+          interval: "20s"
+          timeout: "5s"
+
+    # API Financeiro - Cobrança e pagamentos
+    kryonix-api-financeiro:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-financeiro-1:8000"
+        healthCheck:
+          path: "/api/financeiro/health"
+          interval: "15s"
+          timeout: "5s"
+
+    # API Marketing - Campanhas e email
+    kryonix-api-marketing:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-marketing-1:8000"
+        healthCheck:
+          path: "/api/marketing/health"
+          interval: "30s"
+          timeout: "10s"
+
+    # API Analytics - Relatórios e BI
+    kryonix-api-analytics:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-analytics-1:8000"
+        healthCheck:
+          path: "/api/analytics/health"
+          interval: "20s"
+          timeout: "5s"
+
+    # API Portal - Portal do cliente
+    kryonix-api-portal:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-portal-1:8000"
+        healthCheck:
+          path: "/api/portal/health"
+          interval: "25s"
+          timeout: "5s"
+
+    # API Whitelabel - Customização branding
+    kryonix-api-whitelabel:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-api-whitelabel-1:8000"
+        healthCheck:
+          path: "/api/whitelabel/health"
+          interval: "30s"
+          timeout: "10s"
+
+    # === SERVIÇOS SDK E APPS (SDK HOSPEDAGEM + APPS MOBILE) ===
+
+    # SDK Server - Hospedagem do SDK unificado
+    kryonix-sdk-server:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-sdk-server:8080"
+        healthCheck:
+          path: "/sdk/health"
+          interval: "30s"
+          timeout: "5s"
+
+    # App Downloads - Download de apps mobile
+    kryonix-app-downloads:
+      loadBalancer:
+        servers:
+          - url: "http://kryonix-downloads:8080"
+        healthCheck:
+          path: "/downloads/health"
+          interval: "60s"
+          timeout: "10s"
 
 # TLS otimizado para mobile
 tls:
