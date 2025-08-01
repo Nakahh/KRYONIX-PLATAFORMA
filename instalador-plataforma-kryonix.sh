@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚��╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -847,7 +847,7 @@ app.post('/api/github-webhook', (req, res) => {
 
     console.log('✅ Push VÁLIDO na main - iniciando deploy automático KRYONIX');
 
-    // CORREÇÃO 3: Path relativo correto e verificação de arquivo
+    // CORREÇ��O 3: Path relativo correto e verificação de arquivo
     const deployScriptPath = path.join(process.cwd(), 'webhook-deploy.sh');
 
     if (!fs.existsSync(deployScriptPath)) {
@@ -1986,7 +1986,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════��═══${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2009,7 +2009,7 @@ fi
 
 echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠�� VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
@@ -2037,11 +2037,14 @@ echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
 echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
 echo ""
-echo -e "${GREEN}${BOLD}🎯 MELHORIAS IMPLEMENTADAS:${RESET}"
-echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup - Remove TUDO antes de começar"
-echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
-echo -e "    ${BLUE}│${RESET} ✅ Versão mais recente - Não fica preso em versões antigas"
-echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
+echo -e "${GREEN}${BOLD}🎯 CORREÇÕES WEBHOOK IMPLEMENTADAS:${RESET}"
+echo -e "    ${BLUE}│${RESET} ✅ Dependências corrigidas - Express, CORS, Helmet adicionados"
+echo -e "    ${BLUE}│${RESET} ✅ Package.json corrigido - Dependências deprecadas substituídas"
+echo -e "    ${BLUE}│${RESET} ✅ Webhook endpoint melhorado - Logs detalhados e filtros específicos"
+echo -e "    ${BLUE}│${RESET} ✅ Script deploy inteligente - Backup, verificações e rollback"
+echo -e "    ${BLUE}│${RESET} ✅ Verificação assinatura obrigatória - Segurança máxima"
+echo -e "    ${BLUE}│${RESET} ✅ Filtros branch específicos - Apenas refs/heads/main"
+echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup + Clone fresh - Sempre versão mais recente"
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
 echo ""
