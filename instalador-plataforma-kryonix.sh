@@ -840,7 +840,7 @@ const verifyGitHubSignature = (payload, signature) => {
 app.post('/api/github-webhook', (req, res) => {
     const timestamp = new Date().toISOString();
     console.log('🔔 ===============================================');
-    console.log('█� WEBHOOK GITHUB RECEBIDO KRYONIX:', timestamp);
+    console.log('🔔 WEBHOOK GITHUB RECEBIDO KRYONIX:', timestamp);
     console.log('🔔 ===============================================');
 
     const payload = req.body;
