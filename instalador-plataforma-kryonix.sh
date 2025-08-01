@@ -728,7 +728,7 @@ log_info "📝 Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    log_warning "⚠️ ATEN█ÃO: Ainda detectando referência ao PR #22"
+    log_warning "⚠️ ATENÇÃO: Ainda detectando referência ao PR #22"
     log_info "Isso pode significar que o PR #22 É a versão mais recente no GitHub"
     log_info "Ou pode haver um problema de sincronização"
 else
