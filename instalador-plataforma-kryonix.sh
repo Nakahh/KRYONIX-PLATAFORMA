@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo "╔���═══════════════���════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
-    echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗█��╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -100,7 +100,8 @@ show_banner() {
     echo "╚══���════════════���═��══���═════════════════════════════��══════════════╝"
     echo -e "${RESET}\n"
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
-    echo -e "${CYAN}🛠️ Auto-detecção e correção de erros de módulos './734.js' e similares${RESET}\n"
+    echo -e "${CYAN}🛠️ Auto-detecção e correção de erros de módulos './734.js' e similares${RESET}"
+    echo -e "${YELLOW}🚨 NOVA: Auto-reparo de falhas 0/1 replicas em Docker Swarm${RESET}\n"
 }
 
 # Sistema unificado de barra animada - CORRIGIDO
@@ -137,7 +138,7 @@ animate_progress_bar() {
             ;;
     esac
 
-    # Mostrar cabe��alho apenas uma vez por etapa
+    # Mostrar cabeçalho apenas uma vez por etapa
     if [ "$CURRENT_STEP_BAR_SHOWN" = false ]; then
         echo ""
         echo -e "${status_icon} ${WHITE}${BOLD}Etapa $step/$total: $description${RESET}"
@@ -782,7 +783,7 @@ next_step
 processing_step
 if ! validate_credentials; then
     error_step
-    log_error "Falha na validação das credenciais"
+    log_error "Falha na validaç��o das credenciais"
     exit 1
 fi
 complete_step
@@ -2450,7 +2451,7 @@ deploy() {
             attempt=$((attempt + 1))
         done
 
-        log "❌ Falha ao reparar serviço $service_name após $max_attempts tentativas"
+        log "❌ Falha ao reparar servi��o $service_name após $max_attempts tentativas"
         return 1
     }
 
@@ -2635,7 +2636,7 @@ else
 
     # Mostrar logs do monitor se houver problema
     log_info "📋 Logs do monitor:"
-    docker service logs "${STACK_NAME}_monitor" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
+    docker service logs "${STACK_NAME}_monitor" --tail 10 2>/dev/null || log_warning "Logs não dispon��veis"
 fi
 
 # Webhook agora está integrado no serviço web, então testar diretamente
@@ -2741,7 +2742,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���═════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}══════════════════════════���════════════════════════════════════������══${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════��═���════════════════════════════════════������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
