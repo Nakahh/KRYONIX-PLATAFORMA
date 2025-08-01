@@ -98,6 +98,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-success-50">
+      {/* Mobile Menu */}
+      <MobileMenu />
+
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container-custom py-4">
