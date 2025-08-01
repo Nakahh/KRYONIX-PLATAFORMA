@@ -61,7 +61,7 @@ STEP_DESCRIPTIONS=(
     "Clone FRESH da versão mais recente 🔄"
     "Atualizando dependências automaticamente 📦"
     "Verificando e corrigindo dependências 🔍"
-    "Criando arquivos de serviços ����"
+    "Criando arquivos de serviços 📄"
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
     "Verificando Traefik 📊"
@@ -83,7 +83,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔═════════════════════════════════════════════════════════════════╗"
+    echo "╔══════════════════════════════════��══════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -616,7 +616,7 @@ show_banner
 # Detecção automática do ambiente
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - DEPENDÊNCIAS SEMPRE ATUALIZADAS${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
-echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
+echo -e "${BLUE}🖥��� Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
@@ -1073,12 +1073,32 @@ version: '3.8'
 services:
   web:
     image: kryonix-plataforma:latest
+    networks:
+      - $DOCKER_NETWORK
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - AUTO_UPDATE_DEPS=true
+      - WEBHOOK_SECRET=$WEBHOOK_SECRET
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 120s
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
         max_attempts: 3
-        delay: 10s
+        delay: 15s
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
       labels:
         # Traefik básico
         - "traefik.enable=true"
@@ -1122,20 +1142,53 @@ services:
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
+        # Middleware de Segurança para API
+        - "traefik.http.middlewares.api-security.headers.customrequestheaders.X-Forwarded-Proto=https"
+        - "traefik.http.middlewares.api-security.headers.customresponseheaders.X-Frame-Options=SAMEORIGIN"
+        - "traefik.http.routers.kryonix-webhook.middlewares=api-security"
+        - "traefik.http.routers.kryonix-api.middlewares=api-security"
+
+  webhook:
+    image: kryonix-plataforma:latest
+    command: ["node", "webhook-listener.js"]
     networks:
       - $DOCKER_NETWORK
-    ports:
-      - "8080:8080"
     environment:
       - NODE_ENV=production
-      - PORT=8080
-      - AUTO_UPDATE_DEPS=true
+      - PORT=8082
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 45s
+      timeout: 15s
       retries: 3
-      start_period: 60s
+      start_period: 90s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 15s
+
+  monitor:
+    image: kryonix-plataforma:latest
+    command: ["node", "kryonix-monitor.js"]
+    networks:
+      - $DOCKER_NETWORK
+    environment:
+      - NODE_ENV=production
+      - PORT=8084
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
+      interval: 45s
+      timeout: 15s
+      retries: 3
+      start_period: 90s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 15s
 
 networks:
   $DOCKER_NETWORK:
