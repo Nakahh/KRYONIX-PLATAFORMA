@@ -51,6 +51,10 @@ function App() {
                   <Route path="/login" element={<Login />} />
                   <Route
                     path="/dashboard"
+                    element={<KryonixDashboard />}
+                  />
+                  <Route
+                    path="/dashboard-old"
                     element={
                       <ProtectedRoute>
                         <Dashboard />
