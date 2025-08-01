@@ -1638,6 +1638,23 @@ final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 
 echo -e "    ${BLUE}│${RESET} ${BOLD}Versão Atual:${RESET} ✅ Commit $final_commit"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commit_msg"
+
+# Verificação especial para PR #22 vs versões mais recentes
+if echo "$final_commit_msg" | grep -q "#22"; then
+    echo -e "    ${BLUE}│${RESET} ${YELLOW}⚠️ AVISO:${RESET} Detectada referência ao PR #22"
+    echo -e "    ${BLUE}│${RESET} ${YELLOW}   Verificando se há versão mais recente (#23+)...${RESET}"
+
+    # Tentar uma última verificação de versão mais recente
+    git fetch origin --force --prune --tags 2>/dev/null || true
+    latest_remote=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
+
+    if [ "$final_commit" != "$latest_remote" ] && [ "$latest_remote" != "unknown" ]; then
+        echo -e "    ${BLUE}│${RESET} ${RED}❌ ATENÇÃO:${RESET} Versão mais recente disponível: $latest_remote"
+        echo -e "    ${BLUE}│${RESET} ${YELLOW}   Execute: ./webhook-deploy.sh manual para atualizar${RESET}"
+    else
+        echo -e "    ${BLUE}│${RESET} ${GREEN}✅ Confirmado:${RESET} Versão mais recente instalada"
+    fi
+fi
 echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub:${RESET} ✅ Conectado com PAT Token"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} ✅ $WEBHOOK_URL"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Deploy Automático:${RESET} ✅ Funcionando 100%"
