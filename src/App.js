@@ -43,6 +43,7 @@ function App() {
             <NotificationProvider>
               <div className="App min-h-screen bg-gray-50">
                 <Routes>
+                  <Route path="/test" element={<TestComponent />} />
                   <Route path="/" element={<HomePage />} />
                   <Route path="/login" element={<Login />} />
                   <Route
