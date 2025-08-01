@@ -123,7 +123,7 @@ show_banner() {
     echo ""
     echo -e "${GOLD}${BOLD}╭��[ 🖥️  INFO ]──────────���──────────────────────────────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
-    echo -e "${GOLD}╰───────────────────────────────────────���──────────────────────────────────────╯${RESET}"
+    echo -e "${GOLD}╰───────────────────────────────────────����──────────────────────────────────────╯${RESET}"
 
     # Funcionalidades em linha única
     echo ""
@@ -418,7 +418,7 @@ fresh_git_clone() {
     git credential-manager-core erase <<< "url=https://github.com" 2>/dev/null || true
     git credential erase <<< "url=https://github.com" 2>/dev/null || true
 
-    # CORREÇÃO: Configurar credenciais para repositório privado
+    # CORRE��ÃO: Configurar credenciais para repositório privado
     git config --global credential.helper store
     echo "https://Nakahh:${pat_token}@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
@@ -1411,9 +1411,16 @@ deploy() {
     log "🚀 Fazendo deploy do stack KRYONIX..."
     docker stack deploy -c docker-stack.yml "$STACK_NAME"
 
+    # Força restart de todos os containers para garantir atualização
+    log "🔄 Forçando restart de todos os containers..."
+    sleep 15
+    docker service update --force "${STACK_NAME}_kryonix-web" 2>/dev/null || true
+    docker service update --force "${STACK_NAME}_kryonix-webhook" 2>/dev/null || true
+    docker service update --force "${STACK_NAME}_kryonix-monitor" 2>/dev/null || true
+
     # Aguardar estabilização
     log "⏳ Aguardando estabilização dos serviços..."
-    sleep 30
+    sleep 45
 
     # Verificação completa de health
     log "🔍 Verificando health de TODOS os serviços..."
@@ -1991,7 +1998,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
-echo -e "${GOLD}${BOLD}███████████████████████████████████████████████████████████████████��████████████${RESET}"
+echo -e "${GOLD}${BOLD}█████████████████████████��█████████████████████████████████████████��████████████${RESET}"
 echo ""
 echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 KRYONIX PLATFORM - INSTALAÇÃO COMPLETA${RESET}                          ${MAGENTA}│${RESET}"
@@ -2063,7 +2070,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Segurança avançada - Assinatura criptográ
 echo -e "    ${BLUE}│${RESET} ✅ Controle de branch - Deploy apenas da branch principal"
 echo -e "    ${BLUE}│${RESET} ✅ Ambiente limpo - Instalação completa e organizada"
 echo ""
-echo -e "${CYAN}${BOLD}╔═════════════════��═════════════════��═══════════════════════════════════════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔═════════════════��═════════════════��═════════════════════���═════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
@@ -2072,7 +2079,7 @@ echo -e "${CYAN}║${RESET} ${WHITE}📧 Email:${RESET} ${TURQUOISE}admin@kryoni
 echo -e "${CYAN}║${RESET} ${WHITE}💻 GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${BLINK}${YELLOW}⚡ AGORA TODA ALTERAÇÃO NO GITHUB ATUALIZA O SITE AUTOMATICAMENTE! ⚡${RESET}  ${CYAN}║${RESET}"
-echo -e "${CYAN}╚═══���═══════���══════════���══════��═════����════════════��═══════════════════════════════��══╝${RESET}"
+echo -e "${CYAN}╚═══���══════������══════════���══════��═════����════════════��═══════════════════════════════��══╝${RESET}"
 echo ""
 
 # Instalador KRYONIX finalizado com sucesso
