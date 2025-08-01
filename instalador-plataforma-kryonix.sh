@@ -635,7 +635,7 @@ verify_fresh_clone() {
         latest_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
 
         if [ "$commit_hash" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
-            log_warning "⚠️ Commit mais recente disponível: $latest_commit"
+            log_warning "���️ Commit mais recente disponível: $latest_commit"
 
             # Tentar atualizar para o mais recente
             log_info "🔄 Tentando atualizar para o commit mais recente..."
@@ -1007,7 +1007,7 @@ elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 
     log_success "✅ Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
-    log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
+    log_error "�� Falha ao criar rede $DOCKER_NETWORK"
     exit 1
 fi
 
@@ -1072,7 +1072,24 @@ RUN npm ci --only=production --ignore-scripts && npm cache clean --force
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+# Copiar arquivos de configuração
+COPY package.json package-lock.json* ./
+COPY next.config.js ./
+COPY tailwind.config.js ./
+COPY postcss.config.js ./
+COPY tsconfig.json ./
+# Copiar arquivos de dependências
+COPY check-dependencies.js ./
+COPY validate-dependencies.js ./
+COPY fix-dependencies.js ./
+# Copiar código fonte
+COPY app/ ./app/
+COPY public/ ./public/
+COPY lib/ ./lib/
+COPY server.js ./
+COPY webhook-listener.js ./
+COPY kryonix-monitor.js ./
+COPY webhook-deploy.sh ./
 
 # Build Next.js application
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -1156,7 +1173,7 @@ log_info "🔍 Verificando TODOS os arquivos necessários para Docker build..."
 required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js")
 missing_files=()
 
-# Criar public/index.html se não existir
+# Criar public/index.html se n��o existir
 if [ ! -f "public/index.html" ]; then
     mkdir -p public
     echo '<!DOCTYPE html><html><head><title>KRYONIX</title></head><body><h1>KRYONIX Platform</h1></body></html>' > public/index.html
