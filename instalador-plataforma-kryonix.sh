@@ -83,7 +83,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔══════════════════════════════════��══════════════════════════════╗"
+    echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -616,7 +616,7 @@ show_banner
 # Detecção automática do ambiente
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - DEPENDÊNCIAS SEMPRE ATUALIZADAS${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
-echo -e "${BLUE}🖥��� Servidor: $(hostname)${RESET}"
+echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
@@ -1457,8 +1457,8 @@ else
 fi
 
 # Aguardar estabilização
-log_info "Aguardando estabilização completa (120s)..."
-sleep 120
+log_info "Aguardando estabilização completa com build Next.js (180s)..."
+sleep 180
 
 # Verificar serviços
 log_info "Verificando status de TODOS os serviços..."
