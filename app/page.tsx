@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 
 export default function HomePage() {
-  const [currentPart, setCurrentPart] = useState(1)
+  const [currentPart, setCurrentPart] = useState(2)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
