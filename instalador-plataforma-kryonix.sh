@@ -1760,7 +1760,6 @@ echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garan
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
 echo ""
-BLUE='\033[0;34m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
