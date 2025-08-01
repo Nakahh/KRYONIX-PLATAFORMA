@@ -112,7 +112,7 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}███�   ██║${GREEN}██║╚██╗���█║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚███���║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
@@ -1400,7 +1400,7 @@ deploy() {
     docker rmi -f kryonix-plataforma:latest 2>/dev/null || true
 
     # Build sem cache, forçando reconstrução total
-    if ! docker build --no-cache --force-rm -t kryonix-plataforma:latest .; then
+    if ! docker build --no-cache --force-rm -t kryonix-plataforma:latest . >/dev/null 2>&1; then
         log "❌ Falha no build - restaurando backup..."
         sudo rm -rf "$DEPLOY_PATH"
         sudo mv "$BACKUP_DIR" "$DEPLOY_PATH"
@@ -1626,7 +1626,7 @@ log_info "Criando Dockerfile otimizado para todos os serviços..."
 cat > Dockerfile << 'DOCKERFILE_EOF'
 FROM node:18-bullseye-slim
 
-# Instalar dependências do sistema
+# Instalar depend��ncias do sistema
 RUN apt-get update && apt-get install -y \
     tini \
     curl \
@@ -2002,7 +2002,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 KRYONIX PLATFORM - INSTALAÇÃO COMPLETA${RESET}                          ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
+echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────���───────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar instalação
@@ -2045,7 +2045,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}██ Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}═══█════════════════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}═══█══════════��═════════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
