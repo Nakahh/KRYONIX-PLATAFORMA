@@ -64,7 +64,7 @@ STEP_DESCRIPTIONS=(
     "Criando arquivos de serviços 📄"
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
-    "Verificando Traefik 📊"
+    "Verificando Traefik ���"
     "Criando imagem Docker 🏗️"
     "Preparando stack Traefik prioridade máxima 📋"
     "Configurando GitHub Actions 🚀"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚═══════════════���═��═══════════════════════════════════════════════╝"
+    echo "╚══���════════════���═��═══════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1396,6 +1396,8 @@ COPY check-dependencies.js ./
 COPY validate-dependencies.js ./
 COPY fix-dependencies.js ./
 # Instalar sem executar scripts para evitar problema com check-dependencies
+# ANTI-CORRUPÇÃO: Limpar cache e builds anteriores
+RUN rm -rf .next && npm cache clean --force
 RUN npm ci --only=production --ignore-scripts && npm cache clean --force
 
 # Rebuild the source code only when needed
