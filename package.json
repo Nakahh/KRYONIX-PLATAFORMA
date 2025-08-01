@@ -11,7 +11,9 @@
     "webhook": "node webhook-listener.js",
     "monitor": "node kryonix-monitor.js",
     "lint": "next lint",
-    "postinstall": "npm run build"
+    "check-deps": "node check-dependencies.js",
+    "postinstall": "npm run check-deps && npm run build",
+    "prestart": "npm run check-deps"
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
