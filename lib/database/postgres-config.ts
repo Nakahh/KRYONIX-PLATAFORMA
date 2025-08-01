@@ -126,22 +126,22 @@ export async function executeQuery<T = any>(
 /**
  * Execute transaction with automatic rollback on error
  */
-export async function executeTransaction<T>(
+export async function executeTransaction<T = any>(
   queries: Array<{ query: string; params?: any[] }>,
   module: DatabaseModule = 'platform'
-): Promise<T[]> {
+): Promise<T[][]> {
   const pool = getPool(module)
   const client = await pool.connect()
-  
+
   try {
     await client.query('BEGIN')
-    
-    const results: T[] = []
+
+    const results: T[][] = []
     for (const { query, params = [] } of queries) {
       const result = await client.query(query, params)
-      results.push(result.rows)
+      results.push(result.rows as T[])
     }
-    
+
     await client.query('COMMIT')
     return results
   } catch (error) {

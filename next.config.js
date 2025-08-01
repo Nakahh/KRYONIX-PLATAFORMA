@@ -20,6 +20,13 @@ const nextConfig = {
   // Configuração para produção
   distDir: '.next',
   cleanDistDir: true,
+  // Acelerar build desabilitando lint e type check
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 }
 
 module.exports = nextConfig

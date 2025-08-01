@@ -141,7 +141,7 @@ export async function initializeAllDatabaseModules(): Promise<{ [key in Database
   const failed = Object.values(results).filter(r => !r.success).length
   
   console.log(`📊 Database initialization summary:`)
-  console.log(`✅ Successful: ${successful}/${modules.length}`)
+  console.log(`�� Successful: ${successful}/${modules.length}`)
   console.log(`❌ Failed: ${failed}/${modules.length}`)
   
   if (failed > 0) {
@@ -233,16 +233,16 @@ export async function getDatabaseInitializationStatus(): Promise<{
   
   const status: any = {}
   
-  for (const module of modules) {
+  for (const dbModule of modules) {
     try {
-      const health = await checkDatabaseHealth(module)
-      status[module] = {
+      const health = await checkDatabaseHealth(dbModule)
+      status[dbModule] = {
         initialized: health.connection && health.schemas.length >= 3,
         schemas: health.schemas,
         last_check: new Date()
       }
     } catch (error) {
-      status[module] = {
+      status[dbModule] = {
         initialized: false,
         schemas: [],
         last_check: new Date()
