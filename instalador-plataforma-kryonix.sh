@@ -86,7 +86,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "���     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -318,28 +318,49 @@ sync_git_repository_force_latest() {
         git remote set-url origin "$repo_url"
     fi
     
-    # CORREÇÃO CRÍTICA: Forçar pull da versão mais recente
-    log_info "🚀 Forçando fetch da main mais atualizada..."
-    git fetch origin --force --prune 2>/dev/null || true
-    
+    # CORREÇÃO CRÍTICA: Forçar pull da versão mais recente (SEMPRE)
+    log_info "🚀 FORÇANDO fetch da main MAIS ATUALIZADA..."
+
+    # Limpar qualquer estado local que possa interferir
+    git clean -fd 2>/dev/null || true
+    git reset --hard HEAD 2>/dev/null || true
+
+    # Fetch com todas as opções para garantir atualização
+    git fetch origin --force --prune --tags 2>/dev/null || true
+    git fetch origin $branch --force 2>/dev/null || true
+
     # Mostrar commit atual antes
-    local current_commit=$(git rev-parse HEAD 2>/dev/null || echo "none")
-    log_info "Commit atual: ${current_commit:0:8}"
-    
+    current_commit=$(git rev-parse HEAD 2>/dev/null || echo "none")
+    log_info "📌 Commit local atual: ${current_commit:0:8}"
+
+    # Mostrar commit remoto mais recente
+    remote_commit=$(git rev-parse origin/$branch 2>/dev/null || git rev-parse origin/master 2>/dev/null || echo "none")
+    log_info "🌐 Commit remoto mais recente: ${remote_commit:0:8}"
+
     # Forçar reset para a versão mais recente da main
     if git reset --hard origin/$branch 2>/dev/null; then
-        local new_commit=$(git rev-parse HEAD 2>/dev/null || echo "none")
+        new_commit=$(git rev-parse HEAD 2>/dev/null || echo "none")
         log_success "✅ Sincronizado com origin/$branch - Commit: ${new_commit:0:8}"
-        
+
         # Verificar se realmente atualizou
         if [ "$current_commit" != "$new_commit" ]; then
-            log_success "🎯 Código atualizado para versão mais recente!"
+            log_success "🎯 Código atualizado para versão MAIS RECENTE!"
+
+            # Mostrar diferenças
+            log_info "📝 Mudanças aplicadas:"
+            git log --oneline $current_commit..$new_commit 2>/dev/null | head -3 | while read line; do
+                log_info "   → $line"
+            done
         else
             log_info "ℹ️ Já estava na versão mais recente"
         fi
     elif git reset --hard origin/master 2>/dev/null; then
-        local new_commit=$(git rev-parse HEAD 2>/dev/null || echo "none")
+        new_commit=$(git rev-parse HEAD 2>/dev/null || echo "none")
         log_success "✅ Sincronizado com origin/master - Commit: ${new_commit:0:8}"
+
+        if [ "$current_commit" != "$new_commit" ]; then
+            log_success "🎯 Código atualizado para versão MAIS RECENTE!"
+        fi
     else
         log_warning "⚠️ Não foi possível sincronizar com repositório remoto"
         return 1
@@ -701,7 +722,7 @@ app.post('/webhook', (req, res) => {
       if (error) {
         console.error('❌ Erro no deploy KRYONIX:', error);
       } else {
-        console.log('✅ Deploy KRYONIX executado:', stdout);
+        console.log('��� Deploy KRYONIX executado:', stdout);
       }
     });
   }
