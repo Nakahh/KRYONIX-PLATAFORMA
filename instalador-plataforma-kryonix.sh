@@ -89,7 +89,7 @@ show_banner() {
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo "║     ██║  ██╗��█║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -658,7 +658,7 @@ validate_credentials() {
     if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == ghp_* ]]; then
         log_success "✅ GitHub PAT Token configurado"
     else
-        log_error "❌ GitHub PAT Token inválido"
+        log_error "��� GitHub PAT Token inválido"
         return 1
     fi
 
@@ -1064,10 +1064,13 @@ RUN groupadd -r kryonix && useradd -r -g kryonix kryonix
 
 WORKDIR /app
 
-# Copiar package files
+# Copiar package files E arquivos de dependências ANTES do npm install
 COPY package*.json ./
+COPY check-dependencies.js ./
+COPY validate-dependencies.js ./
+COPY fix-dependencies.js ./
 
-# Instalar dependências
+# Instalar dependências (agora check-dependencies.js já existe)
 RUN npm install --production && npm cache clean --force
 
 # Copiar código da aplicação
@@ -1663,7 +1666,7 @@ if command -v ncu >/dev/null 2>&1; then
     updates_available=$(ncu --jsonUpgraded 2>/dev/null | jq -r 'keys | length' 2>/dev/null || echo "0")
     
     if [ "$updates_available" -gt 0 ]; then
-        log_monitor "📦 $updates_available atualizações de dependências disponíveis"
+        log_monitor "�� $updates_available atualizações de dependências disponíveis"
         
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
@@ -1697,7 +1700,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════���═══════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
