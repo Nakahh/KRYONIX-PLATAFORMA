@@ -87,7 +87,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝█��║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -324,7 +324,7 @@ nuclear_cleanup() {
             sudo rmdir "$PROJECT_DIR" 2>/dev/null || true
         fi
         
-        # Verificaç��o final
+        # Verificação final
         if [ -d "$PROJECT_DIR" ]; then
             error_step
             log_error "❌ Falha na remoção completa do diretório: $PROJECT_DIR"
@@ -1438,7 +1438,7 @@ deploy() {
     git config --global credential.helper store 2>/dev/null || true
 
     # Configurar credenciais para repositório privado
-    echo "https://Nakahh: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@github.com" > ~/.git-credentials
+    echo "https://Nakahh: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@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
 
     # Clone fresh completo (repositório privado)
@@ -1647,7 +1647,7 @@ fi
 
 echo ""
 echo -e "${CYAN}${BOLD}��� STATUS DO SISTEMA:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-���️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
@@ -1668,8 +1668,8 @@ echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
-echo -e "${YELLOW}${BOLD}�� CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════${RESET}"
+echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
+echo -e "${CYAN}��═══════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
