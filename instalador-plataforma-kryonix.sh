@@ -106,7 +106,7 @@ show_banner() {
 
     # Banner KRYONIX alinhado e responsivo (80 caracteres exatos)
     echo -e "${BOLD}${TURQUOISE}"
-    echo "███████████████████████████████████���████████████████████████████████████████████"
+    echo "████████████████████████████████████████████████████████████████████████████████"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
@@ -117,13 +117,13 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${TURQUOISE}████████████████████████████████████████████���███████████████████████████████████${RESET}"
+    echo -e "${TURQUOISE}████████████████████████████████████████████████████████████████████████████████${RESET}"
 
     # Informações essenciais compactas
     echo ""
     echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────────────────────────────────────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
-    echo -e "${GOLD}╰───────────────────────────────────────����──────────────────────────────────────╯${RESET}"
+    echo -e "${GOLD}╰──────────────────────────────────────────────────────────────────────────────╯${RESET}"
 
     # Funcionalidades em linha única
     echo ""
@@ -1419,7 +1419,7 @@ deploy() {
     docker service update --force "${STACK_NAME}_kryonix-monitor" 2>/dev/null || true
 
     # Aguardar estabilização
-    log "⏳ Aguardando estabilização dos serviços..."
+    log "�� Aguardando estabilização dos serviços..."
     sleep 45
 
     # Verificação completa de health
@@ -2070,7 +2070,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Segurança avançada - Assinatura criptográ
 echo -e "    ${BLUE}│${RESET} ✅ Controle de branch - Deploy apenas da branch principal"
 echo -e "    ${BLUE}│${RESET} ✅ Ambiente limpo - Instalação completa e organizada"
 echo ""
-echo -e "${CYAN}${BOLD}╔═════════════════��═════════════════��═════════════════════���═════════════════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔═════════════════��═════════════════��═══════════════��═════���═════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
@@ -2079,7 +2079,7 @@ echo -e "${CYAN}║${RESET} ${WHITE}📧 Email:${RESET} ${TURQUOISE}admin@kryoni
 echo -e "${CYAN}║${RESET} ${WHITE}💻 GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${BLINK}${YELLOW}⚡ AGORA TODA ALTERAÇÃO NO GITHUB ATUALIZA O SITE AUTOMATICAMENTE! ⚡${RESET}  ${CYAN}║${RESET}"
-echo -e "${CYAN}╚═══���══════������══════════���══════��═════����════════════��════════════���══════════════════��══╝${RESET}"
+echo -e "${CYAN}╚═══���══════������══════════���══════��═════����════════════��═══════════════════════════════��══╝${RESET}"
 echo ""
 
 # Instalador KRYONIX finalizado com sucesso
