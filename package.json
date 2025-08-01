@@ -37,14 +37,7 @@
     "node-cron": "^3.0.3",
     "axios": "^1.6.2",
     "dotenv": "^16.3.1",
-    "ws": "^8.14.2",
-    "crypto": "*",
-    "http": "*",
-    "https": "*",
-    "url": "*",
-    "path": "*",
-    "fs": "*",
-    "child_process": "*"
+    "ws": "^8.14.2"
   },
   "devDependencies": {
     "@types/node": "^20",
