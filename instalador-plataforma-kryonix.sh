@@ -106,18 +106,18 @@ show_banner() {
 
     # Banner KRYONIX alinhado e responsivo (80 caracteres exatos)
     echo -e "${BOLD}${TURQUOISE}"
-    echo "██████████████████��████████████���████████████████████████████████████████████████"
+    echo "████████████████████████████████�████████████████████████████████████████████████"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██��███╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}██���   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}███�   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${TURQUOISE}██��██████████████████████��███████████���██████████████████████████████████████████${RESET}"
+    echo -e "${TURQUOISE}██████████████████████████████████████�██████████████████████████████████████████${RESET}"
 
     # Informações essenciais compactas
     echo ""
@@ -472,7 +472,7 @@ fresh_git_clone() {
             
             # Sincronizar com repositório remoto se necessário
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
-                log_info "���� Sincronizando com repositório..."
+                log_info "██ Sincronizando com repositório..."
                 git fetch origin HEAD 2>/dev/null || true
                 git reset --hard FETCH_HEAD 2>/dev/null || true
                 current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
@@ -728,7 +728,7 @@ log_info "📝 Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    log_warning "⚠️ ATEN��ÃO: Ainda detectando referência ao PR #22"
+    log_warning "⚠️ ATEN█ÃO: Ainda detectando referência ao PR #22"
     log_info "Isso pode significar que o PR #22 É a versão mais recente no GitHub"
     log_info "Ou pode haver um problema de sincronização"
 else
@@ -797,7 +797,7 @@ if ! grep -q "/api/github-webhook" server.js; then
     # Backup
     cp server.js server.js.backup
 
-    # Adicionar endpoint webhook para deploy autom��tico
+    # Adicionar endpoint webhook para deploy autom█tico
     cat >> server.js << WEBHOOK_EOF
 
 // ============================================================================
@@ -840,7 +840,7 @@ const verifyGitHubSignature = (payload, signature) => {
 app.post('/api/github-webhook', (req, res) => {
     const timestamp = new Date().toISOString();
     console.log('🔔 ===============================================');
-    console.log('��� WEBHOOK GITHUB RECEBIDO KRYONIX:', timestamp);
+    console.log('█� WEBHOOK GITHUB RECEBIDO KRYONIX:', timestamp);
     console.log('🔔 ===============================================');
 
     const payload = req.body;
@@ -915,7 +915,7 @@ app.post('/api/github-webhook', (req, res) => {
     console.log('🚀 Executando deploy automático...');
     console.log('📁 Script path:', deployScriptPath);
 
-    // CORREÇ��O 4: Usar spawn para melhor controle do processo
+    // CORREÇ█O 4: Usar spawn para melhor controle do processo
     const deployProcess = spawn('bash', [deployScriptPath, 'webhook'], {
         cwd: process.cwd(),
         stdio: 'pipe'
@@ -930,7 +930,7 @@ app.post('/api/github-webhook', (req, res) => {
     });
 
     deployProcess.on('close', (code) => {
-        console.log(\`�� Deploy finalizado com código de saída: \${code}\`);
+        console.log(\`█ Deploy finalizado com código de saída: \${code}\`);
         if (code === 0) {
             console.log('✅ Deploy automático KRYONIX concluído com SUCESSO');
         } else {
@@ -1238,7 +1238,7 @@ deploy() {
 
     # FAZER BACKUP antes de qualquer coisa
     if [ -d "$DEPLOY_PATH" ]; then
-        log "💾 Criando backup da vers��o atual..."
+        log "💾 Criando backup da vers█o atual..."
         sudo cp -r "$DEPLOY_PATH" "$BACKUP_DIR" 2>/dev/null || true
         log "📁 Backup criado em: $BACKUP_DIR"
     fi
@@ -1502,7 +1502,7 @@ log_info "Instalando dependências..."
 if npm install --production --legacy-peer-deps >/dev/null 2>&1; then
     log_success "✅ Dependências instaladas com sucesso"
 else
-    log_error "❌ Erro: depend��ncias não instaladas"
+    log_error "❌ Erro: depend█ncias não instaladas"
     exit 1
 fi
 
@@ -1577,7 +1577,7 @@ log_info "🎯 Rede detectada: $DOCKER_NETWORK"
 if docker network ls --format "{{.Name}}" | grep -q "^${DOCKER_NETWORK}$" 2>/dev/null; then
     log_success "✅ Rede $DOCKER_NETWORK já existe"
 elif docker network create -d overlay --attachable "$DOCKER_NETWORK" >/dev/null 2>&1; then
-    log_success "�� Rede $DOCKER_NETWORK criada com sucesso"
+    log_success "█ Rede $DOCKER_NETWORK criada com sucesso"
 else
     error_step
     log_error "❌ Falha ao criar rede $DOCKER_NETWORK"
@@ -1868,7 +1868,7 @@ on:
 
 jobs:
   deploy:
-    name: ���� Deploy to Production
+    name: ██ Deploy to Production
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
@@ -1994,11 +1994,11 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GOLD}${BOLD}███████████████████████████████���████████████████████████████████████████████████${RESET}"
+echo -e "${GOLD}${BOLD}████████████████████████████████�████████████████████████████████████████████████${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
-echo -e "${GOLD}${BOLD}█████████████████████████��█████████████████████████████████████████��████████████${RESET}"
+echo -e "${GOLD}${BOLD}████████████████████████████████████████████████████████████████████████████████${RESET}"
 echo ""
 echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 KRYONIX PLATFORM - INSTALAÇÃO COMPLETA${RESET}                          ${MAGENTA}│${RESET}"
@@ -2022,7 +2022,7 @@ else
 fi
 
 echo ""
-echo -e "${CYAN}${BOLD}��� STATUS DO SISTEMA:${RESET}"
+echo -e "${CYAN}${BOLD}█� STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
@@ -2042,10 +2042,10 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} https://$DOMAIN_
 fi
 echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
-echo -e "${PURPLE}���� Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
+echo -e "${PURPLE}██ Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}═══��════════════════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}═══█════════════════════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
@@ -2070,8 +2070,8 @@ echo -e "    ${BLUE}│${RESET} ✅ Segurança avançada - Assinatura criptográ
 echo -e "    ${BLUE}│${RESET} ✅ Controle de branch - Deploy apenas da branch principal"
 echo -e "    ${BLUE}│${RESET} ✅ Ambiente limpo - Instalação completa e organizada"
 echo ""
-echo -e "${CYAN}${BOLD}╔═════════════════��═════════════════��═════════════════════���═════════════════════╗${RESET}"
-echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! ����${RESET}       ${CYAN}║${RESET}"
+echo -e "${CYAN}${BOLD}╔═════════════════█═════════════════█═════════════════════█�═════════════════════╗${RESET}"
+echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! ██${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}📱 WhatsApp:${RESET} ${TURQUOISE}+55 17 98180-5327${RESET}                                          ${CYAN}║${RESET}"
