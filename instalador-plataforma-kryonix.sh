@@ -178,7 +178,7 @@ animate_progress_bar() {
     # Mostrar cabeçalho elegante apenas uma vez por etapa
     if [ "$CURRENT_STEP_BAR_SHOWN" = false ]; then
         echo ""
-        echo -e "${border_color}╭───────────────────────────────────────────────────��────────────────╮${RESET}"
+        echo -e "${border_color}╭────────────────────────────────────────────────────────────────────╮${RESET}"
         echo -e "${border_color}│${RESET} ${status_icon} ${WHITE}${BOLD}ETAPA $step/$total:${RESET} ${TURQUOISE}$description${RESET}"
         echo -e "${border_color}│${RESET} ${DIM}Status: $status_text${RESET}"
         echo -e "${border_color}╰────────────────────────────────────────────────────────────────────╯${RESET}"
@@ -944,7 +944,7 @@ app.post('/api/github-webhook', (req, res) => {
     });
 
     deployProcess.on('close', (code) => {
-        console.log(\`🔄 Deploy finalizado com código de saída: \${code}\`);
+        console.log(\`🔄 Deploy finalizado com código de sa��da: \${code}\`);
         if (code === 0) {
             console.log('✅ Deploy automático KRYONIX concluído com SUCESSO');
         } else {
@@ -1489,36 +1489,29 @@ if ! command -v npm >/dev/null 2>&1; then
     sudo apt-get install -y nodejs >/dev/null 2>&1
 fi
 
-log_info "Instalando dependências do projeto com correções..."
+log_info "Instalando dependências..."
 
-# Primeira tentativa com --legacy-peer-deps para resolver conflitos
-log_info "Tentativa 1: Instalação com --legacy-peer-deps..."
+# Instalação silenciosa com verificação de resultado
 if npm install --production --legacy-peer-deps >/dev/null 2>&1; then
-    log_success "Dependências instaladas com sucesso"
+    log_success "✅ Dependências instaladas com sucesso"
 else
-    log_warning "Primeira tentativa falhou, tentando com --force..."
-    npm install --production --force >/dev/null 2>&1 || {
-        log_warning "Instalação com --force falhou, tentando limpeza e reinstalação..."
-        rm -rf node_modules package-lock.json 2>/dev/null || true
-        npm install --production --legacy-peer-deps >/dev/null 2>&1
-    }
+    log_error "❌ Erro: dependências não instaladas"
+    exit 1
 fi
 
-# Verificar se dependências críticas do servidor foram instaladas
-log_info "Verificando dependências críticas do servidor..."
+# Verificação rápida de dependências críticas
 critical_deps=("express" "cors" "helmet" "compression")
-missing_deps=()
+missing_count=0
 
 for dep in "${critical_deps[@]}"; do
     if [ ! -d "node_modules/$dep" ]; then
-        missing_deps+=("$dep")
+        missing_count=$((missing_count + 1))
     fi
 done
 
-if [ ${#missing_deps[@]} -gt 0 ]; then
-    log_warning "Dependências críticas faltando: ${missing_deps[*]}"
-    log_info "Instalando dependências faltantes..."
-    npm install "${missing_deps[@]}" --legacy-peer-deps >/dev/null 2>&1
+if [ $missing_count -gt 0 ]; then
+    log_error "❌ Erro: $missing_count dependências críticas faltando"
+    exit 1
 fi
 
 log_info "Testando servidor localmente..."
@@ -2126,7 +2119,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Verificação assinatura obrigatória - Segu
 echo -e "    ${BLUE}│${RESET} ✅ Filtros branch específicos - Apenas refs/heads/main"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup + Clone fresh - Sempre versão mais recente"
 echo ""
-echo -e "${CYAN}${BOLD}╔══��══════════════════════════════════════════════════��═════════════════════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔═════════════════════════════════════════════════════��═════════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
