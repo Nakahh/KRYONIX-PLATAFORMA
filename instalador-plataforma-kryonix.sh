@@ -90,7 +90,7 @@ show_banner() {
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚��════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -1150,32 +1150,12 @@ version: '3.8'
 services:
   web:
     image: kryonix-plataforma:latest
-    networks:
-      - $DOCKER_NETWORK
-    environment:
-      - NODE_ENV=production
-      - PORT=8080
-      - AUTO_UPDATE_DEPS=true
-      - WEBHOOK_SECRET=$WEBHOOK_SECRET
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 15s
-      retries: 5
-      start_period: 120s
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
         max_attempts: 3
-        delay: 15s
-      resources:
-        limits:
-          memory: 1G
-        reservations:
-          memory: 512M
+        delay: 10s
       labels:
         # Traefik básico
         - "traefik.enable=true"
@@ -1225,47 +1205,66 @@ services:
         - "traefik.http.routers.kryonix-webhook.middlewares=api-security"
         - "traefik.http.routers.kryonix-api.middlewares=api-security"
 
+    networks:
+      - $DOCKER_NETWORK
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - AUTO_UPDATE_DEPS=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
   webhook:
     image: kryonix-plataforma:latest
     command: ["node", "webhook-listener.js"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 10s
     networks:
       - $DOCKER_NETWORK
+    ports:
+      - "8082:8082"
     environment:
       - NODE_ENV=production
       - PORT=8082
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
-      interval: 45s
-      timeout: 15s
+      interval: 30s
+      timeout: 10s
       retries: 3
-      start_period: 90s
+      start_period: 60s
+
+  monitor:
+    image: kryonix-plataforma:latest
+    command: ["node", "kryonix-monitor.js"]
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
         max_attempts: 3
-        delay: 15s
-
-  monitor:
-    image: kryonix-plataforma:latest
-    command: ["node", "kryonix-monitor.js"]
+        delay: 10s
     networks:
       - $DOCKER_NETWORK
+    ports:
+      - "8084:8084"
     environment:
       - NODE_ENV=production
       - PORT=8084
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
-      interval: 45s
-      timeout: 15s
+      interval: 30s
+      timeout: 10s
       retries: 3
-      start_period: 90s
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-        delay: 15s
+      start_period: 60s
 
 networks:
   $DOCKER_NETWORK:
@@ -1455,7 +1454,7 @@ deploy() {
     if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-rebuild.log; then
         log "✅ Rebuild da imagem concluído com sucesso"
     else
-        log "❌ Falha no rebuild da imagem"
+        log "��� Falha no rebuild da imagem"
         log "📋 Últimas linhas do log de build:"
         tail -10 /tmp/docker-rebuild.log || true
         return 1
@@ -1685,7 +1684,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════��═════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 DEPENDÊNCIAS SEMPRE ATUALIZADAS + CLONE FRESH:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
