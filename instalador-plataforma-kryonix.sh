@@ -86,8 +86,8 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝█��║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗█��║██║ ██╔██╗      ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -1447,7 +1447,7 @@ deploy() {
     else
         log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
         # Fallback: token diretamente na URL
-        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
             log "✅ Clone fresh concluído com fallback"
         else
             log "❌ Falha no clone fresh com todos os métodos"
@@ -1624,7 +1624,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════��══════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -1669,7 +1669,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}��═══════════════════════════════════════════${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
