@@ -84,7 +84,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔��     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -418,6 +418,24 @@ fresh_git_clone() {
             log_success "✅ Clone fresh concluído com sucesso"
             return 0
         else
+            log_warning "⚠️ Clone com credenciais store falhou"
+
+            # FALLBACK 1: Token diretamente na URL
+            log_info "Tentando fallback com token na URL..."
+            local direct_url="https://Nakahh:${pat_token}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+            if git clone --single-branch --branch "$branch" --depth 1 "$direct_url" . 2>&1; then
+                log_success "✅ Clone com token na URL funcionou"
+                break
+            fi
+
+            # FALLBACK 2: Configurar credential helper inline
+            log_info "Tentando fallback com credential helper inline..."
+            git config credential.helper "!f() { echo username=Nakahh; echo password=${pat_token}; }; f"
+            if git clone --single-branch --branch "$branch" --depth 1 "$auth_url" . 2>&1; then
+                log_success "✅ Clone com credential helper funcionou"
+                break
+            fi
+
             log_warning "⚠️ Tentativa de clone $clone_attempts falhou"
             if [ $clone_attempts -lt $max_attempts ]; then
                 sleep 5
