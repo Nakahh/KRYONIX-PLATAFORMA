@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowLeft, MessageCircle, Shield, Zap, CheckCircle } from 'lucide-react'
+import Link from 'next/link'
 import MobileMenu from '../components/MobileMenu'
 
 export default function WhatsAppPage() {
@@ -12,9 +13,9 @@ export default function WhatsAppPage() {
       <header className="bg-white shadow-sm">
         <div className="container-custom py-6">
           <div className="flex items-center space-x-4">
-            <a href="/" className="p-2 hover:bg-gray-100 rounded-lg">
+            <Link href="/" className="p-2 hover:bg-gray-100 rounded-lg">
               <ArrowLeft className="w-5 h-5" />
-            </a>
+            </Link>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">WhatsApp Business</h1>
               <p className="text-gray-600">Integração completa com Evolution API</p>
@@ -111,9 +112,9 @@ export default function WhatsAppPage() {
           </div>
 
           <div className="mt-8 text-center">
-            <a href="/" className="btn-primary">
+            <Link href="/" className="btn-primary">
               Voltar ao Início
-            </a>
+            </Link>
           </div>
         </div>
       </section>
