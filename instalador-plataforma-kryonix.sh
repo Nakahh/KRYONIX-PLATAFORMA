@@ -71,7 +71,7 @@ STEP_DESCRIPTIONS=(
     "Criando webhook deploy 🔗"
     "Configurando logs e backup ⚙️"
     "Deploy final integrado 🚀"
-    "Testando webhook e relatório final ���"
+    "Testando webhook e relatório final ����"
     "Configurando monitoramento contínuo 📈"
 )
 
@@ -83,12 +83,12 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔═══════════════════════════��═════════════════════════════════════╗"
+    echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
-    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██���   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
@@ -556,7 +556,7 @@ fresh_git_clone() {
             log_success "✅ Clone fresh concluído com sucesso"
             return 0
         else
-            log_warning "��️ Clone com credenciais store falhou"
+            log_warning "���️ Clone com credenciais store falhou"
 
             # FALLBACK: Token diretamente na URL
             log_info "Tentando fallback com token na URL..."
@@ -566,7 +566,7 @@ fresh_git_clone() {
                 break
             fi
 
-            log_warning "⚠��� Tentativa de clone $clone_attempts falhou"
+            log_warning "⚠️ Tentativa de clone $clone_attempts falhou"
             if [ $clone_attempts -lt $max_attempts ]; then
                 sleep 5
             fi
@@ -1081,8 +1081,8 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -1710,14 +1710,14 @@ if [[ "$monitor_replicas" == "1/1" ]]; then
     MONITOR_STATUS="✅ ONLINE (1/1)"
 else
     log_warning "Serviço monitor com problemas: $monitor_replicas"
-    MONITOR_STATUS="�� PROBLEMA ($monitor_replicas)"
+    MONITOR_STATUS="❌ PROBLEMA ($monitor_replicas)"
 
     # Mostrar logs do monitor se houver problema
     log_info "📋 Logs do monitor:"
     docker service logs "${STACK_NAME}_monitor" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
 fi
 
-# Webhook agora est�� integrado no serviço web, então testar diretamente
+# Webhook agora está integrado no serviço web, então testar diretamente
 log_info "Testando webhook integrado no serviço web..."
 if timeout 10s curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
    -H "Content-Type: application/json" \
@@ -1880,7 +1880,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Verificação específica PR #22"
 echo -e "    ${BLUE}│${RESET} ✅ Dockerfile multi-stage com build adequado"
 echo -e "    ${BLUE}│${RESET} ✅ Docker-stack.yml com prioridade máxima para webhook"
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
-echo -e "    ${BLUE}│${RESET} ✅ Validaç��o específica de inicialização"
+echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
 echo -e "    ${BLUE}│${RESET} ✅ Atualização automática de dependências a cada deploy"
 echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
