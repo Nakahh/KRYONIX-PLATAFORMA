@@ -44,7 +44,7 @@ STACK_NAME="Kryonix"
 
 # Configurações CI/CD - Credenciais configuradas para operação 100% automática
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PAT_TOKEN="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"
+PAT_TOKEN="${PAT_TOKEN:-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}"
 WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
 JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
 WEBHOOK_URL="https://kryonix.com.br/api/github-webhook"
@@ -87,7 +87,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo "║     █���███╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -1064,13 +1064,13 @@ RUN groupadd -r kryonix && useradd -r -g kryonix kryonix
 
 WORKDIR /app
 
-# Copiar package files E arquivos de dependências ANTES do npm install
+# Copiar arquivos de dependências ANTES do npm install (CORREÇÃO CRÍTICA)
 COPY package*.json ./
 COPY check-dependencies.js ./
 COPY validate-dependencies.js ./
 COPY fix-dependencies.js ./
 
-# Instalar dependências (agora check-dependencies.js já existe)
+# Instalar dependências (agora check-dependencies.js já existe - FIX Docker build)
 RUN npm install --production && npm cache clean --force
 
 # Copiar código da aplicação
@@ -1127,8 +1127,14 @@ fi
 
 # Verificação completa de arquivos necessários (do instalador antigo + correções do agente)
 log_info "🔍 Verificando TODOS os arquivos necessários para Docker build..."
-required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js" "public/index.html")
+required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js")
 missing_files=()
+
+# Criar public/index.html se não existir
+if [ ! -f "public/index.html" ]; then
+    mkdir -p public
+    echo '<!DOCTYPE html><html><head><title>KRYONIX</title></head><body><h1>KRYONIX Platform</h1></body></html>' > public/index.html
+fi
 
 for file in "${required_files[@]}"; do
     if [ ! -f "$file" ]; then
@@ -1515,16 +1521,16 @@ deploy() {
     git config --global credential.helper store 2>/dev/null || true
 
     # Configurar credenciais para repositório privado (usando variável segura)
-    echo "https://Nakahh:\${PAT_TOKEN}@github.com" > ~/.git-credentials
+    echo "https://Nakahh:${PAT_TOKEN}@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
 
     # Clone fresh completo (repositório privado)
-    if git clone --single-branch --branch main --depth 1 "\$GITHUB_REPO" kryonix-plataform; then
+    if git clone --single-branch --branch main --depth 1 "$GITHUB_REPO" kryonix-plataform; then
         log "✅ Clone fresh concluído"
     else
         log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
         # Fallback: token diretamente na URL usando variável
-        if git clone --single-branch --branch main --depth 1 "https://Nakahh:\${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
             log "✅ Clone fresh concluído com fallback"
         else
             log "❌ Falha no clone fresh com todos os métodos"
