@@ -221,7 +221,7 @@ export class Parte01Tests {
     suite.tests.push(await this.runTest('Listagem de clientes', async () => {
       const manager = getKeycloakManager()
       // Simular listagem
-      const clientes = []
+      const clientes: any[] = []
       return { clientes, count: clientes.length }
     }))
 
@@ -292,7 +292,7 @@ export class Parte01Tests {
       return { initialized: !!monitor }
     }))
 
-    // Teste 2: Verifica��ão de saúde
+    // Teste 2: Verificação de saúde
     suite.tests.push(await this.runTest('Verificação de saúde', async () => {
       const monitor = getSystemMonitor()
       // Simular verificação sem fazer chamadas reais
