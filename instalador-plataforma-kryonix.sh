@@ -55,7 +55,7 @@ SERVER_USER="${SERVER_USER:-$(whoami)}"
 TOTAL_STEPS=18
 CURRENT_STEP=0
 STEP_DESCRIPTIONS=(
-    "Verificando Docker Swarm ���"
+    "Verificando Docker Swarm ⚙"
     "Limpando ambiente anterior 🧹"
     "Configurando credenciais 🔐"
     "Preparando projeto 📁"
@@ -1631,7 +1631,13 @@ echo -e "${GREEN}${BOLD}══════════════════�
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA COM WEBHOOK EXTERNO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Main Atualizada:${RESET} ✅ Pull forçado da versão mais recente"
+
+# Verificar versão final
+final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
+
+echo -e "    ${BLUE}│${RESET} ${BOLD}Versão Atual:${RESET} ✅ Commit $final_commit"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commit_msg"
 echo -e "    ${BLUE}│${RESET} ${BOLD}GitHub:${RESET} ✅ Conectado com PAT Token"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} ✅ $WEBHOOK_URL"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Deploy Automático:${RESET} ✅ Funcionando 100%"
