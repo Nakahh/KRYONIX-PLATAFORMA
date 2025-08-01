@@ -83,7 +83,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔════════════��════════════════════════════════════════════════════╗"
+    echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -984,7 +984,7 @@ if grep -q '"type": "module"' package.json; then
 fi
 
 # CORREÇÃO CRÍTICA: Corrigir postinstall para funcionar durante Docker build
-log_info "��� Aplicando correção crítica no package.json..."
+log_info "🔧 Aplicando correção crítica no package.json..."
 if grep -q '"postinstall": "npm run check-deps"' package.json; then
     log_info "Corrigindo postinstall para compatibilidade com Docker build"
     # Criar backup
@@ -1624,10 +1624,26 @@ EOF
         cat > Dockerfile << 'EMERGENCY_DOCKERFILE'
 FROM node:18-alpine
 WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache libc6-compat curl bash dumb-init
+
+# Copy package files
 COPY package*.json ./
-RUN npm install --production --ignore-scripts || npm install --production || true
+COPY check-dependencies.js validate-dependencies.js fix-dependencies.js ./
+
+# Install ALL dependencies including devDependencies for build
+RUN npm install --no-audit --no-fund || npm install || true
+
+# Copy source code
 COPY . .
-RUN npm run build || echo "Build failed, continuing..."
+
+# Run build (allowing failure)
+RUN npm run build || echo "Build failed, continuing with development mode..."
+
+# Cleanup devDependencies after build (optional)
+RUN npm prune --production 2>/dev/null || true
+
 EXPOSE 8080
 CMD ["node", "server.js"]
 EMERGENCY_DOCKERFILE
@@ -2120,7 +2136,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
     # Validação de conectividade rápida
     log_info "Testando conectividade HTTP..."
     if timeout 15s curl -f -s "http://localhost:8080/health" >/dev/null 2>&1; then
-        log_success "��� HTTP respondendo - Next.js funcionando"
+        log_success "✅ HTTP respondendo - Next.js funcionando"
         WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
         log_warning "⚠️ Docker rodando mas HTTP não responde"
@@ -2260,7 +2276,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════════��════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════���══${RESET}"
 echo ""
