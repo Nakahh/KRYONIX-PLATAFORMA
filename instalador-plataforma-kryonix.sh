@@ -401,7 +401,7 @@ fresh_git_clone() {
     local branch="${3:-main}"
     local pat_token="$4"
     
-    log_info "🔄 Clone FRESH garantindo vers��o MAIS RECENTE..."
+    log_info "🔄 Clone FRESH garantindo versão MAIS RECENTE..."
     
     # Configurar Git globalmente ANTES de tentar clone
     git config --global user.name "KRYONIX Deploy"
@@ -869,7 +869,7 @@ app.post('/api/github-webhook', (req, res) => {
         });
     }
 
-    // CORREÇÃO 2: Filtros ESPECÍFICOS para push na main
+    // CORREÇ��O 2: Filtros ESPECÍFICOS para push na main
     const isValidEvent = event === 'push';
     const isValidRef = payload?.ref === 'refs/heads/main';
 
@@ -2080,7 +2080,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}═════════════════════════════════��══════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
