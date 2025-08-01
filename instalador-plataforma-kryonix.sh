@@ -42,7 +42,7 @@ DOMAIN_NAME="kryonix.com.br"
 DOCKER_NETWORK=""  # Será detectado automaticamente
 STACK_NAME="Kryonix"
 
-# Configuraç��es CI/CD - Credenciais configuradas para operação 100% automática
+# Configurações CI/CD - Credenciais configuradas para operação 100% automática
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PAT_TOKEN="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"
 WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
@@ -1447,7 +1447,7 @@ deploy() {
     else
         log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
         # Fallback: token diretamente na URL
-        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
             log "✅ Clone fresh concluído com fallback"
         else
             log "❌ Falha no clone fresh com todos os métodos"
@@ -1504,7 +1504,7 @@ deploy() {
     if [ $services_ok -eq $total_services ]; then
         log "🎉 Deploy KRYONIX concluído com SUCESSO! ($services_ok/$total_services serviços OK)"
     else
-        log "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
+        log "��️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
     fi
     
     # Testar webhook externamente
@@ -1624,7 +1624,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════���═══════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
