@@ -86,7 +86,7 @@ show_banner() {
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo "║     ██║ █���╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -687,8 +687,8 @@ validate_credentials() {
 # Mostrar banner
 show_banner
 
-# Detecção automática do ambiente
-echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - DEPENDÊNCIAS SEMPRE ATUALIZADAS${RESET}"
+# Detecção automática do ambiente (como no instalador antigo que funcionava)
+echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
@@ -696,7 +696,7 @@ echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
-echo -e "${GREEN}${BOLD}✅ Auto-update + Dependencies + Clone fresh + Deploy completo!${RESET}\n"
+echo -e "${GREEN}${BOLD}✅ Nuclear cleanup + Clone fresh + Garantia versão mais recente!${RESET}\n"
 
 # Inicializar primeira etapa
 next_step
