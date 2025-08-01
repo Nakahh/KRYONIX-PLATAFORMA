@@ -245,7 +245,7 @@ auto_update_dependencies() {
     
     # Verificar se package.json existe
     if [ ! -f "package.json" ]; then
-        log_error "��� package.json não encontrado!"
+        log_error "❌ package.json não encontrado!"
         return 1
     fi
     
@@ -313,7 +313,7 @@ advanced_dependency_check() {
     
     # Executar verificador próprio do projeto
     if [ -f "check-dependencies.js" ]; then
-        log_info "�� Executando verificador específico do KRYONIX..."
+        log_info "📋 Executando verificador específico do KRYONIX..."
         if node check-dependencies.js 2>&1 | tee /tmp/deps-check.log; then
             log_success "✅ Verificação específica passou"
         else
@@ -813,7 +813,7 @@ log_info "📦 Iniciando atualização automática de dependências..."
 
 # Executar atualização automática
 if ! auto_update_dependencies; then
-    log_warning "⚠️ Problemas na atualização, continuando com depend��ncias originais"
+    log_warning "⚠️ Problemas na atualização, continuando com dependências originais"
 fi
 
 complete_step
@@ -1532,7 +1532,7 @@ deploy() {
     else
         log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
         # Fallback: token diretamente na URL usando variável
-        if git clone --single-branch --branch main --depth 1 "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh:\${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
             log "✅ Clone fresh concluído com fallback"
         else
             log "❌ Falha no clone fresh com todos os métodos"
@@ -1853,7 +1853,7 @@ echo ""
 echo -e "${GREEN}${BOLD}🎯 MELHORIAS IMPLEMENTADAS:${RESET}"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup - Remove TUDO antes de começar"
 echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
-echo -e "    ${BLUE}│${RESET} ��� Versão mais recente - Não fica preso em versões antigas"
+echo -e "    ${BLUE}│${RESET} ✅ Versão mais recente - Não fica preso em versões antigas"
 echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
 echo -e "    ${BLUE}│${RESET} ✅ Verificação específica PR #22"
 echo -e "    ${BLUE}│${RESET} ✅ Dockerfile multi-stage com build adequado"
