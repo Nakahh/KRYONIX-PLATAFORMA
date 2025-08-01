@@ -82,7 +82,7 @@ STEP_DESCRIPTIONS=(
     "NUCLEAR cleanup completo 🧹"
     "Configurando credenciais 🔐"
     "Clone FRESH da versão mais recente 🔄"
-    "Criando arquivos de serviços ��"
+    "Criando arquivos de serviços 📄"
     "Instalando dependências 📦"
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
@@ -113,7 +113,7 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚════��╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
@@ -178,10 +178,10 @@ animate_progress_bar() {
     # Mostrar cabeçalho elegante apenas uma vez por etapa
     if [ "$CURRENT_STEP_BAR_SHOWN" = false ]; then
         echo ""
-        echo -e "${border_color}╭────────────────────────────────────────────────────────────────────╮${RESET}"
+        echo -e "${border_color}╭───────────────────────────────────────────────────��────────────────╮${RESET}"
         echo -e "${border_color}│${RESET} ${status_icon} ${WHITE}${BOLD}ETAPA $step/$total:${RESET} ${TURQUOISE}$description${RESET}"
         echo -e "${border_color}│${RESET} ${DIM}Status: $status_text${RESET}"
-        echo -e "${border_color}╰────────────────────────��───────────────────────────────────────────╯${RESET}"
+        echo -e "${border_color}╰────────────────────────────────────────────────────────────────────╯${RESET}"
         CURRENT_STEP_BAR_SHOWN=true
     fi
 
@@ -1997,9 +1997,9 @@ else
     exit 1
 fi
 
-# Aguardar estabilização - tempo estendido para garantir que todos subam
-log_info "Aguardando estabilização completa (120s)..."
-sleep 120
+# Aguardar estabilização otimizada
+log_info "Aguardando estabilização (15s)..."
+sleep 15
 
 # Verificar serviços
 log_info "Verificando status de TODOS os serviços..."
@@ -2058,7 +2058,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭──────────��──────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰────────────────────────────────────────────────────────────��────────────────╯${RESET}"
+echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2126,7 +2126,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Verificação assinatura obrigatória - Segu
 echo -e "    ${BLUE}│${RESET} ✅ Filtros branch específicos - Apenas refs/heads/main"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup + Clone fresh - Sempre versão mais recente"
 echo ""
-echo -e "${CYAN}${BOLD}╔═════════════════════════════════════════════════════��═════════════════════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔══��══════════════════════════════════════════════════��═════════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
