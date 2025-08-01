@@ -350,7 +350,7 @@ test_service_health() {
 nuclear_cleanup() {
     log_info "🧹 Limpeza completa - preparando ambiente..."
     
-    # Parar e remover todos os containers/servi��os KRYONIX
+    # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
     sleep 15
     
@@ -934,7 +934,7 @@ app.post('/api/github-webhook', (req, res) => {
         if (code === 0) {
             console.log('✅ Deploy automático KRYONIX concluído com SUCESSO');
         } else {
-            console.error('��� Deploy automático KRYONIX falhou');
+            console.error('❌ Deploy automático KRYONIX falhou');
         }
     });
 
@@ -1963,7 +1963,7 @@ if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
     EXTERNAL_WEBHOOK_STATUS="✅ FUNCIONANDO"
 else
-    EXTERNAL_WEBHOOK_STATUS="⚠️ VERIFICAR"
+    EXTERNAL_WEBHOOK_STATUS="⚠�� VERIFICAR"
 fi
 
 complete_step
@@ -1979,7 +1979,7 @@ echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCL
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GOLD}${BOLD}█████████████████████████████████████████████████████████████████████���██████████${RESET}"
 echo ""
-echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
+echo -e "${MAGENTA}${BOLD}╭─────────────────────���───────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 KRYONIX PLATFORM - INSTALAÇÃO COMPLETA${RESET}                          ${MAGENTA}│${RESET}"
 echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2052,13 +2052,13 @@ echo ""
 echo -e "${CYAN}${BOLD}╔═══════════════════════════════════════════════════════════════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
-echo -e "${CYAN}║${RESET} ${WHITE}���� Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}📱 WhatsApp:${RESET} ${TURQUOISE}+55 17 98180-5327${RESET}                                          ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}📧 Email:${RESET} ${TURQUOISE}admin@kryonix.com.br${RESET}                                          ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}💻 GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${BLINK}${YELLOW}⚡ AGORA TODA ALTERAÇÃO NO GITHUB ATUALIZA O SITE AUTOMATICAMENTE! ⚡${RESET}  ${CYAN}║${RESET}"
-echo -e "${CYAN}╚═══���═══════���══════════���══════��═════���════════════��═══════════════════════════════��══╝${RESET}"
+echo -e "${CYAN}╚═══���═══════���══════════���══════��═════����════════════��═══════════════════════════════��══╝${RESET}"
 echo ""
 
 # Instalador KRYONIX finalizado com sucesso
