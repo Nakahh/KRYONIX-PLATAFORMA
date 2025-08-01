@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Smartphone, 
-  Brain, 
-  Zap, 
-  Shield, 
-  Cloud, 
+import {
+  Smartphone,
+  Brain,
+  Zap,
+  Shield,
+  Cloud,
   MessageCircle,
   BarChart3,
-  Users,
   ArrowRight,
   Play,
   CheckCircle
