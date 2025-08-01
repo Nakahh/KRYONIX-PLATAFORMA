@@ -83,7 +83,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████��� ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -745,10 +745,12 @@ if ! grep -q "/api/github-webhook" server.js; then
     # Backup
     cp server.js server.js.backup
 
-    # Adicionar endpoint webhook completo
+    # CORREÇÃO: Adicionar endpoint webhook CORRIGIDO com todas as melhorias
     cat >> server.js << WEBHOOK_EOF
 
-// Webhook do GitHub configurado automaticamente pelo instalador KRYONIX
+// ============================================================================
+// WEBHOOK DO GITHUB - VERSÃO CORRIGIDA COM TODAS AS MELHORIAS
+// ============================================================================
 const crypto = require('crypto');
 const { exec } = require('child_process');
 const path = require('path');
