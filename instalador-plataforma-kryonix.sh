@@ -86,8 +86,8 @@ show_banner() {
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚█��╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███����╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -1454,20 +1454,15 @@ else
     log_warning "Next.js não encontrado no package.json - verificar se é projeto Next.js"
 fi
 
-# Verificação completa de arquivos necessários (do instalador antigo + correções do agente)
+# Verificação completa de arquivos necessários (ATUALIZADA com arquivos criados automaticamente)
 log_info "🔍 Verificando TODOS os arquivos necessários para Docker build..."
-required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js")
+required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js" "next.config.js" "public/index.html")
 missing_files=()
-
-# Criar public/index.html se não existir
-if [ ! -f "public/index.html" ]; then
-    mkdir -p public
-    echo '<!DOCTYPE html><html><head><title>KRYONIX</title></head><body><h1>KRYONIX Platform</h1></body></html>' > public/index.html
-fi
 
 for file in "${required_files[@]}"; do
     if [ ! -f "$file" ]; then
         missing_files+=("$file")
+        log_error "❌ $file faltando"
     else
         log_success "✅ $file encontrado"
     fi
@@ -2148,9 +2143,9 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════���══════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}══════════════════════════════════════════���════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
