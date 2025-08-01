@@ -81,7 +81,7 @@ STEP_DESCRIPTIONS=(
     "Verificando Docker Swarm ⚙"
     "NUCLEAR cleanup completo 🧹"
     "Configurando credenciais 🔐"
-    "Clone FRESH da versão mais recente 🔄"
+    "Preparação do ambiente 🔄"
     "Criando arquivos de serviços 📄"
     "Instalando dependências 📦"
     "Configurando firewall 🔥"
@@ -110,7 +110,7 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██���   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
@@ -123,7 +123,7 @@ show_banner() {
     echo ""
     echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────────────────────────────────────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
-    echo -e "${GOLD}╰──────────────────────────────────────────────────────────────────────────────╯${RESET}"
+    echo -e "${GOLD}╰───────────────────────────────────────���──────────────────────────────────────╯${RESET}"
 
     # Funcionalidades em linha única
     echo ""
@@ -346,9 +346,9 @@ test_service_health() {
     return 1
 }
 
-# NOVA FUNÇÃO: Nuclear cleanup completo
+# Limpeza completa do ambiente
 nuclear_cleanup() {
-    log_info "🧹 NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
+    log_info "🧹 Limpeza completa - preparando ambiente..."
     
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -394,14 +394,14 @@ nuclear_cleanup() {
     return 0
 }
 
-# NOVA FUNÇÃO: Clone fresh garantindo versão mais recente
+# Obtenção do código fonte
 fresh_git_clone() {
     local repo_url="$1"
     local target_dir="$2"
     local branch="${3:-main}"
     local pat_token="$4"
     
-    log_info "🔄 Clone FRESH garantindo versão MAIS RECENTE..."
+    log_info "🔄 Obtendo código fonte..."
     
     # Configurar Git globalmente ANTES de tentar clone
     git config --global user.name "KRYONIX Deploy"
@@ -1977,7 +1977,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
-echo -e "${GOLD}${BOLD}██████████████████████████████████████████████████████████████��█████████████████${RESET}"
+echo -e "${GOLD}${BOLD}████████████████████████████████████████████████████████████████████████████████${RESET}"
 echo ""
 echo -e "${MAGENTA}${BOLD}╭──────────────────────────────────────────────────────────────────���──────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
@@ -2001,7 +2001,7 @@ else
 fi
 
 echo ""
-echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
+echo -e "${CYAN}${BOLD}��� STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
@@ -2021,7 +2021,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} https://$DOMAIN_
 fi
 echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
-echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
+echo -e "${PURPLE}���� Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
 echo -e "${CYAN}════════════════════════════════════════════════════════════${RESET}"
@@ -2049,7 +2049,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Verificação assinatura obrigatória - Segu
 echo -e "    ${BLUE}│${RESET} ✅ Filtros branch específicos - Apenas refs/heads/main"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup + Clone fresh - Sempre versão mais recente"
 echo ""
-echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════════════════════��══════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔═════════════════════════════════════════════════════════════════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}���� Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
