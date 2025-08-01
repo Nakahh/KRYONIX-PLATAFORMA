@@ -110,7 +110,7 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   █��║${GREEN}��█╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   █��║${GREEN}����╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██��══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}���█║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}��${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
@@ -572,7 +572,7 @@ verify_fresh_clone() {
             log_warning "⚠️ Commit do repositório: $latest_commit"
             
             # Tentar sincronizar repositório
-            log_info "🔄 Tentando sincronizar repositório..."
+            log_info "���� Tentando sincronizar repositório..."
             if git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null; then
                 new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
                 new_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
@@ -797,11 +797,11 @@ if ! grep -q "/api/github-webhook" server.js; then
     # Backup
     cp server.js server.js.backup
 
-    # CORREÇÃO: Adicionar endpoint webhook CORRIGIDO com todas as melhorias
+    # Adicionar endpoint webhook para deploy automático
     cat >> server.js << WEBHOOK_EOF
 
 // ============================================================================
-// WEBHOOK DO GITHUB - VERSÃO CORRIGIDA COM TODAS AS MELHORIAS
+// WEBHOOK DO GITHUB - DEPLOY AUTOMÁTICO
 // ============================================================================
 const crypto = require('crypto');
 const { spawn } = require('child_process');
@@ -809,7 +809,7 @@ const fs = require('fs');
 const path = require('path');
 const WEBHOOK_SECRET = '$WEBHOOK_SECRET';
 
-// FUNÇÃO CORRIGIDA - Verificação de assinatura obrigatória e segura
+// Verificação de assinatura segura
 const verifyGitHubSignature = (payload, signature) => {
     console.log('🔐 Iniciando verificação de assinatura...');
 
@@ -836,7 +836,7 @@ const verifyGitHubSignature = (payload, signature) => {
     }
 };
 
-// ENDPOINT WEBHOOK CORRIGIDO - Filtros específicos e logs detalhados
+// ENDPOINT WEBHOOK - Filtros específicos e logs detalhados
 app.post('/api/github-webhook', (req, res) => {
     const timestamp = new Date().toISOString();
     console.log('🔔 ===============================================');
