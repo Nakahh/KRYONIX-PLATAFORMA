@@ -46,8 +46,8 @@ export class BiometricAuth {
     const hasWebAuthn = !!(
       window.navigator &&
       window.navigator.credentials &&
-      window.navigator.credentials.create &&
-      window.navigator.credentials.get &&
+      typeof window.navigator.credentials.create === 'function' &&
+      typeof window.navigator.credentials.get === 'function' &&
       window.PublicKeyCredential
     )
 
