@@ -87,7 +87,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║█���╔██╗ ██║██║ ╚███���╝      ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███�����      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -1285,6 +1285,8 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=8080
+      - HOSTNAME=0.0.0.0
+      - NEXT_TELEMETRY_DISABLED=1
       - AUTO_UPDATE_DEPS=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
@@ -1787,7 +1789,7 @@ MONITOR_EOF
 
 chmod +x dependency-monitor.sh
 
-# Adicionar ao crontab para execução a cada hora
+# Adicionar ao crontab para execuç��o a cada hora
 (crontab -l 2>/dev/null || true; echo "0 * * * * cd $PROJECT_DIR && ./dependency-monitor.sh") | crontab -
 
 log_success "✅ Monitoramento contínuo configurado"
