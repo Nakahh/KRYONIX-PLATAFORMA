@@ -1502,7 +1502,7 @@ log_info "Instalando dependências..."
 if npm install --production --legacy-peer-deps >/dev/null 2>&1; then
     log_success "✅ Dependências instaladas com sucesso"
 else
-    log_error "❌ Erro: depend█ncias não instaladas"
+    log_error "❌ Erro: dependências não instaladas"
     exit 1
 fi
 
