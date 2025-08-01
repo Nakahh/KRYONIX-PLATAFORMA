@@ -55,7 +55,7 @@ SERVER_USER="${SERVER_USER:-$(whoami)}"
 TOTAL_STEPS=18
 CURRENT_STEP=0
 STEP_DESCRIPTIONS=(
-    "Verificando Docker Swarm ⚙"
+    "Verificando Docker Swarm ���"
     "Limpando ambiente anterior 🧹"
     "Configurando credenciais 🔐"
     "Preparando projeto 📁"
@@ -86,7 +86,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚��█╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -308,7 +308,7 @@ sync_git_repository_force_latest() {
     git config --global init.defaultBranch main
     git config --global --add safe.directory "$PROJECT_DIR"
     
-    # Configurar repositório
+    # Configurar repositório de forma mais agressiva
     if [ ! -d ".git" ]; then
         log_info "Inicializando repositório Git..."
         git init
@@ -316,6 +316,10 @@ sync_git_repository_force_latest() {
     else
         log_info "Atualizando repositório existente..."
         git remote set-url origin "$repo_url"
+
+        # Remover qualquer tracking branch local que possa estar "preso"
+        git branch -D main 2>/dev/null || true
+        git branch -D master 2>/dev/null || true
     fi
     
     # CORREÇÃO CRÍTICA: Forçar pull da versão mais recente (SEMPRE)
