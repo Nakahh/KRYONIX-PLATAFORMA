@@ -20,6 +20,17 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/logo-kryonix.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon.png',
+  },
   openGraph: {
     title: 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
     description: 'Plataforma empresarial multi-tenant com 32 stacks integradas, WhatsApp Business, CRM inteligente, automação 24/7 e muito mais. Criação de clientes em 2-5 minutos.',
@@ -29,7 +40,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/logo-kryonix.svg',
+        url: '/logo-kryonix.png',
         width: 1200,
         height: 630,
         alt: 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
@@ -40,7 +51,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
     description: 'Plataforma empresarial multi-tenant com 32 stacks integradas e automação completa por IA.',
-    images: ['/logo-kryonix.svg'],
+    images: ['/logo-kryonix.png'],
   },
   robots: {
     index: true,
@@ -65,6 +76,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
       <body className={`${inter.className} antialiased`}>
         <div id="root">
           {children}
