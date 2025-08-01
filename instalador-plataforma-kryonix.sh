@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
-    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ███���██╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚═════════════════════════════════════════════════════════════════╝"
+    echo "╚════════════���════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1222,8 +1222,13 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-        max_attempts: 3
-        delay: 10s
+        max_attempts: 5
+        delay: 15s
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
       labels:
         # Traefik básico
         - "traefik.enable=true"
