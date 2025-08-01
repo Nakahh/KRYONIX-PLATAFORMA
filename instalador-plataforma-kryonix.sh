@@ -83,13 +83,13 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔���═══════════════���════════════════════════════════════════════════��"
+    echo "╔���═══════════════���════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo "║     █���║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -502,7 +502,7 @@ nuclear_cleanup() {
         # Verificação final
         if [ -d "$PROJECT_DIR" ]; then
             error_step
-            log_error "❌ Falha na remoção completa do diretório: $PROJECT_DIR"
+            log_error "❌ Falha na remo��ão completa do diretório: $PROJECT_DIR"
             exit 1
         fi
     fi
@@ -1254,7 +1254,7 @@ app.post('/api/github-webhook', (req, res) => {
         });
 
         res.json({
-            message: 'Deploy automático KRYONIX iniciado com atualização de dependências',
+            message: 'Deploy automático KRYONIX iniciado com atualizaç��o de dependências',
             status: 'accepted',
             ref: payload.ref,
             sha: payload.after || payload.head_commit?.id,
@@ -1646,13 +1646,16 @@ log_info "🔍 Verificação proativa de builds corrompidos..."
 
 if [ -d ".next" ]; then
     log_info "⚠️ Diretório .next existe - removendo para garantir build limpo..."
-    rm -rf .next
-    rm -rf node_modules/.cache 2>/dev/null || true
-    npm cache clean --force >/dev/null 2>&1 || true
+    timeout 30 rm -rf .next 2>/dev/null || rm -rf .next
+    timeout 10 rm -rf node_modules/.cache 2>/dev/null || true
+    timeout 30 npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
     log_info "ℹ️ Nenhum build anterior encontrado - continuando"
 fi
+
+# Forçar continuação do script
+log_info "🚀 Continuando com o Docker build..."
 
 # Build com logs detalhados para diagnóstico
 log_info "Iniciando Docker build multi-stage com Next.js..."
@@ -2429,7 +2432,7 @@ web_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${ST
 log_info "Status Docker Swarm para ${STACK_NAME}_web: $web_replicas"
 
 if [[ "$web_replicas" == "1/1" ]]; then
-    log_success "Serviço web funcionando no Docker Swarm (1/1)"
+    log_success "Servi��o web funcionando no Docker Swarm (1/1)"
 
     # Validação de conectividade rápida
     log_info "Testando conectividade HTTP..."
@@ -2638,7 +2641,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Docker-stack.yml com prioridade máxima para
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
 echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
 echo -e "    ${BLUE}│${RESET} ✅ Atualização automática de dependências a cada deploy"
-echo -e "    ${BLUE}│${RESET} �� Verificação contínua de dependências (a cada hora)"
+echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
 echo -e "    ${BLUE}│${RESET} ✅ Logs detalhados de todas as atualizações"
