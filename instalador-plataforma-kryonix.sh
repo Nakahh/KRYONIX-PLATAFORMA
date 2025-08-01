@@ -342,7 +342,7 @@ test_service_health() {
         fi
     done
     
-    log_warning "Conectividade não confirmada ap��s $max_attempts tentativas"
+    log_warning "Conectividade não confirmada após $max_attempts tentativas"
     return 1
 }
 
