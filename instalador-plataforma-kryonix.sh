@@ -14,16 +14,39 @@ export LANGUAGE=C
 # Funcionalidades: Nuclear cleanup + Fresh clone + Sempre versão mais recente
 # ============================================================================
 
-# Cores e formatação
-BLUE='\033[1;34m'
-CYAN='\033[1;36m'
-GREEN='\033[1;32m'
-YELLOW='\033[1;33m'
-RED='\033[1;31m'
-PURPLE='\033[1;35m'
-WHITE='\033[1;37m'
+# Cores e formatação aprimoradas para visual profissional
+BLUE='\033[1;94m'      # Azul brilhante
+CYAN='\033[1;96m'      # Ciano brilhante
+GREEN='\033[1;92m'     # Verde brilhante
+YELLOW='\033[1;93m'    # Amarelo brilhante
+RED='\033[1;91m'       # Vermelho brilhante
+PURPLE='\033[1;95m'    # Roxo brilhante
+WHITE='\033[1;97m'     # Branco brilhante
+ORANGE='\033[1;38;5;208m'  # Laranja vibrante
+MAGENTA='\033[1;38;5;201m' # Magenta vibrante
+TURQUOISE='\033[1;38;5;51m' # Turquesa
+LIME='\033[1;38;5;154m'    # Verde lima
+PINK='\033[1;38;5;212m'    # Rosa
+GOLD='\033[1;38;5;220m'    # Dourado
+SILVER='\033[1;38;5;250m'  # Prateado
 BOLD='\033[1m'
+DIM='\033[2m'
+ITALIC='\033[3m'
+UNDERLINE='\033[4m'
+BLINK='\033[5m'
+REVERSE='\033[7m'
+STRIKETHROUGH='\033[9m'
 RESET='\033[0m'
+
+# Backgrounds
+BG_BLACK='\033[40m'
+BG_RED='\033[41m'
+BG_GREEN='\033[42m'
+BG_YELLOW='\033[43m'
+BG_BLUE='\033[44m'
+BG_PURPLE='\033[45m'
+BG_CYAN='\033[46m'
+BG_WHITE='\033[47m'
 
 # Emojis e caracteres especiais
 CHECKMARK='✅'
@@ -383,7 +406,7 @@ fresh_git_clone() {
         log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
         return 1
     fi
-    log_success "✅ Conectividade e token validados"
+    log_success "��� Conectividade e token validados"
 
     # Clone com opções específicas para versão mais recente
     local clone_attempts=0
@@ -1132,7 +1155,7 @@ if [ ! -f "public/index.html" ]; then
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            🌐 https://kryonix.com.br | ���� +55 17 98180-5327<br>
+            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327<br>
             🚀 Deploy automático ativo - Sempre versão mais recente
         </p>
     </div>
@@ -1986,7 +2009,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}══════════��══════════════════════════��═════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2020,7 +2043,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Local:${RESET} $LOCAL_WEBHOOK_STA
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} $EXTERNAL_WEBHOOK_STATUS"
 echo ""
 echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Local Web:${RESET} http://localhost:8080"
+echo -e "    ${BLUE}��${RESET} ${BOLD}Local Web:${RESET} http://localhost:8080"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local Webhook:${RESET} http://localhost:8080/api/github-webhook"
 if docker service ls | grep -q "traefik"; then
 echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
