@@ -33,9 +33,11 @@
 ```
 KRYONIX/
 ├── 🔐 Autenticação (Keycloak)
+├── 🗄️ Database (PostgreSQL Multi-Tenant)
 ├── 📱 Frontend (Next.js 14)
 ├── 🎨 UI (Tailwind CSS)
 ├── 🔧 Scripts de Instalação
+├���─ 🤖 AI Monitoring
 └── 📊 Monitoramento 24/7
 ```
 
@@ -90,7 +92,7 @@ bash "Scripts de instalações/SCRIPT-PARTE-01-SERVIDOR-KRYONIX.sh"
 | 01 | Autenticação Keycloak | ✅ Concluída | Sistema multi-tenant com biometria |
 | 02 | PostgreSQL | 🚧 Planejada | Database isolado por cliente |
 | 03 | MinIO | 📋 Pendente | Armazenamento de arquivos |
-| 04 | Redis | 📋 Pendente | Cache distribuído |
+| 04 | Redis | �� Pendente | Cache distribuído |
 | 05 | Traefik | 📋 Pendente | Balanceamento e SSL |
 | ... | ... | ... | ... |
 | 50 | Deploy Final | 📋 Pendente | Produção completa |
