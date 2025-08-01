@@ -114,7 +114,7 @@ animate_progress_bar() {
 
     # Cores baseadas no status
     local bar_color="$GREEN"
-    local status_icon="🔄"
+    local status_icon="���"
 
     case $status in
         "iniciando")
@@ -1182,103 +1182,213 @@ log() {
 }
 
 deploy() {
-    log "🚀 Iniciando deploy automático KRYONIX com nuclear cleanup..."
+    log "🚀 Iniciando deploy automático KRYONIX com melhorias..."
 
-    # CORREÇÃO: Nuclear cleanup para garantir versão mais recente
-    log "🧹 Nuclear cleanup para garantir versão mais recente..."
+    # FAZER BACKUP antes de qualquer coisa
+    if [ -d "$DEPLOY_PATH" ]; then
+        log "💾 Criando backup da versão atual..."
+        sudo cp -r "$DEPLOY_PATH" "$BACKUP_DIR" 2>/dev/null || true
+        log "📁 Backup criado em: $BACKUP_DIR"
+    fi
 
-    # Parar processos
-    sudo pkill -f "$DEPLOY_PATH" 2>/dev/null || true
+    # VERIFICAR se é realmente necessário fazer deploy
+    cd "$DEPLOY_PATH" 2>/dev/null || cd /opt
 
-    # Remover TUDO do diretório (incluindo .git)
-    cd /opt
-    sudo rm -rf kryonix-plataform
+    if [ -d "$DEPLOY_PATH/.git" ]; then
+        cd "$DEPLOY_PATH"
+        local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
 
-    log "📥 Clone FRESH da versão mais recente..."
+        # Verificar commit remoto mais recente
+        git config --global credential.helper store 2>/dev/null || true
+        echo "https://Nakahh:$PAT_TOKEN@github.com" > ~/.git-credentials 2>/dev/null || true
+        chmod 600 ~/.git-credentials 2>/dev/null || true
 
-    # Configurar Git e credenciais para repositório privado
-    git config --global user.name "KRYONIX Deploy" 2>/dev/null || true
-    git config --global user.email "deploy@kryonix.com.br" 2>/dev/null || true
-    git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
-    git config --global credential.helper store 2>/dev/null || true
+        git fetch origin main 2>/dev/null || true
+        remote_commit=$(git rev-parse origin/main 2>/dev/null | head -c 8 || echo "unknown")
 
-    # Configurar credenciais para repositório privado
-    echo "https://Nakahh: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@github.com" > ~/.git-credentials
-    chmod 600 ~/.git-credentials
+        log "📌 Commit local atual: $local_commit"
+        log "🌐 Commit remoto mais recente: $remote_commit"
 
-    # Clone fresh completo (repositório privado)
-    if git clone --single-branch --branch main --depth 1 "https://github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
-        log "✅ Clone fresh concluído"
+        if [ "$local_commit" = "$remote_commit" ] && [ "$local_commit" != "unknown" ]; then
+            log "✅ Já estamos na versão mais recente - deploy desnecessário"
+            log "ℹ️ Deploy abortado para evitar rebuild desnecessário"
+            return 0
+        fi
+    fi
+
+    log "🔄 Nova versão detectada - prosseguindo com deploy..."
+
+    # CORREÇÃO AUTOMÁTICA do package.json durante deploy
+    if [ -f "$DEPLOY_PATH/package.json" ]; then
+        log "🔧 Aplicando correções automáticas no package.json..."
+        cd "$DEPLOY_PATH"
+
+        # Backup do package.json
+        cp package.json package.json.deploy-backup
+
+        # Adicionar dependências faltantes se não existirem
+        if ! grep -q '"express"' package.json; then
+            log "📦 Adicionando dependências backend..."
+            sed -i '/"socket.io-client": "[^"]*",/a\    "express": "^4.18.2",\n    "cors": "^2.8.5",\n    "helmet": "^7.0.0",\n    "compression": "^1.7.4",' package.json
+        fi
+
+        # Corrigir dependências deprecadas
+        if grep -q '"react-use-gesture"' package.json; then
+            sed -i 's/"react-use-gesture": "[^"]*"/"@use-gesture\/react": "^10.2.27"/' package.json
+        fi
+
+        if grep -q '"react-virtual": ".*2\.10\.4"' package.json; then
+            sed -i 's/"react-virtual": "[^"]*"/"@tanstack\/react-virtual": "^3.0.0"/' package.json
+        fi
+
+        # Corrigir script start
+        if ! grep -q '"start": "node server.js"' package.json; then
+            sed -i 's/"start": "react-scripts start"/"start": "node server.js",\n    "server": "node server.js"/' package.json
+        fi
+
+        log "✅ Correções do package.json aplicadas"
+    fi
+
+    # Nuclear cleanup mais inteligente
+    log "🧹 Limpeza seletiva para atualização..."
+
+    # Parar serviços primeiro
+    docker stack rm "$STACK_NAME" 2>/dev/null || true
+    sleep 15
+
+    # Remover imagens antigas
+    docker images --format "{{.Repository}}:{{.Tag}}" | grep "kryonix-plataforma" | grep -v "latest" | xargs -r docker rmi -f 2>/dev/null || true
+
+    # PULL/CLONE inteligente
+    if [ -d "$DEPLOY_PATH/.git" ]; then
+        log "📥 Atualizando repositório existente..."
+        cd "$DEPLOY_PATH"
+
+        # Reset e pull da versão mais recente
+        git reset --hard HEAD 2>/dev/null || true
+        git clean -fd 2>/dev/null || true
+        git pull origin main --force 2>/dev/null || git fetch origin main && git reset --hard origin/main
+
     else
-        log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
-        # Fallback: token diretamente na URL
-        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
-            log "✅ Clone fresh concluído com fallback"
-        else
-            log "❌ Falha no clone fresh com todos os métodos"
-            return 1
+        log "📥 Clone fresh da versão mais recente..."
+        cd /opt
+        sudo rm -rf kryonix-plataform 2>/dev/null || true
+
+        # Configurar Git
+        git config --global user.name "KRYONIX Deploy"
+        git config --global user.email "deploy@kryonix.com.br"
+        git config --global credential.helper store
+        echo "https://Nakahh:$PAT_TOKEN@github.com" > ~/.git-credentials
+        chmod 600 ~/.git-credentials
+
+        if ! git clone --single-branch --branch main --depth 1 "$GITHUB_REPO" kryonix-plataform; then
+            # Fallback com token na URL
+            git clone --single-branch --branch main --depth 1 "https://Nakahh:$PAT_TOKEN@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform
         fi
     fi
 
     cd "$DEPLOY_PATH"
 
-    # Verificar se é a versão mais recente
-    current_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
-    current_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
-    remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
+    # Verificar commit final
+    final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+    final_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 
-    log "📌 Commit local: $current_commit"
-    log "🌐 Commit remoto: $remote_commit"
-    log "📝 Mensagem: $current_msg"
+    log "📌 Commit final: $final_commit"
+    log "📝 Mensagem: $final_msg"
 
-    # Verificar se tem arquivos necessários
-    if [ ! -f "webhook-listener.js" ] || [ ! -f "kryonix-monitor.js" ]; then
-        log "❌ Arquivos de serviços faltando após clone!"
+    # VERIFICAR arquivos críticos
+    missing_files=()
+    critical_files=("package.json" "server.js" "webhook-deploy.sh")
+
+    for file in "${critical_files[@]}"; do
+        if [ ! -f "$file" ]; then
+            missing_files+=("$file")
+        fi
+    done
+
+    if [ ${#missing_files[@]} -gt 0 ]; then
+        log "❌ Arquivos críticos faltando: ${missing_files[*]}"
+        log "🔄 Restaurando backup..."
+        sudo rm -rf "$DEPLOY_PATH" 2>/dev/null || true
+        sudo mv "$BACKUP_DIR" "$DEPLOY_PATH" 2>/dev/null || true
         return 1
     fi
 
-    # Instalar dependências
-    log "📦 Instalando dependências..."
-    npm install --production
+    # Instalar dependências com retry
+    log "📦 Instalando dependências (com retry)..."
+    for i in {1..3}; do
+        if npm install --production --legacy-peer-deps; then
+            log "✅ Dependências instaladas (tentativa $i)"
+            break
+        else
+            log "⚠️ Falha na instalação - tentativa $i/3"
+            sleep 10
+        fi
+    done
 
-    # Rebuild da imagem
-    log "🏗️ Fazendo rebuild da imagem Docker..."
-    docker build --no-cache -t kryonix-plataforma:latest .
+    # Verificar se dependências críticas foram instaladas
+    if [ ! -d "node_modules/express" ]; then
+        log "❌ Express não instalado - tentando instalação forçada..."
+        npm install express cors helmet compression --legacy-peer-deps --force
+    fi
+
+    # Rebuild da imagem com verificação
+    log "🏗️ Rebuilding imagem Docker..."
+    if ! docker build --no-cache -t kryonix-plataforma:latest .; then
+        log "❌ Falha no build - restaurando backup..."
+        sudo rm -rf "$DEPLOY_PATH"
+        sudo mv "$BACKUP_DIR" "$DEPLOY_PATH"
+        return 1
+    fi
 
     # Deploy do stack
     log "🚀 Fazendo deploy do stack KRYONIX..."
     docker stack deploy -c docker-stack.yml "$STACK_NAME"
 
-    sleep 60
+    # Aguardar estabilização
+    log "⏳ Aguardando estabilização dos serviços..."
+    sleep 90
 
-    # Verificar health de todos os serviços
-    log "🔍 Verificando health dos serviços KRYONIX..."
-
+    # Verificação completa de health
+    log "🔍 Verificando health de TODOS os serviços..."
     services_ok=0
     total_services=3
 
     for port in 8080 8082 8084; do
-        if curl -f -s "http://localhost:$port/health" > /dev/null; then
-            log "✅ Serviço KRYONIX na porta $port funcionando"
-            services_ok=$((services_ok + 1))
-        else
-            log "⚠️ Serviço KRYONIX na porta $port com problemas"
-        fi
+        for attempt in {1..5}; do
+            if curl -f -s -m 10 "http://localhost:$port/health" >/dev/null 2>&1; then
+                log "✅ Serviço na porta $port: FUNCIONANDO"
+                services_ok=$((services_ok + 1))
+                break
+            else
+                if [ $attempt -eq 5 ]; then
+                    log "❌ Serviço na porta $port: PROBLEMA após 5 tentativas"
+                else
+                    log "⏳ Serviço na porta $port: aguardando... (tentativa $attempt/5)"
+                    sleep 10
+                fi
+            fi
+        done
     done
 
+    # Resultado final
     if [ $services_ok -eq $total_services ]; then
-        log "🎉 Deploy KRYONIX concluído com SUCESSO! ($services_ok/$total_services serviços OK)"
-    else
-        log "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
-    fi
+        log "🎉 DEPLOY KRYONIX SUCESSO TOTAL! ($services_ok/$total_services serviços)"
 
-    # Testar webhook externamente
-    if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
-       -H "Content-Type: application/json" \
-       -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
-        log "🌐 Webhook externo KRYONIX funcionando!"
+        # Remover backup se tudo deu certo
+        sudo rm -rf "$BACKUP_DIR" 2>/dev/null || true
+
+        # Teste final do webhook
+        log "🧪 Testando webhook final..."
+        if curl -f -s -m 10 -X GET "http://localhost:8080/api/github-webhook" >/dev/null 2>&1; then
+            log "✅ Webhook endpoint respondendo"
+        fi
+
+        return 0
     else
-        log "⚠️ Webhook externo KRYONIX pode ter problemas"
+        log "❌ DEPLOY COM PROBLEMAS ($services_ok/$total_services serviços OK)"
+        log "🔄 Considerando rollback automático..."
+        return 1
     fi
 }
 
@@ -1569,7 +1679,7 @@ services:
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
-        # Middleware de Seguran��a para API
+        # Middleware de Segurança para API
         - "traefik.http.middlewares.api-security.headers.customrequestheaders.X-Forwarded-Proto=https"
         - "traefik.http.middlewares.api-security.headers.customresponseheaders.X-Frame-Options=SAMEORIGIN"
         - "traefik.http.routers.kryonix-webhook.middlewares=api-security"
@@ -1780,7 +1890,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🚀 Iniciando deploy final com todos os serviços..."
+log_info "��� Iniciando deploy final com todos os serviços..."
 
 # Deploy do stack
 log_info "Fazendo deploy do stack KRYONIX completo..."
