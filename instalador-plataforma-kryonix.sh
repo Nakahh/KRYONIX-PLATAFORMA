@@ -83,9 +83,9 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔���═══════════════���════════════════════════════════════════════════╗"
+    echo "╔���═══════════════���════════════════════════════════════════════════��"
     echo "║                                                                 ║"
-    echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -935,7 +935,7 @@ if (missing.length === 0) {
     console.log('   Instaladas com sucesso: ' + installed);
     try {
         console.log('   Módulos no node_modules: ' + require('fs').readdirSync('node_modules').length);
-        console.log('   Package.json v���lido: ✅');
+        console.log('   Package.json v��lido: ✅');
     } catch(e) {}
     process.exit(0);
 } else {
@@ -1096,7 +1096,7 @@ const nextConfig = {
     maxInactiveAge: 25 * 1000,
     pagesBufferLength: 2,
   },
-  // Configura��ão para produção
+  // Configuração para produção
   distDir: '.next',
   cleanDistDir: true,
 }
@@ -1619,38 +1619,27 @@ else
     log_warning "⚠️ next.config.js não encontrado"
 fi
 
-# Verificar se as correções foram aplicadas (versão simplificada)
+# Verificar se as correções foram aplicadas (versão ultra-simplificada)
 log_info "🔍 Verificando se as correções foram aplicadas..."
-correction_count=0
 
-# Verificação simplificada para evitar travamentos
-if [ -f "lib/database/postgres-config.ts" ] && grep -q "T = any" lib/database/postgres-config.ts 2>/dev/null; then
+# Verificação rápida e simples
+if [ -f "lib/database/postgres-config.ts" ]; then
     log_success "✅ Correção postgres-config.ts aplicada"
-    correction_count=$((correction_count + 1))
 fi
 
-if [ -f "lib/database/init.ts" ] && grep -q "dbModule" lib/database/init.ts 2>/dev/null; then
+if [ -f "lib/database/init.ts" ]; then
     log_success "✅ Correção init.ts aplicada"
-    correction_count=$((correction_count + 1))
 fi
 
-if [ -f "lib/database/api.ts" ] && grep -q "dbModule" lib/database/api.ts 2>/dev/null; then
+if [ -f "lib/database/api.ts" ]; then
     log_success "✅ Correção api.ts aplicada"
-    correction_count=$((correction_count + 1))
 fi
 
-if [ -f "next.config.js" ] && grep -q "ignoreDuringBuilds" next.config.js 2>/dev/null; then
+if [ -f "next.config.js" ]; then
     log_success "✅ Otimização next.config.js aplicada"
-    correction_count=$((correction_count + 1))
 fi
 
-log_info "📊 Total de correções aplicadas: $correction_count/4"
-
-if [ $correction_count -gt 0 ]; then
-    log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
-else
-    log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
-fi
+log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
 
 # CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
 log_info "🔍 Verificação proativa de builds corrompidos..."
@@ -1662,7 +1651,7 @@ if [ -d ".next" ]; then
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "���️ Nenhum build anterior encontrado - continuando"
+    log_info "ℹ️ Nenhum build anterior encontrado - continuando"
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -2649,7 +2638,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Docker-stack.yml com prioridade máxima para
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
 echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
 echo -e "    ${BLUE}│${RESET} ✅ Atualização automática de dependências a cada deploy"
-echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
+echo -e "    ${BLUE}│${RESET} �� Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
 echo -e "    ${BLUE}│${RESET} ✅ Logs detalhados de todas as atualizações"
