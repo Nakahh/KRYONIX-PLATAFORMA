@@ -9,7 +9,8 @@ import {
   BarChart3,
   CheckCircle,
   Clock,
-  Sparkles
+  Sparkles,
+  Globe
 } from 'lucide-react'
 
 export default function HomePage() {
