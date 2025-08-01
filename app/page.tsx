@@ -123,7 +123,7 @@ export default function HomePage() {
               </div>
               
               <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-balance">
-                <span className="gradient-text">Plataforma SaaS</span>
+                <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Plataforma SaaS</span>
                 <br />
                 <span className="text-gray-900">100% Autônoma por IA</span>
               </h1>
