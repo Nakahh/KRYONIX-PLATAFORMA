@@ -315,6 +315,32 @@ Referencie especialmente a **PARTE-20 Performance** como exemplo avançado de im
 - Scripts de deploy automatizado
 - IA integrada para otimização
 
+## 🔗 **INTEGRAÇÃO COM SISTEMA DE PERFORMANCE EXISTENTE**
+
+### **PARTE-20 PERFORMANCE JÁ IMPLEMENTADA**
+```yaml
+SISTEMA_EXISTENTE:
+  SCHEMAS: "TimescaleDB com métricas de performance"
+  SERVICES: "PerformanceService com tracking automático"
+  DASHBOARD: "React mobile-first com WebSockets"
+  MONITORING: "Prometheus + Grafana configurados"
+  AI_OPTIMIZATION: "Sistema preditivo funcionando"
+  CACHE_METRICS: "Tracking de cache hit/miss rate"
+
+INTEGRAÇÃO_OBRIGATÓRIA:
+  CACHE_REDIS: "Deve se conectar com métricas de performance"
+  MONITORING: "Grafana deve mostrar métricas de Redis"
+  AI_PREDICTION: "IA deve otimizar estratégias de cache"
+  MOBILE_OPTIMIZATION: "Cache deve priorizar usuários mobile"
+```
+
+### **PONTOS DE INTEGRAÇÃO CRÍTICOS**
+- **Cache Metrics**: Redis deve reportar métricas para TimescaleDB
+- **Performance Dashboard**: Incluir métricas de Redis em tempo real
+- **AI Optimization**: Sistema preditivo deve otimizar TTL do cache
+- **Mobile Priority**: Cache deve priorizar dados de usuários mobile
+- **WebSocket Events**: Notificações de performance de cache
+
 ---
 
 ## 🚀 **AÇÃO IMEDIATA REQUERIDA**
