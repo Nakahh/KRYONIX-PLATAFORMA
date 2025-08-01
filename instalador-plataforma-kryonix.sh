@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Configurações de encoding seguro para evitar problemas com caracteres especiais
+# Configura��ões de encoding seguro para evitar problemas com caracteres especiais
 export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
 export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚══���════════════���═��══���════════════════════════════════════════════╝"
+    echo "╚══���════════════���═��══���═════════════════════════════��══════════════╝"
     echo -e "${RESET}\n"
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
     echo -e "${CYAN}🛠️ Auto-detecção e correção de erros de módulos './734.js' e similares${RESET}\n"
@@ -1795,7 +1795,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "eslint_module_variable")
-            log_info "🔧 Aplicando correção para variável 'module' conflitante..."
+            log_info "��� Aplicando correção para variável 'module' conflitante..."
             if [ -f "lib/database/init.ts" ]; then
                 sed -i 's/for (const module of modules)/for (const dbModule of modules)/g' lib/database/init.ts
                 sed -i 's/checkDatabaseHealth(module)/checkDatabaseHealth(dbModule)/g' lib/database/init.ts
@@ -1997,9 +1997,9 @@ services:
         delay: 15s
       resources:
         limits:
-          memory: 1G
-        reservations:
           memory: 512M
+        reservations:
+          memory: 256M
       labels:
         # Traefik básico
         - "traefik.enable=true"
