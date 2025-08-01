@@ -1384,9 +1384,17 @@ deploy() {
         npm install express cors helmet compression --legacy-peer-deps --force
     fi
 
-    # Rebuild da imagem com verificação
-    log "🏗️ Rebuilding imagem Docker..."
-    if ! docker build --no-cache -t kryonix-plataforma:latest .; then
+    # Rebuild completo da imagem com limpeza total
+    log "🏗️ Rebuilding imagem Docker (build completo)..."
+
+    # Limpar cache de build do Docker
+    docker builder prune -f 2>/dev/null || true
+
+    # Remover imagem anterior forçadamente
+    docker rmi -f kryonix-plataforma:latest 2>/dev/null || true
+
+    # Build sem cache, forçando reconstrução total
+    if ! docker build --no-cache --force-rm -t kryonix-plataforma:latest .; then
         log "❌ Falha no build - restaurando backup..."
         sudo rm -rf "$DEPLOY_PATH"
         sudo mv "$BACKUP_DIR" "$DEPLOY_PATH"
@@ -1973,7 +1981,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GOLD}${BOLD}████████████████████████████████████████████████████████████████████████████████${RESET}"
+echo -e "${GOLD}${BOLD}███████████████████████████████��████████████████████████████████████████████████${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
@@ -1981,7 +1989,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 KRYONIX PLATFORM - INSTALAÇÃO COMPLETA${RESET}                          ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
+echo -e "${MAGENTA}╰─��───────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar instalação
