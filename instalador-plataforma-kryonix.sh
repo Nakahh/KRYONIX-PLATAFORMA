@@ -90,7 +90,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚══���══╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -392,6 +392,30 @@ sync_git_repository_force_latest() {
             final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
             log_success "✅ Sincronizado com versão MAIS RECENTE: $final_commit"
         fi
+    fi
+
+    # Verificação específica para garantir que não estamos no PR #22
+    current_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "")
+    if echo "$current_msg" | grep -q "#22"; then
+        log_warning "⚠️ DETECTADO: Ainda no PR #22, tentando buscar versão mais recente..."
+
+        # Buscar especificamente por commits mais recentes
+        git fetch origin --force --all 2>/dev/null || true
+
+        # Tentar diferentes estratégias para pegar versão mais recente
+        for ref in "origin/main" "origin/master" "origin/HEAD"; do
+            if git show-ref --verify --quiet refs/remotes/$ref; then
+                latest_commit_from_ref=$(git rev-parse $ref 2>/dev/null | head -c 8 || echo "")
+                if [ ! -z "$latest_commit_from_ref" ] && [ "$latest_commit_from_ref" != "$current_local_commit" ]; then
+                    log_info "🎯 Tentando atualizar para: $ref ($latest_commit_from_ref)"
+                    if git reset --hard $ref 2>/dev/null; then
+                        updated_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "")
+                        log_success "✅ Atualizado para: $updated_msg"
+                        break
+                    fi
+                fi
+            fi
+        done
     fi
     
     log_success "✅ Repositório com versão mais atualizada da main"
@@ -1286,7 +1310,7 @@ jobs:
 
       - name: 🚀 Deploy via webhook
         run: |
-          echo "ℹ️ GitHub webhook automático KRYONIX configurado"
+          echo "ℹ��� GitHub webhook automático KRYONIX configurado"
           echo "🔗 Webhook URL: https://kryonix.com.br/api/github-webhook"
           
           # Verificar se o webhook está respondendo
@@ -1627,7 +1651,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════���══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 INSTALAÇÃO 100% AUTOMÁTICA COM WEBHOOK EXTERNO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
