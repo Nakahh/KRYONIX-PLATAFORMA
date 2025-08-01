@@ -16,6 +16,7 @@ export interface TenantConfig {
     max_api_calls_per_day: number
   }
   isolation_level: 'schema' | 'database' | 'row_level'
+  last_activity: Date
 }
 
 export interface TenantStats {
