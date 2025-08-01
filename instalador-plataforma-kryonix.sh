@@ -76,7 +76,7 @@ STEP_DESCRIPTIONS=(
 )
 
 # ============================================================================
-# FUNÇÕES DE INTERFACE E PROGRESSO
+# FUN��ÕES DE INTERFACE E PROGRESSO
 # ============================================================================
 
 # Função para mostrar banner da Plataforma Kryonix
@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  █���╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -369,8 +369,26 @@ sync_git_repository_force_latest() {
     git clean -fd 2>/dev/null || true
     
     # Verificar se realmente está na main mais recente
-    local branch_info=$(git branch -vv 2>/dev/null | grep "^\*" || echo "unknown")
+    branch_info=$(git branch -vv 2>/dev/null | grep "^\*" || echo "unknown")
     log_info "Branch atual: $branch_info"
+
+    # Verificar se há PRs/commits mais recentes disponíveis
+    latest_remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
+    current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+
+    log_info "🔍 Commit local: $current_local_commit"
+    log_info "🔍 Commit remoto HEAD: $latest_remote_commit"
+
+    if [ "$current_local_commit" != "$latest_remote_commit" ]; then
+        log_warning "⚠️ Detectada versão mais recente disponível!"
+        log_info "🔄 Tentando sincronizar com HEAD mais recente..."
+
+        # Tentar puxar diretamente do HEAD remoto
+        if git fetch origin HEAD:refs/remotes/origin/latest 2>/dev/null && git reset --hard origin/latest 2>/dev/null; then
+            final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+            log_success "✅ Sincronizado com versão MAIS RECENTE: $final_commit"
+        fi
+    fi
     
     log_success "✅ Repositório com versão mais atualizada da main"
     return 0
@@ -1297,7 +1315,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🚀 Criando webhook deploy com pull FORÇADO da main atualizada..."
+log_info "🚀 Criando webhook deploy com pull FOR��ADO da main atualizada..."
 
 cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 #!/bin/bash
