@@ -85,11 +85,11 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo "╔���═══════════════���════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
-    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo "║     █���║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -502,7 +502,7 @@ nuclear_cleanup() {
         # Verificação final
         if [ -d "$PROJECT_DIR" ]; then
             error_step
-            log_error "❌ Falha na remo��ão completa do diretório: $PROJECT_DIR"
+            log_error "❌ Falha na remoção completa do diretório: $PROJECT_DIR"
             exit 1
         fi
     fi
@@ -935,7 +935,7 @@ if (missing.length === 0) {
     console.log('   Instaladas com sucesso: ' + installed);
     try {
         console.log('   Módulos no node_modules: ' + require('fs').readdirSync('node_modules').length);
-        console.log('   Package.json v��lido: ✅');
+        console.log('   Package.json v���lido: ✅');
     } catch(e) {}
     process.exit(0);
 } else {
@@ -1096,7 +1096,7 @@ const nextConfig = {
     maxInactiveAge: 25 * 1000,
     pagesBufferLength: 2,
   },
-  // Configuração para produção
+  // Configura��ão para produção
   distDir: '.next',
   cleanDistDir: true,
 }
@@ -1254,7 +1254,7 @@ app.post('/api/github-webhook', (req, res) => {
         });
 
         res.json({
-            message: 'Deploy automático KRYONIX iniciado com atualizaç��o de dependências',
+            message: 'Deploy automático KRYONIX iniciado com atualização de dependências',
             status: 'accepted',
             ref: payload.ref,
             sha: payload.after || payload.head_commit?.id,
@@ -1619,43 +1619,51 @@ else
     log_warning "⚠️ next.config.js não encontrado"
 fi
 
-# Verificar se as correções foram aplicadas (versão ultra-simplificada)
+# Verificar se as correções foram aplicadas (versão simplificada)
 log_info "🔍 Verificando se as correções foram aplicadas..."
+correction_count=0
 
-# Verificação rápida e simples
-if [ -f "lib/database/postgres-config.ts" ]; then
+# Verificação simplificada para evitar travamentos
+if [ -f "lib/database/postgres-config.ts" ] && grep -q "T = any" lib/database/postgres-config.ts 2>/dev/null; then
     log_success "✅ Correção postgres-config.ts aplicada"
+    correction_count=$((correction_count + 1))
 fi
 
-if [ -f "lib/database/init.ts" ]; then
+if [ -f "lib/database/init.ts" ] && grep -q "dbModule" lib/database/init.ts 2>/dev/null; then
     log_success "✅ Correção init.ts aplicada"
+    correction_count=$((correction_count + 1))
 fi
 
-if [ -f "lib/database/api.ts" ]; then
+if [ -f "lib/database/api.ts" ] && grep -q "dbModule" lib/database/api.ts 2>/dev/null; then
     log_success "✅ Correção api.ts aplicada"
+    correction_count=$((correction_count + 1))
 fi
 
-if [ -f "next.config.js" ]; then
+if [ -f "next.config.js" ] && grep -q "ignoreDuringBuilds" next.config.js 2>/dev/null; then
     log_success "✅ Otimização next.config.js aplicada"
+    correction_count=$((correction_count + 1))
 fi
 
-log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
+log_info "📊 Total de correções aplicadas: $correction_count/4"
+
+if [ $correction_count -gt 0 ]; then
+    log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
+else
+    log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
+fi
 
 # CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
 log_info "🔍 Verificação proativa de builds corrompidos..."
 
 if [ -d ".next" ]; then
     log_info "⚠️ Diretório .next existe - removendo para garantir build limpo..."
-    timeout 30 rm -rf .next 2>/dev/null || rm -rf .next
-    timeout 10 rm -rf node_modules/.cache 2>/dev/null || true
-    timeout 30 npm cache clean --force >/dev/null 2>&1 || true
+    rm -rf .next
+    rm -rf node_modules/.cache 2>/dev/null || true
+    npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "ℹ️ Nenhum build anterior encontrado - continuando"
+    log_info "���️ Nenhum build anterior encontrado - continuando"
 fi
-
-# Forçar continuação do script
-log_info "🚀 Continuando com o Docker build..."
 
 # Build com logs detalhados para diagnóstico
 log_info "Iniciando Docker build multi-stage com Next.js..."
@@ -2432,7 +2440,7 @@ web_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${ST
 log_info "Status Docker Swarm para ${STACK_NAME}_web: $web_replicas"
 
 if [[ "$web_replicas" == "1/1" ]]; then
-    log_success "Servi��o web funcionando no Docker Swarm (1/1)"
+    log_success "Serviço web funcionando no Docker Swarm (1/1)"
 
     # Validação de conectividade rápida
     log_info "Testando conectividade HTTP..."
