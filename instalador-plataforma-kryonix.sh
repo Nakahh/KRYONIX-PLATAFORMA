@@ -1963,7 +1963,7 @@ if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
     EXTERNAL_WEBHOOK_STATUS="✅ FUNCIONANDO"
 else
-    EXTERNAL_WEBHOOK_STATUS="⚠�� VERIFICAR"
+    EXTERNAL_WEBHOOK_STATUS="⚠️ VERIFICAR"
 fi
 
 complete_step
@@ -1973,13 +1973,13 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GOLD}${BOLD}████████████���██████████████████████████████████████████████████████████████████${RESET}"
+echo -e "${GOLD}${BOLD}████████████████████████████████████████████████████████████████████████████████${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
-echo -e "${GOLD}${BOLD}█████████████████████████████████████████████████████████████████████���██████████${RESET}"
+echo -e "${GOLD}${BOLD}████████████████████████████████████████████████████████████████████████████████${RESET}"
 echo ""
-echo -e "${MAGENTA}${BOLD}╭─────────────────────���───────────────────────────────────────────────────────╮${RESET}"
+echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 KRYONIX PLATFORM - INSTALAÇÃO COMPLETA${RESET}                          ${MAGENTA}│${RESET}"
 echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2049,7 +2049,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Segurança avançada - Assinatura criptográ
 echo -e "    ${BLUE}│${RESET} ✅ Controle de branch - Deploy apenas da branch principal"
 echo -e "    ${BLUE}│${RESET} ✅ Ambiente limpo - Instalação completa e organizada"
 echo ""
-echo -e "${CYAN}${BOLD}╔═══════════════════════════════════════════════════════════════════════════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔═════════════════��═════════════════════════════════════════════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
