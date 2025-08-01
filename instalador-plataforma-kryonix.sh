@@ -90,7 +90,7 @@ show_banner() {
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo "║     ╚═╝  ╚═╝╚═��  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -1460,16 +1460,53 @@ fi
 log_info "Aguardando estabilização completa com build Next.js (180s)..."
 sleep 180
 
-# Verificar serviços
+# Verificar serviços com validação específica para Next.js
 log_info "Verificando status de TODOS os serviços..."
 
+# Verificar serviço web principal
 if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_web" | grep -q "1/1"; then
     log_success "Serviço web funcionando (1/1)"
-    WEB_STATUS="✅ ONLINE (1/1)"
+
+    # Validação adicional: verificar se Next.js está respondendo
+    log_info "Validando inicialização do Next.js..."
+    sleep 30
+
+    if curl -f -s -m 15 "http://localhost:8080/health" >/dev/null 2>&1; then
+        log_success "Next.js inicializado e respondendo"
+        WEB_STATUS="✅ ONLINE (1/1) + Next.js OK"
+    else
+        log_warning "Serviço rodando mas Next.js ainda inicializando..."
+        # Aguardar mais 60s para Next.js completar
+        log_info "Aguardando mais 60s para Next.js completar inicialização..."
+        sleep 60
+
+        if curl -f -s -m 15 "http://localhost:8080/health" >/dev/null 2>&1; then
+            log_success "Next.js agora está respondendo"
+            WEB_STATUS="✅ ONLINE (1/1) + Next.js OK"
+        else
+            log_warning "Next.js ainda com problemas - verificar logs"
+            WEB_STATUS="⚠️ ONLINE (1/1) mas Next.js com problemas"
+        fi
+    fi
 else
     log_warning "Serviço web com problemas"
     WEB_STATUS="❌ PROBLEMA (0/1)"
+
+    # Mostrar logs para diagnóstico
+    log_info "Mostrando logs do serviço web para diagnóstico:"
+    docker service logs "${STACK_NAME}_web" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
 fi
+
+# Verificar outros serviços
+for service in webhook monitor; do
+    if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_${service}" | grep -q "1/1"; then
+        log_success "Serviço $service funcionando (1/1)"
+        eval "${service^^}_STATUS=\"✅ ONLINE (1/1)\""
+    else
+        log_warning "Serviço $service com problemas"
+        eval "${service^^}_STATUS=\"❌ PROBLEMA (0/1)\""
+    fi
+done
 
 complete_step
 next_step
