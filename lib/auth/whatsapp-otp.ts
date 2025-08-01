@@ -332,15 +332,19 @@ _Equipe KRYONIX_`
         text: message
       }
 
-      const response = await fetch(`${this.config.evolutionApiUrl}/message/sendText/${this.config.instanceName}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': this.config.apiKey!
-        },
-        body: JSON.stringify(payload),
-        timeout: 10000
-      })
+      const response = await Promise.race([
+        fetch(`${this.config.evolutionApiUrl}/message/sendText/${this.config.instanceName}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': this.config.apiKey!
+          },
+          body: JSON.stringify(payload)
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Request timeout')), 10000)
+        )
+      ])
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
