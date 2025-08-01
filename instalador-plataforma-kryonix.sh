@@ -116,8 +116,8 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}��${RESET}"
-    echo -e "${TURQUOISE}███████████████████████���████████████████████████████████████████████████████████${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
+    echo -e "${TURQUOISE}���██████████████████████���████████████████████████████████████████████████████████${RESET}"
 
     # Informações essenciais compactas
     echo ""
@@ -1981,7 +1981,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
+echo -e "${MAGENTA}╰──────────────────────────────────────────────────────────────────────────��──╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2003,7 +2003,7 @@ fi
 echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠�� VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
@@ -2024,7 +2024,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}═════════════════════════════════════════���══════════════${RESET}"
+echo -e "${CYAN}══════════���══════════════════════════════���══════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
