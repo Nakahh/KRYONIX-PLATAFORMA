@@ -105,7 +105,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="hidden sm:flex items-center space-x-2">
-              <div className="status-online"></div>
+              <div className="inline-flex h-2 w-2 rounded-full bg-green-400"></div>
               <span className="text-sm text-gray-600">Sistema Online</span>
             </div>
           </div>
