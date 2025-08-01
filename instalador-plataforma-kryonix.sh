@@ -83,11 +83,11 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔═════════════════════════════════════════════════════════════════╗"
+    echo "╔════════════��════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ���█║██║ ╚███���╝      ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚═══════════════════════════════════════════════════════════════���═╝"
+    echo "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -984,7 +984,7 @@ if grep -q '"type": "module"' package.json; then
 fi
 
 # CORREÇÃO CRÍTICA: Corrigir postinstall para funcionar durante Docker build
-log_info "🔧 Aplicando correção crítica no package.json..."
+log_info "��� Aplicando correção crítica no package.json..."
 if grep -q '"postinstall": "npm run check-deps"' package.json; then
     log_info "Corrigindo postinstall para compatibilidade com Docker build"
     # Criar backup
@@ -1529,6 +1529,36 @@ else
     log_info "🔍 Tipo de erro detectado: $build_error_type"
 
     case $build_error_type in
+        "missing_autoprefixer"|"missing_postcss"|"missing_tailwind")
+            log_info "🔧 Aplicando correção para dependências de build CSS/TailwindCSS..."
+            # Corrigir package.json movendo dependências de build para dependencies
+            cp package.json package.json.build-backup
+            cat > /tmp/fix-build-deps.js << 'EOF'
+const fs = require('fs');
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
+// Mover dependências de build críticas para dependencies
+const buildDeps = ['autoprefixer', 'postcss', 'tailwindcss', 'typescript'];
+buildDeps.forEach(dep => {
+    if (pkg.devDependencies && pkg.devDependencies[dep]) {
+        console.log(`Movendo ${dep} para dependencies`);
+        pkg.dependencies[dep] = pkg.devDependencies[dep];
+        delete pkg.devDependencies[dep];
+    }
+});
+
+fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+console.log('✅ Dependências de build movidas para dependencies');
+EOF
+            node /tmp/fix-build-deps.js
+            rm -f /tmp/fix-build-deps.js
+
+            # Limpar node_modules e reinstalar
+            log_info "🧹 Limpando node_modules e reinstalando com dependências corrigidas..."
+            rm -rf node_modules package-lock.json
+            npm install --no-audit --no-fund
+            ;;
+
         "missing_check_deps")
             log_info "🔧 Aplicando correção para check-dependencies.js..."
             # Recriar arquivos de dependências com certeza
@@ -2090,7 +2120,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
     # Validação de conectividade rápida
     log_info "Testando conectividade HTTP..."
     if timeout 15s curl -f -s "http://localhost:8080/health" >/dev/null 2>&1; then
-        log_success "✅ HTTP respondendo - Next.js funcionando"
+        log_success "��� HTTP respondendo - Next.js funcionando"
         WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
         log_warning "⚠️ Docker rodando mas HTTP não responde"
@@ -2230,7 +2260,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════════��════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════���══${RESET}"
 echo ""
