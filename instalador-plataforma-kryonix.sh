@@ -728,7 +728,7 @@ log_info "📝 Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    log_warning "⚠️ ATEN█ÃO: Ainda detectando referência ao PR #22"
+    log_warning "⚠️ ATENÇÃO: Ainda detectando referência ao PR #22"
     log_info "Isso pode significar que o PR #22 É a versão mais recente no GitHub"
     log_info "Ou pode haver um problema de sincronização"
 else
@@ -840,7 +840,7 @@ const verifyGitHubSignature = (payload, signature) => {
 app.post('/api/github-webhook', (req, res) => {
     const timestamp = new Date().toISOString();
     console.log('🔔 ===============================================');
-    console.log('█� WEBHOOK GITHUB RECEBIDO KRYONIX:', timestamp);
+    console.log('🔔 WEBHOOK GITHUB RECEBIDO KRYONIX:', timestamp);
     console.log('🔔 ===============================================');
 
     const payload = req.body;
@@ -1238,7 +1238,7 @@ deploy() {
 
     # FAZER BACKUP antes de qualquer coisa
     if [ -d "$DEPLOY_PATH" ]; then
-        log "💾 Criando backup da vers█o atual..."
+        log "💾 Criando backup da versão atual..."
         sudo cp -r "$DEPLOY_PATH" "$BACKUP_DIR" 2>/dev/null || true
         log "📁 Backup criado em: $BACKUP_DIR"
     fi
@@ -1502,7 +1502,7 @@ log_info "Instalando dependências..."
 if npm install --production --legacy-peer-deps >/dev/null 2>&1; then
     log_success "✅ Dependências instaladas com sucesso"
 else
-    log_error "❌ Erro: depend█ncias não instaladas"
+    log_error "❌ Erro: dependências não instaladas"
     exit 1
 fi
 
@@ -1626,7 +1626,7 @@ log_info "Criando Dockerfile otimizado para todos os serviços..."
 cat > Dockerfile << 'DOCKERFILE_EOF'
 FROM node:18-bullseye-slim
 
-# Instalar depend��ncias do sistema
+# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     tini \
     curl \
