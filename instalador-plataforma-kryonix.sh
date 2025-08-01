@@ -106,7 +106,7 @@ show_banner() {
 
     # Banner KRYONIX alinhado e responsivo (80 caracteres exatos)
     echo -e "${BOLD}${TURQUOISE}"
-    echo "████████████████████████████████████████████████████████████████████████████████"
+    echo "███████████████���████████████████████████████████████████████████████████████████"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
@@ -117,7 +117,7 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}��${RESET}"
-    echo -e "${TURQUOISE}████████████████████████████████████████████████████████████████████████████████${RESET}"
+    echo -e "${TURQUOISE}███████████████████████���████████████████████████████████████████████████████████${RESET}"
 
     # Informações essenciais compactas
     echo ""
@@ -1885,63 +1885,7 @@ log_success "GitHub Actions configurado"
 complete_step
 next_step
 
-# ============================================================================
-# ETAPA 13: CONFIGURAR GITHUB ACTIONS
-# ============================================================================
-
-processing_step
-log_info "Configurando CI/CD com GitHub Actions..."
-
-# Criar GitHub Actions workflow
-mkdir -p .github/workflows
-
-cat > .github/workflows/deploy.yml << 'GITHUB_ACTIONS_EOF'
-name: 🚀 Deploy KRYONIX Platform
-
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
-
-jobs:
-  deploy:
-    name: 🚀 Deploy to Production
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🚀 Deploy via webhook
-        run: |
-          echo "ℹ️ GitHub webhook automático KRYONIX configurado"
-          echo "🔗 Webhook URL: https://kryonix.com.br/api/github-webhook"
-
-          # Verificar se o webhook está respondendo
-          curl -f "https://kryonix.com.br/health" || exit 1
-
-      - name: 🏗️ Verify deployment
-        run: |
-          echo "⏳ Aguardando deployment automático KRYONIX..."
-          sleep 60
-
-          # Verificar múltiplas vezes
-          for i in {1..10}; do
-            if curl -f "https://kryonix.com.br/health"; then
-              echo "✅ Deployment KRYONIX verificado com sucesso!"
-              exit 0
-            fi
-            echo "⏳ Tentativa $i/10 - aguardando..."
-            sleep 30
-          done
-
-          echo "⚠️ Verificação manual necessária"
-          exit 1
-GITHUB_ACTIONS_EOF
-
-log_success "GitHub Actions configurado"
-complete_step
-next_step
+# Etapa 13: GitHub Actions já configurado na etapa anterior
 
 # ============================================================================
 # ETAPA 14: CONFIGURAR LOGS E BACKUP
@@ -2035,7 +1979,7 @@ echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCL
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GOLD}${BOLD}███████████████████████████████████████████████████████████████████████████████${RESET}"
 echo ""
-echo -e "${MAGENTA}${BOLD}╭──────────────────────────────────────────────────────────────��──────────────╮${RESET}"
+echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
 echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2080,7 +2024,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}═════════════════════════════════════════���══════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
