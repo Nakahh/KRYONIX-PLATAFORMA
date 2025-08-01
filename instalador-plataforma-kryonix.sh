@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
-    echo "║     ██╗  ██╗█���████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -456,7 +456,7 @@ nuclear_cleanup() {
         # Verificação final
         if [ -d "$PROJECT_DIR" ]; then
             error_step
-            log_error "❌ Falha na remoção completa do diretório: $PROJECT_DIR"
+            log_error "��� Falha na remoção completa do diretório: $PROJECT_DIR"
             exit 1
         fi
     fi
@@ -757,6 +757,19 @@ if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
     exit 1
 fi
 
+# Verificar clone (como no instalador antigo que funcionava)
+verification_result=0
+verify_fresh_clone "$PROJECT_DIR" "main"
+verification_result=$?
+
+if [ $verification_result -eq 1 ]; then
+    error_step
+    log_error "Falha na verificação do clone"
+    exit 1
+elif [ $verification_result -eq 2 ]; then
+    log_warning "Clone concluído com avisos"
+fi
+
 # Entrar no diretório
 cd "$PROJECT_DIR"
 
@@ -767,11 +780,26 @@ if [ ! -f "package.json" ]; then
     exit 1
 fi
 
+if [ ! -f "server.js" ]; then
+    error_step
+    log_error "server.js não encontrado no repositório!"
+    exit 1
+fi
+
 # Mostrar informações finais do commit
 final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8)
 final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 log_success "✅ Clone fresh concluído - Commit: $final_commit"
 log_info "📝 Última alteração: $final_commit_msg"
+
+# Verificação final para PR #22 (como no instalador antigo)
+if echo "$final_commit_msg" | grep -qi "#22"; then
+    log_warning "⚠️ ATENÇÃO: Ainda detectando referência ao PR #22"
+    log_info "Isso pode significar que o PR #22 É a versão mais recente no GitHub"
+    log_info "Ou pode haver um problema de sincronização"
+else
+    log_success "✅ Confirmado: Não está no PR #22 - versão mais recente obtida"
+fi
 
 complete_step
 next_step
@@ -1567,7 +1595,7 @@ sleep 180
 # Verificar serviços com validação específica para Next.js
 log_info "Verificando status de TODOS os serviços..."
 
-# Verificar servi��o web principal
+# Verificar serviço web principal
 if docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_web" | grep -q "1/1"; then
     log_success "Serviço web funcionando (1/1)"
 
