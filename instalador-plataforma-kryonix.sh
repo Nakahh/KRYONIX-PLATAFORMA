@@ -363,7 +363,7 @@ advanced_dependency_check() {
         if node check-dependencies.js 2>&1 | tee /tmp/deps-check.log; then
             log_success "✅ Verificação específica passou"
         else
-            log_error "❌ Verificação específica falhou"
+            log_error "�� Verificação específica falhou"
             log_info "📋 Tentando correção automática..."
             
             # Correção automática
@@ -2343,10 +2343,159 @@ deploy() {
     log "🚀 Fazendo deploy do stack KRYONIX..."
     docker stack deploy -c docker-stack.yml "$STACK_NAME"
 
-    sleep 60
+    sleep 30
+
+    # CORREÇÃO AUTOMÁTICA: Detectar e corrigir falhas 0/1
+    log "🔍 Verificando e corrigindo falhas de replica 0/1..."
+
+    # Função para detectar e corrigir falhas 0/1
+    detect_and_fix_replica_failures() {
+        local service_name="$1"
+        local max_attempts=3
+        local attempt=1
+
+        log "🔍 Verificando saúde do serviço $service_name..."
+
+        while [ $attempt -le $max_attempts ]; do
+            log "Tentativa $attempt/$max_attempts para $service_name"
+
+            # Verificar status atual das replicas
+            local replica_status=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "$service_name" | awk '{print $2}' 2>/dev/null || echo "0/1")
+            log "Status atual: $replica_status"
+
+            if [[ "$replica_status" == "1/1" ]]; then
+                log "✅ Serviço $service_name funcionando normalmente"
+                return 0
+            fi
+
+            # Estratégia progressiva de reparo
+            case $attempt in
+                1)
+                    log "🔄 Tentativa 1: Restart suave do serviço"
+                    docker service update --force "$service_name" >/dev/null 2>&1 || true
+                    ;;
+                2)
+                    log "🔧 Tentativa 2: Verificando recursos e portas"
+                    # Verificar memória disponível
+                    available_memory=$(free -m | awk '/^Mem:/ {print $7}' 2>/dev/null || echo "2048")
+                    if [ "$available_memory" -lt 1024 ]; then
+                        log "⚠️ Memória baixa ($available_memory MB), ajustando limites"
+                        docker service update --limit-memory=512M "$service_name" >/dev/null 2>&1 || true
+                    fi
+
+                    # Verificar conflitos de porta
+                    if [[ "$service_name" == *"_web"* ]]; then
+                        if netstat -tuln 2>/dev/null | grep -q ":8080 "; then
+                            log "⚠️ Conflito de porta 8080 detectado, removendo binding"
+                            docker service update --publish-rm="8080:8080" "$service_name" >/dev/null 2>&1 || true
+                        fi
+                    elif [[ "$service_name" == *"_monitor"* ]]; then
+                        if netstat -tuln 2>/dev/null | grep -q ":8084 "; then
+                            log "⚠️ Conflito de porta 8084 detectado, removendo binding"
+                            docker service update --publish-rm="8084:8084" "$service_name" >/dev/null 2>&1 || true
+                        fi
+                    fi
+                    ;;
+                3)
+                    log "🚨 Tentativa 3: Recreação com configuração mínima"
+                    # Remover e recriar com configuração básica
+                    docker service rm "$service_name" >/dev/null 2>&1 || true
+                    sleep 15
+
+                    if [[ "$service_name" == *"_web"* ]]; then
+                        docker service create \
+                            --name "$service_name" \
+                            --replicas 1 \
+                            --limit-memory 512M \
+                            --restart-condition on-failure \
+                            --restart-max-attempts 3 \
+                            --restart-delay 15s \
+                            --network "${DOCKER_NETWORK}" \
+                            --env NODE_ENV=production \
+                            --env PORT=8080 \
+                            --health-cmd "curl -f http://localhost:8080/health || exit 1" \
+                            --health-interval 30s \
+                            --health-timeout 10s \
+                            --health-retries 3 \
+                            --health-start-period 60s \
+                            kryonix-plataforma:latest >/dev/null 2>&1 || true
+                    elif [[ "$service_name" == *"_monitor"* ]]; then
+                        docker service create \
+                            --name "$service_name" \
+                            --replicas 1 \
+                            --limit-memory 256M \
+                            --restart-condition on-failure \
+                            --restart-max-attempts 3 \
+                            --restart-delay 10s \
+                            --network "${DOCKER_NETWORK}" \
+                            --env NODE_ENV=production \
+                            --env PORT=8084 \
+                            --health-cmd "curl -f http://localhost:8084/health || exit 1" \
+                            --health-interval 30s \
+                            --health-timeout 10s \
+                            --health-retries 3 \
+                            --health-start-period 60s \
+                            kryonix-plataforma:latest node kryonix-monitor.js >/dev/null 2>&1 || true
+                    fi
+                    ;;
+            esac
+
+            # Aguardar e verificar novamente
+            sleep 30
+            attempt=$((attempt + 1))
+        done
+
+        log "❌ Falha ao reparar serviço $service_name após $max_attempts tentativas"
+        return 1
+    }
+
+    # Verificar e corrigir todos os serviços
+    services_to_check=("${STACK_NAME}_web" "${STACK_NAME}_monitor")
+    failed_services=()
+
+    for service in "${services_to_check[@]}"; do
+        if ! detect_and_fix_replica_failures "$service"; then
+            failed_services+=("$service")
+        fi
+    done
+
+    # Relatório final de status
+    if [ ${#failed_services[@]} -eq 0 ]; then
+        log "🎉 Todos os serviços KRYONIX reparados e funcionando!"
+    else
+        log "⚠️ Serviços com problemas: ${failed_services[*]}"
+
+        # Gerar relatório de diagnóstico
+        diagnostic_file="/tmp/kryonix-diagnostic-$(date +%Y%m%d_%H%M%S).log"
+        cat > "$diagnostic_file" << DIAGNOSTIC_EOF
+KRYONIX DIAGNOSTIC REPORT - $(date)
+================================
+
+FAILED SERVICES: ${failed_services[*]}
+
+DOCKER SERVICES STATUS:
+$(docker service ls 2>/dev/null || echo "Error getting service list")
+
+SYSTEM RESOURCES:
+Memory: $(free -h | grep Mem 2>/dev/null || echo "Error getting memory info")
+Disk: $(df -h / | tail -1 2>/dev/null || echo "Error getting disk info")
+
+PORT CONFLICTS:
+$(netstat -tuln 2>/dev/null | grep -E ":(8080|8084) " || echo "No port conflicts detected")
+
+SERVICE LOGS:
+DIAGNOSTIC_EOF
+
+        for service in "${failed_services[@]}"; do
+            echo "=== $service ===" >> "$diagnostic_file"
+            docker service logs "$service" --tail 20 2>&1 >> "$diagnostic_file" || echo "Error getting logs for $service" >> "$diagnostic_file"
+        done
+
+        log "📄 Relatório de diagnóstico salvo em: $diagnostic_file"
+    fi
 
     # Verificar health de todos os serviços
-    log "🔍 Verificando health dos serviços KRYONIX..."
+    log "🔍 Verificando health final dos serviços KRYONIX..."
 
     services_ok=0
     total_services=3
@@ -2587,7 +2736,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���═════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════������══${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════���════════════════════════════════════������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
