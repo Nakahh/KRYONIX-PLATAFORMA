@@ -71,7 +71,7 @@ STEP_DESCRIPTIONS=(
     "Criando webhook deploy 🔗"
     "Configurando logs e backup ⚙️"
     "Deploy final integrado 🚀"
-    "Testando webhook e relatório final 📊"
+    "Testando webhook e relatório final ���"
     "Configurando monitoramento contínuo 📈"
 )
 
@@ -1478,7 +1478,7 @@ STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PAT_TOKEN="$PAT_TOKEN"
+PAT_TOKEN="${PAT_TOKEN:-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}"
 
 # Cores
 GREEN='\033[0;32m'
@@ -1712,7 +1712,7 @@ log_info "🧪 Testando webhook e preparando relatório final..."
 if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
    -H "Content-Type: application/json" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
-    LOCAL_WEBHOOK_STATUS="✅ OK"
+    LOCAL_WEBHOOK_STATUS="��� OK"
 else
     LOCAL_WEBHOOK_STATUS="❌ PROBLEMA"
 fi
@@ -1835,7 +1835,7 @@ echo ""
 echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
-echo -e "${YELLOW}${BOLD}��� CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
+echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
 echo -e "${CYAN}════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
