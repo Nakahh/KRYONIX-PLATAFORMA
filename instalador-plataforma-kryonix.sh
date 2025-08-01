@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚═══════════════���═════════════════════════════════════════════════╝"
+    echo "╚═══════════════���═��═══════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -383,7 +383,7 @@ advanced_dependency_check() {
         log_warning "⚠️ server.js pode ter problemas"
     fi
     
-    # Verificar estrutura de arquivos necessários
+    # Verificar estrutura de arquivos necess��rios
     log_info "📁 Verificando estrutura de arquivos..."
     
     required_files=("package.json" "server.js")
@@ -467,7 +467,7 @@ test_service_health() {
 
 # FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
-    log_info "���� NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
+    log_info "����� NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
     
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -1518,7 +1518,7 @@ if [ ${#missing_files[@]} -gt 0 ]; then
     exit 1
 fi
 
-# Verificação adicional específica do instalador antigo
+# Verificação adicional espec��fica do instalador antigo
 log_info "🔍 Verificação adicional de integridade dos arquivos..."
 
 # Verificar se server.js tem o endpoint webhook
@@ -1641,6 +1641,43 @@ if [ $correction_count -gt 0 ]; then
     log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
 else
     log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
+fi
+
+# CORREÇÃO PROATIVA: Verificar e limpar builds corrompidos antes do Docker build
+log_info "🔍 Verificação proativa de builds corrompidos..."
+
+if [ -d ".next" ]; then
+    log_info "⚠️ Diretório .next existe - verificando integridade..."
+
+    # Verificar se existem arquivos suspeitos de corrupção
+    corrupted_files=0
+
+    # Verificar webpack-runtime.js
+    if [ -f ".next/server/webpack-runtime.js" ]; then
+        if grep -q "Cannot find module" .next/server/webpack-runtime.js 2>/dev/null; then
+            log_warning "⚠️ webpack-runtime.js contém erros"
+            ((corrupted_files++))
+        fi
+    fi
+
+    # Verificar se há arquivos .js faltando referenciados
+    if find .next -name "*.js" -exec grep -l "Cannot find module.*\.js" {} \; 2>/dev/null | grep -q .; then
+        log_warning "⚠️ Detectados arquivos .js com referências quebradas"
+        ((corrupted_files++))
+    fi
+
+    # Se encontrou corrupção, limpar
+    if [ $corrupted_files -gt 0 ]; then
+        log_warning "🧹 Build corrompido detectado - limpando antes do Docker build..."
+        rm -rf .next
+        rm -rf node_modules/.cache
+        npm cache clean --force
+        log_success "✅ Build corrompido limpo"
+    else
+        log_info "✅ Build atual parece íntegro"
+    fi
+else
+    log_info "ℹ️ Nenhum build anterior encontrado - continuando"
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -1824,7 +1861,7 @@ ANTICORRUPTION_CONFIG_EOF
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
-// Mover dependências de build críticas para dependencies
+// Mover dependências de build cr��ticas para dependencies
 const buildDeps = ['autoprefixer', 'postcss', 'tailwindcss', 'typescript'];
 buildDeps.forEach(dep => {
     if (pkg.devDependencies && pkg.devDependencies[dep]) {
@@ -2452,7 +2489,7 @@ log_info "Status Docker Swarm para ${STACK_NAME}_monitor: $monitor_replicas"
 
 if [[ "$monitor_replicas" == "1/1" ]]; then
     log_success "Serviço monitor funcionando (1/1)"
-    MONITOR_STATUS="✅ ONLINE (1/1)"
+    MONITOR_STATUS="�� ONLINE (1/1)"
 else
     log_warning "Serviço monitor com problemas: $monitor_replicas"
     MONITOR_STATUS="❌ PROBLEMA ($monitor_replicas)"
