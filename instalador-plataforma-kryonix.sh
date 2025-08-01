@@ -722,7 +722,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🔍 Executando verificação avançada de dependências..."
+log_info "🔍 Executando verificação avançada de depend��ncias..."
 
 # Executar verificação avançada
 if ! advanced_dependency_check; then
@@ -1045,8 +1045,31 @@ DOCKERFILE_EOF
 
 log_info "Fazendo build da imagem Docker..."
 
+# Verificação pré-build para Next.js
+log_info "🔍 Verificando requisitos específicos para Next.js..."
+
+# Verificar se arquivos Next.js essenciais existem
+nextjs_files=("app/page.tsx" "app/layout.tsx" "next.config.js" "tailwind.config.js")
+missing_nextjs=()
+
+for file in "${nextjs_files[@]}"; do
+    if [ -f "$file" ]; then
+        log_success "$file encontrado"
+    else
+        missing_nextjs+=("$file")
+        log_warning "$file faltando"
+    fi
+done
+
+# Verificar se Next.js está nas dependências
+if grep -q '"next"' package.json; then
+    log_success "Next.js encontrado no package.json"
+else
+    log_warning "Next.js não encontrado no package.json - verificar se é projeto Next.js"
+fi
+
 # Build com logs detalhados para diagnóstico
-log_info "Iniciando Docker build com logs detalhados..."
+log_info "Iniciando Docker build multi-stage com Next.js..."
 if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build.log; then
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
@@ -1608,7 +1631,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════��═══════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 DEPENDÊNCIAS SEMPRE ATUALIZADAS + CLONE FRESH:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -1644,7 +1667,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada com DEPENDÊNCIAS SEMPR
 echo -e "${PURPLE}🚀 Deploy automático + Auto-update + Monitoramento contínuo!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}════════════════════════════════════════���═══${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
