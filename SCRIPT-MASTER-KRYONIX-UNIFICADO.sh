@@ -222,7 +222,7 @@ KEYCLOAK_EOF
     POSTGRES_PASSWORD=$POSTGRES_PASSWORD docker-compose up -d
     
     # Verificar Keycloak
-    check_service "Keycloak" "8080" 15 10
+    check_service "Keycloak" "8081" 15 10
     
     success "PARTE-01: Keycloak Autenticação configurado"
 }
