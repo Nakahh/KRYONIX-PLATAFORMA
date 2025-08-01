@@ -8,7 +8,7 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 3
-        delay: 10s
+        delay: 15s
       labels:
         # Traefik básico
         - "traefik.enable=true"
@@ -60,18 +60,26 @@ services:
 
     networks:
       - traefik-public
-    ports:
-      - "8080:8080"
+    # Removido ports - desnecessário no Docker Swarm com Traefik
     environment:
       - NODE_ENV=production
       - PORT=8080
       - AUTO_UPDATE_DEPS=true
+      - WEBHOOK_SECRET=Kr7$$n0x-V1t0r-2025-#Jwt$$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+      timeout: 15s
+      retries: 5
+      start_period: 120s  # Mais tempo para Next.js inicializar
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
 
   webhook:
     image: kryonix-plataforma:latest
@@ -81,20 +89,19 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 3
-        delay: 10s
+        delay: 15s
     networks:
       - traefik-public
-    ports:
-      - "8082:8082"
+    # Removido ports - desnecessário no Docker Swarm
     environment:
       - NODE_ENV=production
       - PORT=8082
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
-      interval: 30s
-      timeout: 10s
+      interval: 45s
+      timeout: 15s
       retries: 3
-      start_period: 60s
+      start_period: 90s
 
   monitor:
     image: kryonix-plataforma:latest
@@ -104,20 +111,19 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 3
-        delay: 10s
+        delay: 15s
     networks:
       - traefik-public
-    ports:
-      - "8084:8084"
+    # Removido ports - desnecessário no Docker Swarm
     environment:
       - NODE_ENV=production
       - PORT=8084
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
-      interval: 30s
-      timeout: 10s
+      interval: 45s
+      timeout: 15s
       retries: 3
-      start_period: 60s
+      start_period: 90s
 
 networks:
   traefik-public:
