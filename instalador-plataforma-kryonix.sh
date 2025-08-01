@@ -175,35 +175,22 @@ animate_progress_bar() {
             ;;
     esac
 
-    # Mostrar cabeçalho elegante apenas uma vez por etapa
+    # Mostrar etapa simples apenas uma vez
     if [ "$CURRENT_STEP_BAR_SHOWN" = false ]; then
         echo ""
-        echo -e "${border_color}╭────────────────────────────────────────────────────────────────────╮${RESET}"
-        echo -e "${border_color}│${RESET} ${status_icon} ${WHITE}${BOLD}ETAPA $step/$total:${RESET} ${TURQUOISE}$description${RESET}"
-        echo -e "${border_color}│${RESET} ${DIM}Status: $status_text${RESET}"
-        echo -e "${border_color}╰────────────────────────────────────────────────────────────────────╯${RESET}"
+        echo -e "${TURQUOISE}${BOLD}[$step/$total]${RESET} ${WHITE}$description${RESET}"
         CURRENT_STEP_BAR_SHOWN=true
     fi
 
-    # Barra de progresso com gradiente visual
+    # Barra animada compacta
     local filled=$((target_progress * BAR_WIDTH / 100))
     local empty=$((BAR_WIDTH - filled))
 
-    # Construir barra com gradiente
-    echo -ne "\r${WHITE}${BOLD}["
+    echo -ne "\r${WHITE}[${RESET}"
 
-    # Parte preenchida com gradiente
+    # Parte preenchida
     for ((j=1; j<=filled; j++)); do
-        local pos_percent=$((j * 100 / BAR_WIDTH))
-        if [ $pos_percent -le 25 ]; then
-            echo -ne "${RED}█${RESET}"
-        elif [ $pos_percent -le 50 ]; then
-            echo -ne "${YELLOW}█${RESET}"
-        elif [ $pos_percent -le 75 ]; then
-            echo -ne "${CYAN}█${RESET}"
-        else
-            echo -ne "${GREEN}█${RESET}"
-        fi
+        echo -ne "${bar_color}█${RESET}"
     done
 
     # Parte vazia
@@ -211,11 +198,10 @@ animate_progress_bar() {
         echo -ne "${DIM}░${RESET}"
     done
 
-    echo -ne "]${RESET} ${bar_color}${BOLD}${target_progress}%${RESET} ${status_icon}"
+    echo -ne "${WHITE}]${RESET} ${bar_color}${target_progress}%${RESET} ${status_icon}"
 
-    # Nova linha e reset quando concluído ou erro
+    # Nova linha apenas quando concluído
     if [ "$status" = "concluido" ] || [ "$status" = "erro" ]; then
-        echo -e " ${status_text}"
         echo ""
         CURRENT_STEP_BAR_SHOWN=false
     fi
@@ -2043,7 +2029,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GOLD}${BOLD}███████████████████████████████████████████████████████████████████████████████${RESET}"
+echo -e "${GOLD}${BOLD}█████████████████████████████████████████████████████████████████���█████████████${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
@@ -2051,7 +2037,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭──────────��──────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────────────────────────╯${RESET}"
+echo -e "${MAGENTA}╰────────────────────────────────────���────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2074,7 +2060,7 @@ echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-���️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
@@ -2094,7 +2080,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}═══════════════════════════════════════��════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
