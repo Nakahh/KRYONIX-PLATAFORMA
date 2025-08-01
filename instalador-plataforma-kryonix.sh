@@ -87,7 +87,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚═══��═════════════════════════════════════════════════════════════╝"
+    echo "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -340,7 +340,7 @@ advanced_dependency_check() {
     fi
     
     # Verificar estrutura de arquivos necessários
-    log_info "���� Verificando estrutura de arquivos..."
+    log_info "📁 Verificando estrutura de arquivos..."
     
     required_files=("package.json" "server.js")
     missing_files=()
@@ -945,8 +945,10 @@ app.post('/api/github-webhook', (req, res) => {
 WEBHOOK_EOF
 
     log_success "✅ Webhook completo adicionado ao server.js"
+    WEBHOOK_EXISTS=false
 else
-    log_info "ℹ️ Webhook já existe no server.js"
+    log_info "ℹ️ Webhook já existe no server.js - pulando criação"
+    WEBHOOK_EXISTS=true
 fi
 
 log_success "✅ Todos os arquivos de serviços verificados/criados"
@@ -1157,7 +1159,7 @@ log_info "🔍 Verificação adicional de integridade dos arquivos..."
 if grep -q "/api/github-webhook" server.js; then
     log_success "✅ Endpoint webhook encontrado no server.js"
 else
-    log_warning "⚠️ Endpoint webhook pode estar faltando no server.js"
+    log_warning "⚠�� Endpoint webhook pode estar faltando no server.js"
 fi
 
 # Verificar se arquivos de serviços têm health check
@@ -1189,7 +1191,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "��� Criando docker-stack.yml com Traefik PRIORIDADE MÁXIMA para webhook..."
+log_info "🚀 Criando docker-stack.yml com Traefik PRIORIDADE MÁXIMA para webhook..."
 
 cat > docker-stack.yml << STACK_EOF
 version: '3.8'
