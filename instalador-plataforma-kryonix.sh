@@ -298,7 +298,7 @@ auto_update_dependencies() {
     done
     
     if [ $install_attempts -eq $max_attempts ]; then
-        log_warning "���️ Restaurando package.json original..."
+        log_warning "⚠️ Restaurando package.json original..."
         cp package.json.backup package.json
         npm install --no-audit --no-fund 2>/dev/null || true
         log_warning "✅ Package.json restaurado com dependências originais"
@@ -507,7 +507,7 @@ fresh_git_clone() {
     log_info "🔍 Testando conectividade com GitHub..."
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
-        log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
+        log_info "💡 Verifique se o PAT token tem permiss��es 'repo' para repositórios privados"
         return 1
     fi
     log_success "✅ Conectividade e token validados"
@@ -518,7 +518,7 @@ fresh_git_clone() {
     
     while [ $clone_attempts -lt $max_attempts ]; do
         clone_attempts=$((clone_attempts + 1))
-        log_info "��� Tentativa de clone $clone_attempts/$max_attempts..."
+        log_info "📥 Tentativa de clone $clone_attempts/$max_attempts..."
         
         # Limpar qualquer clone parcial
         sudo rm -rf ./* .[^.]* ..?* 2>/dev/null || true
@@ -794,7 +794,7 @@ log_info "📝 Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22 (como no instalador antigo)
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    log_warning "⚠�� ATENÇÃO: Ainda detectando referência ao PR #22"
+    log_warning "⚠️ ATENÇÃO: Ainda detectando referência ao PR #22"
     log_info "Isso pode significar que o PR #22 É a versão mais recente no GitHub"
     log_info "Ou pode haver um problema de sincronização"
 else
@@ -947,7 +947,7 @@ WEBHOOK_EOF
     log_success "✅ Webhook completo adicionado ao server.js"
     WEBHOOK_EXISTS=false
 else
-    log_info "ℹ️ Webhook j�� existe no server.js - pulando criação"
+    log_info "ℹ️ Webhook já existe no server.js - pulando criação"
     WEBHOOK_EXISTS=true
 fi
 
@@ -1171,7 +1171,7 @@ if [ ${#missing_files[@]} -gt 0 ]; then
     exit 1
 fi
 
-# Verificação adicional específica do instalador antigo
+# Verifica��ão adicional específica do instalador antigo
 log_info "🔍 Verificação adicional de integridade dos arquivos..."
 
 # Verificar se server.js tem o endpoint webhook
@@ -1237,11 +1237,11 @@ services:
         # Configuração do serviço web
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
 
-        # WEBHOOK - PRIORIDADE MÁXIMA (10000)
+        # WEBHOOK - PRIORIDADE EXTREMA (50000) para resolver 404
         - "traefik.http.routers.kryonix-webhook.rule=Host(\`$DOMAIN_NAME\`) && Path(\`/api/github-webhook\`)"
         - "traefik.http.routers.kryonix-webhook.entrypoints=web,websecure"
         - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
-        - "traefik.http.routers.kryonix-webhook.priority=10000"
+        - "traefik.http.routers.kryonix-webhook.priority=50000"
         - "traefik.http.routers.kryonix-webhook.tls=true"
         - "traefik.http.routers.kryonix-webhook.tls.certresolver=$CERT_RESOLVER"
 
@@ -1677,7 +1677,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         log_success "✅ HTTP respondendo - Next.js funcionando"
         WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
-        log_warning "⚠️ Docker rodando mas HTTP não responde"
+        log_warning "⚠️ Docker rodando mas HTTP n��o responde"
         WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
@@ -1714,7 +1714,7 @@ else
 fi
 
 # Webhook agora está integrado no serviço web, então testar diretamente
-log_info "Testando webhook integrado no servi��o web..."
+log_info "Testando webhook integrado no serviço web..."
 if timeout 10s curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
    -H "Content-Type: application/json" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
