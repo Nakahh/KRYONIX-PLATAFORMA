@@ -182,9 +182,12 @@ export class SystemMonitor {
     const errors: string[] = []
 
     try {
-      const response = await fetch('https://keycloak.kryonix.com.br/health/ready', {
-        timeout: 10000
-      })
+      const response = await Promise.race([
+        fetch('https://keycloak.kryonix.com.br/health/ready'),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Request timeout')), 10000)
+        )
+      ])
 
       const responseTime = Date.now() - startTime
 
@@ -276,9 +279,12 @@ export class SystemMonitor {
     try {
       // Em produção, isso verificaria MinIO real
       // Por enquanto, simula verificação
-      const response = await fetch('https://storage.kryonix.com.br/minio/health/live', {
-        timeout: 5000
-      })
+      const response = await Promise.race([
+        fetch('https://storage.kryonix.com.br/minio/health/live'),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Request timeout')), 5000)
+        )
+      ])
 
       if (!response.ok) {
         errors.push(`MinIO HTTP ${response.status}`)
@@ -317,9 +323,12 @@ export class SystemMonitor {
     const errors: string[] = []
 
     try {
-      const response = await fetch('https://api.kryonix.com.br/health', {
-        timeout: 5000
-      })
+      const response = await Promise.race([
+        fetch('https://api.kryonix.com.br/health'),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Request timeout')), 5000)
+        )
+      ])
 
       const responseTime = Date.now() - startTime
 
