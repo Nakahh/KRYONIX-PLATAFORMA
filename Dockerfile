@@ -1,6 +1,6 @@
 FROM node:18-bullseye-slim
 
-# Instalar dependências do sistema incluindo npm-check-updates
+# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     tini \
     curl \
