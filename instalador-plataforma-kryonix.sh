@@ -106,18 +106,18 @@ show_banner() {
 
     # Banner KRYONIX alinhado e responsivo (80 caracteres exatos)
     echo -e "${BOLD}${TURQUOISE}"
-    echo "██████████████████████████████████████████████████████���█████████████████████████"
+    echo "██████████████████████████████████��███████████████████���█████████████████████████"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██��${ORANGE}██████╗ ${YELLOW}█������   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}��█║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   █��║${GREEN}�������██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██��══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚��█╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██��══██╗${YELLOW}  ��██╔╝  ${LIME}██║   ██║${GREEN}██║╚��█╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}���█║  ██║${YELLOW}   ��█║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ █���╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}��${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${TURQUOISE}█████████████████████████████████████████████���██████████████████████████████████${RESET}"
+    echo -e "${TURQUOISE}██████████████████████��██████████████████████���██████████████████████████████████${RESET}"
 
     # Informações essenciais compactas
     echo ""
@@ -1366,8 +1366,14 @@ deploy() {
         return 1
     fi
 
+    # Limpeza agressiva para garantir atualização total
+    log "🧹 Limpeza agressiva de cache e dependências..."
+    rm -rf node_modules package-lock.json 2>/dev/null || true
+    npm cache clean --force 2>/dev/null || true
+    npm cache verify 2>/dev/null || true
+
     # Instalar dependências com retry
-    log "📦 Instalando dependências (com retry)..."
+    log "📦 Instalando dependências (fresh install com retry)..."
     for i in {1..3}; do
         if npm install --production --legacy-peer-deps; then
             log "✅ Dependências instaladas (tentativa $i)"
@@ -1989,7 +1995,7 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo ""
 echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 KRYONIX PLATFORM - INSTALAÇÃO COMPLETA${RESET}                          ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰─��───────────────────────────────────────────────────────────────────────────╯${RESET}"
+echo -e "${MAGENTA}╰─��───────────────────────────────────────────────────���───────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar instalação
@@ -2032,7 +2038,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}���� Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}═══��════════════════════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
