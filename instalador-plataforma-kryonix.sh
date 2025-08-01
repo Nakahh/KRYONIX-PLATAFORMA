@@ -110,7 +110,7 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                           ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝${ORANGE} ██████╔╝${YELLOW} ╚████╔���${LIME} ██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}   ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝${ORANGE} █████���╔╝${YELLOW} ╚████╔╝${LIME} ██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗${ORANGE} ██╔══██╗${YELLOW}  ╚██╔╝${LIME}  ██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║${LIME}   ╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝${LIME}    ╚═════╝${GREEN} ╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}  ${RESET}${CYAN}█${RESET}"
@@ -159,52 +159,82 @@ animate_progress_bar() {
     local status="$4"
     local target_progress=$((step * 100 / total))
 
-    # Cores baseadas no status
-    local bar_color="$GREEN"
-    local status_icon="🔄"
+    # Cores e ícones melhorados baseados no status
+    local bar_color=""
+    local status_icon=""
+    local status_text=""
+    local border_color=""
 
     case $status in
         "iniciando")
             bar_color="$YELLOW"
-            status_icon="🔄"
+            status_icon="🚀"
+            status_text="${YELLOW}INICIANDO${RESET}"
+            border_color="$YELLOW"
             ;;
         "processando")
-            bar_color="$BLUE"
-            status_icon="⚙"
+            bar_color="$CYAN"
+            status_icon="⚙️"
+            status_text="${CYAN}PROCESSANDO${RESET}"
+            border_color="$CYAN"
             ;;
         "concluido")
             bar_color="$GREEN"
             status_icon="✅"
+            status_text="${GREEN}CONCLUÍDO${RESET}"
+            border_color="$GREEN"
             ;;
         "erro")
             bar_color="$RED"
             status_icon="❌"
+            status_text="${RED}ERRO${RESET}"
+            border_color="$RED"
             ;;
     esac
 
-    # Mostrar cabeçalho apenas uma vez por etapa
+    # Mostrar cabeçalho elegante apenas uma vez por etapa
     if [ "$CURRENT_STEP_BAR_SHOWN" = false ]; then
         echo ""
-        echo -e "${status_icon} ${WHITE}${BOLD}Etapa $step/$total: $description${RESET}"
+        echo -e "${border_color}╭────────────────────────────────────────────────────────────────────╮${RESET}"
+        echo -e "${border_color}│${RESET} ${status_icon} ${WHITE}${BOLD}ETAPA $step/$total:${RESET} ${TURQUOISE}$description${RESET}"
+        echo -e "${border_color}│${RESET} ${DIM}Status: $status_text${RESET}"
+        echo -e "${border_color}╰────────────────────────────────────────────────────────────────────╯${RESET}"
         CURRENT_STEP_BAR_SHOWN=true
     fi
 
-    # Atualizar barra na mesma linha
+    # Barra de progresso com gradiente visual
     local filled=$((target_progress * BAR_WIDTH / 100))
-    echo -ne "\r${bar_color}${BOLD}["
+    local empty=$((BAR_WIDTH - filled))
 
-    # Desenhar barra preenchida
-    for ((j=1; j<=filled; j++)); do echo -ne "█"; done
+    # Construir barra com gradiente
+    echo -ne "\r${WHITE}${BOLD}["
 
-    # Desenhar barra vazia
-    for ((j=filled+1; j<=BAR_WIDTH; j++)); do echo -ne "░"; done
+    # Parte preenchida com gradiente
+    for ((j=1; j<=filled; j++)); do
+        local pos_percent=$((j * 100 / BAR_WIDTH))
+        if [ $pos_percent -le 25 ]; then
+            echo -ne "${RED}█${RESET}"
+        elif [ $pos_percent -le 50 ]; then
+            echo -ne "${YELLOW}█${RESET}"
+        elif [ $pos_percent -le 75 ]; then
+            echo -ne "${CYAN}█${RESET}"
+        else
+            echo -ne "${GREEN}█${RESET}"
+        fi
+    done
 
-    echo -ne "] ${target_progress}% ${status_icon}${RESET}"
+    # Parte vazia
+    for ((j=1; j<=empty; j++)); do
+        echo -ne "${DIM}░${RESET}"
+    done
 
-    # Nova linha apenas quando concluído ou erro
+    echo -ne "]${RESET} ${bar_color}${BOLD}${target_progress}%${RESET} ${status_icon}"
+
+    # Nova linha e reset quando concluído ou erro
     if [ "$status" = "concluido" ] || [ "$status" = "erro" ]; then
+        echo -e " ${status_text}"
         echo ""
-        CURRENT_STEP_BAR_SHOWN=false  # Reset para próxima etapa
+        CURRENT_STEP_BAR_SHOWN=false
     fi
 }
 
@@ -467,7 +497,7 @@ fresh_git_clone() {
             
             # Forçar atualização para absoluto mais recente se diferente
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
-                log_info "���� Atualizando para commit absoluto mais recente..."
+                log_info "🔄 Atualizando para commit absoluto mais recente..."
                 git fetch origin HEAD 2>/dev/null || true
                 git reset --hard FETCH_HEAD 2>/dev/null || true
                 current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
@@ -2078,7 +2108,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}════���═══════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
