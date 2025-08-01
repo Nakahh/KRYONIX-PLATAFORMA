@@ -95,7 +95,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚══���══════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 }
@@ -532,7 +532,7 @@ verify_fresh_clone() {
     return 0
 }
 
-# Função para validar credenciais pr��-configuradas
+# Função para validar credenciais pr����-configuradas
 validate_credentials() {
     log_info "🔐 Validando credenciais pré-configuradas..."
 
@@ -571,7 +571,7 @@ show_banner
 # Detecção automática do ambiente
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
-echo -e "${BLUE}├�� Servidor: $(hostname)${RESET}"
+echo -e "${BLUE}����� Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
@@ -1760,15 +1760,6 @@ echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garan
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
 echo ""
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
-
-log() {
-    local message="${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
-    echo -e "$message"
-    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
-}
 
 deploy() {
     log "🚀 Iniciando deploy automático KRYONIX com nuclear cleanup..."
