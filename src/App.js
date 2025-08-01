@@ -11,6 +11,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 
 // Import pages
 import HomePage from './pages/HomePage';
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
