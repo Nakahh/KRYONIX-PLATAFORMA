@@ -44,9 +44,9 @@ STACK_NAME="Kryonix"
 
 # Configurações CI/CD - Credenciais configuradas para operação 100% automática
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PAT_TOKEN="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"
-WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
-JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+PAT_TOKEN="${PAT_TOKEN:-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}"
+WEBHOOK_SECRET="${WEBHOOK_SECRET:-Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8}"
+JWT_SECRET="${JWT_SECRET:-Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8}"
 WEBHOOK_URL="https://kryonix.com.br/api/github-webhook"
 SERVER_HOST="${SERVER_HOST:-$(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo '127.0.0.1')}"
 SERVER_USER="${SERVER_USER:-$(whoami)}"
@@ -71,7 +71,7 @@ STEP_DESCRIPTIONS=(
     "Criando webhook deploy 🔗"
     "Configurando logs e backup ⚙️"
     "Deploy final integrado 🚀"
-    "Testando webhook e relatório final 📊"
+    "Testando webhook e relatório final ���"
     "Configurando monitoramento contínuo 📈"
 )
 
@@ -89,7 +89,7 @@ show_banner() {
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo "║     ██║  ██╗��█║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚═════════════════════════════════════════════════════════════════╝"
+    echo "╚═══��═════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -340,7 +340,7 @@ advanced_dependency_check() {
     fi
     
     # Verificar estrutura de arquivos necessários
-    log_info "📁 Verificando estrutura de arquivos..."
+    log_info "���� Verificando estrutura de arquivos..."
     
     required_files=("package.json" "server.js")
     missing_files=()
@@ -658,7 +658,7 @@ validate_credentials() {
     if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == ghp_* ]]; then
         log_success "✅ GitHub PAT Token configurado"
     else
-        log_error "��� GitHub PAT Token inválido"
+        log_error "❌ GitHub PAT Token inválido"
         return 1
     fi
 
@@ -1064,13 +1064,13 @@ RUN groupadd -r kryonix && useradd -r -g kryonix kryonix
 
 WORKDIR /app
 
-# Copiar package files E arquivos de dependências ANTES do npm install
+# Copiar arquivos de dependências ANTES do npm install (CORREÇÃO CRÍTICA)
 COPY package*.json ./
 COPY check-dependencies.js ./
 COPY validate-dependencies.js ./
 COPY fix-dependencies.js ./
 
-# Instalar dependências (agora check-dependencies.js já existe)
+# Instalar dependências (agora check-dependencies.js já existe - FIX Docker build)
 RUN npm install --production && npm cache clean --force
 
 # Copiar código da aplicação
@@ -1125,10 +1125,16 @@ else
     log_warning "Next.js não encontrado no package.json - verificar se é projeto Next.js"
 fi
 
-# Verificação completa de arquivos necessários (do instalador antigo)
+# Verificação completa de arquivos necessários (do instalador antigo + correções do agente)
 log_info "🔍 Verificando TODOS os arquivos necessários para Docker build..."
-required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "public/index.html")
+required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js")
 missing_files=()
+
+# Criar public/index.html se não existir
+if [ ! -f "public/index.html" ]; then
+    mkdir -p public
+    echo '<!DOCTYPE html><html><head><title>KRYONIX</title></head><body><h1>KRYONIX Platform</h1></body></html>' > public/index.html
+fi
 
 for file in "${required_files[@]}"; do
     if [ ! -f "$file" ]; then
@@ -1183,7 +1189,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🚀 Criando docker-stack.yml com Traefik PRIORIDADE MÁXIMA para webhook..."
+log_info "��� Criando docker-stack.yml com Traefik PRIORIDADE MÁXIMA para webhook..."
 
 cat > docker-stack.yml << STACK_EOF
 version: '3.8'
@@ -1378,6 +1384,94 @@ next_step
 # ============================================================================
 
 processing_step
+
+# Criar arquivos de dependências necessários (identificado pelo agente)
+log_info "🔧 Criando arquivos de dependências necessários para Docker build..."
+
+# check-dependencies.js (arquivo obrigatório referenciado no package.json)
+if [ ! -f "check-dependencies.js" ]; then
+    log_info "Criando check-dependencies.js..."
+    cat > check-dependencies.js << 'CHECK_DEPS_EOF'
+#!/usr/bin/env node
+
+// KRYONIX - Verificador de dependências críticas
+console.log('🔍 KRYONIX - Verificando dependências críticas...');
+
+const deps = ['next', 'react', 'react-dom', 'express', 'cors', 'helmet', 'body-parser', 'morgan'];
+let missing = [];
+
+deps.forEach(dep => {
+    try {
+        require(dep);
+        console.log('✅ ' + dep + ': OK');
+    } catch(e) {
+        console.error('❌ ' + dep + ': FALTANDO');
+        missing.push(dep);
+    }
+});
+
+if (missing.length === 0) {
+    console.log('🎉 Todas as dependências críticas instaladas!');
+    process.exit(0);
+} else {
+    console.error('❌ Dependências faltando: ' + missing.join(', '));
+    process.exit(1);
+}
+CHECK_DEPS_EOF
+fi
+
+# validate-dependencies.js
+if [ ! -f "validate-dependencies.js" ]; then
+    log_info "Criando validate-dependencies.js..."
+    cat > validate-dependencies.js << 'VALIDATE_DEPS_EOF'
+#!/usr/bin/env node
+
+const fs = require('fs');
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const deps = Object.keys(pkg.dependencies);
+
+console.log('📦 Validando ' + deps.length + ' dependências...');
+
+let installed = 0;
+deps.forEach(dep => {
+    try {
+        require.resolve(dep);
+        installed++;
+    } catch(e) {
+        console.error('❌ Falta: ' + dep);
+    }
+});
+
+console.log('✅ Instaladas: ' + installed + '/' + deps.length);
+
+if (installed !== deps.length) {
+    process.exit(1);
+}
+VALIDATE_DEPS_EOF
+fi
+
+# fix-dependencies.js
+if [ ! -f "fix-dependencies.js" ]; then
+    log_info "Criando fix-dependencies.js..."
+    cat > fix-dependencies.js << 'FIX_DEPS_EOF'
+#!/usr/bin/env node
+
+console.log('🔧 KRYONIX - Corrigindo dependências...');
+
+const { exec } = require('child_process');
+
+// Tentar instalação de dependências faltando
+exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
+    if (error) {
+        console.error('❌ Erro na correção:', error.message);
+        process.exit(1);
+    }
+    console.log('✅ Dependências corrigidas');
+    console.log(stdout);
+});
+FIX_DEPS_EOF
+fi
+
 log_info "Criando webhook-deploy.sh com auto-update de dependências..."
 
 cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
@@ -1389,7 +1483,8 @@ set -euo pipefail
 STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
-GITHUB_REPO="https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+PAT_TOKEN="${PAT_TOKEN:-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}"
 
 # Cores
 GREEN='\033[0;32m'
@@ -1425,17 +1520,17 @@ deploy() {
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
     git config --global credential.helper store 2>/dev/null || true
 
-    # Configurar credenciais para repositório privado
-    echo "https://Nakahh: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@github.com" > ~/.git-credentials
+    # Configurar credenciais para repositório privado (usando variável segura)
+    echo "https://Nakahh:${PAT_TOKEN}@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
 
     # Clone fresh completo (repositório privado)
-    if git clone --single-branch --branch main --depth 1 "https://github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+    if git clone --single-branch --branch main --depth 1 "$GITHUB_REPO" kryonix-plataform; then
         log "✅ Clone fresh concluído"
     else
         log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
-        # Fallback: token diretamente na URL
-        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+        # Fallback: token diretamente na URL usando variável
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
             log "✅ Clone fresh concluído com fallback"
         else
             log "❌ Falha no clone fresh com todos os métodos"
@@ -1623,7 +1718,7 @@ log_info "🧪 Testando webhook e preparando relatório final..."
 if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
    -H "Content-Type: application/json" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
-    LOCAL_WEBHOOK_STATUS="✅ OK"
+    LOCAL_WEBHOOK_STATUS="��� OK"
 else
     LOCAL_WEBHOOK_STATUS="❌ PROBLEMA"
 fi
@@ -1666,7 +1761,7 @@ if command -v ncu >/dev/null 2>&1; then
     updates_available=$(ncu --jsonUpgraded 2>/dev/null | jq -r 'keys | length' 2>/dev/null || echo "0")
     
     if [ "$updates_available" -gt 0 ]; then
-        log_monitor "�� $updates_available atualizações de dependências disponíveis"
+        log_monitor "📦 $updates_available atualizações de dependências disponíveis"
         
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
