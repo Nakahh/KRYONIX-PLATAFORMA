@@ -110,7 +110,7 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}��█╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   █��║${GREEN}��█╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██��══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}��${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
@@ -564,15 +564,15 @@ verify_fresh_clone() {
     if echo "$commit_msg" | grep -qi "#22"; then
         log_warning "⚠️ Commit atual referencia PR #22 - verificando por versões mais recentes..."
         
-        # Tentar buscar o mais recente
+        # Buscar informações do repositório
         git fetch origin --force 2>/dev/null || true
         latest_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
         
         if [ "$commit_hash" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
-            log_warning "⚠️ Commit mais recente disponível: $latest_commit"
+            log_warning "⚠️ Commit do repositório: $latest_commit"
             
-            # Tentar atualizar para o mais recente
-            log_info "🔄 Tentando atualizar para o commit mais recente..."
+            # Tentar sincronizar repositório
+            log_info "🔄 Tentando sincronizar repositório..."
             if git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null; then
                 new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
                 new_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
@@ -1847,7 +1847,7 @@ on:
 
 jobs:
   deploy:
-    name: 🚀 Deploy to Production
+    name: ���� Deploy to Production
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
@@ -2049,7 +2049,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Verificação assinatura obrigatória - Segu
 echo -e "    ${BLUE}│${RESET} ✅ Filtros branch específicos - Apenas refs/heads/main"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup + Clone fresh - Sempre versão mais recente"
 echo ""
-echo -e "${CYAN}${BOLD}╔═══════════════════════════════════════════════════════════���═════════════════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔═══════════════════════════════════════════════════════════���══��══════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}���� Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
@@ -2058,7 +2058,7 @@ echo -e "${CYAN}║${RESET} ${WHITE}📧 Email:${RESET} ${TURQUOISE}admin@kryoni
 echo -e "${CYAN}║${RESET} ${WHITE}💻 GitHub:${RESET} ${TURQUOISE}github.com/Nakahh/KRYONIX-PLATAFORMA${RESET}                         ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${BLINK}${YELLOW}⚡ AGORA TODA ALTERAÇÃO NO GITHUB ATUALIZA O SITE AUTOMATICAMENTE! ⚡${RESET}  ${CYAN}║${RESET}"
-echo -e "${CYAN}╚═══════════���═══════════════════════════════════════════════════════════════════════╝${RESET}"
+echo -e "${CYAN}╚═══════════���════════════════════════════════════════════════════════════════════��══╝${RESET}"
 echo ""
 
 # Instalador KRYONIX finalizado com sucesso
