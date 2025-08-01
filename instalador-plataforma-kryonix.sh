@@ -110,7 +110,7 @@ show_banner() {
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}��█╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
@@ -459,15 +459,15 @@ fresh_git_clone() {
                     "$auth_url" \
                     . 2>&1; then
             
-            # Imediatamente buscar refs mais recentes
-            log_info "📡 Buscando refs mais recentes para garantir versão mais atualizada..."
+            # Buscar informações do repositório
+            log_info "📡 Preparando repositório..."
             git fetch origin --force --prune --depth=1 2>/dev/null || true
             
-            # Obter commit mais recente do remoto
+            # Obter commit do remoto
             latest_remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
             current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
             
-            log_info "🔍 Remoto mais recente: $latest_remote_commit"
+            log_info "🔍 Commit remoto: $latest_remote_commit"
             log_info "🔍 Local atual: $current_local_commit"
             
             # Forçar atualização para absoluto mais recente se diferente
@@ -728,7 +728,7 @@ log_info "📝 Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    log_warning "⚠️ ATENÇÃO: Ainda detectando referência ao PR #22"
+    log_warning "⚠️ ATEN��ÃO: Ainda detectando referência ao PR #22"
     log_info "Isso pode significar que o PR #22 É a versão mais recente no GitHub"
     log_info "Ou pode haver um problema de sincronização"
 else
@@ -930,7 +930,7 @@ app.post('/api/github-webhook', (req, res) => {
     });
 
     deployProcess.on('close', (code) => {
-        console.log(\`🔄 Deploy finalizado com código de saída: \${code}\`);
+        console.log(\`�� Deploy finalizado com código de saída: \${code}\`);
         if (code === 0) {
             console.log('✅ Deploy automático KRYONIX concluído com SUCESSO');
         } else {
@@ -1238,7 +1238,7 @@ deploy() {
 
     # FAZER BACKUP antes de qualquer coisa
     if [ -d "$DEPLOY_PATH" ]; then
-        log "💾 Criando backup da versão atual..."
+        log "💾 Criando backup da vers��o atual..."
         sudo cp -r "$DEPLOY_PATH" "$BACKUP_DIR" 2>/dev/null || true
         log "📁 Backup criado em: $BACKUP_DIR"
     fi
@@ -2024,7 +2024,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}���� Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════════════════════${RESET}"
+echo -e "${CYAN}══════════════���═════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
