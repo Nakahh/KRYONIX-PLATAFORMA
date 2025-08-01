@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
-    echo "║     █��╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -556,7 +556,7 @@ fresh_git_clone() {
             log_success "✅ Clone fresh concluído com sucesso"
             return 0
         else
-            log_warning "⚠️ Clone com credenciais store falhou"
+            log_warning "��️ Clone com credenciais store falhou"
 
             # FALLBACK: Token diretamente na URL
             log_info "Tentando fallback com token na URL..."
@@ -955,7 +955,6 @@ RUN apt-get update && apt-get install -y \
     curl \
     bash \
     git \
-    npm-check-updates \
     && rm -rf /var/lib/apt/lists/*
 
 # Criar usuário não-root
