@@ -112,7 +112,7 @@ animate_progress_bar() {
 
     # Cores baseadas no status
     local bar_color="$GREEN"
-    local status_icon="🔄"
+    local status_icon="����"
 
     case $status in
         "iniciando")
@@ -535,7 +535,7 @@ verify_fresh_clone() {
 validate_credentials() {
     log_info "🔐 Validando credenciais pré-configuradas..."
 
-    if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == ghp_* ]]; then
+    if [ ! -z "$PAT_TOKEN" ] && [[ "$PAT_TOKEN" == github_pat_* ]]; then
         log_success "✅ GitHub PAT Token configurado"
     else
         log_error "❌ GitHub PAT Token inválido"
@@ -1504,7 +1504,7 @@ deploy() {
     if [ $services_ok -eq $total_services ]; then
         log "🎉 Deploy KRYONIX concluído com SUCESSO! ($services_ok/$total_services serviços OK)"
     else
-        log "��️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
+        log "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
     fi
     
     # Testar webhook externamente
