@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
+    "build-fast": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=production next build",
+    "build-docker": "node build-fast.js",
+    "fix-typescript": "node fix-typescript-build.js",
     "start": "node server.js",
     "production": "NODE_ENV=production node server.js",
     "webhook": "node webhook-listener.js",
