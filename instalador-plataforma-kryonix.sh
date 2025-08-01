@@ -413,7 +413,7 @@ fresh_git_clone() {
     git config --global core.compression 0
     git config --global http.sslVerify true
 
-    # CORREÇÃO: Limpar TODAS as credenciais antigas
+    # CORREÇÃOO: Limpar TODAS as credenciais antigas
     git config --global --unset-all credential.helper 2>/dev/null || true
     git credential-manager-core erase <<< "url=https://github.com" 2>/dev/null || true
     git credential erase <<< "url=https://github.com" 2>/dev/null || true
@@ -428,7 +428,7 @@ fresh_git_clone() {
     
     cd "$target_dir"
 
-    # CORREÇÃO: Testar conectividade e autenticação antes de tentar clone
+    # CORREÇÃOO: Testar conectividade e autenticação antes de tentar clone
     log_info "🔍 Testando conectividade com GitHub..."
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
@@ -448,7 +448,7 @@ fresh_git_clone() {
         # Limpar qualquer clone parcial
         sudo rm -rf ./* .[^.]* ..?* 2>/dev/null || true
         
-        # CORREÇÃO: Múltiplas estratégias de clone para repositório privado
+        # CORREÇÃOO: Múltiplas estratégias de clone para repositório privado
         log_info "Tentando clone com credenciais armazenadas..."
 
         if git clone --verbose \
@@ -745,7 +745,7 @@ next_step
 processing_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
-# CORREÇÃO COMPLETA do package.json
+# CORREÇÃOO COMPLETA do package.json
 log_info "🔧 Configurando package.json..."
 
 # Backup do package.json original
@@ -757,7 +757,7 @@ if grep -q '"type": "module"' package.json; then
     sed -i '/"type": "module",/d' package.json
 fi
 
-# CORREÇÃO 1: Adicionar dependências backend faltantes
+# CORREÇÃOO 1: Adicionar dependências backend faltantes
 log_info "Adicionando dependências backend faltantes..."
 if ! grep -q '"express"' package.json; then
     # Adicionar dependências do servidor
@@ -765,7 +765,7 @@ if ! grep -q '"express"' package.json; then
     log_success "Dependências backend adicionadas"
 fi
 
-# CORREÇÃO 2: Substituir dependências deprecadas
+# CORREÇÃOO 2: Substituir dependências deprecadas
 log_info "Substituindo dependências deprecadas..."
 # Substituir react-use-gesture por @use-gesture/react
 if grep -q '"react-use-gesture"' package.json; then
@@ -779,7 +779,7 @@ if grep -q '"react-virtual"' package.json; then
     log_success "react-virtual substituído por @tanstack/react-virtual"
 fi
 
-# CORREÇÃO 3: Adicionar scripts de servidor
+# CORREÇÃOO 3: Adicionar scripts de servidor
 log_info "Corrigindo scripts npm..."
 # Verificar se script start já aponta para server.js
 if ! grep -q '"start": "node server.js"' package.json; then
@@ -859,7 +859,7 @@ app.post('/api/github-webhook', (req, res) => {
     console.log(\`   Repository: \${payload?.repository?.name || 'AUSENTE'}\`);
     console.log(\`   Pusher: \${payload?.pusher?.name || 'AUSENTE'}\`);
 
-    // CORREÇÃO 1: Verificação de assinatura OBRIGATÓRIA
+    // CORREÇÃOO 1: Verificação de assinatura OBRIGATÓRIA
     if (!verifyGitHubSignature(payload, signature)) {
         console.log('❌ Webhook REJEITADO: assinatura inválida ou ausente');
         return res.status(401).json({
@@ -869,7 +869,7 @@ app.post('/api/github-webhook', (req, res) => {
         });
     }
 
-    // CORREÇÃO 2: Filtros ESPECÍFICOS para push na main
+    // CORREÇÃOO 2: Filtros ESPECÍFICOS para push na main
     const isValidEvent = event === 'push';
     const isValidRef = payload?.ref === 'refs/heads/main';
 
@@ -899,7 +899,7 @@ app.post('/api/github-webhook', (req, res) => {
 
     console.log('✅ Push VÁLIDO na main - iniciando deploy automático KRYONIX');
 
-    // CORREÇÃO 3: Path relativo correto e verificação de arquivo
+    // CORREÇÃOO 3: Path relativo correto e verificação de arquivo
     const deployScriptPath = path.join(process.cwd(), 'webhook-deploy.sh');
 
     if (!fs.existsSync(deployScriptPath)) {
@@ -915,7 +915,7 @@ app.post('/api/github-webhook', (req, res) => {
     console.log('🚀 Executando deploy automático...');
     console.log('📁 Script path:', deployScriptPath);
 
-    // CORREÇ█O 4: Usar spawn para melhor controle do processo
+    // CORREÇÃOO 4: Usar spawn para melhor controle do processo
     const deployProcess = spawn('bash', [deployScriptPath, 'webhook'], {
         cwd: process.cwd(),
         stdio: 'pipe'
@@ -1270,7 +1270,7 @@ deploy() {
 
     log "🔄 Nova versão detectada - prosseguindo com deploy..."
 
-    # CORREÇÃO AUTOMÁTICA do package.json durante deploy
+    # CORREÇÃOO AUTOMÁTICA do package.json durante deploy
     if [ -f "$DEPLOY_PATH/package.json" ]; then
         log "🔧 Aplicando correções automáticas no package.json..."
         cd "$DEPLOY_PATH"
