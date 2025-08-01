@@ -3,21 +3,14 @@
 import { useState, useEffect } from 'react'
 import {
   Shield,
-  Zap,
-  Smartphone,
   Bot,
-  Globe,
-  Users,
-  BarChart3,
+  Smartphone,
   MessageCircle,
-  Cog,
+  BarChart3,
   CheckCircle,
   Clock,
-  ArrowRight,
-  Star,
   Sparkles
 } from 'lucide-react'
-import MobileMenu from './components/MobileMenu'
 
 export default function HomePage() {
   const [currentPart, setCurrentPart] = useState(1)
