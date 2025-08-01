@@ -11,7 +11,7 @@
     "webhook": "node webhook-listener.js",
     "monitor": "node kryonix-monitor.js",
     "lint": "next lint",
-    "check-deps": "node -e \"console.log('✅ Verificando dependências...'); try { require('next'); require('react'); require('express'); require('cors'); console.log('✅ Todas as dependências críticas OK'); } catch(e) { console.error('❌ Dependência faltando:', e.message); process.exit(1); }\"",
+    "check-deps": "node -e \"console.log('🔍 KRYONIX - Verificando dependências críticas...'); const deps = ['next', 'react', 'react-dom', 'express', 'cors', 'helmet', 'body-parser', 'morgan']; let missing = []; deps.forEach(dep => { try { require(dep); console.log('✅ ' + dep + ': OK'); } catch(e) { console.error('❌ ' + dep + ': FALTANDO'); missing.push(dep); } }); if (missing.length === 0) { console.log('🎉 Todas as dependências críticas instaladas!'); } else { console.error('❌ Dependências faltando: ' + missing.join(', ')); process.exit(1); }\"",
     "postinstall": "npm run check-deps && npm run build",
     "prestart": "npm run check-deps"
   },
