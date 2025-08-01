@@ -66,7 +66,7 @@ STEP_DESCRIPTIONS=(
     "Detectando rede Traefik 🔗"
     "Verificando Traefik 📊"
     "Criando imagem Docker 🏗️"
-    "Preparando stack Traefik prioridade máxima ��"
+    "Preparando stack Traefik prioridade máxima 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
     "Configurando logs e backup ⚙️"
@@ -86,8 +86,8 @@ show_banner() {
     echo "╔═════════════════════════════════════════════════════════════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████��╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
+    echo "║     ██║ ██╔╝█���╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo "║                                                                 ║"
-    echo "╚═════════════════════════════════════════��═══════════════════════╝"
+    echo "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 }
 
@@ -1051,54 +1051,73 @@ processing_step
 log_info "Criando Dockerfile otimizado para todos os serviços..."
 
 cat > Dockerfile << 'DOCKERFILE_EOF'
-FROM node:18-bullseye-slim
+# Multi-stage build otimizado para Next.js
+FROM node:18-alpine AS base
 
-# Instalar dependências do sistema
-RUN apt-get update && apt-get install -y \
-    tini \
-    curl \
-    bash \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Criar usuário não-root
-RUN groupadd -r kryonix && useradd -r -g kryonix kryonix
-
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copiar arquivos de dependências ANTES do npm install (CORREÇÃO CRÍTICA)
-COPY package*.json ./
-COPY check-dependencies.js ./
-COPY validate-dependencies.js ./
-COPY fix-dependencies.js ./
+# Install dependencies based on the preferred package manager
+COPY package.json package-lock.json* ./
+RUN npm ci --only=production && npm cache clean --force
 
-# Instalar dependências (agora check-dependencies.js já existe - FIX Docker build)
-RUN npm install --production && npm cache clean --force
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-# Copiar código da aplicação
-COPY server.js ./
-COPY webhook-listener.js ./
-COPY kryonix-monitor.js ./
-COPY webhook-deploy.sh ./
-COPY public/ ./public/
+# Build Next.js application
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm run build
 
-# Tornar script executável
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Install runtime dependencies
+RUN apk add --no-cache curl bash dumb-init
+
+# Copy built application
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Copy server files and scripts
+COPY --chown=nextjs:nodejs server.js ./
+COPY --chown=nextjs:nodejs webhook-listener.js ./
+COPY --chown=nextjs:nodejs kryonix-monitor.js ./
+COPY --chown=nextjs:nodejs webhook-deploy.sh ./
+COPY --chown=nextjs:nodejs check-dependencies.js ./
+COPY --chown=nextjs:nodejs validate-dependencies.js ./
+COPY --chown=nextjs:nodejs fix-dependencies.js ./
+COPY --chown=nextjs:nodejs package.json ./
+
+# Make scripts executable
 RUN chmod +x webhook-deploy.sh
 
-# Configurar permissões
-RUN chown -R kryonix:kryonix /app
-
-USER kryonix
+USER nextjs
 
 # Expor portas
 EXPOSE 8080 8082 8084
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+# Health check otimizado para 15s
+HEALTHCHECK --interval=15s --timeout=10s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
-# Comando de start com tini
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENV PORT 8080
+ENV HOSTNAME "0.0.0.0"
+
+# Comando de start otimizado
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["node", "server.js"]
 DOCKERFILE_EOF
 
