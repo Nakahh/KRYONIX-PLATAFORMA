@@ -35,52 +35,52 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          <NotificationProvider>
-            <Router>
+        <Router>
+          <AuthProvider>
+            <NotificationProvider>
               <div className="App min-h-screen bg-gray-50">
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/login" element={<Login />} />
-                  <Route 
-                    path="/dashboard" 
+                  <Route
+                    path="/dashboard"
                     element={
                       <ProtectedRoute>
                         <Dashboard />
                       </ProtectedRoute>
-                    } 
+                    }
                   />
-                  <Route 
-                    path="/analytics" 
+                  <Route
+                    path="/analytics"
                     element={
                       <ProtectedRoute>
                         <Analytics />
                       </ProtectedRoute>
-                    } 
+                    }
                   />
-                  <Route 
-                    path="/whatsapp" 
+                  <Route
+                    path="/whatsapp"
                     element={
                       <ProtectedRoute>
                         <WhatsApp />
                       </ProtectedRoute>
-                    } 
+                    }
                   />
-                  <Route 
-                    path="/settings" 
+                  <Route
+                    path="/settings"
                     element={
                       <ProtectedRoute>
                         <Settings />
                       </ProtectedRoute>
-                    } 
+                    }
                   />
                 </Routes>
-                
+
                 {/* Bottom Navigation for mobile */}
                 <BottomNavigation />
-                
+
                 {/* Toast notifications */}
-                <Toaster 
+                <Toaster
                   position="top-right"
                   toastOptions={{
                     duration: 4000,
@@ -91,9 +91,9 @@ function App() {
                   }}
                 />
               </div>
-            </Router>
-          </NotificationProvider>
-        </AuthProvider>
+            </NotificationProvider>
+          </AuthProvider>
+        </Router>
       </ThemeProvider>
     </QueryClientProvider>
   );
