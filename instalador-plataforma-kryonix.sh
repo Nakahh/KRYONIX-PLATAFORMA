@@ -108,22 +108,22 @@ show_banner() {
     echo -e "${BOLD}${TURQUOISE}"
     echo "████████████████████████████████████████████████████████████████████████████████"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}��${RESET}${BG_BLUE}  ${GOLD}██╗  ██╗${ORANGE}██████╗ ${YELLOW}██╗   ██╗${LIME}██████╗ ${GREEN}███╗   ██╗${CYAN}██╗${BLUE}██╗  ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║ ██╔╝${ORANGE}██╔══██╗${YELLOW}╚██╗ ██╔╝${LIME}██╔═══██╗${GREEN}████╗  ██║${CYAN}██║${BLUE}╚██╗██╔╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}█████╔╝ ${ORANGE}██████╔╝${YELLOW} ╚████╔╝ ${LIME}██║   ██║${GREEN}██╔██╗ ██║${CYAN}██║${BLUE} ╚███╔╝${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██╔═██╗ ${ORANGE}██╔══██╗${YELLOW}  ╚██╔╝  ${LIME}██║   ██║${GREEN}██║╚██╗██║${CYAN}██║${BLUE} ██╔██╗${RESET}${BG_BLUE}      ${RESET}${CYAN}█${RESET}"
-    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ╚████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
+    echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}██║  ██╗${ORANGE}██║  ██║${YELLOW}   ██║   ${LIME}╚██████╔╝${GREEN}██║ ��████║${CYAN}██║${BLUE}██╔╝ ██╗${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}  ${GOLD}╚═╝  ╚═╝${ORANGE}╚═╝  ╚═╝${YELLOW}   ╚═╝   ${LIME} ╚═════╝ ${GREEN}╚═╝  ╚═══╝${CYAN}╚═╝${BLUE}╚═╝  ╚═╝${RESET}${BG_BLUE}     ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}       ${WHITE}${BOLD}🤖 PLATAFORMA SAAS 100% AUTÔNOMA POR IA 🚀${RESET}${BG_BLUE}                   ${RESET}${CYAN}█${RESET}"
     echo -e "${CYAN}█${RESET}${BG_BLUE}                                                                              ${RESET}${CYAN}█${RESET}"
-    echo -e "${TURQUOISE}���██████████████████████���████████████████████████████████████████████████████████${RESET}"
+    echo -e "${TURQUOISE}████████████████████████████████████████████████████████████████████████████████${RESET}"
 
     # Informações essenciais compactas
     echo ""
-    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]─────────────────────────────────────────────────────────────────╮${RESET}"
+    echo -e "${GOLD}${BOLD}╭─[ 🖥️  INFO ]───────────────────────────���─────────────────────────────────────╮${RESET}"
     echo -e "${GOLD}│${RESET} ${CYAN}📍${RESET} ${WHITE}$(hostname)${RESET} • ${CYAN}🌐${RESET} ${WHITE}$(curl -s -4 ifconfig.me 2>/dev/null || echo 'localhost')${RESET} • ${CYAN}👤${RESET} ${WHITE}$(whoami)${RESET}                                       ${GOLD}│${RESET}"
-    echo -e "${GOLD}╰──────────────────────────────────��────────────────────────────────────────────╯${RESET}"
+    echo -e "${GOLD}╰──────────────────────────────────────────────────────────────────────────────╯${RESET}"
 
     # Funcionalidades em linha única
     echo ""
@@ -500,7 +500,7 @@ fresh_git_clone() {
                 break
             fi
 
-            log_warning "���️ Tentativa de clone $clone_attempts falhou"
+            log_warning "⚠️ Tentativa de clone $clone_attempts falhou"
             if [ $clone_attempts -lt $max_attempts ]; then
                 sleep 5
             fi
@@ -562,7 +562,7 @@ verify_fresh_clone() {
     
     # Verificar especificamente se está no PR #22 (preocupação do usuário)
     if echo "$commit_msg" | grep -qi "#22"; then
-        log_warning "⚠��� Commit atual referencia PR #22 - verificando por versões mais recentes..."
+        log_warning "⚠️ Commit atual referencia PR #22 - verificando por versões mais recentes..."
         
         # Tentar buscar o mais recente
         git fetch origin --force 2>/dev/null || true
@@ -1184,7 +1184,7 @@ if [ ! -f "public/index.html" ]; then
         </div>
         
         <p style="margin-top: 2rem; opacity: 0.8;">
-            ���� https://kryonix.com.br | 📱 +55 17 98180-5327<br>
+            🌐 https://kryonix.com.br | 📱 +55 17 98180-5327<br>
             🚀 Deploy automático ativo - Sempre versão mais recente
         </p>
     </div>
@@ -1263,7 +1263,7 @@ deploy() {
 
         if [ "$local_commit" = "$remote_commit" ] && [ "$local_commit" != "unknown" ]; then
             log "✅ Já estamos na versão mais recente - deploy desnecessário"
-            log "ℹ�� Deploy abortado para evitar rebuild desnecessário"
+            log "ℹ️ Deploy abortado para evitar rebuild desnecessário"
             return 0
         fi
     fi
@@ -1977,11 +1977,11 @@ echo -e "${GOLD}${BOLD}███████████████████
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█  ${BLINK}🎉 INSTALAÇÃO KRYONIX CONCLUÍDA COM SUCESSO TOTAL! 🎉${RESET}${GREEN}${BG_GREEN}${WHITE}                █${RESET}"
 echo -e "${GREEN}${BG_GREEN}${WHITE}█                                                                             █${RESET}"
-echo -e "${GOLD}${BOLD}███████████████████████████████████████████████████████████████████████████████${RESET}"
+echo -e "${GOLD}${BOLD}████████████████████████���██████████████████████████████████████████████████████${RESET}"
 echo ""
 echo -e "${MAGENTA}${BOLD}╭─────────────────────────────────────────────────────────────────────────────╮${RESET}"
 echo -e "${MAGENTA}│${RESET} ${TURQUOISE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE${RESET}                 ${MAGENTA}│${RESET}"
-echo -e "${MAGENTA}╰──────────────────────────────────────────────────────────────────────────��──╯${RESET}"
+echo -e "${MAGENTA}╰──────────────────────────────────────────────────────────────────────────────╯${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2003,7 +2003,7 @@ fi
 echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠�� VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
@@ -2024,7 +2024,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÃO GITHUB WEBHOOK (COPIE EXATAMENTE):${RESET}"
-echo -e "${CYAN}══════════���══════════════════════════════���══════════════${RESET}"
+echo -e "${CYAN}════════════════════════════════════════════════════════════${RESET}"
 echo -e "${CYAN}${BOLD}🔗 Payload URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}🔑 Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}📄 Content-Type:${RESET} application/json"
@@ -2049,7 +2049,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Verificação assinatura obrigatória - Segu
 echo -e "    ${BLUE}│${RESET} ✅ Filtros branch específicos - Apenas refs/heads/main"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup + Clone fresh - Sempre versão mais recente"
 echo ""
-echo -e "${CYAN}${BOLD}╔═══════════════════════════════════════════════════════════════════════════════════╗${RESET}"
+echo -e "${CYAN}${BOLD}╔═════════════════════════════════���═════════════════════════════════════════════════╗${RESET}"
 echo -e "${CYAN}║${RESET} ${GOLD}${BOLD}🚀 KRYONIX PLATFORM 100% FUNCIONAL - DEPLOY AUTOMÁTICO ATIVO! 🚀${RESET}       ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET}                                                                               ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${WHITE}🌐 Site:${RESET} ${TURQUOISE}https://kryonix.com.br${RESET}                                           ${CYAN}║${RESET}"
