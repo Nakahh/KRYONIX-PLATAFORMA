@@ -72,7 +72,7 @@ STACKS_STATUS:
   IA_INTELLIGENCE:
     🟡 Ollama: "Aguardando instalação LLM local"
     🟡 Dify AI: "Aguardando configuração"
-    🟡 Langfuse: "Aguardando tracking IA"
+    ✅ Langfuse: "Configurado https://langfuse.kryonix.com.br (Criar usuário no primeiro acesso)"
     🟡 TensorFlow/PyTorch: "Aguardando ML setup"
 
   COMUNICACAO_APPS:

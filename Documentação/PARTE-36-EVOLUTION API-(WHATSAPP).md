@@ -12,7 +12,9 @@ SAAS_MODULE_WHATSAPP:
   portuguese_ui: "Interface em português para leigos"
   
   EVOLUTION_API_INTEGRATION:
-    endpoint: "https://evolution.kryonix.com.br"
+    manager_url: "https://api.kryonix.com.br/manager"
+    api_url: "https://api.kryonix.com.br"
+    global_api_key: "2f4d6967043b87b5ebee57b872e0223a"
     auto_scaling: "IA escala conforme demanda"
     multi_instance: "Múltiplas instâncias WhatsApp"
     webhook_intelligent: "IA processa webhooks automaticamente"
@@ -361,6 +363,7 @@ docker run -d \
   -e REDIS_URI="redis://redis.kryonix.com.br:6379" \
   -e WEBHOOK_GLOBAL_URL="https://api.kryonix.com.br/webhooks/whatsapp" \
   -e CONFIG_SESSION_PHONE_CLIENT="KRYONIX SaaS" \
+  -e GLOBAL_API_KEY="2f4d6967043b87b5ebee57b872e0223a" \
   atendai/evolution-api:latest
 
 echo "✅ Evolution API configurado para KRYONIX"
@@ -376,13 +379,13 @@ http:
   
   routers:
     evolution-api:
-      rule: "Host(\`evolution.kryonix.com.br\`)"
+      rule: "Host(\`api.kryonix.com.br\`)"
       tls:
         certResolver: letsencrypt
       service: evolution-api
 EOF
 
-echo "🌐 Proxy configurado: https://evolution.kryonix.com.br"
+echo "🌐 Proxy configurado: https://api.kryonix.com.br"
 
 # 3. IA configura instâncias automaticamente
 python3 /opt/kryonix/ai/setup-whatsapp-instances.py

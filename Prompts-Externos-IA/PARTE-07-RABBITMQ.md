@@ -11,7 +11,8 @@
 - **Auto-Creation**: Criação automática de filas quando novo cliente é criado
 - **8 APIs Modulares**: CRM, WhatsApp, Agendamento, Financeiro, Marketing, Analytics, Portal, Whitelabel
 - **URL**: https://rabbitmq.kryonix.com.br
-- **Login Master**: kryonix / Vitor@123456
+- **Login Master**: kryonix / 8ed56dd2b7dc80f9dd205a348e1dd303
+- **AMQP URL**: amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672
 
 ---
 
@@ -71,7 +72,7 @@ connection_max = 1000
 
 # Multi-tenant security
 default_user = kryonix
-default_pass = Vitor@123456
+default_pass = 8ed56dd2b7dc80f9dd205a348e1dd303
 default_vhost = /kryonix-master
 
 # SSL for mobile security
@@ -276,7 +277,7 @@ class KryonixRabbitMQClientManager:
                 host='localhost',
                 port=5672,
                 virtual_host='/kryonix-master',
-                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456'),
+                credentials=pika.PlainCredentials('kryonix', '8ed56dd2b7dc80f9dd205a348e1dd303'),
                 heartbeat=300,
                 connection_attempts=5,
                 retry_delay=2
@@ -299,7 +300,7 @@ class KryonixRabbitMQClientManager:
             import requests
             import base64
 
-            auth = base64.b64encode(b'kryonix:Vitor@123456').decode('ascii')
+            auth = base64.b64encode(b'kryonix:8ed56dd2b7dc80f9dd205a348e1dd303').decode('ascii')
             headers = {'Authorization': f'Basic {auth}'}
 
             vhost_name = f'/cliente_{cliente_id}'
@@ -367,7 +368,7 @@ class KryonixRabbitMQClientManager:
                 host='localhost',
                 port=5672,
                 virtual_host=vhost_name,
-                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456')
+                credentials=pika.PlainCredentials('kryonix', '8ed56dd2b7dc80f9dd205a348e1dd303')
             )
 
             client_connection = pika.BlockingConnection(client_params)
@@ -409,7 +410,7 @@ class KryonixRabbitMQClientManager:
                 host='localhost',
                 port=5672,
                 virtual_host=vhost_name,
-                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456')
+                credentials=pika.PlainCredentials('kryonix', '8ed56dd2b7dc80f9dd205a348e1dd303')
             )
 
             client_connection = pika.BlockingConnection(client_params)
@@ -492,7 +493,7 @@ class KryonixRabbitMQClientManager:
                 host='localhost',
                 port=5672,
                 virtual_host=vhost_name,
-                credentials=pika.PlainCredentials('kryonix', 'Vitor@123456')
+                credentials=pika.PlainCredentials('kryonix', '8ed56dd2b7dc80f9dd205a348e1dd303')
             )
 
             client_connection = pika.BlockingConnection(client_params)
@@ -562,7 +563,7 @@ cat > messaging/consumers/sdk-integration-consumer.js << 'EOF'
 const amqp = require('amqplib');
 const axios = require('axios');
 
-const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:Vitor@123456@localhost:5672';
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672';
 const KRYONIX_SDK_URL = process.env.KRYONIX_SDK_URL || 'http://localhost:8000';
 
 class SDKIntegrationConsumer {
@@ -687,7 +688,7 @@ cat > messaging/consumers/mobile-priority-consumer.js << 'EOF'
 const amqp = require('amqplib');
 const axios = require('axios');
 
-const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:Vitor@123456@localhost:5672/mobile';
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672/mobile';
 
 class MobilePriorityConsumer {
     async connect() {
@@ -812,7 +813,7 @@ cat > messaging/consumers/evolution-webhook-consumer.js << 'EOF'
 const amqp = require('amqplib');
 const axios = require('axios');
 
-const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:Vitor@123456@localhost:5672';
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672';
 
 class EvolutionWebhookConsumer {
     async connect() {
@@ -968,7 +969,7 @@ services:
     hostname: rabbitmq-kryonix
     environment:
       - RABBITMQ_DEFAULT_USER=kryonix
-      - RABBITMQ_DEFAULT_PASS=Vitor@123456
+      - RABBITMQ_DEFAULT_PASS=8ed56dd2b7dc80f9dd205a348e1dd303
       - RABBITMQ_DEFAULT_VHOST=/kryonix-master
       - RABBITMQ_CONFIG_FILE=/etc/rabbitmq/rabbitmq
     volumes:
@@ -1004,7 +1005,7 @@ services:
       - ./consumers:/app
     command: node mobile-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/mobile
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/mobile
       - EVOLUTION_API_URL=http://evolution:8080
       - NODE_ENV=production
     networks:
@@ -1021,7 +1022,7 @@ services:
       - ./consumers:/app
     command: node ai-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/ai
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/ai
       - OLLAMA_URL=http://ollama:11434
       - NODE_ENV=production
     networks:
@@ -1038,7 +1039,7 @@ services:
       - ./consumers:/app
     command: node sdk-integration-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/kryonix-master
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/kryonix-master
       - KRYONIX_SDK_URL=http://localhost:8000
       - NODE_ENV=production
     networks:
@@ -1055,7 +1056,7 @@ services:
       - ./consumers:/app
     command: node mobile-priority-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/mobile
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/mobile
       - NODE_ENV=production
     networks:
       - kryonix-network
@@ -1071,7 +1072,7 @@ services:
       - ./consumers:/app
     command: node evolution-webhook-consumer.js
     environment:
-      - RABBITMQ_URL=amqp://kryonix:Vitor@123456@rabbitmq:5672/kryonix-master
+      - RABBITMQ_URL=amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@rabbitmq:5672/kryonix-master
       - EVOLUTION_API_URL=http://evolution:8080
       - NODE_ENV=production
     networks:
@@ -1276,13 +1277,13 @@ echo "🔍 Verificando serviços multi-tenant..."
 sleep 60
 
 # Verificar RabbitMQ Management
-curl -s -u kryonix:Vitor@123456 http://localhost:15672/api/overview && echo "✅ RabbitMQ Management OK" || echo "❌ RabbitMQ Management ERRO"
+curl -s -u kryonix:8ed56dd2b7dc80f9dd205a348e1dd303 http://localhost:15672/api/overview && echo "✅ RabbitMQ Management OK" || echo "❌ RabbitMQ Management ERRO"
 
 # Verificar VHosts
-curl -s -u kryonix:Vitor@123456 http://localhost:15672/api/vhosts && echo "✅ VHosts OK" || echo "❌ VHosts ERRO"
+curl -s -u kryonix:8ed56dd2b7dc80f9dd205a348e1dd303 http://localhost:15672/api/vhosts && echo "✅ VHosts OK" || echo "❌ VHosts ERRO"
 
 # Verificar Exchanges
-curl -s -u kryonix:Vitor@123456 http://localhost:15672/api/exchanges && echo "✅ Exchanges OK" || echo "❌ Exchanges ERRO"
+curl -s -u kryonix:8ed56dd2b7dc80f9dd205a348e1dd303 http://localhost:15672/api/exchanges && echo "✅ Exchanges OK" || echo "❌ Exchanges ERRO"
 
 # Verificar Consumers
 docker ps | grep -E "(mobile|ai|sdk|evolution)-consumer" && echo "✅ Consumers ativos" || echo "❌ Consumers não iniciados"
@@ -1297,7 +1298,7 @@ cat > test-sdk-integration.js << 'EOF'
 const amqp = require('amqplib');
 
 async function testSDKCall() {
-    const connection = await amqp.connect('amqp://kryonix:Vitor@123456@localhost:5672/kryonix-master');
+    const connection = await amqp.connect('amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672/kryonix-master');
     const channel = await connection.createChannel();
 
     const sdkCall = {
@@ -1335,7 +1336,7 @@ cat > test-mobile-priority.js << 'EOF'
 const amqp = require('amqplib');
 
 async function testMobilePriority() {
-    const connection = await amqp.connect('amqp://kryonix:Vitor@123456@localhost:5672/mobile');
+    const connection = await amqp.connect('amqp://kryonix:8ed56dd2b7dc80f9dd205a348e1dd303@localhost:5672/mobile');
     const channel = await connection.createChannel();
 
     const priorityNotification = {
@@ -1401,7 +1402,7 @@ echo "
 ✅ Scripts de automação e monitoramento
 ✅ Integração completa Evolution API + SDK
 
-🔐 Login: kryonix / Vitor@123456
+🔐 Login: kryonix / 8ed56dd2b7dc80f9dd205a348e1dd303
 
 📱 CONSUMERS ATIVOS:
 📱 mobile-consumer (WhatsApp, SMS, Push)
