@@ -24,21 +24,41 @@ export * from './schemas/mobile-users'
 export * from './schemas/mobile-notifications'
 export * from './schemas/ai-monitoring'
 
-// Re-export key types and functions for easy access
+// Re-export database types from postgres-config
 export type {
   DatabaseModule,
-  DatabaseConfig,
-  ApiResponse,
+  DatabaseConfig
+} from './postgres-config'
+
+// Re-export API types from api
+export type {
+  ApiResponse
+} from './api'
+
+// Re-export mobile types from schemas
+export type {
   MobileUser,
   MobileSession,
-  PushNotification,
+  PushNotification
+} from './schemas/mobile-users'
+
+// Re-export multi-tenant types
+export type {
   TenantConfig,
-  TenantStats,
-  Migration,
+  TenantStats
+} from './multi-tenant'
+
+// Re-export migration types
+export type {
+  Migration
+} from './migrations'
+
+// Re-export backup types
+export type {
   BackupConfig,
   BackupJob,
   BackupMetrics
-} from './postgres-config'
+} from './backup'
 
 // Main initialization function
 export { 
