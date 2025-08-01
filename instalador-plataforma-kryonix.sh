@@ -83,7 +83,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████��� ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
@@ -693,11 +693,50 @@ next_step
 processing_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
-# Corrigir package.json se necessário
+# CORREÇÃO COMPLETA do package.json
+log_info "🔧 Corrigindo package.json completo..."
+
+# Backup do package.json original
+cp package.json package.json.backup 2>/dev/null || true
+
+# Remover type: module se existir
 if grep -q '"type": "module"' package.json; then
     log_info "Removendo type: module do package.json para compatibilidade"
     sed -i '/"type": "module",/d' package.json
 fi
+
+# CORREÇÃO 1: Adicionar dependências backend faltantes
+log_info "Adicionando dependências backend faltantes..."
+if ! grep -q '"express"' package.json; then
+    # Adicionar dependências do servidor
+    sed -i '/"socket.io-client": "[^"]*",/a\    "express": "^4.18.2",\n    "cors": "^2.8.5",\n    "helmet": "^7.0.0",\n    "compression": "^1.7.4",' package.json
+    log_success "Dependências backend adicionadas"
+fi
+
+# CORREÇÃO 2: Substituir dependências deprecadas
+log_info "Substituindo dependências deprecadas..."
+# Substituir react-use-gesture por @use-gesture/react
+if grep -q '"react-use-gesture"' package.json; then
+    sed -i 's/"react-use-gesture": "[^"]*"/"@use-gesture\/react": "^10.2.27"/' package.json
+    log_success "react-use-gesture substituído por @use-gesture/react"
+fi
+
+# Substituir react-virtual por @tanstack/react-virtual
+if grep -q '"react-virtual"' package.json; then
+    sed -i 's/"react-virtual": "[^"]*"/"@tanstack\/react-virtual": "^3.0.0"/' package.json
+    log_success "react-virtual substituído por @tanstack/react-virtual"
+fi
+
+# CORREÇÃO 3: Adicionar scripts de servidor
+log_info "Corrigindo scripts npm..."
+# Verificar se script start já aponta para server.js
+if ! grep -q '"start": "node server.js"' package.json; then
+    # Backup do script start original
+    sed -i 's/"start": "react-scripts start"/"start": "node server.js",\n    "start:dev": "react-scripts start",\n    "server": "node server.js"/' package.json
+    log_success "Scripts npm corrigidos"
+fi
+
+log_success "✅ package.json completamente corrigido"
 
 # Verificar se webhook já está integrado no server.js
 if ! grep -q "/api/github-webhook" server.js; then
