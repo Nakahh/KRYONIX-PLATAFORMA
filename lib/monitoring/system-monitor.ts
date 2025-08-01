@@ -525,7 +525,7 @@ export class SystemMonitor {
 *Horário:* ${new Date(alert.timestamp).toLocaleString('pt-BR')}
 
 *Status dos Serviços:*
-${alert.metrics ? this.formatServicesStatus(alert.metrics) : 'N/A'}
+${alert.metrics ? this.formatServicesStatus(alert.metrics as SystemMetrics) : 'N/A'}
 
 _Sistema de Monitoramento KRYONIX_`
 
