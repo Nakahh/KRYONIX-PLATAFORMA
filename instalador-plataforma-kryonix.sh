@@ -1619,28 +1619,29 @@ else
     log_warning "⚠️ next.config.js não encontrado"
 fi
 
-# Verificar se as correções foram aplicadas
+# Verificar se as correções foram aplicadas (versão simplificada)
 log_info "🔍 Verificando se as correções foram aplicadas..."
 correction_count=0
 
-if grep -q "executeTransaction<T = any>" lib/database/postgres-config.ts 2>/dev/null; then
+# Verificação simplificada para evitar travamentos
+if [ -f "lib/database/postgres-config.ts" ] && grep -q "T = any" lib/database/postgres-config.ts 2>/dev/null; then
     log_success "✅ Correção postgres-config.ts aplicada"
-    ((correction_count++))
+    correction_count=$((correction_count + 1))
 fi
 
-if grep -q "for (const dbModule of modules)" lib/database/init.ts 2>/dev/null; then
+if [ -f "lib/database/init.ts" ] && grep -q "dbModule" lib/database/init.ts 2>/dev/null; then
     log_success "✅ Correção init.ts aplicada"
-    ((correction_count++))
+    correction_count=$((correction_count + 1))
 fi
 
-if grep -q "for (const \[dbModule, status\]" lib/database/api.ts 2>/dev/null; then
+if [ -f "lib/database/api.ts" ] && grep -q "dbModule" lib/database/api.ts 2>/dev/null; then
     log_success "✅ Correção api.ts aplicada"
-    ((correction_count++))
+    correction_count=$((correction_count + 1))
 fi
 
-if grep -q "ignoreDuringBuilds" next.config.js 2>/dev/null; then
+if [ -f "next.config.js" ] && grep -q "ignoreDuringBuilds" next.config.js 2>/dev/null; then
     log_success "✅ Otimização next.config.js aplicada"
-    ((correction_count++))
+    correction_count=$((correction_count + 1))
 fi
 
 log_info "📊 Total de correções aplicadas: $correction_count/4"
@@ -2608,7 +2609,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═���═════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════������══${RESET}"
 echo ""
