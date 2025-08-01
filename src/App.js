@@ -17,6 +17,9 @@ import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import WhatsApp from './pages/WhatsApp';
 
+// Import test component
+import TestComponent from './components/TestComponent';
+
 // Import components
 import ProtectedRoute from './components/ProtectedRoute';
 import BottomNavigation from './components/BottomNavigation';
