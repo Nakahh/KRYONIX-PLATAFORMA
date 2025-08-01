@@ -243,7 +243,7 @@ INTEGRAÇÃO: "Conectar com PARTE-20 Performance já implementada"
 ### **2. CONSULTA ESPECIALIZADA (10 min)**
 - Usar Agent tool para consultar especialista da área
 - Obter recomendações técnicas específicas
-- Validar padrões e melhores pr��ticas
+- Validar padrões e melhores práticas
 - Definir arquitetura detalhada
 
 ### **3. TRANSFORMAÇÃO (20 min)**
@@ -281,13 +281,14 @@ INTEGRAÇÃO: "Conectar com PARTE-20 Performance já implementada"
 
 ## 🔄 **WORKFLOW RECOMENDADO**
 
-1. **Começar com PARTE-17** (Logs e Auditoria)
-2. **Seguir ordem sequencial** das partes
-3. **Consultar especialistas** para cada área
-4. **Manter consistência** com padrões estabelecidos
-5. **Atualizar todo list** após cada parte
-6. **Validar integração** com partes anteriores
-7. **Documentar decisões** técnicas importantes
+1. **Começar com PARTE-04** (Cache Redis) - Próxima na sequência
+2. **Seguir ordem cronológica** das partes (04, 05, 06, 07, etc.)
+3. **Consultar especialistas** para cada área específica
+4. **Manter consistência** com padrões já estabelecidos
+5. **Integrar com PARTE-20** (Performance já implementada)
+6. **Atualizar todo list** após cada parte completa
+7. **Validar compatibilidade** com partes anteriores
+8. **Documentar decisões** técnicas importantes
 
 ## 📞 **SUPORTE E RECURSOS**
 
