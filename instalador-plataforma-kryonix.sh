@@ -87,8 +87,8 @@ show_banner() {
     echo "║                                                                 ║"
     echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║█��║╚██╗██║██║ ██╔██╗      ║"
+    echo "║     █���███╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo "║                                                                 ║"
@@ -1157,7 +1157,7 @@ fi
 # Verificar se arquivos de serviços têm health check
 for service_file in webhook-listener.js kryonix-monitor.js; do
     if [ -f "$service_file" ] && grep -q "/health" "$service_file"; then
-        log_success "✅ Health check encontrado em $service_file"
+        log_success "�� Health check encontrado em $service_file"
     else
         log_warning "⚠️ Health check pode estar faltando em $service_file"
     fi
@@ -1514,17 +1514,17 @@ deploy() {
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
     git config --global credential.helper store 2>/dev/null || true
 
-    # Configurar credenciais para repositório privado
-    echo "https://Nakahh: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@github.com" > ~/.git-credentials
+    # Configurar credenciais para repositório privado (usando variável segura)
+    echo "https://Nakahh:\${PAT_TOKEN}@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
 
     # Clone fresh completo (repositório privado)
-    if git clone --single-branch --branch main --depth 1 "https://github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+    if git clone --single-branch --branch main --depth 1 "\$GITHUB_REPO" kryonix-plataform; then
         log "✅ Clone fresh concluído"
     else
         log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
-        # Fallback: token diretamente na URL
-        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+        # Fallback: token diretamente na URL usando variável
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh:\${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
             log "✅ Clone fresh concluído com fallback"
         else
             log "❌ Falha no clone fresh com todos os métodos"
@@ -1791,7 +1791,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═════════════════════════════════════��═════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🤖 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
