@@ -300,26 +300,32 @@ INTEGRAÇÃO: "Conectar com PARTE-20 Performance já implementada"
 
 ### **ARQUIVOS DE REFERÊNCIA**
 - `SCRIPT-COMPLETO-TRANSFORMACAO-KRYONIX.sh` - Script automation
-- `Documentação/PARTE-[01-16]*.md` - Partes já transformadas
+- `Documentação/PARTE-20-PERFORMANCE-OTIMIZACAO-COMPLETA.md` - Sistema de Performance implementado
+- `Prompts-Externos-IA/PARTE-01-KEYCLOAK.md` - Autenticação
+- `Prompts-Externos-IA/PARTE-02-POSTGRESQL.md` - Database
+- `Prompts-Externos-IA/PARTE-03-MINIO.md` - Storage
 - `package.json` - Dependências do projeto
 
 ### **PADRÕES A SEGUIR**
-Sempre referencie as partes já transformadas (01-16) como exemplo dos padrões corretos implementados. Mantenha absolute consistency com:
-- Estrutura de schemas SQL
-- Patterns de services TypeScript
+Referencie especialmente a **PARTE-20 Performance** como exemplo avançado de implementação completa. Mantenha consistência com:
+- Estrutura de schemas SQL com TimescaleDB
+- Services TypeScript com WebSockets
 - Componentes React mobile-first
+- Sistema de monitoramento em tempo real
 - Scripts de deploy automatizado
-- Checklists de validação
+- IA integrada para otimização
 
 ---
 
 ## 🚀 **AÇÃO IMEDIATA REQUERIDA**
 
-**PRÓXIMO PASSO:** Transformar **PARTE-17 - LOGS E AUDITORIA** seguindo exatamente os padrões estabelecidos.
+**PRÓXIMO PASSO:** Implementar **PARTE-04 - CACHE REDIS** seguindo exatamente os padrões estabelecidos.
 
-**FOCO:** Implementar sistema completo de auditoria multi-tenant com LGPD compliance automático, logs estruturados isolados por cliente e monitoramento de segurança em tempo real.
+**FOCO:** Redis otimizado para sessões mobile com 8 databases especializados, namespacing por tenant, cache preditivo e integração com o sistema de performance já implementado (PARTE-20).
 
-**DEADLINE:** Manter velocidade de 1 parte por sessão para completar as 31 partes restantes.
+**INTEGRAÇÃO OBRIGATÓRIA:** Conectar com sistema de performance da PARTE-20 para métricas de cache em tempo real.
+
+**DEADLINE:** Manter velocidade de 1 parte por sessão para completar as 46 partes restantes.
 
 ---
 *Prompt criado para continuidade perfeita da transformação KRYONIX*
