@@ -89,7 +89,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║���█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔╝      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██��   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -625,7 +625,7 @@ verify_fresh_clone() {
     local target_dir="$1"
     local expected_branch="${2:-main}"
 
-    log_info "�� Verificando integridade do clone fresh..."
+    log_info "🔍 Verificando integridade do clone fresh..."
 
     cd "$target_dir"
 
@@ -1777,7 +1777,7 @@ else
                 fi
             fi
 
-            # Recriar next.config.js com configurações anti-corrupção
+            # Recriar next.config.js com configura��ões anti-corrupção
             log_info "⚙️ Recriando next.config.js com configurações anti-corrupção..."
             cat > next.config.js << 'ANTICORRUPTION_CONFIG_EOF'
 /** @type {import('next').NextConfig} */
@@ -2127,14 +2127,15 @@ fi
 
 log_success "✅ YAML simplificado criado baseado no instalador que funcionava"
 
-log_success "✅ Docker stack configurado com TODAS AS CORREÇÕES baseadas no instalador que funcionava"
-log_info "🔧 Correções aplicadas:"
-log_info "   ✅ Rede fixada para Kryonix-NET"
-log_info "   ✅ Health checks otimizados (interval=60s, start_period=30s)"
-log_info "   ✅ Placement constraints (node.role == manager)"
-log_info "   ✅ SSL resolver correto (letsencrypt)"
-log_info "   ✅ Restart delays aumentados (30s)"
-log_info "   ✅ Dockerfile simplificado (single-stage)"
+log_success "✅ Docker stack configurado com CORREÇÕES DOS AGENTES para resolver 0/1 replicas"
+log_info "🔧 Correções dos agentes aplicadas:"
+log_info "   ✅ Serviços unificados em um container (web, webhook, monitor)"
+log_info "   ✅ Placement constraints flexibilizados (preferences: spread)"
+log_info "   ✅ Health checks otimizados (interval=15s, start_period=60s)"
+log_info "   ✅ Health check correto (0.0.0.0:8080/health)"
+log_info "   ✅ Recursos adequados (1G RAM, 1.0 CPU)"
+log_info "   ✅ Update e rollback config adicionados"
+log_info "   ✅ Webhook com prioridade máxima (10000)"
 complete_step
 next_step
 
@@ -2672,7 +2673,7 @@ log_info "   Serviços: $(grep -c "image: kryonix-plataforma" docker-stack.yml) 
 
 # CORREÇÃO: Bypass total do dry-run que está travando
 log_warning "⚡ Bypassing dry-run (problema conhecido de travamento)"
-log_info "🚀 Validação simples e deploy direto..."
+log_info "🚀 Validaç��o simples e deploy direto..."
 
 # Validação básica apenas
 if [ ! -f "docker-stack.yml" ]; then
@@ -2976,7 +2977,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════��═══════════════════════������════════���═══${RESET}"
+echo -e "${CYAN}═��════��═══════════════════════������════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
