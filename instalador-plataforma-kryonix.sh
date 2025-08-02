@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██��██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -102,7 +102,7 @@ show_banner() {
 
 
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Problemas 0/1 replicas resolvidos pelos 5 agentes${RESET}"
-echo -e "${CYAN}🛠️ CORREÇ��ES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
+echo -e "${CYAN}🛠️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
 echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container único${RESET}"
 echo -e "${PURPLE}⚙️ OTIMIZADO: Health check 0.0.0.0:8080 + 1G RAM + placement flexível${RESET}\n"
 }
@@ -886,7 +886,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "Criando arquivos necess��rios para TODOS os serviços funcionarem..."
+log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
 # CORREÇÃO CRÍTICA: Criar arquivos de dependências ANTES de qualquer build
 log_info "🔧 Criando arquivos de dependências críticas para Docker build..."
@@ -919,7 +919,7 @@ try {
     const fs = require('fs');
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     console.log('📦 Módulos instalados: ' + (require('fs').readdirSync('node_modules').length || 0));
-    console.log('📋 Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
+    console.log('�� Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
 } catch(e) {
     console.log('📊 Estatísticas não disponíveis');
 }
@@ -954,7 +954,7 @@ const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const deps = Object.keys(pkg.dependencies || {});
 
-console.log('�� Validando ' + deps.length + ' dependências...');
+console.log('📦 Validando ' + deps.length + ' dependências...');
 
 let installed = 0;
 let missing = [];
@@ -1596,7 +1596,7 @@ for service_file in webhook-listener.js kryonix-monitor.js; do
 done
 
 # CORREÇÃO: Aplicar correções de TypeScript antes do build
-log_info "�� Aplicando correções de TypeScript para resolver erros de build..."
+log_info "🔧 Aplicando correções de TypeScript para resolver erros de build..."
 
 # Correção 1: Arquivo postgres-config.ts - função executeTransaction
 if [ -f "lib/database/postgres-config.ts" ]; then
