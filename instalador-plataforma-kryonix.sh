@@ -779,7 +779,7 @@ next_step
 processing_step
 if ! validate_credentials; then
     error_step
-    log_error "Falha na validaç��o das credenciais"
+    log_error "Falha na validação das credenciais"
     exit 1
 fi
 complete_step
@@ -2991,7 +2991,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════�����══════════════════════������════════════${RESET}"
+echo -e "${CYAN}══════�����══════════���═══════════������════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
