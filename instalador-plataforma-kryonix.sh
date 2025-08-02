@@ -89,7 +89,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔❌ ███❌██╔╝ ╚████╔╝ ██║   ██║██╔██�� █❌║██║ ╚███╔❌      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚█████��╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ��██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -260,7 +260,7 @@ auto_update_dependencies() {
     log_info "📦 Backup do package.json criado"
     
     # Atualizar para versões mais recentes (mantendo compatibilidade)
-    log_info "❌❌ Atualizando depend��ncias para versões mais recentes..."
+    log_info "❌❌ Atualizando dependências para versões mais recentes..."
     
     # Usar npm-check-updates se disponível, senão instalar
     if ! command -v ncu >/dev/null 2>&1; then
@@ -347,7 +347,7 @@ try {
         console.log('✅ Dependências de build já estão corretas');
     }
 } catch (error) {
-    console.log('⚠��� Erro na correção proativa, continuando...');
+    console.log('⚠️ Erro na correção proativa, continuando...');
 }
 EOF
 
@@ -791,7 +791,7 @@ next_step
 
 processing_step
 log_info "❌ Iniciando clone FRESH para garantir versão MAIS RECENTE..."
-log_info "❌ Objetivo: Sempre pegar versão mais recente com depend��ncias atualizadas!"
+log_info "❌ Objetivo: Sempre pegar versão mais recente com dependências atualizadas!"
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
@@ -1167,7 +1167,7 @@ app.post('/webhook', (req, res) => {
   console.log('🔗 Webhook KRYONIX recebido no listener:', new Date().toISOString());
 
   if (req.body.ref === 'refs/heads/main' || req.body.ref === 'refs/heads/master') {
-    console.log('❌���� Iniciando deploy automático KRYONIX...');
+    console.log('❌�� Iniciando deploy automático KRYONIX...');
     exec('bash /app/webhook-deploy.sh webhook', (error, stdout, stderr) => {
       if (error) {
         console.error('❌ Erro no deploy KRYONIX:', error);
@@ -1340,7 +1340,7 @@ app.post('/api/github-webhook', (req, res) => {
         });
 
         res.json({
-            message: 'Deploy automático KRYONIX iniciado com atualização de depend��ncias',
+            message: 'Deploy automático KRYONIX iniciado com atualização de dependências',
             status: 'accepted',
             ref: payload.ref,
             sha: payload.after || payload.head_commit?.id,
@@ -1772,7 +1772,7 @@ else
             log_info "🗑️ Limpando cache npm..."
             npm cache clean --force
 
-            # Reinstalar dependências críticas do Next.js
+            # Reinstalar dependências cr��ticas do Next.js
             log_info "📦 Reinstalando dependências críticas do Next.js..."
             npm install next@latest react@latest react-dom@latest --no-audit --no-fund
 
@@ -2797,7 +2797,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
-        log_info "���� Logs do servi��o web (últimas 10 linhas):"
+        log_info "📋 Logs do servi��o web (últimas 10 linhas):"
         docker service logs "${STACK_NAME}_web" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
     fi
 else
@@ -2955,7 +2955,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl
 final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
 final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 
-echo -e "    ${BLUE}│${RESET} ${BOLD}Versão Final:${RESET} �� Commit $final_commit"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Versão Final:${RESET} ✅ Commit $final_commit"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commit_msg"
 
 # Verificação especial para PR #22 (como no instalador antigo)
