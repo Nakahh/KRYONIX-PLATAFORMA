@@ -1766,7 +1766,7 @@ else
 
             # Verificar se Dockerfile existe e corrigir se necessário
             if [ -f "Dockerfile" ]; then
-                log_info "🐳 Atualizando Dockerfile para evitar builds corrompidos..."
+                log_info "��� Atualizando Dockerfile para evitar builds corrompidos..."
                 # Adicionar limpeza de cache no Dockerfile
                 if ! grep -q "npm cache clean" Dockerfile; then
                     sed -i '/RUN npm ci/a RUN npm cache clean --force' Dockerfile
@@ -2030,31 +2030,73 @@ version: '3.8'
 services:
   web:
     image: kryonix-plataforma:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
       replicas: 1
       placement:
-        constraints:
-          - node.role == manager
+        preferences:
+          - spread: node.role
       restart_policy:
         condition: on-failure
-        delay: 30s
+        delay: 10s
         max_attempts: 5
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 5s
       resources:
         limits:
-          memory: 2G
-          cpus: '1.5'
-        reservations:
           memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
           cpus: '0.5'
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=Kryonix-NET"
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
-        - "traefik.http.routers.kryonix-main.rule=Host(`kryonix.com.br`)"
+        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.path=/health"
+        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=15s"
+
+        # WEBHOOK - PRIORIDADE MÁXIMA (10000)
+        - "traefik.http.routers.kryonix-webhook.rule=Host(`kryonix.com.br`) && Path(`/api/github-webhook`)"
+        - "traefik.http.routers.kryonix-webhook.entrypoints=web,websecure"
+        - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
+        - "traefik.http.routers.kryonix-webhook.priority=10000"
+        - "traefik.http.routers.kryonix-webhook.tls=true"
+        - "traefik.http.routers.kryonix-webhook.tls.certresolver=letsencrypt"
+
+        # API Routes - Alta Prioridade (9000)
+        - "traefik.http.routers.kryonix-api.rule=Host(`kryonix.com.br`) && PathPrefix(`/api/`)"
+        - "traefik.http.routers.kryonix-api.entrypoints=web,websecure"
+        - "traefik.http.routers.kryonix-api.service=kryonix-web"
+        - "traefik.http.routers.kryonix-api.priority=9000"
+        - "traefik.http.routers.kryonix-api.tls=true"
+        - "traefik.http.routers.kryonix-api.tls.certresolver=letsencrypt"
+
+        # HTTPS Principal - Prioridade Normal (100)
+        - "traefik.http.routers.kryonix-main.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
         - "traefik.http.routers.kryonix-main.entrypoints=websecure"
         - "traefik.http.routers.kryonix-main.service=kryonix-web"
+        - "traefik.http.routers.kryonix-main.priority=100"
         - "traefik.http.routers.kryonix-main.tls=true"
         - "traefik.http.routers.kryonix-main.tls.certresolver=letsencrypt"
+
+        # HTTP - Redirecionamento (50)
+        - "traefik.http.routers.kryonix-http.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
+        - "traefik.http.routers.kryonix-http.entrypoints=web"
+        - "traefik.http.routers.kryonix-http.service=kryonix-web"
+        - "traefik.http.routers.kryonix-http.priority=50"
+        - "traefik.http.routers.kryonix-http.middlewares=https-redirect"
+
+        # Middleware HTTPS Redirect
+        - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+
     networks:
       - Kryonix-NET
     ports:
@@ -2062,64 +2104,15 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=8080
+      - HOSTNAME=0.0.0.0
+      - NEXT_TELEMETRY_DISABLED=1
+      - AUTO_UPDATE_DEPS=true
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 60s
-      timeout: 30s
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8080/health"]
+      interval: 15s
+      timeout: 10s
       retries: 3
-      start_period: 30s
-
-  webhook:
-    image: kryonix-plataforma:latest
-    command: ["node", "webhook-listener.js"]
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.role == manager
-      restart_policy:
-        condition: on-failure
-        delay: 30s
-        max_attempts: 3
-    networks:
-      - Kryonix-NET
-    ports:
-      - "8082:8082"
-    environment:
-      - NODE_ENV=production
-      - PORT=8082
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
-      interval: 60s
-      timeout: 30s
-      retries: 3
-      start_period: 30s
-
-  monitor:
-    image: kryonix-plataforma:latest
-    command: ["node", "kryonix-monitor.js"]
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.role == manager
-      restart_policy:
-        condition: on-failure
-        delay: 30s
-        max_attempts: 3
-    networks:
-      - Kryonix-NET
-    ports:
-      - "8084:8084"
-    environment:
-      - NODE_ENV=production
-      - PORT=8084
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
-      interval: 60s
-      timeout: 30s
-      retries: 3
-      start_period: 30s
+      start_period: 60s
 
 networks:
   Kryonix-NET:
@@ -2383,7 +2376,7 @@ deploy() {
     npm install --production
 
     # Rebuild da imagem
-    log "🏗️ Fazendo rebuild da imagem Docker..."
+    log "���️ Fazendo rebuild da imagem Docker..."
     docker build --no-cache -t kryonix-plataforma:latest .
 
     # Deploy do stack
@@ -2803,7 +2796,7 @@ else
     log_info "Status após restart: $web_replicas_after_restart"
 fi
 
-# Verificar servi��o webhook (RESTAURADO)
+# Verificar servi����o webhook (RESTAURADO)
 webhook_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_webhook" | awk '{print $2}' || echo "0/1")
 log_info "Status Docker Swarm para ${STACK_NAME}_webhook: $webhook_replicas"
 
@@ -2975,7 +2968,7 @@ echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local Web:${RESET} http://localhost:8080"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local Webhook:${RESET} http://localhost:8080/api/github-webhook"
 if docker service ls | grep -q "traefik"; then
-echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
+echo -e "    ${BLUE}���${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} https://$DOMAIN_NAME/api/github-webhook"
 fi
 echo ""
