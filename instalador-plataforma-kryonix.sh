@@ -87,10 +87,10 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔�� ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║█���╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -372,14 +372,14 @@ advanced_dependency_check() {
             
             # Correção automática
             if node fix-dependencies.js 2>&1 | tee /tmp/deps-fix.log; then
-                log_success "✅ Correção automática aplicada"
+                log_success "��� Correção automática aplicada"
             else
                 log_warning "��️ Correção manual pode ser necess��ria"
             fi
         fi
     fi
     
-    # Verificar se serviços específicos funcionam
+    # Verificar se servi��os específicos funcionam
     log_info "�� Testando inicialização de serviços..."
     
     # Testar server.js
@@ -1027,7 +1027,7 @@ if grep -q '"type": "module"' package.json; then
 fi
 
 # CORREÇÃO CRÍTICA: Corrigir postinstall para funcionar durante Docker build
-log_info "��� Aplicando correç��o crítica no package.json..."
+log_info "��� Aplicando correção crítica no package.json..."
 if grep -q '"postinstall": "npm run check-deps"' package.json; then
     log_info "Corrigindo postinstall para compatibilidade com Docker build"
     # Criar backup
@@ -1481,7 +1481,7 @@ WORKDIR /app
 # Copiar package.json primeiro (para cache de layers)
 COPY package*.json ./
 
-# CORREÇÃO CRÍTICA: Copiar arquivos de dependências ANTES da instalação
+# CORREÇÃO CRÍTICA: Copiar arquivos de dependências ANTES da instala��ão
 COPY check-dependencies.js ./
 COPY validate-dependencies.js ./
 COPY fix-dependencies.js ./
@@ -1652,7 +1652,7 @@ fi
 
 # Correção 4: Otimizar next.config.js para builds mais rápidos
 if [ -f "next.config.js" ]; then
-    log_info "🔧 Otimizando next.config.js para build mais r����pido..."
+    log_info "🔧 Otimizando next.config.js para build mais r������pido..."
 
     # Backup do arquivo original
     cp next.config.js next.config.js.bak
@@ -2298,7 +2298,7 @@ console.log('🔧 KRYONIX - Corrigindo dependências...');
 
 const { exec } = require('child_process');
 
-/* Tentar instalação de dependências faltando */
+/* Tentar instala��ão de dependências faltando */
 exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
     if (error) {
         console.error('❌ Erro na correção:', error.message);
@@ -2955,7 +2955,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl
 final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
 final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 
-echo -e "    ${BLUE}��${RESET} ${BOLD}Versão Final:${RESET} ✅ Commit $final_commit"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Versão Final:${RESET} ✅ Commit $final_commit"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commit_msg"
 
 # Verificação especial para PR #22 (como no instalador antigo)
