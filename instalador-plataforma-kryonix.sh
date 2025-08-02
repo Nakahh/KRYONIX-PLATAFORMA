@@ -64,14 +64,14 @@ STEP_DESCRIPTIONS=(
     "Criando arquivos de serviços 📄"
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
-    "Verificando Traefik �����"
+    "Verificando Traefik 🔍"
     "Criando imagem Docker 🏗️"
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
-    "Configurando logs e backup �����️"
-    "Deploy final integrado ��"
-    "Testando webhook e relatório final �����"
+    "Configurando logs e backup 🗂️"
+    "Deploy final integrado 🚀"
+    "Testando webhook e relatório final 📊"
     "Configurando monitoramento contínuo 📈"
 )
 
@@ -1712,7 +1712,7 @@ if [ -d ".next" ]; then
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "�����️ Nenhum build anterior encontrado - continuando"
+    log_info "�������️ Nenhum build anterior encontrado - continuando"
 fi
 
 # Build com logs detalhados para diagnóstico
