@@ -86,8 +86,8 @@ show_banner() {
     echo    "╔═══════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║������█║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     █████╔��� ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -678,7 +678,7 @@ verify_fresh_clone() {
         latest_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
 
         if [ "$commit_hash" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
-            log_warning "⚠️ Commit mais recente disponível: $latest_commit"
+            log_warning "⚠�� Commit mais recente disponível: $latest_commit"
 
             # Tentar atualizar para o mais recente
             log_info "��� Tentando atualizar para o commit mais recente..."
@@ -1650,7 +1650,7 @@ else
     log_warning "⚠���� lib/database/api.ts não encontrado"
 fi
 
-# Correção 4: Otimizar next.config.js para builds mais rápidos
+# Correção 4: Otimizar next.config.js para builds mais r��pidos
 if [ -f "next.config.js" ]; then
     log_info "🔧 Otimizando next.config.js para build mais r����pido..."
 
@@ -1883,7 +1883,7 @@ ANTICORRUPTION_CONFIG_EOF
             # Otimizar next.config.js para pular validações TypeScript durante build
             if [ -f "next.config.js" ] && ! grep -q "ignoreDuringBuilds" next.config.js; then
                 sed -i 's/cleanDistDir: true,/cleanDistDir: true,\n  eslint: { ignoreDuringBuilds: true },\n  typescript: { ignoreBuildErrors: true },/g' next.config.js
-                log_success "✅ next.config.js otimizado para pular validações"
+                log_success "✅ next.config.js otimizado para pular valida��ões"
             fi
             log_success "✅ Todas as correções de TypeScript aplicadas"
             ;;
@@ -2448,7 +2448,7 @@ deploy() {
                     # Verificar conflitos de porta
                     if [[ "$service_name" == *"_web"* ]]; then
                         if netstat -tuln 2>/dev/null | grep -q ":8080 "; then
-                            log "⚠️ Conflito de porta 8080 detectado, removendo binding"
+                            log "���️ Conflito de porta 8080 detectado, removendo binding"
                             docker service update --publish-rm="8080:8080" "$service_name" >/dev/null 2>&1 || true
                         fi
                     elif [[ "$service_name" == *"_monitor"* ]]; then
@@ -2794,7 +2794,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
         log_warning "⚠️ Docker rodando mas HTTP não responde"
-        WEB_STATUS="��️ RUNNING (1/1) mas HTTP falha"
+        WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
         log_info "📋 Logs do servi��o web (últimas 10 linhas):"
@@ -2895,7 +2895,7 @@ log_info "📈 Configurando monitoramento contínuo de dependências..."
 cat > dependency-monitor.sh << 'MONITOR_EOF'
 #!/bin/bash
 
-# Monitor cont���nuo de dependências KRYONIX
+# Monitor cont��nuo de dependências KRYONIX
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deps-monitor.log"
 
@@ -2946,7 +2946,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�����══════════════��═�����═══════════════════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�������══════════════��═�����═══════════════════════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
