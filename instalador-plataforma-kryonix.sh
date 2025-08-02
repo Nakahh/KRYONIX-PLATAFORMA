@@ -89,8 +89,8 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔❌ ███❌██╔╝ ╚████╔╝ ██║   ██║██╔██�� █❌║██║ ╚███╔❌      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "���     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ██��  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -344,7 +344,7 @@ try {
         fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
         console.log('✅ Dependências de build corrigidas proativamente');
     } else {
-        console.log('✅ Dependências de build já estão corretas');
+        console.log('✅ Dependências de build já est��o corretas');
     }
 } catch (error) {
     console.log('⚠️ Erro na correção proativa, continuando...');
@@ -416,7 +416,7 @@ advanced_dependency_check() {
 # FUNÇÕES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
-# CORREÇÃO: Fun��ão simplificada para garantir rede Kryonix-NET
+# CORREÇÃO: Função simplificada para garantir rede Kryonix-NET
 ensure_kryonix_network() {
     local network_name="Kryonix-NET"
 
@@ -925,7 +925,7 @@ try {
 }
 
 if (missing.length === 0) {
-    console.log('�� Todas as dependências críticas instaladas!');
+    console.log('🎉 Todas as dependências críticas instaladas!');
     console.log('✅ Instaladas: ' + installed + '/' + deps.length);
     console.log('📊 Resumo da verificação:');
     console.log('   Dependências críticas: ' + deps.length);
@@ -1418,7 +1418,7 @@ fi
 
 log_info "🎯 Rede configurada: $DOCKER_NETWORK (CORREÇÃO aplicada)"
 
-# CORREÇ��O: A função ensure_kryonix_network() já fez a verificação e criação
+# CORREÇÃO: A função ensure_kryonix_network() já fez a verificação e criação
 # Removido código duplicado que causava erro
 
 log_success "�� Rede Docker configurada: $DOCKER_NETWORK"
@@ -2612,7 +2612,7 @@ DIAGNOSTIC_EOF
        -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
         log "🌐 Webhook externo KRYONIX funcionando!"
     else
-        log "��️ Webhook externo KRYONIX pode ter problemas"
+        log "⚠️ Webhook externo KRYONIX pode ter problemas"
     fi
 }
 
