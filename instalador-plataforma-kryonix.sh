@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █���███╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██���██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -156,7 +156,7 @@ animate_progress_bar() {
     for ((j=1; j<=filled; j++)); do echo -ne "█"; done
 
     # Desenhar barra vazia
-    for ((j=filled+1; j<=BAR_WIDTH; j++)); do echo -ne "��"; done
+    for ((j=filled+1; j<=BAR_WIDTH; j++)); do echo -ne " "; done
 
     echo -ne "] ${target_progress}% ${status_icon}${RESET}"
 
@@ -1340,7 +1340,7 @@ app.post('/api/github-webhook', (req, res) => {
         });
 
         res.json({
-            message: 'Deploy automático KRYONIX iniciado com atualização de dependências',
+            message: 'Deploy automático KRYONIX iniciado com atualizaç��o de dependências',
             status: 'accepted',
             ref: payload.ref,
             sha: payload.after || payload.head_commit?.id,
