@@ -89,7 +89,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔❌ ███❌██╔╝ ╚████╔╝ ██║   ██║██╔██�� █❌║██║ ╚███╔❌      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ��██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -357,7 +357,7 @@ EOF
     return 0
 }
 
-# Função de verifica��ão avançada de dependências
+# Função de verificação avançada de dependências
 advanced_dependency_check() {
     log_info "🔍 Executando verificação avançada de dependências..."
     
@@ -1772,7 +1772,7 @@ else
             log_info "🗑️ Limpando cache npm..."
             npm cache clean --force
 
-            # Reinstalar dependências cr��ticas do Next.js
+            # Reinstalar dependências críticas do Next.js
             log_info "📦 Reinstalando dependências críticas do Next.js..."
             npm install next@latest react@latest react-dom@latest --no-audit --no-fund
 
@@ -1936,7 +1936,7 @@ EMERGENCY_CHECK_EOF
             cat > /tmp/emergency-fix.js << 'EOF'
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-pkg.scripts.postinstall = 'echo "Build mode - verifica��ão pulada"';
+pkg.scripts.postinstall = 'echo "Build mode - verificação pulada"';
 if (pkg.scripts.preinstall) pkg.scripts.preinstall = 'echo "Build mode - preinstall pulado"';
 fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
 console.log('Emergency package.json fix applied');
@@ -2769,7 +2769,7 @@ if [ "$deploy_success" = true ]; then
 else
     error_step
     log_error "❌ FALHA em todas as $max_deploy_attempts tentativas de deploy"
-    log_error "📋 Último erro: $deploy_output"
+    log_error "���� Último erro: $deploy_output"
     exit 1
 fi
 
@@ -2998,7 +2998,7 @@ echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
 echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
 echo ""
 echo -e "${RED}${BOLD}🚀 CORREÇÕES DOS 5 AGENTES APLICADAS (resolve 0/1 replicas):${RESET}"
-echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Serviços unificados em um container"
+echo -e "    ${BLUE}│${RESET} �� CRÍTICO: Serviços unificados em um container"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Placement constraints flexibilizados (preferences: spread)"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Health check otimizado (0.0.0.0:8080, 15s interval, 60s start)"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CPU)"
