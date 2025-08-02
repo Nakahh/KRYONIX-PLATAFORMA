@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Configura��ões de encoding seguro para evitar problemas com caracteres especiais
+# Configurações de encoding seguro para evitar problemas com caracteres especiais
 export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
 export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
@@ -69,7 +69,7 @@ STEP_DESCRIPTIONS=(
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
-    "Configurando logs e backup �����️"
+    "Configurando logs e backup ��������"
     "Deploy final integrado ��"
     "Testando webhook e relatório final �����"
     "Configurando monitoramento contínuo 📈"
@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║������█║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
+    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██��██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═══════════════════════════════������══════════════════������══���═══��═════╝"
+    echo    "╚═══════════════════════════════������════════���═════════������══���═══��═════╝"
     echo -e "${RESET}\n"
 
 
@@ -137,7 +137,7 @@ animate_progress_bar() {
             ;;
         "erro")
             bar_color="$RED"
-            status_icon="❌"
+            status_icon="���"
             ;;
     esac
 
@@ -1857,7 +1857,7 @@ ANTICORRUPTION_CONFIG_EOF
                 sed -i 's/apiGetModuleStatus(module as DatabaseModule)/apiGetModuleStatus(dbModule as DatabaseModule)/g' lib/database/api.ts
                 sed -i 's/moduleStatuses\[module\]/moduleStatuses[dbModule]/g' lib/database/api.ts
                 sed -i 's/module: module as DatabaseModule/module: dbModule as DatabaseModule/g' lib/database/api.ts
-                log_success "✅ api.ts corrigido"
+                log_success "��� api.ts corrigido"
             fi
             ;;
 
@@ -2946,7 +2946,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�����══════════════��═�����═══════════════════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�����══════════════��═�����═══════════════���═══════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
