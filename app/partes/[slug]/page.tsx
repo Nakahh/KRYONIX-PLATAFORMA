@@ -175,10 +175,26 @@ export default function PartPage({ params }: { params: { slug: string } }) {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-3 text-gray-700 hover:text-primary-600 transition-colors">
               <ArrowLeft className="w-5 h-5" />
-              <span className="font-medium">Voltar à Homepage</span>
+              <span className="font-medium hidden sm:block">Voltar à Homepage</span>
+              <span className="font-medium sm:hidden">Voltar</span>
             </Link>
-            <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-              KRYONIX
+            <div className="flex items-center space-x-3">
+              <Image
+                src="/logo-kryonix.png"
+                alt="KRYONIX Logo"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
+              <div className="flex items-center space-x-2">
+                <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                  KRYONIX
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
+                  <span className="text-xs text-gray-600 hidden sm:block">Online</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
