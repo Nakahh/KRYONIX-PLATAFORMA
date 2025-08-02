@@ -93,18 +93,20 @@ show_banner() {
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
-    echo -e "║                        ${CYAN}INSTALLER v2.0${BLUE}                         ║"
+    echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
     echo    "║                                                                 ║"
-    echo -e "║              ${WHITE}Deploy Inteligente e Automatizado${BLUE}                ║"
+    echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
     echo    "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
 
-    echo -e "${GREEN}🚀 Instalação inteligente com deploy automático${RESET}"
-    echo -e "${CYAN}💫 Arquitetura moderna e otimizada${RESET}"
-    echo -e "${PURPLE}⚡ Configuração zero-touch${RESET}\n"
+
+    echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Problemas 0/1 replicas resolvidos pelos 5 agentes${RESET}"
+echo -e "${CYAN}🛠️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
+echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container único${RESET}"
+echo -e "${PURPLE}⚙️ OTIMIZADO: Health check 0.0.0.0:8080 + 1G RAM + placement flexível${RESET}\n"
 }
 
 # Sistema unificado de barra animada - CORRIGIDO
@@ -304,7 +306,7 @@ auto_update_dependencies() {
     done
     
     if [ $install_attempts -eq $max_attempts ]; then
-        log_warning "⚠️ Restaurando package.json original..."
+        log_warning "���️ Restaurando package.json original..."
         cp package.json.backup package.json
         npm install --no-audit --no-fund 2>/dev/null || true
         log_warning "✅ Package.json restaurado com dependências originais"
@@ -1449,7 +1451,7 @@ else
     log_warning "⚠️ Traefik não encontrado - KRYONIX funcionará localmente"
 fi
 
-log_success "✅ Verificaç��o do Traefik concluída"
+log_success "✅ Verificação do Traefik concluída"
 complete_step
 next_step
 
@@ -1699,7 +1701,7 @@ log_info "📊 Total de correções aplicadas: $correction_count/4"
 if [ $correction_count -gt 0 ]; then
     log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
 else
-    log_warning "⚠��� Nenhuma correção foi aplicada - arquivos podem já estar corretos"
+    log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
 fi
 
 # CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
@@ -1962,11 +1964,11 @@ EOF
     esac
 
     # Tentar build com correções aplicadas
-    log_info "🔄 Tentando build novamente com correções aplicadas..."
+    log_info "🔄 Tentando build novamente com correç��es aplicadas..."
     if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build-retry.log; then
         TIMESTAMP=$(date +%Y%m%d_%H%M%S)
         docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
-        log_success "��� Build concluído ap��s corre��ão automática: kryonix-plataforma:$TIMESTAMP"
+        log_success "��� Build concluído ap��s correção automática: kryonix-plataforma:$TIMESTAMP"
 
         # Restaurar arquivos originais se houver backup
         if [ -f "package.json.emergency-backup" ]; then
@@ -2809,7 +2811,7 @@ else
     docker service logs "${STACK_NAME}_web" --tail 20 2>/dev/null || log_warning "Logs não disponíveis"
 
     # Tentar restart forçado
-    log_info "���� Tentando restart forçado do serviço..."
+    log_info "🔄 Tentando restart forçado do serviço..."
     docker service update --force "${STACK_NAME}_web" >/dev/null 2>&1 || true
 
     # Aguardar um pouco e verificar novamente
@@ -2944,7 +2946,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═❌══════════════════════❌��═══════��════❌═══════════════════��════════${RESET}"
+echo -e "${GREEN}${BOLD}═❌════���═════════════════❌��═══════��════❌═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}��═══════❌❌�══════════════��═❌��═══════════════════════════❌════════❌❌❌══${RESET}"
 echo ""
@@ -2981,7 +2983,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} $EXTERNAL_WEBHOO
 echo ""
 echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local Web:${RESET} http://localhost:8080"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Local Webhook:${RESET} http://localhost:8080/api/github-webhook"
+echo -e "    ${BLUE}���${RESET} ${BOLD}Local Webhook:${RESET} http://localhost:8080/api/github-webhook"
 if docker service ls | grep -q "traefik"; then
 echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} https://$DOMAIN_NAME/api/github-webhook"
