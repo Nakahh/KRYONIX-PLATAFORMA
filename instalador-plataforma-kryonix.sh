@@ -66,7 +66,7 @@ STEP_DESCRIPTIONS=(
     "Detectando rede Traefik 🔗"
     "Verificando Traefik �����"
     "Criando imagem Docker 🏗️"
-    "Preparando stack Traefik prioridade máxima 📋"
+    "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
     "Configurando logs e backup �����️"
@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║���█║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚════════════════════════════════���══════════════════������══���═════════╝"
+    echo    "╚════════════════════════════════���══════════════════������══���═══��═════╝"
     echo -e "${RESET}\n"
 
 
@@ -791,7 +791,7 @@ next_step
 
 processing_step
 log_info "�� Iniciando clone FRESH para garantir versão MAIS RECENTE..."
-log_info "��� Objetivo: Sempre pegar versão mais recente com dependências atualizadas!"
+log_info "��� Objetivo: Sempre pegar versão mais recente com depend��ncias atualizadas!"
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
@@ -1134,7 +1134,7 @@ INDEXHTML_EOF
     log_success "✅ public/index.html criado"
 fi
 
-# 6. Criar outros arquivos de servi��os se não existirem
+# 6. Criar outros arquivos de serviços se não existirem
 if [ ! -f "webhook-listener.js" ]; then
     log_info "Criando webhook-listener.js..."
     cat > webhook-listener.js << 'WEBHOOK_EOF'
@@ -1850,7 +1850,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "typescript_error")
-            log_info "🔧 Aplicando corre���ões gerais de TypeScript..."
+            log_info "🔧 Aplicando corre��ões gerais de TypeScript..."
             # Aplicar todas as correções de TypeScript
             if [ -f "lib/database/postgres-config.ts" ]; then
                 sed -i 's/export async function executeTransaction<T>(/export async function executeTransaction<T = any>(/g' lib/database/postgres-config.ts
@@ -2924,7 +2924,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═���══════════════════════���════════��════���═══════════════════��════════${RESET}"
+echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════════════════════���════════���������══${RESET}"
 echo ""
@@ -2971,7 +2971,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════��═══════════════════════������══���═════════${RESET}"
+echo -e "${CYAN}══════��═══════════════════════������════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -2999,7 +2999,7 @@ echo -e "${YELLOW}NOTA: Apenas 1 serviço após unificação pelos agentes${RESE
 echo -e "${YELLOW}      webhook e monitor integrados no serviço web${RESET}"
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
 echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
-echo -e "    ${BLUE}│${RESET} ����� Atualização automática de dependências a cada deploy"
+echo -e "    ${BLUE}│${RESET} ������ Atualização automática de dependências a cada deploy"
 echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
