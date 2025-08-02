@@ -69,7 +69,7 @@ STEP_DESCRIPTIONS=(
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
-    "Configurando logs e backup ��������"
+    "Configurando logs e backup �����️"
     "Deploy final integrado ��"
     "Testando webhook e relatório final �����"
     "Configurando monitoramento contínuo 📈"
@@ -83,11 +83,11 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔══════════════════��══════════════════════════════════════════════╗"
+    echo    "╔═══════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║������█║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██��██�� █���║██║ ╚███╔���      ║"
+    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═══════════════════════════════������════════���═════════������══���═══��═════╝"
+    echo    "╚═══════════════════════════════������══════════════════������══���═══��═════╝"
     echo -e "${RESET}\n"
 
 
@@ -137,7 +137,7 @@ animate_progress_bar() {
             ;;
         "erro")
             bar_color="$RED"
-            status_icon="���"
+            status_icon="❌"
             ;;
     esac
 
@@ -1857,7 +1857,7 @@ ANTICORRUPTION_CONFIG_EOF
                 sed -i 's/apiGetModuleStatus(module as DatabaseModule)/apiGetModuleStatus(dbModule as DatabaseModule)/g' lib/database/api.ts
                 sed -i 's/moduleStatuses\[module\]/moduleStatuses[dbModule]/g' lib/database/api.ts
                 sed -i 's/module: module as DatabaseModule/module: dbModule as DatabaseModule/g' lib/database/api.ts
-                log_success "��� api.ts corrigido"
+                log_success "✅ api.ts corrigido"
             fi
             ;;
 
@@ -2794,7 +2794,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
         log_warning "⚠️ Docker rodando mas HTTP não responde"
-        WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
+        WEB_STATUS="��️ RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
         log_info "📋 Logs do servi��o web (últimas 10 linhas):"
@@ -2895,7 +2895,7 @@ log_info "📈 Configurando monitoramento contínuo de dependências..."
 cat > dependency-monitor.sh << 'MONITOR_EOF'
 #!/bin/bash
 
-# Monitor cont��nuo de dependências KRYONIX
+# Monitor cont���nuo de dependências KRYONIX
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deps-monitor.log"
 
@@ -2946,7 +2946,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�����══════════════��═�����═══════════════���═══════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�����══════════════��═�����═══════════════════════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
