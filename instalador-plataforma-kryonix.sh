@@ -85,8 +85,8 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔══════════════════��══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║�������█║╚██╗██╔╝     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ��█╗██╗██╗  ██╗     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║������█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -304,7 +304,7 @@ auto_update_dependencies() {
     done
     
     if [ $install_attempts -eq $max_attempts ]; then
-        log_warning "⚠�� Restaurando package.json original..."
+        log_warning "⚠️ Restaurando package.json original..."
         cp package.json.backup package.json
         npm install --no-audit --no-fund 2>/dev/null || true
         log_warning "✅ Package.json restaurado com dependências originais"
@@ -1049,7 +1049,7 @@ try {
 
     /* Adicionar script de fallback para build */
     if (!pkg.scripts['build-deps-check']) {
-        pkg.scripts['build-deps-check'] = 'node -e "console.log(\'✅ Build mode - verificação de depend��ncias pulada\')"';
+        pkg.scripts['build-deps-check'] = 'node -e "console.log(\'✅ Build mode - verificação de dependências pulada\')"';
         console.log('✅ Script build-deps-check adicionado');
     }
 
@@ -1697,12 +1697,12 @@ fi
 log_info "📊 Total de correções aplicadas: $correction_count/4"
 
 if [ $correction_count -gt 0 ]; then
-    log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
+    log_success "�� Correções de TypeScript aplicadas com sucesso!"
 else
     log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
 fi
 
-# CORREÇÃO PROATIVA: Limpar builds corrompidos (vers��o simplificada)
+# CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
 log_info "🔍 Verificação proativa de builds corrompidos..."
 
 if [ -d ".next" ]; then
@@ -2313,8 +2313,8 @@ set -euo pipefail
 STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
-GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PAT_TOKEN="\${PAT_TOKEN:-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}"
+GITHUB_REPO="https://Nakahh:\${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 
 # Cores
 GREEN='\033[0;32m'
@@ -2588,7 +2588,7 @@ DIAGNOSTIC_EOF
             log "�� Serviço KRYONIX na porta $port funcionando"
             services_ok=$((services_ok + 1))
         else
-            log "��️ Serviço KRYONIX na porta $port com problemas"
+            log "⚠️ Serviço KRYONIX na porta $port com problemas"
         fi
     done
 
@@ -2938,7 +2938,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════��═══════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════════════════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
