@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║���█║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔��      ║"
+    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔╝      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -547,7 +547,7 @@ fresh_git_clone() {
     cd "$target_dir"
 
     # Testar conectividade e autenticação antes de tentar clone
-    log_info "🔍 Testando conectividade com GitHub..."
+    log_info "��� Testando conectividade com GitHub..."
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
         log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
@@ -1638,7 +1638,7 @@ else
     log_warning "⚠���� lib/database/api.ts não encontrado"
 fi
 
-# Correção 4: Otimizar next.config.js para builds mais rápidos
+# Correção 4: Otimizar next.config.js para builds mais r��pidos
 if [ -f "next.config.js" ]; then
     log_info "🔧 Otimizando next.config.js para build mais r����pido..."
 
@@ -2753,7 +2753,7 @@ else
 fi
 
 # Aguardar estabilização adequada para 3 serviços (otimizado)
-log_info "Aguardando estabilização dos serviços (90s com configurações otimizadas)..."
+log_info "Aguardando estabilização dos servi��os (90s com configurações otimizadas)..."
 sleep 90
 
 # Verificar serviços com validação específica para Next.js
@@ -2924,7 +2924,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═���════════════════���═════���════════��════���═══════════════════��════════${RESET}"
+echo -e "${GREEN}${BOLD}═���══════════════════════���════════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════════════════════���════════���������══${RESET}"
 echo ""
@@ -2940,7 +2940,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commi
 
 # Verificação especial para PR #22 (como no instalador antigo)
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    echo -e "    ${BLUE}��${RESET} ${YELLOW}⚠️ AVISO:${RESET} Detectada referência ao PR #22"
+    echo -e "    ${BLUE}│${RESET} ${YELLOW}⚠️ AVISO:${RESET} Detectada referência ao PR #22"
     echo -e "    ${BLUE}│${RESET} ${YELLOW}   Isso pode significar que PR #22 É a versão mais recente${RESET}"
     echo -e "    ${BLUE}│${RESET} ${YELLOW}   ou há um problema de sincronização com GitHub${RESET}"
 else
@@ -2979,11 +2979,11 @@ echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
 echo ""
 echo -e "${RED}${BOLD}🚀 CORREÇÕES DOS 5 AGENTES APLICADAS (resolve 0/1 replicas):${RESET}"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Serviços unificados em um container"
-echo -e "    ${BLUE}│${RESET} ✅ Dockerfile simplificado (single-stage, sem complexidade)"
-echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados (start_period=30s, timeout=30s)"
-echo -e "    ${BLUE}│${RESET} ✅ Placement constraints (node.role == manager)"
-echo -e "    ${BLUE}│${RESET} ✅ SSL resolver correto (letsencrypt)"
-echo -e "    ${BLUE}│${RESET} ✅ Restart delays aumentados (30s)"
+echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Placement constraints flexibilizados (preferences: spread)"
+echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Health check otimizado (0.0.0.0:8080, 15s interval, 60s start)"
+echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CPU)"
+echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Update/rollback config adicionados"
+echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Comunicação entre serviços corrigida"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup - Remove TUDO antes de começar"
 echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
 echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
