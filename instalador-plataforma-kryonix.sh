@@ -64,14 +64,14 @@ STEP_DESCRIPTIONS=(
     "Criando arquivos de serviços 📄"
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
-    "Verificando Traefik �����"
+    "Verificando Traefik ❌��"
     "Criando imagem Docker 🏗️"
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
-    "Configurando logs e backup �����️"
+    "Configurando logs e backup ❌��️"
     "Deploy final integrado ��"
-    "Testando webhook e relatório final �����"
+    "Testando webhook e relatório final ❌��"
     "Configurando monitoramento contínuo 📈"
 )
 
@@ -87,17 +87,17 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔��� ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
+    echo    "║     █████╔❌ ███❌██╔╝ ╚████╔╝ ██║   ██║██╔██�� █❌║██║ ╚███╔❌      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚█████��╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═══════════════════════════════������══════════════════������══���═══��═════╝"
+    echo    "╚═══════════════════════════════❌❌══════════════════❌❌══❌═══��═════╝"
     echo -e "${RESET}\n"
 
 
@@ -260,7 +260,7 @@ auto_update_dependencies() {
     log_info "📦 Backup do package.json criado"
     
     # Atualizar para versões mais recentes (mantendo compatibilidade)
-    log_info "������ Atualizando depend��ncias para versões mais recentes..."
+    log_info "❌❌ Atualizando depend��ncias para versões mais recentes..."
     
     # Usar npm-check-updates se disponível, senão instalar
     if ! command -v ncu >/dev/null 2>&1; then
@@ -276,7 +276,7 @@ auto_update_dependencies() {
     fi
     
     # Limpar cache npm
-    log_info "��� Limpando cache npm..."
+    log_info "❌ Limpando cache npm..."
     npm cache clean --force >/dev/null 2>&1 || true
     
     # Reinstalar dependências com versões atualizadas
@@ -347,7 +347,7 @@ try {
         console.log('✅ Dependências de build já estão corretas');
     }
 } catch (error) {
-    console.log('⚠️ Erro na correção proativa, continuando...');
+    console.log('⚠��� Erro na correção proativa, continuando...');
 }
 EOF
 
@@ -466,7 +466,7 @@ test_service_health() {
 
 # FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
-    log_info "����� NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
+    log_info "❌�� NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
     
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -561,7 +561,7 @@ fresh_git_clone() {
     
     while [ $clone_attempts -lt $max_attempts ]; do
         clone_attempts=$((clone_attempts + 1))
-        log_info "��� Tentativa de clone $clone_attempts/$max_attempts..."
+        log_info "❌ Tentativa de clone $clone_attempts/$max_attempts..."
         
         # Limpar qualquer clone parcial
         sudo rm -rf ./* .[^.]* ..?* 2>/dev/null || true
@@ -609,7 +609,7 @@ fresh_git_clone() {
                 break
             fi
 
-            log_warning "⚠��� Tentativa de clone $clone_attempts falhou"
+            log_warning "⚠❌ Tentativa de clone $clone_attempts falhou"
             if [ $clone_attempts -lt $max_attempts ]; then
                 sleep 5
             fi
@@ -681,7 +681,7 @@ verify_fresh_clone() {
             log_warning "⚠�� Commit mais recente disponível: $latest_commit"
 
             # Tentar atualizar para o mais recente
-            log_info "��� Tentando atualizar para o commit mais recente..."
+            log_info "❌ Tentando atualizar para o commit mais recente..."
             if git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null; then
                 new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
                 new_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
@@ -790,8 +790,8 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "��� Iniciando clone FRESH para garantir versão MAIS RECENTE..."
-log_info "��� Objetivo: Sempre pegar versão mais recente com depend��ncias atualizadas!"
+log_info "❌ Iniciando clone FRESH para garantir versão MAIS RECENTE..."
+log_info "❌ Objetivo: Sempre pegar versão mais recente com depend��ncias atualizadas!"
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
@@ -856,7 +856,7 @@ log_info "📦 Iniciando atualização automática de dependências..."
 
 # Executar atualização automática
 if ! auto_update_dependencies; then
-    log_warning "⚠️ Problemas na atualiza����ão, continuando com dependências originais"
+    log_warning "⚠️ Problemas na atualiza❌�ão, continuando com dependências originais"
 fi
 
 complete_step
@@ -909,7 +909,7 @@ deps.forEach(dep => {
         console.log('✅ ' + dep + ': OK');
         installed++;
     } catch(e) {
-        console.error('��� ' + dep + ': FALTANDO');
+        console.error('❌ ' + dep + ': FALTANDO');
         missing.push(dep);
     }
 });
@@ -932,7 +932,7 @@ if (missing.length === 0) {
     console.log('   Instaladas com sucesso: ' + installed);
     try {
         console.log('   Módulos no node_modules: ' + require('fs').readdirSync('node_modules').length);
-        console.log('   Package.json v���lido: ✅');
+        console.log('   Package.json v❌lido: ✅');
     } catch(e) {}
     process.exit(0);
 } else {
@@ -940,7 +940,7 @@ if (missing.length === 0) {
     process.exit(1);
 }
 CHECK_DEPS_EOF
-    log_success "��� check-dependencies.js criado"
+    log_success "❌ check-dependencies.js criado"
 fi
 
 # 2. validate-dependencies.js
@@ -987,7 +987,7 @@ if [ ! -f "fix-dependencies.js" ]; then
     log_info "Criando fix-dependencies.js..."
     cat > fix-dependencies.js << 'FIX_DEPS_EOF'
 #!/usr/bin/env node
-/* KRYONIX - Corretor automático de depend���ncias */
+/* KRYONIX - Corretor automático de depend❌ncias */
 
 console.log('🔧 KRYONIX - Corrigindo dependências...');
 
@@ -1017,7 +1017,7 @@ exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
     }
 });
 FIX_DEPS_EOF
-    log_success "��� fix-dependencies.js criado"
+    log_success "❌ fix-dependencies.js criado"
 fi
 
 # Corrigir package.json se necessário
@@ -1027,7 +1027,7 @@ if grep -q '"type": "module"' package.json; then
 fi
 
 # CORREÇÃO CRÍTICA: Corrigir postinstall para funcionar durante Docker build
-log_info "��� Aplicando correção crítica no package.json..."
+log_info "❌ Aplicando correção crítica no package.json..."
 if grep -q '"postinstall": "npm run check-deps"' package.json; then
     log_info "Corrigindo postinstall para compatibilidade com Docker build"
     # Criar backup
@@ -1167,7 +1167,7 @@ app.post('/webhook', (req, res) => {
   console.log('🔗 Webhook KRYONIX recebido no listener:', new Date().toISOString());
 
   if (req.body.ref === 'refs/heads/main' || req.body.ref === 'refs/heads/master') {
-    console.log('����� Iniciando deploy automático KRYONIX...');
+    console.log('❌���� Iniciando deploy automático KRYONIX...');
     exec('bash /app/webhook-deploy.sh webhook', (error, stdout, stderr) => {
       if (error) {
         console.error('❌ Erro no deploy KRYONIX:', error);
@@ -1251,7 +1251,7 @@ app.get('/dashboard', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`��� KRYONIX Monitor rodando em http://0.0.0.0:${PORT}`);
+  console.log(`❌ KRYONIX Monitor rodando em http://0.0.0.0:${PORT}`);
 });
 MONITOR_EOF
     log_success "✅ kryonix-monitor.js criado"
@@ -1320,7 +1320,7 @@ app.post('/api/github-webhook', (req, res) => {
             console.log('❌ Assinatura inválida do webhook');
             return res.status(401).json({ error: 'Invalid signature' });
         }
-        console.log('��� Assinatura do webhook verificada');
+        console.log('❌ Assinatura do webhook verificada');
     }
 
     /* Processar apenas push events na main/master */
@@ -1446,7 +1446,7 @@ if docker service ls | grep -q "traefik"; then
     fi
     log_info "🔐 Resolver SSL detectado: $CERT_RESOLVER"
 else
-    log_warning "⚠��� Traefik não encontrado - KRYONIX funcionará localmente"
+    log_warning "⚠❌ Traefik não encontrado - KRYONIX funcionará localmente"
 fi
 
 log_success "✅ Verificação do Traefik concluída"
@@ -1566,7 +1566,7 @@ for file in "${required_files[@]}"; do
         missing_files+=("$file")
         log_error "❌ $file faltando"
     else
-        log_success "��� $file encontrado"
+        log_success "❌ $file encontrado"
     fi
 done
 
@@ -1591,7 +1591,7 @@ for service_file in webhook-listener.js kryonix-monitor.js; do
     if [ -f "$service_file" ] && grep -q "/health" "$service_file"; then
         log_success "✅ Health check encontrado em $service_file"
     else
-        log_warning "⚠��� Health check pode estar faltando em $service_file"
+        log_warning "⚠❌ Health check pode estar faltando em $service_file"
     fi
 done
 
@@ -1647,12 +1647,12 @@ if [ -f "lib/database/api.ts" ]; then
 
     log_success "✅ api.ts corrigido"
 else
-    log_warning "⚠���� lib/database/api.ts não encontrado"
+    log_warning "⚠❌� lib/database/api.ts não encontrado"
 fi
 
 # Correção 4: Otimizar next.config.js para builds mais r��pidos
 if [ -f "next.config.js" ]; then
-    log_info "🔧 Otimizando next.config.js para build mais r����pido..."
+    log_info "🔧 Otimizando next.config.js para build mais r❌�pido..."
 
     # Backup do arquivo original
     cp next.config.js next.config.js.bak
@@ -1712,7 +1712,7 @@ if [ -d ".next" ]; then
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "�����️ Nenhum build anterior encontrado - continuando"
+    log_info "❌��️ Nenhum build anterior encontrado - continuando"
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -1845,7 +1845,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "eslint_module_variable")
-            log_info "��� Aplicando correção para variável 'module' conflitante..."
+            log_info "❌ Aplicando correção para variável 'module' conflitante..."
             if [ -f "lib/database/init.ts" ]; then
                 sed -i 's/for (const module of modules)/for (const dbModule of modules)/g' lib/database/init.ts
                 sed -i 's/checkDatabaseHealth(module)/checkDatabaseHealth(dbModule)/g' lib/database/init.ts
@@ -1889,7 +1889,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "missing_autoprefixer"|"missing_postcss"|"missing_tailwind")
-            log_info "���� Aplicando correção para dependências de build CSS/TailwindCSS..."
+            log_info "❌� Aplicando correção para dependências de build CSS/TailwindCSS..."
             # Corrigir package.json movendo dependências de build para dependencies
             cp package.json package.json.build-backup
             cat > /tmp/fix-build-deps.js << 'EOF'
@@ -2189,7 +2189,7 @@ jobs:
       - name: 🚀 Deploy via webhook com auto-update
         run: |
           echo "ℹ️ GitHub webhook automático KRYONIX com dependências sempre atualizadas"
-          echo "��� Webhook URL: https://kryonix.com.br/api/github-webhook"
+          echo "❌ Webhook URL: https://kryonix.com.br/api/github-webhook"
           
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
@@ -2243,7 +2243,7 @@ deps.forEach(dep => {
         require(dep);
         console.log('✅ ' + dep + ': OK');
     } catch(e) {
-        console.error('��� ' + dep + ': FALTANDO');
+        console.error('❌ ' + dep + ': FALTANDO');
         missing.push(dep);
     }
 });
@@ -2448,7 +2448,7 @@ deploy() {
                     # Verificar conflitos de porta
                     if [[ "$service_name" == *"_web"* ]]; then
                         if netstat -tuln 2>/dev/null | grep -q ":8080 "; then
-                            log "���️ Conflito de porta 8080 detectado, removendo binding"
+                            log "❌️ Conflito de porta 8080 detectado, removendo binding"
                             docker service update --publish-rm="8080:8080" "$service_name" >/dev/null 2>&1 || true
                         fi
                     elif [[ "$service_name" == *"_monitor"* ]]; then
@@ -2552,7 +2552,7 @@ deploy() {
 
     # Relatório final de status
     if [ ${#failed_services[@]} -eq 0 ]; then
-        log "��� Todos os serviços KRYONIX reparados e funcionando!"
+        log "❌ Todos os serviços KRYONIX reparados e funcionando!"
     else
         log "⚠️ Serviços com problemas: ${failed_services[*]}"
 
@@ -2797,11 +2797,11 @@ if [[ "$web_replicas" == "1/1" ]]; then
         WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
-        log_info "📋 Logs do servi��o web (últimas 10 linhas):"
+        log_info "���� Logs do servi��o web (últimas 10 linhas):"
         docker service logs "${STACK_NAME}_web" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
     fi
 else
-    log_error "��� Serviço web com problemas no Docker Swarm: $web_replicas"
+    log_error "❌ Serviço web com problemas no Docker Swarm: $web_replicas"
     WEB_STATUS="❌ FAILED ($web_replicas)"
 
     # Mostrar logs detalhados para diagnóstico
@@ -2824,7 +2824,7 @@ WEBHOOK_STATUS="✅ INTEGRADO (no serviço web)"
 MONITOR_STATUS="✅ INTEGRADO (no serviço web)"
 
     # Mostrar logs do webhook se houver problema
-    log_info "���� Logs do webhook:"
+    log_info "❌� Logs do webhook:"
     docker service logs "${STACK_NAME}_webhook" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
 
 # Verificar serviço monitor
@@ -2840,7 +2840,7 @@ else
 
     # Mostrar logs do monitor se houver problema
     log_info "📋 Logs do monitor:"
-    docker service logs "${STACK_NAME}_monitor" --tail 10 2>/dev/null || log_warning "Logs não dispon����veis"
+    docker service logs "${STACK_NAME}_monitor" --tail 10 2>/dev/null || log_warning "Logs não dispon❌�veis"
 fi
 
 # Webhook agora está integrado no serviço web, então testar diretamente
@@ -2867,7 +2867,7 @@ log_info "�� Testando webhook e preparando relatório final..."
 if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
    -H "Content-Type: application/json" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
-    LOCAL_WEBHOOK_STATUS="��� OK"
+    LOCAL_WEBHOOK_STATUS="❌ OK"
 else
     LOCAL_WEBHOOK_STATUS="❌ PROBLEMA"
 fi
@@ -2944,18 +2944,18 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
+echo -e "${GREEN}${BOLD}═❌══════════════════════❌��═══════��════❌═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�������══════════════��═�����═══════════════════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════❌❌�══════════════��═❌��═══════════════════════════❌════════❌❌❌══${RESET}"
 echo ""
-echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
+echo -e "${PURPLE}${BOLD}❌� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
 final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
 final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 
-echo -e "    ${BLUE}│${RESET} ${BOLD}Versão Final:${RESET} ✅ Commit $final_commit"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Versão Final:${RESET} �� Commit $final_commit"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commit_msg"
 
 # Verificação especial para PR #22 (como no instalador antigo)
@@ -2969,10 +2969,10 @@ fi
 
 echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç����o Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç❌�o Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ��� DEPLOYADO"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ❌ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
 echo -e "${CYAN}${BOLD}🧪 TESTES WEBHOOK:${RESET}"
@@ -2991,7 +2991,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════��═══════════════════════������════════════${RESET}"
+echo -e "${CYAN}══════��═══════════════════════❌❌════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -3019,7 +3019,7 @@ echo -e "${YELLOW}NOTA: Apenas 1 serviço após unificação pelos agentes${RESE
 echo -e "${YELLOW}      webhook e monitor integrados no serviço web${RESET}"
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
 echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
-echo -e "    ${BLUE}│${RESET} ������ Atualização automática de dependências a cada deploy"
+echo -e "    ${BLUE}│${RESET} ❌❌ Atualização automática de dependências a cada deploy"
 echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
