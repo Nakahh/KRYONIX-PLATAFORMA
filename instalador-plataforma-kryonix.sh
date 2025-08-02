@@ -64,14 +64,14 @@ STEP_DESCRIPTIONS=(
     "Criando arquivos de serviços 📄"
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
-    "Verificando Traefik 🔍"
+    "Verificando Traefik �����"
     "Criando imagem Docker 🏗️"
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
-    "Configurando logs e backup 🗂️"
-    "Deploy final integrado 🚀"
-    "Testando webhook e relatório final 📊"
+    "Configurando logs e backup �����️"
+    "Deploy final integrado ��"
+    "Testando webhook e relatório final �����"
     "Configurando monitoramento contínuo 📈"
 )
 
@@ -87,17 +87,17 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ��"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     █████╔��� ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
+    echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚══════���════════════════════════════════════════════════════════════╝"
+    echo    "╚═══════════════════════════════������══════════════════������══���═══��═════╝"
     echo -e "${RESET}\n"
 
 
@@ -374,12 +374,12 @@ advanced_dependency_check() {
             if node fix-dependencies.js 2>&1 | tee /tmp/deps-fix.log; then
                 log_success "✅ Correção automática aplicada"
             else
-                log_warning "����� Correção manual pode ser necess��ria"
+                log_warning "��️ Correção manual pode ser necess��ria"
             fi
         fi
     fi
     
-    # Verificar se servi��os específicos funcionam
+    # Verificar se serviços específicos funcionam
     log_info "�� Testando inicialização de serviços..."
     
     # Testar server.js
@@ -678,7 +678,7 @@ verify_fresh_clone() {
         latest_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
 
         if [ "$commit_hash" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
-            log_warning "⚠️ Commit mais recente disponível: $latest_commit"
+            log_warning "⚠�� Commit mais recente disponível: $latest_commit"
 
             # Tentar atualizar para o mais recente
             log_info "��� Tentando atualizar para o commit mais recente..."
@@ -734,8 +734,8 @@ show_banner
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
-echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
-echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
+echo -e "${BLUE}��─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
+echo -e "${BLUE}├�� Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
@@ -779,7 +779,7 @@ next_step
 processing_step
 if ! validate_credentials; then
     error_step
-    log_error "Falha na validação das credenciais"
+    log_error "Falha na validaç��o das credenciais"
     exit 1
 fi
 complete_step
@@ -790,8 +790,8 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🔄 Iniciando clone FRESH para garantir versão MAIS RECENTE..."
-log_info "🎯 Objetivo: Sempre pegar versão mais recente com dependências atualizadas!"
+log_info "��� Iniciando clone FRESH para garantir versão MAIS RECENTE..."
+log_info "��� Objetivo: Sempre pegar versão mais recente com depend��ncias atualizadas!"
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
@@ -833,7 +833,7 @@ fi
 final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8)
 final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 log_success "✅ Clone fresh concluído - Commit: $final_commit"
-log_info "📝 Última alteração: $final_commit_msg"
+log_info "�� Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22 (como no instalador antigo)
 if echo "$final_commit_msg" | grep -qi "#22"; then
@@ -1033,7 +1033,7 @@ if grep -q '"postinstall": "npm run check-deps"' package.json; then
     # Criar backup
     cp package.json package.json.backup-postinstall
 
-    # Aplicar correç���o usando Node.js para evitar problemas com aspas
+    # Aplicar correç��o usando Node.js para evitar problemas com aspas
     cat > /tmp/postinstall-fix.js << 'EOF'
 const fs = require('fs');
 console.log('�� Aplicando correção crítica no package.json...');
@@ -1598,7 +1598,7 @@ done
 # CORREÇÃO: Aplicar correções de TypeScript antes do build
 log_info "�� Aplicando corre��ões de TypeScript para resolver erros de build..."
 
-# Correção 1: Arquivo postgres-config.ts - fun��ão executeTransaction
+# Correção 1: Arquivo postgres-config.ts - função executeTransaction
 if [ -f "lib/database/postgres-config.ts" ]; then
     log_info "🔧 Corrigindo tipos genéricos em postgres-config.ts..."
 
@@ -1650,7 +1650,7 @@ else
     log_warning "⚠���� lib/database/api.ts não encontrado"
 fi
 
-# Correção 4: Otimizar next.config.js para builds mais rápidos
+# Correção 4: Otimizar next.config.js para builds mais r��pidos
 if [ -f "next.config.js" ]; then
     log_info "🔧 Otimizando next.config.js para build mais r����pido..."
 
@@ -1712,7 +1712,7 @@ if [ -d ".next" ]; then
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "�������️ Nenhum build anterior encontrado - continuando"
+    log_info "�����️ Nenhum build anterior encontrado - continuando"
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -1883,7 +1883,7 @@ ANTICORRUPTION_CONFIG_EOF
             # Otimizar next.config.js para pular validações TypeScript durante build
             if [ -f "next.config.js" ] && ! grep -q "ignoreDuringBuilds" next.config.js; then
                 sed -i 's/cleanDistDir: true,/cleanDistDir: true,\n  eslint: { ignoreDuringBuilds: true },\n  typescript: { ignoreBuildErrors: true },/g' next.config.js
-                log_success "✅ next.config.js otimizado para pular validações"
+                log_success "✅ next.config.js otimizado para pular valida��ões"
             fi
             log_success "✅ Todas as correções de TypeScript aplicadas"
             ;;
@@ -2448,7 +2448,7 @@ deploy() {
                     # Verificar conflitos de porta
                     if [[ "$service_name" == *"_web"* ]]; then
                         if netstat -tuln 2>/dev/null | grep -q ":8080 "; then
-                            log "⚠️ Conflito de porta 8080 detectado, removendo binding"
+                            log "���️ Conflito de porta 8080 detectado, removendo binding"
                             docker service update --publish-rm="8080:8080" "$service_name" >/dev/null 2>&1 || true
                         fi
                     elif [[ "$service_name" == *"_monitor"* ]]; then
@@ -2603,7 +2603,7 @@ DIAGNOSTIC_EOF
     if [ $services_ok -eq $total_services ]; then
         log "🎉 Deploy KRYONIX concluído com SUCESSO! ($services_ok/$total_services serviços OK)"
     else
-        log "⚠��� Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
+        log "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
     fi
 
     # Testar webhook externamente
@@ -2876,7 +2876,7 @@ fi
 if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
    -H "Content-Type: application/json" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
-    EXTERNAL_WEBHOOK_STATUS="��� FUNCIONANDO"
+    EXTERNAL_WEBHOOK_STATUS="✅ FUNCIONANDO"
 else
     EXTERNAL_WEBHOOK_STATUS="⚠️ VERIFICAR"
 fi
@@ -2946,7 +2946,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�����═══════���══════��═�����═══════════════════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�������══════════════��═�����═══════════════════════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2991,7 +2991,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════�����══════════���═══════════������════════════${RESET}"
+echo -e "${CYAN}══════��═══════════════════════������════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
