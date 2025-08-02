@@ -130,12 +130,15 @@ export default function HomePage() {
     { part: 44, title: 'Integração CRM', status: 'pending', description: 'Gestão de clientes', slug: 'integracao-crm' },
     { part: 45, title: 'Agendamento Inteligente', status: 'pending', description: 'Agenda com IA', slug: 'agendamento-inteligente' },
 
-    // FASE 5: MÓDULOS ESPECIALIZADOS (PARTES 46-50)
+    // FASE 5: MÓDULOS ESPECIALIZADOS (PARTES 46-53)
     { part: 46, title: 'Análise Comercial Avançada', status: 'pending', description: 'Inteligência comercial', slug: 'analise-comercial' },
     { part: 47, title: 'Atendimento Omnichannel', status: 'pending', description: 'Atendimento multicanal', slug: 'atendimento-omnichannel' },
     { part: 48, title: 'CRM Funil de Vendas', status: 'pending', description: 'Pipeline de vendas', slug: 'crm-funil-vendas' },
     { part: 49, title: 'Portal Cliente e Treinamento', status: 'pending', description: 'Portal personalizado', slug: 'portal-cliente-treinamento' },
-    { part: 50, title: 'Whitelabel Customizável', status: 'pending', description: 'Marca própria', slug: 'whitelabel-customizavel' }
+    { part: 50, title: 'Whitelabel Customizável', status: 'pending', description: 'Marca própria', slug: 'whitelabel-customizavel' },
+    { part: 51, title: 'Integração Supabase', status: 'pending', description: 'Database na nuvem', slug: 'integracao-supabase' },
+    { part: 52, title: 'Integração WuzAPI', status: 'pending', description: 'WhatsApp API alternativa', slug: 'integracao-wuzapi' },
+    { part: 53, title: 'Integração NTFY', status: 'pending', description: 'Notificações push', slug: 'integracao-ntfy' }
   ]
 
   if (!mounted) {
