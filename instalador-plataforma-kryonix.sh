@@ -85,12 +85,12 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔══════════════════��══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ��█╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║������█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -1167,7 +1167,7 @@ app.post('/webhook', (req, res) => {
   console.log('🔗 Webhook KRYONIX recebido no listener:', new Date().toISOString());
 
   if (req.body.ref === 'refs/heads/main' || req.body.ref === 'refs/heads/master') {
-    console.log('��� Iniciando deploy automático KRYONIX...');
+    console.log('����� Iniciando deploy automático KRYONIX...');
     exec('bash /app/webhook-deploy.sh webhook', (error, stdout, stderr) => {
       if (error) {
         console.error('❌ Erro no deploy KRYONIX:', error);
@@ -1697,7 +1697,7 @@ fi
 log_info "📊 Total de correções aplicadas: $correction_count/4"
 
 if [ $correction_count -gt 0 ]; then
-    log_success "�� Correções de TypeScript aplicadas com sucesso!"
+    log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
 else
     log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
 fi
@@ -2081,10 +2081,10 @@ services:
         - "traefik.docker.network=Kryonix-NET"
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
         - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.path=/health"
-        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=30s"
+        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=15s"
 
         # WEBHOOK - PRIORIDADE MÁXIMA (10000)
-        - "traefik.http.routers.kryonix-webhook.rule=Host(\`kryonix.com.br\`) && Path(\`/api/github-webhook\`)"
+        - "traefik.http.routers.kryonix-webhook.rule=Host(`kryonix.com.br`) && Path(`/api/github-webhook`)"
         - "traefik.http.routers.kryonix-webhook.entrypoints=web,websecure"
         - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
         - "traefik.http.routers.kryonix-webhook.priority=10000"
@@ -2092,7 +2092,7 @@ services:
         - "traefik.http.routers.kryonix-webhook.tls.certresolver=letsencrypt"
 
         # API Routes - Alta Prioridade (9000)
-        - "traefik.http.routers.kryonix-api.rule=Host(\`kryonix.com.br\`) && PathPrefix(\`/api/\`)"
+        - "traefik.http.routers.kryonix-api.rule=Host(`kryonix.com.br`) && PathPrefix(`/api/`)"
         - "traefik.http.routers.kryonix-api.entrypoints=web,websecure"
         - "traefik.http.routers.kryonix-api.service=kryonix-web"
         - "traefik.http.routers.kryonix-api.priority=9000"
@@ -2100,7 +2100,7 @@ services:
         - "traefik.http.routers.kryonix-api.tls.certresolver=letsencrypt"
 
         # HTTPS Principal - Prioridade Normal (100)
-        - "traefik.http.routers.kryonix-main.rule=Host(\`kryonix.com.br\`) || Host(\`www.kryonix.com.br\`)"
+        - "traefik.http.routers.kryonix-main.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
         - "traefik.http.routers.kryonix-main.entrypoints=websecure"
         - "traefik.http.routers.kryonix-main.service=kryonix-web"
         - "traefik.http.routers.kryonix-main.priority=100"
@@ -2108,7 +2108,7 @@ services:
         - "traefik.http.routers.kryonix-main.tls.certresolver=letsencrypt"
 
         # HTTP - Redirecionamento (50)
-        - "traefik.http.routers.kryonix-http.rule=Host(\`kryonix.com.br\`) || Host(\`www.kryonix.com.br\`)"
+        - "traefik.http.routers.kryonix-http.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
         - "traefik.http.routers.kryonix-http.entrypoints=web"
         - "traefik.http.routers.kryonix-http.service=kryonix-web"
         - "traefik.http.routers.kryonix-http.priority=50"
@@ -2118,19 +2118,27 @@ services:
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
+    networks:
+      - Kryonix-NET
     ports:
       - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - HOSTNAME=0.0.0.0
+      - NEXT_TELEMETRY_DISABLED=1
+      - AUTO_UPDATE_DEPS=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://0.0.0.0:8080/health"]
-      interval: 30s
-      timeout: 15s
-      retries: 5
-      start_period: 180s
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 networks:
   Kryonix-NET:
     external: true
-AGENT_CORRECTED_STACK_EOF
+WORKING_STACK_EOF
 
 # Validação simples
 if [ ! -f docker-stack.yml ]; then
@@ -2313,8 +2321,8 @@ set -euo pipefail
 STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
+GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PAT_TOKEN="\${PAT_TOKEN:-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}"
-GITHUB_REPO="https://Nakahh:\${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 
 # Cores
 GREEN='\033[0;32m'
