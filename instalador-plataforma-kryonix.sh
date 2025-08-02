@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚█���╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗█��║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -380,7 +380,7 @@ advanced_dependency_check() {
     fi
     
     # Verificar se serviços específicos funcionam
-    log_info "���� Testando inicialização de serviços..."
+    log_info "�� Testando inicialização de serviços..."
     
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
@@ -954,7 +954,7 @@ const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const deps = Object.keys(pkg.dependencies || {});
 
-console.log('��� Validando ' + deps.length + ' dependências...');
+console.log('📦 Validando ' + deps.length + ' dependências...');
 
 let installed = 0;
 let missing = [];
@@ -1446,7 +1446,7 @@ if docker service ls | grep -q "traefik"; then
     fi
     log_info "🔐 Resolver SSL detectado: $CERT_RESOLVER"
 else
-    log_warning "⚠❌ Traefik não encontrado - KRYONIX funcionará localmente"
+    log_warning "⚠️ Traefik não encontrado - KRYONIX funcionará localmente"
 fi
 
 log_success "✅ Verificação do Traefik concluída"
@@ -1769,7 +1769,7 @@ else
             rm -rf .next/cache
 
             # Limpar cache npm
-            log_info "🗑��� Limpando cache npm..."
+            log_info "🗑️ Limpando cache npm..."
             npm cache clean --force
 
             # Reinstalar dependências críticas do Next.js
