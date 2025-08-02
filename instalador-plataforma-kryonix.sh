@@ -86,11 +86,11 @@ show_banner() {
     echo    "╔══════════════════��══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║����█║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║������█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -856,7 +856,7 @@ log_info "📦 Iniciando atualização automática de dependências..."
 
 # Executar atualização automática
 if ! auto_update_dependencies; then
-    log_warning "⚠️ Problemas na atualiza��ão, continuando com dependências originais"
+    log_warning "⚠️ Problemas na atualiza����ão, continuando com dependências originais"
 fi
 
 complete_step
@@ -1167,7 +1167,7 @@ app.post('/webhook', (req, res) => {
   console.log('🔗 Webhook KRYONIX recebido no listener:', new Date().toISOString());
 
   if (req.body.ref === 'refs/heads/main' || req.body.ref === 'refs/heads/master') {
-    console.log('��� Iniciando deploy automático KRYONIX...');
+    console.log('����� Iniciando deploy automático KRYONIX...');
     exec('bash /app/webhook-deploy.sh webhook', (error, stdout, stderr) => {
       if (error) {
         console.error('❌ Erro no deploy KRYONIX:', error);
@@ -1257,12 +1257,24 @@ MONITOR_EOF
     log_success "✅ kryonix-monitor.js criado"
 fi
 
+# CORREÇÃO CRÍTICA: Corrigir constructor next() no server.js ANTES de adicionar webhook
+log_info "🔧 Aplicando correção crítica no server.js (constructor next())..."
+if [ -f server.js ]; then
+    # Backup do arquivo
+    cp server.js server.js.backup
+
+    # Corrigir constructor next() removendo parâmetros hostname e port inválidos
+    sed -i '/const nextApp = next({/,/});/{
+        /hostname,/d
+        /port,/d
+    }' server.js
+
+    log_success "✅ Constructor next() corrigido"
+fi
+
 # Verificar se webhook já está integrado no server.js
 if ! grep -q "/api/github-webhook" server.js; then
     log_info "🔗 Adicionando endpoint webhook completo ao server.js..."
-
-    # Backup
-    cp server.js server.js.backup
 
     # Adicionar endpoint webhook completo
     cat >> server.js << WEBHOOK_EOF
@@ -1512,7 +1524,7 @@ EXPOSE 8080
 
 # CORREÇÃO CRÍTICA: Health check otimizado para Docker Swarm (start_period adequado)
 HEALTHCHECK --interval=60s --timeout=30s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+    CMD curl -f http://0.0.0.0:8080/health || exit 1
 
 # Comando de start com dumb-init para signal handling
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
@@ -2021,17 +2033,25 @@ next_step
 processing_step
 log_info "🚀 Criando docker-stack.yml com Traefik PRIORIDADE MÁXIMA para webhook..."
 
-# CORREÇÃO COMPLETA: Criar YAML simples baseado no instalador antigo que funcionava 100%
-log_info "🔧 Criando docker-stack.yml SIMPLIFICADO baseado no instalador que funcionava..."
+# CORREÇÃO COMPLETA: Docker Stack UNIFICADO conforme análise dos agentes especializados
+log_info "🔧 Criando docker-stack.yml UNIFICADO (serviço único) baseado na análise dos agentes..."
 
-cat > docker-stack.yml << 'WORKING_STACK_EOF'
+cat > docker-stack.yml << 'AGENT_CORRECTED_STACK_EOF'
 version: '3.8'
 
 services:
   web:
     image: kryonix-plataforma:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - Kryonix-NET
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - HOSTNAME=0.0.0.0
+      - NEXT_TELEMETRY_DISABLED=1
+      - AUTO_UPDATE_DEPS=true
+      - WEBHOOK_SECRET=Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
+      - PAT_TOKEN=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
     deploy:
       replicas: 1
       placement:
@@ -2039,21 +2059,22 @@ services:
           - spread: node.role
       restart_policy:
         condition: on-failure
-        delay: 10s
-        max_attempts: 5
+        delay: 15s
+        max_attempts: 3
       update_config:
         parallelism: 1
         delay: 10s
         failure_action: rollback
+        order: start-first
       rollback_config:
         parallelism: 1
         delay: 5s
       resources:
         limits:
-          memory: 1G
-          cpus: '1.0'
+          memory: 2G
+          cpus: '1.5'
         reservations:
-          memory: 512M
+          memory: 1G
           cpus: '0.5'
       labels:
         - "traefik.enable=true"
