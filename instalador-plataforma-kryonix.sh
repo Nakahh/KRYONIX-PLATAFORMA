@@ -86,7 +86,7 @@ show_banner() {
     echo    "╔══════════════════��══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  �������║���█║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║���█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔╝      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -101,10 +101,10 @@ show_banner() {
     echo -e "${RESET}\n"
 
 
-    echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Baseado na investigação de múltiplos agentes especialistas${RESET}"
-echo -e "${CYAN}🛠️ CORREÇÕES APLICADAS: Certificate resolver + Health checks curl + Resource limits${RESET}"
-echo -e "${YELLOW}🚨 RESOLVIDO: Problema 0/1 replicas - Análise profunda aplicada${RESET}"
-echo -e "${PURPLE}⚙️ TRAEFIK: SSL resolver letsencrypt + Rede Kryonix-NET + 2G memory${RESET}\n"
+    echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Problemas 0/1 replicas resolvidos pelos 5 agentes${RESET}"
+echo -e "${CYAN}🛠️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
+echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container único${RESET}"
+echo -e "${PURPLE}⚙️ OTIMIZADO: Health check 0.0.0.0:8080 + 1G RAM + placement flexível${RESET}\n"
 }
 
 # Sistema unificado de barra animada - CORRIGIDO
@@ -856,7 +856,7 @@ log_info "📦 Iniciando atualização automática de dependências..."
 
 # Executar atualização automática
 if ! auto_update_dependencies; then
-    log_warning "⚠️ Problemas na atualização, continuando com dependências originais"
+    log_warning "⚠️ Problemas na atualiza��ão, continuando com dependências originais"
 fi
 
 complete_step
@@ -2978,7 +2978,7 @@ echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
 echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
 echo ""
 echo -e "${GREEN}${BOLD}🔧 CORREÇÕES APLICADAS (baseadas no instalador que funcionava):${RESET}"
-echo -e "    ${BLUE}��${RESET} ✅ Rede fixada para Kryonix-NET (resolve conflito de rede)"
+echo -e "    ${BLUE}��${RESET} ��� Rede fixada para Kryonix-NET (resolve conflito de rede)"
 echo -e "    ${BLUE}│${RESET} ✅ Dockerfile simplificado (single-stage, sem complexidade)"
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados (start_period=30s, timeout=30s)"
 echo -e "    ${BLUE}│${RESET} ✅ Placement constraints (node.role == manager)"
@@ -3003,7 +3003,7 @@ echo -e "    ${BLUE}│${RESET} ����� Atualização automática de dep
 echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
-echo -e "    ${BLUE}│${RESET} ��� Logs detalhados de todas as atualizações"
+echo -e "    ${BLUE}│${RESET} ✅ Logs detalhados de todas as atualizações"
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
 echo ""
