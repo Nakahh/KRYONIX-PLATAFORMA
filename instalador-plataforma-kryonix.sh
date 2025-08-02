@@ -67,7 +67,7 @@ STEP_DESCRIPTIONS=(
     "Verificando Traefik 🔍"
     "Criando imagem Docker 🏗️"
     "Preparando stack CORRIGIDO pelos agentes 📋"
-    "Configurando GitHub Actions ����"
+    "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
     "Configurando logs e backup 📄️"
     "Deploy final integrado 🚀"
@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██���██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -2350,7 +2350,7 @@ deploy() {
     cd /opt
     sudo rm -rf kryonix-plataform
 
-    log "���� Clone FRESH da vers��o mais recente..."
+    log "📥 Clone FRESH da vers��o mais recente..."
 
     # Configurar Git e credenciais para repositório privado
     git config --global user.name "KRYONIX Deploy" 2>/dev/null || true
@@ -2991,7 +2991,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════��═══════════════════════���❌════════════${RESET}"
+echo -e "${CYAN}══════��═════════════��═════════❌❌════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
