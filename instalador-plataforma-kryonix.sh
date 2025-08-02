@@ -89,7 +89,7 @@ show_banner() {
     echo    "║     ██║ █���╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██��   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██��   ╚██████╔╝██║ ╚█��██║██║██╔��� ██��     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██��   ╚██████╔╝██║ ╚█��██║██║██╔���� ██��     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -787,7 +787,7 @@ next_step
 
 processing_step
 log_info "❌ Iniciando clone FRESH para garantir versão MAIS RECENTE..."
-log_info "❌ Objetivo: Sempre pegar versão mais recente com dependências atualizadas!"
+log_info "❌ Objetivo: Sempre pegar vers��o mais recente com dependências atualizadas!"
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
@@ -848,7 +848,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "📦 Iniciando atualização automática de dependências..."
+# Instalando dependências...
 
 # Executar atualização automática
 if ! auto_update_dependencies; then
@@ -1623,7 +1623,7 @@ if [ -f "lib/database/init.ts" ]; then
     sed -i 's/checkDatabaseHealth(module)/checkDatabaseHealth(dbModule)/g' lib/database/init.ts
     sed -i 's/status\[module\]/status[dbModule]/g' lib/database/init.ts
 
-    log_success "✅ init.ts corrigido"
+    log_success "��� init.ts corrigido"
 else
     log_warning "⚠️ lib/database/init.ts não encontrado"
 fi
@@ -1681,7 +1681,7 @@ if [ -f "lib/database/init.ts" ] && grep -q "dbModule" lib/database/init.ts 2>/d
 fi
 
 if [ -f "lib/database/api.ts" ] && grep -q "dbModule" lib/database/api.ts 2>/dev/null; then
-    log_success "✅ Correção api.ts aplicada"
+    log_success "✅ Corre��ão api.ts aplicada"
     correction_count=$((correction_count + 1))
 fi
 
@@ -2987,7 +2987,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═���════��═══════════════════════❌❌════════════${RESET}"
+echo -e "${CYAN}═���════���═══════════════════════❌❌════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -3005,7 +3005,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
 echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
 
 echo ""
-echo -e "${PURPLE}${BOLD}📊 VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
+echo -e "${PURPLE}${BOLD}���� VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
 echo -e "Execute para verificar se as correções funcionaram:"
 echo -e "${YELLOW}docker service ls${RESET}"
 echo ""
