@@ -7,7 +7,7 @@ export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
 
 # ============================================================================
-# 🚀 INSTALADOR KRYONIX PLATFORM - DEPENDÊNCIAS SEMPRE ATUALIZADAS
+# �� INSTALADOR KRYONIX PLATFORM - DEPENDÊNCIAS SEMPRE ATUALIZADAS
 # ============================================================================
 # Autor: Vitor Fernandes
 # Descrição: Instalador 100% automático com atualizações contínuas
@@ -71,7 +71,7 @@ STEP_DESCRIPTIONS=(
     "Criando webhook deploy 🔗"
     "Configurando logs e backup 📄️"
     "Deploy final integrado 🚀"
-    "Testando webhook e relatório final ❌��"
+    "Testando webhook e relatório final 📊"
     "Configurando monitoramento contínuo 📈"
 )
 
@@ -1036,7 +1036,7 @@ if grep -q '"postinstall": "npm run check-deps"' package.json; then
     # Aplicar correç��o usando Node.js para evitar problemas com aspas
     cat > /tmp/postinstall-fix.js << 'EOF'
 const fs = require('fs');
-console.log('�� Aplicando correção crítica no package.json...');
+console.log('���� Aplicando correção crítica no package.json...');
 
 try {
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
@@ -1694,7 +1694,7 @@ if [ -f "next.config.js" ] && grep -q "ignoreDuringBuilds" next.config.js 2>/dev
     correction_count=$((correction_count + 1))
 fi
 
-log_info "�� Total de correções aplicadas: $correction_count/4"
+log_info "📊 Total de correções aplicadas: $correction_count/4"
 
 if [ $correction_count -gt 0 ]; then
     log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
@@ -1966,7 +1966,7 @@ EOF
     if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build-retry.log; then
         TIMESTAMP=$(date +%Y%m%d_%H%M%S)
         docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
-        log_success "✅ Build concluído ap��s correção automática: kryonix-plataforma:$TIMESTAMP"
+        log_success "��� Build concluído ap��s correção automática: kryonix-plataforma:$TIMESTAMP"
 
         # Restaurar arquivos originais se houver backup
         if [ -f "package.json.emergency-backup" ]; then
@@ -2383,7 +2383,7 @@ deploy() {
     current_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
     remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
 
-    log "�� Commit local: $current_commit"
+    log "📌 Commit local: $current_commit"
     log "🌐 Commit remoto: $remote_commit"
     log "📝 Mensagem: $current_msg"
 
@@ -2675,7 +2675,7 @@ if ! docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
 fi
 
 # Verificar se YAML está válido primeiro
-log_info "���� Validando YAML antes do deploy..."
+log_info "🔍 Validando YAML antes do deploy..."
 
 # Verificar se arquivo YAML existe e tem conteúdo
 if [ ! -f docker-stack.yml ]; then
@@ -2748,7 +2748,7 @@ if [ "$deploy_success" = true ]; then
         sleep 10
 
         services_count=$(docker service ls --format "{{.Name}}" | grep "^${STACK_NAME}_" | wc -l)
-        log_info "📊 Serviços encontrados: $services_count"
+        log_info "���� Serviços encontrados: $services_count"
 
         if [ $services_count -gt 0 ]; then
             log_success "✅ Serviços criados com sucesso!"
@@ -2910,7 +2910,7 @@ if command -v ncu >/dev/null 2>&1; then
     updates_available=$(ncu --jsonUpgraded 2>/dev/null | jq -r 'keys | length' 2>/dev/null || echo "0")
     
     if [ "$updates_available" -gt 0 ]; then
-        log_monitor "���� $updates_available atualizaç��es de dependências disponíveis"
+        log_monitor "📦 $updates_available atualizaç��es de dependências disponíveis"
         
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
