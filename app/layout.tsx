@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
+  title: 'Kryonix',
   description: 'Plataforma empresarial multi-tenant com 32 stacks tecnológicas integradas e automação completa por inteligência artificial.',
   keywords: ['saas', 'ia', 'automação', 'multi-tenant', 'whatsapp', 'crm', 'brasil'],
   authors: [{ name: 'KRYONIX', url: 'https://www.kryonix.com.br' }],
