@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ █���╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██��   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██��   ╚██████╔╝██║ ╚█��██║██║██╔��� ██��     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║              ${WHITE}Deploy Inteligente e Automatizado${BLUE}                ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚═════════════════════════════════════════════��═══════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -468,7 +468,7 @@ test_service_health() {
 nuclear_cleanup() {
     # Limpeza automática para nova instalação
     
-    # Parar e remover todos os containers/serviços KRYONIX
+    # Parar e remover todos os containers/servi��os KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
     sleep 15
     
@@ -561,12 +561,12 @@ fresh_git_clone() {
     
     while [ $clone_attempts -lt $max_attempts ]; do
         clone_attempts=$((clone_attempts + 1))
-        log_info "❌ Tentativa de clone $clone_attempts/$max_attempts..."
+        # Tentativa $clone_attempts/$max_attempts
         
         # Limpar qualquer clone parcial
         sudo rm -rf ./* .[^.]* ..?* 2>/dev/null || true
         
-        log_info "Tentando clone com credenciais armazenadas..."
+        # Clonando repositório...
 
         if git clone --verbose \
                     --single-branch \
@@ -577,7 +577,7 @@ fresh_git_clone() {
                     . 2>&1; then
             
             # Imediatamente buscar refs mais recentes
-            log_info "📡 Buscando refs mais recentes para garantir versão mais atualizada..."
+            # Atualizando referências...
             git fetch origin --force --prune --depth=1 2>/dev/null || true
             
             # Obter commit mais recente do remoto
@@ -1613,7 +1613,7 @@ fi
 
 # Correção 2: Arquivo init.ts - variável module conflitando com ESLint
 if [ -f "lib/database/init.ts" ]; then
-    log_info "🔧 Corrigindo variável 'module' em init.ts..."
+    log_info "��� Corrigindo variável 'module' em init.ts..."
 
     # Backup do arquivo original
     cp lib/database/init.ts lib/database/init.ts.bak
@@ -2152,7 +2152,7 @@ log_info "   ✅ CRÍTICO: Health check otimizado (0.0.0.0:8080, 15s interval, 6
 log_info "   ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CPU)"
 log_info "   ✅ CRÍTICO: Update/rollback config adicionados"
 log_info "   ✅ CRÍTICO: Webhook com prioridade máxima (10000)"
-log_info "   ✅ CORREÇÃO: Problemas 0/1 replicas resolvidos"
+log_info "   ��� CORREÇÃO: Problemas 0/1 replicas resolvidos"
 complete_step
 next_step
 
@@ -2987,7 +2987,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════��═══════════════════════❌❌════════════${RESET}"
+echo -e "${CYAN}═���════��═══════════════════════❌❌════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
