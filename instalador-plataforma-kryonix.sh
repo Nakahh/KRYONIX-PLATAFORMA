@@ -734,7 +734,7 @@ show_banner
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
-echo -e "${BLUE}��─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
+echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├�� Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
@@ -791,7 +791,7 @@ next_step
 
 processing_step
 log_info "��� Iniciando clone FRESH para garantir versão MAIS RECENTE..."
-log_info "��� Objetivo: Sempre pegar versão mais recente com depend��ncias atualizadas!"
+log_info "��� Objetivo: Sempre pegar versão mais recente com depend���ncias atualizadas!"
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
@@ -1258,7 +1258,7 @@ MONITOR_EOF
 fi
 
 # CORREÇÃO CRÍTICA: Corrigir constructor next() no server.js ANTES de adicionar webhook
-log_info "🔧 Aplicando correção crítica no server.js (constructor next())..."
+log_info "�� Aplicando correção crítica no server.js (constructor next())..."
 if [ -f server.js ]; then
     # Backup do arquivo
     cp server.js server.js.backup
@@ -2840,7 +2840,7 @@ else
 
     # Mostrar logs do monitor se houver problema
     log_info "📋 Logs do monitor:"
-    docker service logs "${STACK_NAME}_monitor" --tail 10 2>/dev/null || log_warning "Logs não dispon����veis"
+    docker service logs "${STACK_NAME}_monitor" --tail 10 2>/dev/null || log_warning "Logs n��o dispon����veis"
 fi
 
 # Webhook agora está integrado no serviço web, então testar diretamente
@@ -3005,7 +3005,7 @@ echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CP
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Update/rollback config adicionados"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Comunicação entre serviços corrigida"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup - Remove TUDO antes de começar"
-echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
+echo -e "    ${BLUE}│${RESET} ��� Clone fresh - Sempre repositório limpo"
 echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
 
 echo ""
