@@ -157,7 +157,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Image
-                src="/logo-kryonix.png"
+                src="/logo kryonix.png"
                 alt="KRYONIX Logo"
                 width={40}
                 height={40}
