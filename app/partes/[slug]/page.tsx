@@ -1,0 +1,347 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { ArrowLeft, CheckCircle, Clock, AlertCircle, Sparkles, Code2, Database, Shield, Zap } from 'lucide-react'
+
+interface Part {
+  part: number
+  title: string
+  status: 'completed' | 'in_progress' | 'pending'
+  description: string
+  slug: string
+  phase: string
+  technologies: string[]
+  features: string[]
+  benefits: string[]
+  technical_description: string
+  simple_description: string
+}
+
+const partsData: Part[] = [
+  {
+    part: 1,
+    title: 'Autenticação Keycloak',
+    status: 'completed',
+    description: 'Sistema multi-tenant com biometria',
+    slug: 'autenticacao-keycloak',
+    phase: 'FASE 1: FUNDAÇÃO',
+    technologies: ['Keycloak', 'OAuth 2.0', 'JWT', 'Redis', 'PostgreSQL'],
+    features: [
+      'Login unificado (SSO)',
+      'Autenticação biométrica',
+      'Autenticação via WhatsApp',
+      'Multi-tenant isolado',
+      'Gestão de sessões',
+      'Controle de acesso'
+    ],
+    benefits: [
+      'Segurança máxima para seus dados',
+      'Login rápido e fácil',
+      'Acesso via celular',
+      'Dados totalmente isolados',
+      'Controle total de usuários'
+    ],
+    technical_description: 'Sistema de autenticação enterprise baseado em Keycloak com suporte a múltiplos tenants, integração com biometria via WebAuthn, autenticação via WhatsApp OTP, e gestão completa de identidades com JWT tokens.',
+    simple_description: 'Sistema de login super seguro que permite entrar na plataforma usando impressão digital, reconhecimento facial ou WhatsApp. Cada cliente tem seus dados completamente separados e protegidos.'
+  },
+  {
+    part: 2,
+    title: 'Base de Dados PostgreSQL',
+    status: 'completed',
+    description: 'Database isolado por cliente',
+    slug: 'database-postgresql',
+    phase: 'FASE 1: FUNDAÇÃO',
+    technologies: ['PostgreSQL 15', 'PgBouncer', 'Backup automático', 'Replicação', 'Monitoring'],
+    features: [
+      'Isolamento total por cliente',
+      'Backup automático diário',
+      'Alta disponibilidade',
+      'Performance otimizada',
+      'Monitoramento 24/7',
+      'Migração automática'
+    ],
+    benefits: [
+      'Seus dados nunca se misturam com outros',
+      'Backup automático todos os dias',
+      'Sistema nunca para de funcionar',
+      'Velocidade máxima',
+      'Monitoramento constante'
+    ],
+    technical_description: 'Banco de dados PostgreSQL enterprise com arquitetura multi-tenant, isolamento completo de dados por cliente, backup automático com retenção configurável, alta disponibilidade com replicação master-slave.',
+    simple_description: 'Banco de dados super seguro onde cada cliente tem seus próprios dados completamente separados. Faz backup automático todos os dias e nunca perde informações.'
+  },
+  {
+    part: 3,
+    title: 'Storage MinIO',
+    status: 'in_progress',
+    description: 'Armazenamento de arquivos',
+    slug: 'storage-minio',
+    phase: 'FASE 1: FUNDAÇÃO',
+    technologies: ['MinIO', 'S3 Compatible', 'CDN', 'Compression', 'Encryption'],
+    features: [
+      'Armazenamento ilimitado',
+      'CDN global integrada',
+      'Compressão automática',
+      'Criptografia avançada',
+      'Versionamento de arquivos',
+      'Acesso via API'
+    ],
+    benefits: [
+      'Espaço ilimitado para arquivos',
+      'Arquivos carregam super rápido',
+      'Compressão para economizar espaço',
+      'Arquivos protegidos com criptografia',
+      'Histórico de versões'
+    ],
+    technical_description: 'Sistema de armazenamento distribuído baseado em MinIO com compatibilidade S3, CDN integrada, compressão automática de arquivos, criptografia AES-256 e versionamento.',
+    simple_description: 'Sistema de armazenamento que guarda todos seus arquivos (fotos, documentos, vídeos) de forma segura e rápida. Espaço ilimitado e acesso super rápido de qualquer lugar.'
+  }
+  // Adicione mais partes conforme necessário...
+]
+
+export default function PartPage({ params }: { params: { slug: string } }) {
+  const [part, setPart] = useState<Part | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const foundPart = partsData.find(p => p.slug === params.slug)
+    setPart(foundPart || null)
+  }, [params.slug])
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-500"></div>
+      </div>
+    )
+  }
+
+  if (!part) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Parte não encontrada</h1>
+          <p className="text-gray-600 mb-6">Esta parte ainda não foi implementada.</p>
+          <Link href="/" className="btn-primary">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar à Homepage
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return <CheckCircle className="w-6 h-6 text-success-500" />
+      case 'in_progress':
+        return <Clock className="w-6 h-6 text-primary-500" />
+      default:
+        return <AlertCircle className="w-6 h-6 text-yellow-500" />
+    }
+  }
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'Concluída'
+      case 'in_progress':
+        return 'Em Andamento'
+      default:
+        return 'Pendente'
+    }
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'text-success-700 bg-success-100'
+      case 'in_progress':
+        return 'text-primary-700 bg-primary-100'
+      default:
+        return 'text-yellow-700 bg-yellow-100'
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center space-x-3 text-gray-700 hover:text-primary-600 transition-colors">
+              <ArrowLeft className="w-5 h-5" />
+              <span className="font-medium">Voltar à Homepage</span>
+            </Link>
+            <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+              KRYONIX
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            {/* Status Badge */}
+            <div className="flex justify-center mb-6">
+              <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${getStatusColor(part.status)}`}>
+                {getStatusIcon(part.status)}
+                <span className="ml-2">{getStatusText(part.status)}</span>
+              </div>
+            </div>
+
+            {/* Title */}
+            <div className="text-center mb-8">
+              <div className="text-sm font-medium text-primary-600 mb-2">{part.phase}</div>
+              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+                <span className="text-primary-600">Parte {part.part}:</span> {part.title}
+              </h1>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                {part.description}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="pb-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-3 gap-8">
+              
+              {/* Main Info */}
+              <div className="lg:col-span-2 space-y-8">
+                
+                {/* Description Cards */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="card">
+                    <div className="flex items-center mb-4">
+                      <Code2 className="w-6 h-6 text-blue-500 mr-3" />
+                      <h3 className="text-lg font-semibold text-gray-900">Descrição Técnica</h3>
+                    </div>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {part.technical_description}
+                    </p>
+                  </div>
+
+                  <div className="card">
+                    <div className="flex items-center mb-4">
+                      <Sparkles className="w-6 h-6 text-green-500 mr-3" />
+                      <h3 className="text-lg font-semibold text-gray-900">Em Linguagem Simples</h3>
+                    </div>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {part.simple_description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Features */}
+                <div className="card">
+                  <div className="flex items-center mb-6">
+                    <Zap className="w-6 h-6 text-purple-500 mr-3" />
+                    <h3 className="text-xl font-semibold text-gray-900">Principais Funcionalidades</h3>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-3">
+                    {part.features.map((feature, index) => (
+                      <div key={index} className="flex items-center space-x-3">
+                        <CheckCircle className="w-4 h-4 text-success-500 flex-shrink-0" />
+                        <span className="text-sm text-gray-700">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Benefits */}
+                <div className="card">
+                  <div className="flex items-center mb-6">
+                    <Shield className="w-6 h-6 text-emerald-500 mr-3" />
+                    <h3 className="text-xl font-semibold text-gray-900">Benefícios para Você</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {part.benefits.map((benefit, index) => (
+                      <div key={index} className="flex items-start space-x-3">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></div>
+                        <span className="text-sm text-gray-700">{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Sidebar */}
+              <div className="space-y-6">
+                
+                {/* Technologies */}
+                <div className="card">
+                  <div className="flex items-center mb-4">
+                    <Database className="w-5 h-5 text-indigo-500 mr-2" />
+                    <h3 className="text-lg font-semibold text-gray-900">Tecnologias</h3>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {part.technologies.map((tech, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Status Info */}
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Status de Desenvolvimento</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Progresso</span>
+                      <span className="text-sm font-medium text-gray-900">
+                        {part.status === 'completed' ? '100%' : part.status === 'in_progress' ? '75%' : '0%'}
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          part.status === 'completed' ? 'bg-success-500' : 
+                          part.status === 'in_progress' ? 'bg-primary-500' : 'bg-gray-300'
+                        }`}
+                        style={{ 
+                          width: part.status === 'completed' ? '100%' : part.status === 'in_progress' ? '75%' : '0%' 
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Navigation */}
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Navegação</h3>
+                  <div className="space-y-2">
+                    <Link 
+                      href="/" 
+                      className="block w-full text-center py-2 px-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium"
+                    >
+                      Ver Todas as Partes
+                    </Link>
+                    <Link 
+                      href="/progresso" 
+                      className="block w-full text-center py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+                    >
+                      Progresso Completo
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
