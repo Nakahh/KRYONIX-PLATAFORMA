@@ -374,7 +374,7 @@ advanced_dependency_check() {
             if node fix-dependencies.js 2>&1 | tee /tmp/deps-fix.log; then
                 log_success "✅ Correção automática aplicada"
             else
-                log_warning "⚠️ Correção manual pode ser necess��ria"
+                log_warning "��️ Correção manual pode ser necess��ria"
             fi
         fi
     fi
@@ -2924,7 +2924,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═���══════════════════════���════════��════════════════════════��════════${RESET}"
+echo -e "${GREEN}${BOLD}═���══════════════════════���════════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════════════════════���════════���������══${RESET}"
 echo ""
@@ -2977,7 +2977,7 @@ echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
 echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
 echo ""
-echo -e "${GREEN}${BOLD}🔧 CORREÇÕES APLICADAS (baseadas no instalador que funcionava):${RESET}"
+echo -e "${RED}${BOLD}🚀 CORREÇÕES DOS 5 AGENTES APLICADAS (resolve 0/1 replicas):${RESET}"
 echo -e "    ${BLUE}��${RESET} ��� Rede fixada para Kryonix-NET (resolve conflito de rede)"
 echo -e "    ${BLUE}│${RESET} ✅ Dockerfile simplificado (single-stage, sem complexidade)"
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados (start_period=30s, timeout=30s)"
