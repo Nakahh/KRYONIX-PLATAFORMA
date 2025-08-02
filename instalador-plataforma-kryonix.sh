@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ���"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -102,7 +102,7 @@ show_banner() {
 
 
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Problemas 0/1 replicas resolvidos pelos 5 agentes${RESET}"
-echo -e "${CYAN}🛠️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
+echo -e "${CYAN}🛠️ CORREÇ��ES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
 echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container único${RESET}"
 echo -e "${PURPLE}⚙️ OTIMIZADO: Health check 0.0.0.0:8080 + 1G RAM + placement flexível${RESET}\n"
 }
@@ -1712,7 +1712,7 @@ if [ -d ".next" ]; then
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "❌��️ Nenhum build anterior encontrado - continuando"
+    log_info "⚠️ Nenhum build anterior encontrado - continuando"
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -2241,7 +2241,7 @@ let missing = [];
 deps.forEach(dep => {
     try {
         require(dep);
-        console.log('�� ' + dep + ': OK');
+        console.log('✅ ' + dep + ': OK');
     } catch(e) {
         console.error('❌ ' + dep + ': FALTANDO');
         missing.push(dep);
