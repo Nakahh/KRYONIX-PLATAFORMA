@@ -85,11 +85,11 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗█���╗  ██╗     ║"
     echo    "║     ██║ █���╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██��   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██��██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██��   ╚██████╔╝██║ ╚█��██║██��██╔���� ██��     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██��   ╚██████╔╝██║ ╚█��██║██║██╔���� ██��     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -641,7 +641,7 @@ verify_fresh_clone() {
     commit_date=$(git log -1 --pretty=format:"%ci" 2>/dev/null || echo "N/A")
     author=$(git log -1 --pretty=format:"%an" 2>/dev/null || echo "N/A")
 
-    log_info "��� Informações do repositório:"
+    log_info "📊 Informações do repositório:"
     log_info "   Commit: $commit_hash"
     log_info "   Mensagem: $commit_msg"
     log_info "   Data: $commit_date"
@@ -1577,17 +1577,17 @@ fi
 
 # Verificar se server.js tem o endpoint webhook
 if grep -q "/api/github-webhook" server.js; then
-    log_success "✅ Endpoint webhook encontrado no server.js"
+    # Webhook endpoint OK
 else
-    log_warning "⚠�� Endpoint webhook pode estar faltando no server.js"
+    # Webhook endpoint não encontrado
 fi
 
 # Verificar se arquivos de servi��os têm health check
 for service_file in webhook-listener.js kryonix-monitor.js; do
     if [ -f "$service_file" ] && grep -q "/health" "$service_file"; then
-        log_success "✅ Health check encontrado em $service_file"
+        # Health check OK
     else
-        log_warning "⚠❌ Health check pode estar faltando em $service_file"
+        # Health check ausente
     fi
 done
 
@@ -2151,7 +2151,7 @@ log_info "   ✅ CRÍTICO: Placement constraints flexibilizados (preferences: sp
 log_info "   ✅ CRÍTICO: Health check otimizado (0.0.0.0:8080, 15s interval, 60s start)"
 log_info "   ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CPU)"
 log_info "   ✅ CRÍTICO: Update/rollback config adicionados"
-log_info "   ��� CRÍTICO: Webhook com prioridade máxima (10000)"
+log_info "   ✅ CRÍTICO: Webhook com prioridade máxima (10000)"
 log_info "   ��� CORREÇÃO: Problemas 0/1 replicas resolvidos"
 complete_step
 next_step
@@ -2942,7 +2942,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═❌══════════════════════����═══════��════❌═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��══════���❌❌�══════════════��═❌����═════════════════════���════❌════════❌❌❌══${RESET}"
+echo -e "${GREEN}${BOLD}��══════���❌❌�══════════════��═❌����══════════════════════════❌════════❌❌❌══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX INSTALLER v2.0${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
