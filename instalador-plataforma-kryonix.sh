@@ -379,7 +379,7 @@ advanced_dependency_check() {
         fi
     fi
     
-    # Verificar se serviços específicos funcionam
+    # Verificar se servi��os específicos funcionam
     log_info "�� Testando inicialização de serviços..."
     
     # Testar server.js
@@ -790,8 +790,8 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "��� Iniciando clone FRESH para garantir versão MAIS RECENTE..."
-log_info "��� Objetivo: Sempre pegar versão mais recente com depend��ncias atualizadas!"
+log_info "🔄 Iniciando clone FRESH para garantir versão MAIS RECENTE..."
+log_info "🎯 Objetivo: Sempre pegar versão mais recente com dependências atualizadas!"
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
