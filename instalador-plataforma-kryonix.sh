@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████���╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚════════════════════════════════════���════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -305,7 +305,7 @@ auto_update_dependencies() {
     done
     
     if [ $install_attempts -eq $max_attempts ]; then
-        log_warning "⚠️ Restaurando package.json original..."
+        log_warning "���️ Restaurando package.json original..."
         cp package.json.backup package.json
         npm install --no-audit --no-fund 2>/dev/null || true
         log_warning "✅ Package.json restaurado com dependências originais"
@@ -1963,7 +1963,7 @@ EOF
     esac
 
     # Tentar build com correções aplicadas
-    log_info "🔄 Tentando build novamente com correções aplicadas..."
+    log_info "🔄 Tentando build novamente com correç��es aplicadas..."
     if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build-retry.log; then
         TIMESTAMP=$(date +%Y%m%d_%H%M%S)
         docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
@@ -2945,11 +2945,11 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═❌══════════════════════❌��═══════��════❌═══════════════════��════════${RESET}"
+echo -e "${GREEN}${BOLD}═❌════���═════════════════❌��═══════��════❌═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}��═══════❌❌�══════════════��═❌��═══════════════════════════❌════════❌❌❌══${RESET}"
 echo ""
-echo -e "${PURPLE}${BOLD}❌� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
+echo -e "${PURPLE}${BOLD}🚀 KRYONIX INSTALLER v2.0${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2982,7 +2982,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} $EXTERNAL_WEBHOO
 echo ""
 echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local Web:${RESET} http://localhost:8080"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Local Webhook:${RESET} http://localhost:8080/api/github-webhook"
+echo -e "    ${BLUE}���${RESET} ${BOLD}Local Webhook:${RESET} http://localhost:8080/api/github-webhook"
 if docker service ls | grep -q "traefik"; then
 echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} https://$DOMAIN_NAME/api/github-webhook"
