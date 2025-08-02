@@ -90,7 +90,7 @@ show_banner() {
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
     echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
+    echo "║     ╚═╝  ╚═╝╚���╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
     echo "║                                                                 ��"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -1991,22 +1991,31 @@ version: '3.8'
 services:
   web:
     image: kryonix-plataforma:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
       replicas: 1
       placement:
-        constraints:
-          - node.role == manager
+        preferences:
+          - spread: node.role
       restart_policy:
         condition: on-failure
-        max_attempts: 3
-        delay: 15s
+        max_attempts: 5
+        delay: 10s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 5s
       resources:
         limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
           memory: 512M
           cpus: '0.5'
-        reservations:
-          memory: 256M
-          cpus: '0.25'
       labels:
         # Traefik básico
         - "traefik.enable=true"
