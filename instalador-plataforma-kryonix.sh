@@ -86,9 +86,9 @@ show_banner() {
     echo "╔���═══════════════���════════════════��═══════════════════���═══════════╗"
     echo "║                                                                 ║"
     echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██���███╗ ███╗   ██╗█��╗██╗  ██╗     ║"
-    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝█��╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
-    echo "║     █��╔═██��� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
     echo "║                                                                 ��"
@@ -99,7 +99,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo "╚══���════════════���═��══���═════════════════════════════��══════════════╝"
     echo -e "${RESET}\n"
-    echo -e "${GREEN}�� VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
+    echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
     echo -e "${CYAN}🛠️ Auto-detecção e correção de erros de módulos './734.js' e similares${RESET}"
     echo -e "${YELLOW}🚨 NOVA: Auto-reparo de falhas 0/1 replicas em Docker Swarm${RESET}"
     echo -e "${PURPLE}⚙️ TRAEFIK: Placement constraints e configurações otimizadas${RESET}\n"
@@ -742,7 +742,7 @@ echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}��─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
 echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
-echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
+echo -e "${BLUE}└��� Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
 echo -e "${GREEN}${BOLD}✅ Nuclear cleanup + Clone fresh + Garantia versão mais recente!${RESET}\n"
 
@@ -795,7 +795,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "���� Iniciando clone FRESH para garantir versão MAIS RECENTE..."
+log_info "🔄 Iniciando clone FRESH para garantir versão MAIS RECENTE..."
 log_info "🎯 Objetivo: Sempre pegar versão mais recente com dependências atualizadas!"
 
 # Fazer clone fresh
@@ -1664,7 +1664,7 @@ if [ -d ".next" ]; then
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "���️ Nenhum build anterior encontrado - continuando"
+    log_info "�����️ Nenhum build anterior encontrado - continuando"
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -2076,75 +2076,11 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
       - AUTO_UPDATE_DEPS=true
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8080/health"]
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 40s
-
-  webhook:
-    image: kryonix-plataforma:latest
-    command: ["node", "webhook-listener.js"]
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.role == manager
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-        delay: 15s
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.25'
-        reservations:
-          memory: 128M
-          cpus: '0.1'
-    networks:
-      - $DOCKER_NETWORK
-    environment:
-      - NODE_ENV=production
-      - PORT=8082
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  monitor:
-    image: kryonix-plataforma:latest
-    command: ["node", "kryonix-monitor.js"]
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.role == manager
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-        delay: 15s
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.25'
-        reservations:
-          memory: 128M
-          cpus: '0.1'
-    networks:
-      - $DOCKER_NETWORK
-    ports:
-      - "8084:8084"
-    environment:
-      - NODE_ENV=production
-      - PORT=8084
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      start_period: 60s
 
 networks:
   $DOCKER_NETWORK:
@@ -2699,7 +2635,7 @@ else
     docker service logs "${STACK_NAME}_web" --tail 20 2>/dev/null || log_warning "Logs não disponíveis"
 
     # Tentar restart forçado
-    log_info "🔄 Tentando restart forçado do serviço..."
+    log_info "��� Tentando restart forçado do serviço..."
     docker service update --force "${STACK_NAME}_web" >/dev/null 2>&1 || true
 fi
 
@@ -2848,7 +2784,7 @@ echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç����o Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook (integrado):${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
+echo -e "    ${BLUE}���${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
 echo -e "${CYAN}${BOLD}🧪 TESTES WEBHOOK:${RESET}"
