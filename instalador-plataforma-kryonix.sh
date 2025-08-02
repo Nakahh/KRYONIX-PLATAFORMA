@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║█���╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═══════════════════════════════������══════════════════������══���═══��═════╝"
+    echo    "╚══════���════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -372,14 +372,14 @@ advanced_dependency_check() {
             
             # Correção automática
             if node fix-dependencies.js 2>&1 | tee /tmp/deps-fix.log; then
-                log_success "��� Correção automática aplicada"
+                log_success "✅ Correção automática aplicada"
             else
-                log_warning "��️ Correção manual pode ser necess��ria"
+                log_warning "����� Correção manual pode ser necess��ria"
             fi
         fi
     fi
     
-    # Verificar se servi��os específicos funcionam
+    # Verificar se serviços específicos funcionam
     log_info "�� Testando inicialização de serviços..."
     
     # Testar server.js
@@ -837,7 +837,7 @@ log_info "�� Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22 (como no instalador antigo)
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    log_warning "⚠️ ATENÇÃO: Ainda detectando referência ao PR #22"
+    log_warning "��️ ATENÇÃO: Ainda detectando referência ao PR #22"
     log_info "Isso pode significar que o PR #22 É a versão mais recente no GitHub"
     log_info "Ou pode haver um problema de sincronização"
 else
@@ -1481,7 +1481,7 @@ WORKDIR /app
 # Copiar package.json primeiro (para cache de layers)
 COPY package*.json ./
 
-# CORREÇÃO CRÍTICA: Copiar arquivos de dependências ANTES da instala��ão
+# CORREÇÃO CRÍTICA: Copiar arquivos de dependências ANTES da instalação
 COPY check-dependencies.js ./
 COPY validate-dependencies.js ./
 COPY fix-dependencies.js ./
@@ -1652,7 +1652,7 @@ fi
 
 # Correção 4: Otimizar next.config.js para builds mais rápidos
 if [ -f "next.config.js" ]; then
-    log_info "🔧 Otimizando next.config.js para build mais r������pido..."
+    log_info "🔧 Otimizando next.config.js para build mais r����pido..."
 
     # Backup do arquivo original
     cp next.config.js next.config.js.bak
@@ -2298,7 +2298,7 @@ console.log('🔧 KRYONIX - Corrigindo dependências...');
 
 const { exec } = require('child_process');
 
-/* Tentar instala��ão de dependências faltando */
+/* Tentar instalação de dependências faltando */
 exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
     if (error) {
         console.error('❌ Erro na correção:', error.message);
@@ -2876,7 +2876,7 @@ fi
 if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
    -H "Content-Type: application/json" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
-    EXTERNAL_WEBHOOK_STATUS="✅ FUNCIONANDO"
+    EXTERNAL_WEBHOOK_STATUS="��� FUNCIONANDO"
 else
     EXTERNAL_WEBHOOK_STATUS="⚠️ VERIFICAR"
 fi
@@ -2946,7 +2946,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�����══════════════��═�����═══════════════════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�����═══════���══════��═�����═══════════════════════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
