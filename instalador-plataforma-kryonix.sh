@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██��██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -919,7 +919,7 @@ try {
     const fs = require('fs');
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     console.log('📦 Módulos instalados: ' + (require('fs').readdirSync('node_modules').length || 0));
-    console.log('�� Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
+    console.log('📋 Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
 } catch(e) {
     console.log('📊 Estatísticas não disponíveis');
 }
@@ -1845,7 +1845,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "eslint_module_variable")
-            log_info "❌ Aplicando correção para variável 'module' conflitante..."
+            log_info "🔧 Aplicando correção para variável 'module' conflitante..."
             if [ -f "lib/database/init.ts" ]; then
                 sed -i 's/for (const module of modules)/for (const dbModule of modules)/g' lib/database/init.ts
                 sed -i 's/checkDatabaseHealth(module)/checkDatabaseHealth(dbModule)/g' lib/database/init.ts
