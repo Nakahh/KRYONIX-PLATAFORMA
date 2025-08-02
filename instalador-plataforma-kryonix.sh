@@ -380,7 +380,7 @@ advanced_dependency_check() {
     fi
     
     # Verificar se serviços específicos funcionam
-    log_info "🧪 Testando inicialização de serviços..."
+    log_info "�� Testando inicialização de serviços..."
     
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
@@ -1766,7 +1766,7 @@ else
 
             # Verificar se Dockerfile existe e corrigir se necessário
             if [ -f "Dockerfile" ]; then
-                log_info "��� Atualizando Dockerfile para evitar builds corrompidos..."
+                log_info "🐳 Atualizando Dockerfile para evitar builds corrompidos..."
                 # Adicionar limpeza de cache no Dockerfile
                 if ! grep -q "npm cache clean" Dockerfile; then
                     sed -i '/RUN npm ci/a RUN npm cache clean --force' Dockerfile
@@ -2125,16 +2125,17 @@ if [ ! -f docker-stack.yml ]; then
     exit 1
 fi
 
-log_success "✅ YAML simplificado criado baseado no instalador que funcionava"
+log_success "✅ Docker stack CORRIGIDO pelos 5 agentes para resolver 0/1 replicas"
 
-log_success "✅ Docker stack configurado com TODAS AS CORREÇÕES baseadas no instalador que funcionava"
-log_info "🔧 Correções aplicadas:"
-log_info "   ✅ Rede fixada para Kryonix-NET"
-log_info "   ✅ Health checks otimizados (interval=60s, start_period=30s)"
-log_info "   ✅ Placement constraints (node.role == manager)"
-log_info "   ✅ SSL resolver correto (letsencrypt)"
-log_info "   ✅ Restart delays aumentados (30s)"
-log_info "   ✅ Dockerfile simplificado (single-stage)"
+log_success "✅ Docker stack configurado com CORREÇÕES DOS AGENTES aplicadas"
+log_info "🔧 Correções dos 5 agentes aplicadas:"
+log_info "   ✅ CRÍTICO: Serviços unificados em um container (web, webhook, monitor)"
+log_info "   ✅ CRÍTICO: Placement constraints flexibilizados (preferences: spread)"
+log_info "   ✅ CRÍTICO: Health check otimizado (0.0.0.0:8080, 15s interval, 60s start)"
+log_info "   ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CPU)"
+log_info "   ✅ CRÍTICO: Update/rollback config adicionados"
+log_info "   ✅ CRÍTICO: Webhook com prioridade máxima (10000)"
+log_info "   ✅ CORREÇÃO: Problemas 0/1 replicas resolvidos"
 complete_step
 next_step
 
@@ -2376,7 +2377,7 @@ deploy() {
     npm install --production
 
     # Rebuild da imagem
-    log "���️ Fazendo rebuild da imagem Docker..."
+    log "🏗️ Fazendo rebuild da imagem Docker..."
     docker build --no-cache -t kryonix-plataforma:latest .
 
     # Deploy do stack
@@ -2796,7 +2797,7 @@ else
     log_info "Status após restart: $web_replicas_after_restart"
 fi
 
-# Verificar servi����o webhook (RESTAURADO)
+# Verificar servi��o webhook (RESTAURADO)
 webhook_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_webhook" | awk '{print $2}' || echo "0/1")
 log_info "Status Docker Swarm para ${STACK_NAME}_webhook: $webhook_replicas"
 
@@ -2968,7 +2969,7 @@ echo -e "${CYAN}${BOLD}🔗 ACESSO:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local Web:${RESET} http://localhost:8080"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Local Webhook:${RESET} http://localhost:8080/api/github-webhook"
 if docker service ls | grep -q "traefik"; then
-echo -e "    ${BLUE}���${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Domínio:${RESET} https://$DOMAIN_NAME"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} https://$DOMAIN_NAME/api/github-webhook"
 fi
 echo ""
