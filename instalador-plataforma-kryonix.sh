@@ -10,7 +10,7 @@ export LANGUAGE=C
 # �� INSTALADOR KRYONIX PLATFORM - DEPENDÊNCIAS SEMPRE ATUALIZADAS
 # ============================================================================
 # Autor: Vitor Fernandes
-# Descrição: Instalador 100% automático com atualizações contínuas
+# Descrição: Instalador 100% automático com atualizações cont��nuas
 # Funcionalidades: Auto-update + Dependencies + Fresh clone + Deploy completo
 # ============================================================================
 
@@ -365,7 +365,7 @@ advanced_dependency_check() {
     if [ -f "check-dependencies.js" ]; then
         log_info "📋 Executando verificador específico do KRYONIX..."
         if node check-dependencies.js 2>&1 | tee /tmp/deps-check.log; then
-            log_success "✅ Verificação espec��fica passou"
+            log_success "✅ Verificação específica passou"
         else
             log_error "�� Verificação específica falhou"
             log_info "📋 Tentando correção automática..."
@@ -1272,7 +1272,7 @@ if [ -f server.js ]; then
     log_success "✅ Constructor next() corrigido"
 fi
 
-# Verificar se webhook j�� está integrado no server.js
+# Verificar se webhook já está integrado no server.js
 if ! grep -q "/api/github-webhook" server.js; then
     log_info "🔗 Adicionando endpoint webhook completo ao server.js..."
 
@@ -1576,7 +1576,7 @@ if [ ${#missing_files[@]} -gt 0 ]; then
     exit 1
 fi
 
-# Verificação adicional espec��fica do instalador antigo
+# Verificação adicional específica do instalador antigo
 log_info "🔍 Verificação adicional de integridade dos arquivos..."
 
 # Verificar se server.js tem o endpoint webhook
@@ -1830,7 +1830,7 @@ const nextConfig = {
 module.exports = nextConfig
 ANTICORRUPTION_CONFIG_EOF
 
-            log_success "✅ Corre��ão de build corrompido aplicada"
+            log_success "✅ Correção de build corrompido aplicada"
             ;;
 
         "typescript_postgres_config")
@@ -2556,7 +2556,7 @@ deploy() {
     else
         log "⚠️ Serviços com problemas: ${failed_services[*]}"
 
-        # Gerar relatório de diagn���stico
+        # Gerar relatório de diagn��stico
         diagnostic_file="/tmp/kryonix-diagnostic-$(date +%Y%m%d_%H%M%S).log"
         cat > "$diagnostic_file" << DIAGNOSTIC_EOF
 KRYONIX DIAGNOSTIC REPORT - $(date)
@@ -2836,7 +2836,7 @@ if [[ "$monitor_replicas" == "1/1" ]]; then
     MONITOR_STATUS="�� ONLINE (1/1)"
 else
     log_warning "Serviço monitor com problemas: $monitor_replicas"
-    MONITOR_STATUS="�� PROBLEMA ($monitor_replicas)"
+    MONITOR_STATUS="❌ PROBLEMA ($monitor_replicas)"
 
     # Mostrar logs do monitor se houver problema
     log_info "📋 Logs do monitor:"
@@ -2910,7 +2910,7 @@ if command -v ncu >/dev/null 2>&1; then
     updates_available=$(ncu --jsonUpgraded 2>/dev/null | jq -r 'keys | length' 2>/dev/null || echo "0")
     
     if [ "$updates_available" -gt 0 ]; then
-        log_monitor "📦 $updates_available atualizaç��es de depend��ncias disponíveis"
+        log_monitor "📦 $updates_available atualizaç��es de dependências disponíveis"
         
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
@@ -3001,7 +3001,7 @@ echo -e "${RED}${BOLD}🚀 CORREÇÕES DOS 5 AGENTES APLICADAS (resolve 0/1 repl
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Serviços unificados em um container"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Placement constraints flexibilizados (preferences: spread)"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Health check otimizado (0.0.0.0:8080, 15s interval, 60s start)"
-echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CPU)"
+echo -e "    ${BLUE}���${RESET} ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CPU)"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Update/rollback config adicionados"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Comunicação entre serviços corrigida"
 echo -e "    ${BLUE}│${RESET} ✅ Nuclear cleanup - Remove TUDO antes de começar"
