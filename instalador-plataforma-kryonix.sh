@@ -87,8 +87,8 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚���███╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔�� ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═══════════════════════════════�������══════════════════������══���═══��═════╝"
+    echo    "╚═══════════════════════════════������══════════════════������══���═══��═════╝"
     echo -e "${RESET}\n"
 
 
@@ -1027,7 +1027,7 @@ if grep -q '"type": "module"' package.json; then
 fi
 
 # CORREÇÃO CRÍTICA: Corrigir postinstall para funcionar durante Docker build
-log_info "��� Aplicando correção crítica no package.json..."
+log_info "��� Aplicando correç��o crítica no package.json..."
 if grep -q '"postinstall": "npm run check-deps"' package.json; then
     log_info "Corrigindo postinstall para compatibilidade com Docker build"
     # Criar backup
@@ -2824,7 +2824,7 @@ WEBHOOK_STATUS="✅ INTEGRADO (no serviço web)"
 MONITOR_STATUS="✅ INTEGRADO (no serviço web)"
 
     # Mostrar logs do webhook se houver problema
-    log_info "����� Logs do webhook:"
+    log_info "���� Logs do webhook:"
     docker service logs "${STACK_NAME}_webhook" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
 
 # Verificar serviço monitor
@@ -2936,7 +2936,7 @@ chmod +x dependency-monitor.sh
 # Adicionar ao crontab para execução a cada hora
 (crontab -l 2>/dev/null || true; echo "0 * * * * cd $PROJECT_DIR && ./dependency-monitor.sh") | crontab -
 
-log_success "✅ Monitoramento cont��nuo configurado"
+log_success "✅ Monitoramento contínuo configurado"
 complete_step
 
 # ============================================================================
@@ -2955,7 +2955,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl
 final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
 final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 
-echo -e "    ${BLUE}│${RESET} ${BOLD}Versão Final:${RESET} ✅ Commit $final_commit"
+echo -e "    ${BLUE}��${RESET} ${BOLD}Versão Final:${RESET} ✅ Commit $final_commit"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commit_msg"
 
 # Verificação especial para PR #22 (como no instalador antigo)
