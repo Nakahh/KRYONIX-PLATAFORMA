@@ -390,7 +390,7 @@ export default function HomePage() {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <Image
-                  src="/logo kryonix.png"
+                  src="/logo-kryonix.png"
                   alt="KRYONIX Logo"
                   width={32}
                   height={32}
