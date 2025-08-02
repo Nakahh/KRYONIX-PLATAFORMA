@@ -7,7 +7,7 @@ export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
 
 # ============================================================================
-# �� INSTALADOR KRYONIX PLATFORM - DEPENDÊNCIAS SEMPRE ATUALIZADAS
+# ���� INSTALADOR KRYONIX PLATFORM - DEPENDÊNCIAS SEMPRE ATUALIZADAS
 # ============================================================================
 # Autor: Vitor Fernandes
 # Descrição: Instalador 100% automático com atualizações cont��nuas
@@ -751,7 +751,7 @@ if ! docker info | grep -q "Swarm: active"; then
     exit 1
 fi
 
-log_success "Docker Swarm detectado e ativo"
+# Verificação silenciosa - sem logs verbosos
 complete_step
 next_step
 
@@ -2444,7 +2444,7 @@ deploy() {
                     # Verificar conflitos de porta
                     if [[ "$service_name" == *"_web"* ]]; then
                         if netstat -tuln 2>/dev/null | grep -q ":8080 "; then
-                            log "❌️ Conflito de porta 8080 detectado, removendo binding"
+                            log "❌�� Conflito de porta 8080 detectado, removendo binding"
                             docker service update --publish-rm="8080:8080" "$service_name" >/dev/null 2>&1 || true
                         fi
                     elif [[ "$service_name" == *"_monitor"* ]]; then
@@ -2906,7 +2906,7 @@ if command -v ncu >/dev/null 2>&1; then
     updates_available=$(ncu --jsonUpgraded 2>/dev/null | jq -r 'keys | length' 2>/dev/null || echo "0")
     
     if [ "$updates_available" -gt 0 ]; then
-        log_monitor "📦 $updates_available atualizaç��es de dependências disponíveis"
+        log_monitor "📦 $updates_available atualizaç����es de dependências disponíveis"
         
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
@@ -3019,7 +3019,7 @@ echo -e "    ${BLUE}│${RESET} ❌❌ Atualização automática de dependência
 echo -e "    ${BLUE}���${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
-echo -e "    ${BLUE}│${RESET} ✅ Logs detalhados de todas as atualizações"
+echo -e "    ${BLUE}│${RESET} �� Logs detalhados de todas as atualizações"
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
 echo ""
