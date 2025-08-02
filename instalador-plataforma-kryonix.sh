@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗█��║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ���"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -1647,7 +1647,7 @@ if [ -f "lib/database/api.ts" ]; then
 
     log_success "✅ api.ts corrigido"
 else
-    log_warning "⚠❌� lib/database/api.ts não encontrado"
+    log_warning "⚠️ lib/database/api.ts não encontrado"
 fi
 
 # Correção 4: Otimizar next.config.js para builds mais r��pidos
@@ -2241,7 +2241,7 @@ let missing = [];
 deps.forEach(dep => {
     try {
         require(dep);
-        console.log('✅ ' + dep + ': OK');
+        console.log('�� ' + dep + ': OK');
     } catch(e) {
         console.error('❌ ' + dep + ': FALTANDO');
         missing.push(dep);
