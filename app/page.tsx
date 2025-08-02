@@ -241,12 +241,15 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto">
-            <div className="space-y-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-4">
               {progress.map((item, index) => (
-                <div
+                <Link
                   key={item.part}
-                  className={`card ${item.status === 'in_progress' ? 'ring-2 ring-primary-500' : ''} transition-all duration-300`}
+                  href={`/partes/${item.slug}`}
+                  className={`card hover:shadow-lg cursor-pointer transition-all duration-300 ${
+                    item.status === 'in_progress' ? 'ring-2 ring-primary-500' : ''
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
@@ -257,30 +260,33 @@ export default function HomePage() {
                       }`}>
                         {item.status === 'completed' ? <CheckCircle className="w-5 h-5" /> : item.part}
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{item.title}</h3>
-                        <p className="text-sm text-gray-600">{item.description}</p>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
+                        <p className="text-xs text-gray-600">{item.description}</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
                       {item.status === 'completed' && (
-                        <span className="badge-success">Concluída</span>
+                        <span className="px-2 py-1 text-xs bg-success-100 text-success-700 rounded-full font-medium">Concluída</span>
                       )}
                       {item.status === 'in_progress' && (
-                        <span className="badge-info">Em Andamento</span>
+                        <span className="px-2 py-1 text-xs bg-primary-100 text-primary-700 rounded-full font-medium">Em Andamento</span>
                       )}
                       {item.status === 'pending' && (
-                        <span className="badge-warning">Pendente</span>
+                        <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full font-medium">Pendente</span>
                       )}
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
 
             <div className="mt-8 text-center">
-              <p className="text-sm text-gray-500">
-                ... e mais 45 partes sendo desenvolvidas
+              <p className="text-lg font-semibold text-gray-700">
+                50 Partes Técnicas Completas
+              </p>
+              <p className="text-sm text-gray-500 mt-2">
+                Clique em qualquer parte para ver os detalhes técnicos
               </p>
             </div>
           </div>
