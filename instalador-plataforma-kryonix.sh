@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔��� ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚���███╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═══════════════════════════════������══════════════════������══���═══��═════╝"
+    echo    "╚═══════════════════════════════�������══════════════════������══���═══��═════╝"
     echo -e "${RESET}\n"
 
 
@@ -678,7 +678,7 @@ verify_fresh_clone() {
         latest_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null | head -c 8 || echo "unknown")
 
         if [ "$commit_hash" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
-            log_warning "⚠�� Commit mais recente disponível: $latest_commit"
+            log_warning "⚠️ Commit mais recente disponível: $latest_commit"
 
             # Tentar atualizar para o mais recente
             log_info "��� Tentando atualizar para o commit mais recente..."
@@ -1650,7 +1650,7 @@ else
     log_warning "⚠���� lib/database/api.ts não encontrado"
 fi
 
-# Correção 4: Otimizar next.config.js para builds mais r��pidos
+# Correção 4: Otimizar next.config.js para builds mais rápidos
 if [ -f "next.config.js" ]; then
     log_info "🔧 Otimizando next.config.js para build mais r����pido..."
 
@@ -1883,7 +1883,7 @@ ANTICORRUPTION_CONFIG_EOF
             # Otimizar next.config.js para pular validações TypeScript durante build
             if [ -f "next.config.js" ] && ! grep -q "ignoreDuringBuilds" next.config.js; then
                 sed -i 's/cleanDistDir: true,/cleanDistDir: true,\n  eslint: { ignoreDuringBuilds: true },\n  typescript: { ignoreBuildErrors: true },/g' next.config.js
-                log_success "✅ next.config.js otimizado para pular valida��ões"
+                log_success "✅ next.config.js otimizado para pular validações"
             fi
             log_success "✅ Todas as correções de TypeScript aplicadas"
             ;;
@@ -2448,7 +2448,7 @@ deploy() {
                     # Verificar conflitos de porta
                     if [[ "$service_name" == *"_web"* ]]; then
                         if netstat -tuln 2>/dev/null | grep -q ":8080 "; then
-                            log "���️ Conflito de porta 8080 detectado, removendo binding"
+                            log "⚠️ Conflito de porta 8080 detectado, removendo binding"
                             docker service update --publish-rm="8080:8080" "$service_name" >/dev/null 2>&1 || true
                         fi
                     elif [[ "$service_name" == *"_monitor"* ]]; then
@@ -2824,7 +2824,7 @@ WEBHOOK_STATUS="✅ INTEGRADO (no serviço web)"
 MONITOR_STATUS="✅ INTEGRADO (no serviço web)"
 
     # Mostrar logs do webhook se houver problema
-    log_info "���� Logs do webhook:"
+    log_info "����� Logs do webhook:"
     docker service logs "${STACK_NAME}_webhook" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
 
 # Verificar serviço monitor
@@ -2936,7 +2936,7 @@ chmod +x dependency-monitor.sh
 # Adicionar ao crontab para execução a cada hora
 (crontab -l 2>/dev/null || true; echo "0 * * * * cd $PROJECT_DIR && ./dependency-monitor.sh") | crontab -
 
-log_success "✅ Monitoramento contínuo configurado"
+log_success "✅ Monitoramento cont��nuo configurado"
 complete_step
 
 # ============================================================================
@@ -2946,7 +2946,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�������══════════════��═�����═══════════════════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�����══════════════��═�����═══════════════════════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
