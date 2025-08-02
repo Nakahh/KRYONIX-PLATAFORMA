@@ -86,11 +86,11 @@ show_banner() {
     echo    "╔══════════════════��══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║������█║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║�������█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ���═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -304,7 +304,7 @@ auto_update_dependencies() {
     done
     
     if [ $install_attempts -eq $max_attempts ]; then
-        log_warning "⚠️ Restaurando package.json original..."
+        log_warning "⚠�� Restaurando package.json original..."
         cp package.json.backup package.json
         npm install --no-audit --no-fund 2>/dev/null || true
         log_warning "✅ Package.json restaurado com dependências originais"
@@ -1049,7 +1049,7 @@ try {
 
     /* Adicionar script de fallback para build */
     if (!pkg.scripts['build-deps-check']) {
-        pkg.scripts['build-deps-check'] = 'node -e "console.log(\'✅ Build mode - verificação de dependências pulada\')"';
+        pkg.scripts['build-deps-check'] = 'node -e "console.log(\'✅ Build mode - verificação de depend��ncias pulada\')"';
         console.log('✅ Script build-deps-check adicionado');
     }
 
@@ -1167,7 +1167,7 @@ app.post('/webhook', (req, res) => {
   console.log('🔗 Webhook KRYONIX recebido no listener:', new Date().toISOString());
 
   if (req.body.ref === 'refs/heads/main' || req.body.ref === 'refs/heads/master') {
-    console.log('����� Iniciando deploy automático KRYONIX...');
+    console.log('��� Iniciando deploy automático KRYONIX...');
     exec('bash /app/webhook-deploy.sh webhook', (error, stdout, stderr) => {
       if (error) {
         console.error('❌ Erro no deploy KRYONIX:', error);
@@ -1702,7 +1702,7 @@ else
     log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
 fi
 
-# CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
+# CORREÇÃO PROATIVA: Limpar builds corrompidos (vers��o simplificada)
 log_info "🔍 Verificação proativa de builds corrompidos..."
 
 if [ -d ".next" ]; then
@@ -2081,10 +2081,10 @@ services:
         - "traefik.docker.network=Kryonix-NET"
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
         - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.path=/health"
-        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=15s"
+        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=30s"
 
         # WEBHOOK - PRIORIDADE MÁXIMA (10000)
-        - "traefik.http.routers.kryonix-webhook.rule=Host(`kryonix.com.br`) && Path(`/api/github-webhook`)"
+        - "traefik.http.routers.kryonix-webhook.rule=Host(\`kryonix.com.br\`) && Path(\`/api/github-webhook\`)"
         - "traefik.http.routers.kryonix-webhook.entrypoints=web,websecure"
         - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
         - "traefik.http.routers.kryonix-webhook.priority=10000"
@@ -2092,7 +2092,7 @@ services:
         - "traefik.http.routers.kryonix-webhook.tls.certresolver=letsencrypt"
 
         # API Routes - Alta Prioridade (9000)
-        - "traefik.http.routers.kryonix-api.rule=Host(`kryonix.com.br`) && PathPrefix(`/api/`)"
+        - "traefik.http.routers.kryonix-api.rule=Host(\`kryonix.com.br\`) && PathPrefix(\`/api/\`)"
         - "traefik.http.routers.kryonix-api.entrypoints=web,websecure"
         - "traefik.http.routers.kryonix-api.service=kryonix-web"
         - "traefik.http.routers.kryonix-api.priority=9000"
@@ -2100,7 +2100,7 @@ services:
         - "traefik.http.routers.kryonix-api.tls.certresolver=letsencrypt"
 
         # HTTPS Principal - Prioridade Normal (100)
-        - "traefik.http.routers.kryonix-main.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
+        - "traefik.http.routers.kryonix-main.rule=Host(\`kryonix.com.br\`) || Host(\`www.kryonix.com.br\`)"
         - "traefik.http.routers.kryonix-main.entrypoints=websecure"
         - "traefik.http.routers.kryonix-main.service=kryonix-web"
         - "traefik.http.routers.kryonix-main.priority=100"
@@ -2108,7 +2108,7 @@ services:
         - "traefik.http.routers.kryonix-main.tls.certresolver=letsencrypt"
 
         # HTTP - Redirecionamento (50)
-        - "traefik.http.routers.kryonix-http.rule=Host(`kryonix.com.br`) || Host(`www.kryonix.com.br`)"
+        - "traefik.http.routers.kryonix-http.rule=Host(\`kryonix.com.br\`) || Host(\`www.kryonix.com.br\`)"
         - "traefik.http.routers.kryonix-http.entrypoints=web"
         - "traefik.http.routers.kryonix-http.service=kryonix-web"
         - "traefik.http.routers.kryonix-http.priority=50"
@@ -2118,27 +2118,19 @@ services:
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
-    networks:
-      - Kryonix-NET
     ports:
       - "8080:8080"
-    environment:
-      - NODE_ENV=production
-      - PORT=8080
-      - HOSTNAME=0.0.0.0
-      - NEXT_TELEMETRY_DISABLED=1
-      - AUTO_UPDATE_DEPS=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://0.0.0.0:8080/health"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 180s
 
 networks:
   Kryonix-NET:
     external: true
-WORKING_STACK_EOF
+AGENT_CORRECTED_STACK_EOF
 
 # Validação simples
 if [ ! -f docker-stack.yml ]; then
@@ -2596,7 +2588,7 @@ DIAGNOSTIC_EOF
             log "�� Serviço KRYONIX na porta $port funcionando"
             services_ok=$((services_ok + 1))
         else
-            log "⚠️ Serviço KRYONIX na porta $port com problemas"
+            log "��️ Serviço KRYONIX na porta $port com problemas"
         fi
     done
 
@@ -2946,7 +2938,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════════════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════��═══════════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
