@@ -64,7 +64,7 @@ STEP_DESCRIPTIONS=(
     "Criando arquivos de serviços 📄"
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
-    "Verificando Traefik ❌��"
+    "Verificando Traefik 🔍"
     "Criando imagem Docker 🏗️"
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔❌ ███❌██╔╝ ╚████╔╝ ██║   ██║██╔██�� █❌║██║ ╚███╔❌      ║"
-    echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
+    echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗���█║██║ ██╔██╗      ║"
     echo    "║     ██��  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -796,7 +796,7 @@ log_info "❌ Objetivo: Sempre pegar versão mais recente com dependências atua
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
     error_step
-    log_error "Falha no clone fresh do repositório GitHub"
+    log_error "Falha no clone fresh do reposit��rio GitHub"
     exit 1
 fi
 
@@ -1446,7 +1446,7 @@ if docker service ls | grep -q "traefik"; then
     fi
     log_info "🔐 Resolver SSL detectado: $CERT_RESOLVER"
 else
-    log_warning "⚠❌ Traefik não encontrado - KRYONIX funcionará localmente"
+    log_warning "⚠❌ Traefik n��o encontrado - KRYONIX funcionará localmente"
 fi
 
 log_success "✅ Verificação do Traefik concluída"
@@ -1954,7 +1954,7 @@ EOF
 
         *)
             log_info "🔧 Aplicando correção genérica..."
-            # Aplicar todas as correç��es possíveis
+            # Aplicar todas as correç����es possíveis
             echo 'console.log("Emergency check passed");' > check-dependencies.js
             cp package.json package.json.emergency-backup
             sed -i 's/"postinstall":.*/"postinstall": "echo \\"Emergency build mode\\"",/' package.json
@@ -2763,7 +2763,7 @@ if [ "$deploy_success" = true ]; then
         fi
     else
         log_error "❌ Stack NÃO foi criada no Docker Swarm!"
-        log_error "🔍 Stacks existentes: $(docker stack ls --format '{{.Name}}' | tr '\n' ' ')"
+        log_error "��� Stacks existentes: $(docker stack ls --format '{{.Name}}' | tr '\n' ' ')"
         exit 1
     fi
 else
