@@ -874,7 +874,7 @@ if ! advanced_dependency_check; then
     log_warning "⚠️ Problemas detectados nas dependências"
     
     # Tentar instalação básica como fallback
-    log_info "🔄 Tentando instalação básica como fallback..."
+    log_info "���� Tentando instalação básica como fallback..."
     npm install --no-audit --no-fund 2>/dev/null || true
 fi
 
@@ -2798,7 +2798,7 @@ else
 fi
 
 # Verificar servi��o webhook (RESTAURADO)
-webhook_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_webhook" | awk '{print $2}' || echo "0/1")
+# CORREÇÃO DOS AGENTES: Serviços unificados no container principal
 log_info "Status Docker Swarm para ${STACK_NAME}_webhook: $webhook_replicas"
 
 if [[ "$webhook_replicas" == "1/1" ]]; then
