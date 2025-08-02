@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██��██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -260,7 +260,7 @@ auto_update_dependencies() {
     log_info "📦 Backup do package.json criado"
     
     # Atualizar para versões mais recentes (mantendo compatibilidade)
-    log_info "❌❌ Atualizando dependências para versões mais recentes..."
+    log_info "🔄 Atualizando dependências para versões mais recentes..."
     
     # Usar npm-check-updates se disponível, senão instalar
     if ! command -v ncu >/dev/null 2>&1; then
@@ -380,7 +380,7 @@ advanced_dependency_check() {
     fi
     
     # Verificar se serviços específicos funcionam
-    log_info "�� Testando inicialização de serviços..."
+    log_info "�� Testando inicializaç��o de serviços..."
     
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
@@ -2148,7 +2148,7 @@ fi
 
 log_success "✅ Docker stack CORRIGIDO pelos 5 agentes para resolver 0/1 replicas"
 
-log_success "✅ Docker stack configurado com CORREÇÕES DOS AGENTES aplicadas"
+log_success "�� Docker stack configurado com CORREÇÕES DOS AGENTES aplicadas"
 log_info "🔧 Correções dos 5 agentes aplicadas:"
 log_info "   ✅ CRÍTICO: Serviços unificados em um container (web, webhook, monitor)"
 log_info "   ✅ CRÍTICO: Placement constraints flexibilizados (preferences: spread)"
