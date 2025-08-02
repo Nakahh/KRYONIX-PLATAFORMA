@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚█���╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -380,7 +380,7 @@ advanced_dependency_check() {
     fi
     
     # Verificar se serviços específicos funcionam
-    log_info "�� Testando inicialização de serviços..."
+    log_info "���� Testando inicialização de serviços..."
     
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
@@ -625,7 +625,7 @@ verify_fresh_clone() {
     local target_dir="$1"
     local expected_branch="${2:-main}"
 
-    log_info "���� Verificando integridade do clone fresh..."
+    log_info "🔍 Verificando integridade do clone fresh..."
 
     cd "$target_dir"
 
@@ -888,7 +888,7 @@ next_step
 processing_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
-# CORREÇÃO CR��TICA: Criar arquivos de dependências ANTES de qualquer build
+# CORREÇÃO CRÍTICA: Criar arquivos de dependências ANTES de qualquer build
 log_info "🔧 Criando arquivos de dependências críticas para Docker build..."
 
 # 1. check-dependencies.js (OBRIGATÓRIO para package.json postinstall)
@@ -954,7 +954,7 @@ const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const deps = Object.keys(pkg.dependencies || {});
 
-console.log('📦 Validando ' + deps.length + ' dependências...');
+console.log('��� Validando ' + deps.length + ' dependências...');
 
 let installed = 0;
 let missing = [];
@@ -1306,7 +1306,7 @@ app.post('/api/github-webhook', (req, res) => {
     const signature = req.get('X-Hub-Signature-256');
     const event = req.get('X-GitHub-Event');
 
-    console.log('��� Webhook KRYONIX recebido:', {
+    console.log('🔗 Webhook KRYONIX recebido:', {
         event: event || 'NONE',
         ref: payload.ref || 'N/A',
         repository: payload.repository?.name || 'N/A',
@@ -1566,7 +1566,7 @@ for file in "${required_files[@]}"; do
         missing_files+=("$file")
         log_error "❌ $file faltando"
     else
-        log_success "❌ $file encontrado"
+        log_success "✅ $file encontrado"
     fi
 done
 
@@ -1769,7 +1769,7 @@ else
             rm -rf .next/cache
 
             # Limpar cache npm
-            log_info "🗑️ Limpando cache npm..."
+            log_info "🗑��� Limpando cache npm..."
             npm cache clean --force
 
             # Reinstalar dependências críticas do Next.js
