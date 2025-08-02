@@ -165,8 +165,8 @@ export default function HomePage() {
                 <p className="text-xs text-gray-600">Plataforma SaaS 100% Autônoma por IA</p>
               </div>
             </div>
-            <div className="hidden sm:flex items-center space-x-2">
-              <div className="inline-flex h-2 w-2 rounded-full bg-green-400"></div>
+            <div className="flex items-center space-x-2">
+              <div className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
               <span className="text-sm text-gray-600">Sistema Online</span>
             </div>
           </div>
@@ -180,7 +180,7 @@ export default function HomePage() {
             <div className="mb-8">
               <div className="inline-flex items-center px-4 py-2 rounded-full bg-success-100 text-success-700 text-sm font-medium mb-6">
                 <CheckCircle className="w-4 h-4 mr-2" />
-                PARTE {currentPart} DE 50 CONCLUÍDA - PostgreSQL Mobile-First
+                PARTE {currentPart} DE 53 CONCLUÍDA - PostgreSQL Mobile-First
               </div>
               
               <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-balance">
@@ -237,7 +237,7 @@ export default function HomePage() {
               Progresso de Desenvolvimento
             </h2>
             <p className="text-lg text-gray-600">
-              Acompanhe o desenvolvimento em tempo real das 50 partes do projeto
+              Acompanhe o desenvolvimento em tempo real das 53 partes do projeto
             </p>
           </div>
 
@@ -283,7 +283,7 @@ export default function HomePage() {
 
             <div className="mt-8 text-center">
               <p className="text-lg font-semibold text-gray-700">
-                50 Partes Técnicas Completas
+                53 Partes Técnicas Completas
               </p>
               <p className="text-sm text-gray-500 mt-2">
                 Clique em qualquer parte para ver os detalhes técnicos
