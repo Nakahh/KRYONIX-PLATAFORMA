@@ -7,7 +7,7 @@ export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
 
 # ============================================================================
-# ���� INSTALADOR KRYONIX PLATFORM - DEPENDÊNCIAS SEMPRE ATUALIZADAS
+# 🚀 INSTALADOR KRYONIX PLATFORM - DEPENDÊNCIAS SEMPRE ATUALIZADAS
 # ============================================================================
 # Autor: Vitor Fernandes
 # Descrição: Instalador 100% automático com atualizações contínuas
@@ -86,7 +86,7 @@ show_banner() {
     echo    "╔══════════════════��══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║������█║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║����█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -1257,24 +1257,12 @@ MONITOR_EOF
     log_success "✅ kryonix-monitor.js criado"
 fi
 
-# CORREÇÃO CRÍTICA: Corrigir constructor next() no server.js ANTES de adicionar webhook
-log_info "🔧 Aplicando correção crítica no server.js (constructor next())..."
-if [ -f server.js ]; then
-    # Backup do arquivo
-    cp server.js server.js.backup
-
-    # Corrigir constructor next() removendo parâmetros hostname e port inválidos
-    sed -i '/const nextApp = next({/,/});/{
-        /hostname,/d
-        /port,/d
-    }' server.js
-
-    log_success "✅ Constructor next() corrigido"
-fi
-
 # Verificar se webhook já está integrado no server.js
 if ! grep -q "/api/github-webhook" server.js; then
     log_info "🔗 Adicionando endpoint webhook completo ao server.js..."
+
+    # Backup
+    cp server.js server.js.backup
 
     # Adicionar endpoint webhook completo
     cat >> server.js << WEBHOOK_EOF
@@ -1524,7 +1512,7 @@ EXPOSE 8080
 
 # CORREÇÃO CRÍTICA: Health check otimizado para Docker Swarm (start_period adequado)
 HEALTHCHECK --interval=60s --timeout=30s --start-period=60s --retries=3 \
-    CMD curl -f http://0.0.0.0:8080/health || exit 1
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Comando de start com dumb-init para signal handling
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
@@ -1812,7 +1800,7 @@ const nextConfig = {
   },
   distDir: '.next',
   cleanDistDir: true,
-  /* Configurações anti-corrup��ão */
+  /* Configurações anti-corrupção */
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -2935,7 +2923,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═���═══════════════════���══�����═══════��════���═══════════════════��════════${RESET}"
+echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════════════════════���════════���������══${RESET}"
 echo ""
