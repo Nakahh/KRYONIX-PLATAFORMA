@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██���      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -102,7 +102,7 @@ show_banner() {
 
 
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Problemas 0/1 replicas resolvidos pelos 5 agentes${RESET}"
-echo -e "${CYAN}🛠️ CORREÇ��ES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
+echo -e "${CYAN}🛠️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
 echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container único${RESET}"
 echo -e "${PURPLE}⚙️ OTIMIZADO: Health check 0.0.0.0:8080 + 1G RAM + placement flexível${RESET}\n"
 }
@@ -954,7 +954,7 @@ const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const deps = Object.keys(pkg.dependencies || {});
 
-console.log('📦 Validando ' + deps.length + ' dependências...');
+console.log('📦 Validando ' + deps.length + ' depend��ncias...');
 
 let installed = 0;
 let missing = [];
@@ -2748,7 +2748,7 @@ if [ "$deploy_success" = true ]; then
         sleep 10
 
         services_count=$(docker service ls --format "{{.Name}}" | grep "^${STACK_NAME}_" | wc -l)
-        log_info "���� Serviços encontrados: $services_count"
+        log_info "📊 Serviços encontrados: $services_count"
 
         if [ $services_count -gt 0 ]; then
             log_success "✅ Serviços criados com sucesso!"
@@ -2794,7 +2794,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
         log_warning "⚠️ Docker rodando mas HTTP não responde"
-        WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
+        WEB_STATUS="⚠��� RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
         log_info "📋 Logs do servi��o web (últimas 10 linhas):"
