@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ��"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -833,11 +833,11 @@ fi
 final_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8)
 final_commit_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
 log_success "✅ Clone fresh concluído - Commit: $final_commit"
-log_info "�� Última alteração: $final_commit_msg"
+log_info "📝 Última alteração: $final_commit_msg"
 
 # Verificação final para PR #22 (como no instalador antigo)
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    log_warning "��️ ATENÇÃO: Ainda detectando referência ao PR #22"
+    log_warning "⚠️ ATENÇÃO: Ainda detectando referência ao PR #22"
     log_info "Isso pode significar que o PR #22 É a versão mais recente no GitHub"
     log_info "Ou pode haver um problema de sincronização"
 else
@@ -1598,7 +1598,7 @@ done
 # CORREÇÃO: Aplicar correções de TypeScript antes do build
 log_info "�� Aplicando corre��ões de TypeScript para resolver erros de build..."
 
-# Correção 1: Arquivo postgres-config.ts - função executeTransaction
+# Correção 1: Arquivo postgres-config.ts - fun��ão executeTransaction
 if [ -f "lib/database/postgres-config.ts" ]; then
     log_info "🔧 Corrigindo tipos genéricos em postgres-config.ts..."
 
