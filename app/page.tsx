@@ -78,7 +78,7 @@ export default function HomePage() {
 
   const progress = [
     // FASE 1: FUNDAÇÃO (PARTES 1-10)
-    { part: 1, title: 'Autenticaç��o Keycloak', status: 'completed', description: 'Sistema multi-tenant com biometria', slug: 'autenticacao-keycloak' },
+    { part: 1, title: 'Autenticação Keycloak', status: 'completed', description: 'Sistema multi-tenant com biometria', slug: 'autenticacao-keycloak' },
     { part: 2, title: 'Base de Dados PostgreSQL', status: 'completed', description: 'Database isolado por cliente', slug: 'database-postgresql' },
     { part: 3, title: 'Storage MinIO', status: 'in_progress', description: 'Armazenamento de arquivos', slug: 'storage-minio' },
     { part: 4, title: 'Cache Redis', status: 'pending', description: 'Cache distribuído', slug: 'cache-redis' },
@@ -157,7 +157,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Image
-                src="/logo kryonix.png"
+                src="/logo-kryonix.png"
                 alt="KRYONIX Logo"
                 width={40}
                 height={40}
