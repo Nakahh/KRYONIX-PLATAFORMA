@@ -276,7 +276,7 @@ auto_update_dependencies() {
     fi
     
     # Limpar cache npm
-    log_info "❌ Limpando cache npm..."
+    log_info "🧹 Limpando cache npm..."
     npm cache clean --force >/dev/null 2>&1 || true
     
     # Reinstalar dependências com versões atualizadas
@@ -380,7 +380,7 @@ advanced_dependency_check() {
     fi
     
     # Verificar se serviços específicos funcionam
-    log_info "�� Testando inicializaç��o de serviços..."
+    log_info "�� Testando inicialização de serviços..."
     
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
@@ -625,7 +625,7 @@ verify_fresh_clone() {
     local target_dir="$1"
     local expected_branch="${2:-main}"
 
-    log_info "🔍 Verificando integridade do clone fresh..."
+    log_info "���� Verificando integridade do clone fresh..."
 
     cd "$target_dir"
 
@@ -888,7 +888,7 @@ next_step
 processing_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
-# CORREÇÃO CRÍTICA: Criar arquivos de dependências ANTES de qualquer build
+# CORREÇÃO CR��TICA: Criar arquivos de dependências ANTES de qualquer build
 log_info "🔧 Criando arquivos de dependências críticas para Docker build..."
 
 # 1. check-dependencies.js (OBRIGATÓRIO para package.json postinstall)
@@ -1306,7 +1306,7 @@ app.post('/api/github-webhook', (req, res) => {
     const signature = req.get('X-Hub-Signature-256');
     const event = req.get('X-GitHub-Event');
 
-    console.log('🔗 Webhook KRYONIX recebido:', {
+    console.log('��� Webhook KRYONIX recebido:', {
         event: event || 'NONE',
         ref: payload.ref || 'N/A',
         repository: payload.repository?.name || 'N/A',
@@ -2148,7 +2148,7 @@ fi
 
 log_success "✅ Docker stack CORRIGIDO pelos 5 agentes para resolver 0/1 replicas"
 
-log_success "�� Docker stack configurado com CORREÇÕES DOS AGENTES aplicadas"
+log_success "✅ Docker stack configurado com CORREÇÕES DOS AGENTES aplicadas"
 log_info "🔧 Correções dos 5 agentes aplicadas:"
 log_info "   ✅ CRÍTICO: Serviços unificados em um container (web, webhook, monitor)"
 log_info "   ✅ CRÍTICO: Placement constraints flexibilizados (preferences: spread)"
