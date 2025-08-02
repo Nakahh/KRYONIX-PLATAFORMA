@@ -88,9 +88,9 @@ show_banner() {
     echo "║     ██╗  ██��██████╗ ██╗   ██╗ ██���███╗ ███╗   ██╗█��╗██╗  ██╗     ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███���╝      ║"
-    echo "║     █��╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo "║     █��╔═██��� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo "║     ╚═╝  ╚═╝╚���╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
+    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═��╚═╝  ╚═╝     ║"
     echo "║                                                                 ��"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -99,7 +99,7 @@ show_banner() {
     echo "║                                                                 ║"
     echo "╚══���════════════���═��══���═════════════════════════════��══════════════╝"
     echo -e "${RESET}\n"
-    echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
+    echo -e "${GREEN}�� VERSÃO CORRIGIDA: Inclui correções para builds corrompidos e chunks webpack${RESET}"
     echo -e "${CYAN}🛠️ Auto-detecção e correção de erros de módulos './734.js' e similares${RESET}"
     echo -e "${YELLOW}🚨 NOVA: Auto-reparo de falhas 0/1 replicas em Docker Swarm${RESET}"
     echo -e "${PURPLE}⚙️ TRAEFIK: Placement constraints e configurações otimizadas${RESET}\n"
@@ -795,7 +795,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🔄 Iniciando clone FRESH para garantir versão MAIS RECENTE..."
+log_info "���� Iniciando clone FRESH para garantir versão MAIS RECENTE..."
 log_info "🎯 Objetivo: Sempre pegar versão mais recente com dependências atualizadas!"
 
 # Fazer clone fresh
@@ -2024,7 +2024,7 @@ services:
         # Configuração do serviço web com health check
         - "traefik.http.services.kryonix-web.loadbalancer.server.port=8080"
         - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.path=/health"
-        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=30s"
+        - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=15s"
 
         # WEBHOOK - PRIORIDADE MÁXIMA (10000)
         - "traefik.http.routers.kryonix-webhook.rule=Host(\`$DOMAIN_NAME\`) && Path(\`/api/github-webhook\`)"
