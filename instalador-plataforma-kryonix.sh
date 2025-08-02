@@ -89,7 +89,7 @@ show_banner() {
     echo    "║     ██║ █���╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██��     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚█��██║██║██╔╝ ██��     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -466,7 +466,7 @@ test_service_health() {
 
 # FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
-    log_info "🧹 NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
+    # Limpeza automática para nova instalação
     
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -669,7 +669,7 @@ verify_fresh_clone() {
         return 2  # Warning, não erro
     fi
 
-    # Verificação específica para PR #22 (preocupação do usuário)
+    # Verificação específica para PR #22 (preocupação do usu��rio)
     if echo "$commit_msg" | grep -qi "#22"; then
         log_warning "⚠️ Commit atual referencia PR #22 - verificando por versões mais recentes..."
 
@@ -2589,7 +2589,7 @@ DIAGNOSTIC_EOF
 
     for port in 8080 8082 8084; do
         if curl -f -s "http://localhost:$port/health" > /dev/null; then
-            log "�� Serviço KRYONIX na porta $port funcionando"
+            log "��� Serviço KRYONIX na porta $port funcionando"
             services_ok=$((services_ok + 1))
         else
             log "⚠️ Serviço KRYONIX na porta $port com problemas"
@@ -2942,7 +2942,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═❌══════════════════════����═══════��════❌═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════❌❌�══════════════��═❌��═══════════════════════════❌════════❌❌❌══${RESET}"
+echo -e "${GREEN}${BOLD}��══════���❌❌�══════════════��═❌��═══════════════════════════❌════════❌❌❌══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX INSTALLER v2.0${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
