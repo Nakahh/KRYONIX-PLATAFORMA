@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █���███╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██���██║██║ ██��██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██���██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -344,7 +344,7 @@ try {
         fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
         console.log('✅ Dependências de build corrigidas proativamente');
     } else {
-        console.log('✅ Dependências de build já est��o corretas');
+        console.log('✅ Dependências de build já estão corretas');
     }
 } catch (error) {
     console.log('⚠️ Erro na correção proativa, continuando...');
@@ -380,7 +380,7 @@ advanced_dependency_check() {
     fi
     
     # Verificar se serviços específicos funcionam
-    log_info "�� Testando inicializa��ão de serviços..."
+    log_info "�� Testando inicialização de serviços..."
     
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
@@ -1272,7 +1272,7 @@ if [ -f server.js ]; then
     log_success "✅ Constructor next() corrigido"
 fi
 
-# Verificar se webhook já está integrado no server.js
+# Verificar se webhook j�� está integrado no server.js
 if ! grep -q "/api/github-webhook" server.js; then
     log_info "🔗 Adicionando endpoint webhook completo ao server.js..."
 
@@ -1830,7 +1830,7 @@ const nextConfig = {
 module.exports = nextConfig
 ANTICORRUPTION_CONFIG_EOF
 
-            log_success "✅ Correção de build corrompido aplicada"
+            log_success "✅ Corre��ão de build corrompido aplicada"
             ;;
 
         "typescript_postgres_config")
@@ -2556,7 +2556,7 @@ deploy() {
     else
         log "⚠️ Serviços com problemas: ${failed_services[*]}"
 
-        # Gerar relatório de diagn��stico
+        # Gerar relatório de diagn���stico
         diagnostic_file="/tmp/kryonix-diagnostic-$(date +%Y%m%d_%H%M%S).log"
         cat > "$diagnostic_file" << DIAGNOSTIC_EOF
 KRYONIX DIAGNOSTIC REPORT - $(date)
@@ -2836,7 +2836,7 @@ if [[ "$monitor_replicas" == "1/1" ]]; then
     MONITOR_STATUS="�� ONLINE (1/1)"
 else
     log_warning "Serviço monitor com problemas: $monitor_replicas"
-    MONITOR_STATUS="❌ PROBLEMA ($monitor_replicas)"
+    MONITOR_STATUS="�� PROBLEMA ($monitor_replicas)"
 
     # Mostrar logs do monitor se houver problema
     log_info "📋 Logs do monitor:"
@@ -2910,7 +2910,7 @@ if command -v ncu >/dev/null 2>&1; then
     updates_available=$(ncu --jsonUpgraded 2>/dev/null | jq -r 'keys | length' 2>/dev/null || echo "0")
     
     if [ "$updates_available" -gt 0 ]; then
-        log_monitor "📦 $updates_available atualizaç��es de dependências disponíveis"
+        log_monitor "📦 $updates_available atualizaç��es de depend��ncias disponíveis"
         
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
@@ -2991,7 +2991,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════��═══════════════════════❌❌══���═════════${RESET}"
+echo -e "${CYAN}══════��═══════════════════════❌❌════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
