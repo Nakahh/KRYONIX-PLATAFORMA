@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █���███╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██���██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██���██║██║ ██��██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -270,7 +270,7 @@ auto_update_dependencies() {
     
     # Atualizar dependências com verificação de compatibilidade
     if command -v ncu >/dev/null 2>&1; then
-        log_info "🔄 Verificando atualiza��ões disponíveis..."
+        log_info "🔄 Verificando atualizações disponíveis..."
         ncu --upgrade --target minor >/dev/null 2>&1 || true
         log_success "✅ Dependências atualizadas para versões menores compatíveis"
     fi
@@ -380,7 +380,7 @@ advanced_dependency_check() {
     fi
     
     # Verificar se serviços específicos funcionam
-    log_info "�� Testando inicialização de serviços..."
+    log_info "�� Testando inicializa��ão de serviços..."
     
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
@@ -2991,7 +2991,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════��═══════════════════════❌❌════════════${RESET}"
+echo -e "${CYAN}══════��═══════════════════════❌❌══���═════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
