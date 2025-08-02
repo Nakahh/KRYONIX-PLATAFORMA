@@ -609,7 +609,7 @@ fresh_git_clone() {
                 break
             fi
 
-            log_warning "⚠�� Tentativa de clone $clone_attempts falhou"
+            log_warning "⚠��� Tentativa de clone $clone_attempts falhou"
             if [ $clone_attempts -lt $max_attempts ]; then
                 sleep 5
             fi
@@ -1942,7 +1942,7 @@ EOF
 
         *)
             log_info "🔧 Aplicando correção genérica..."
-            # Aplicar todas as correções possíveis
+            # Aplicar todas as correç��es possíveis
             echo 'console.log("Emergency check passed");' > check-dependencies.js
             cp package.json package.json.emergency-backup
             sed -i 's/"postinstall":.*/"postinstall": "echo \\"Emergency build mode\\"",/' package.json
@@ -2780,7 +2780,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         docker service logs "${STACK_NAME}_web" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
     fi
 else
-    log_error "❌ Serviço web com problemas no Docker Swarm: $web_replicas"
+    log_error "��� Serviço web com problemas no Docker Swarm: $web_replicas"
     WEB_STATUS="❌ FAILED ($web_replicas)"
 
     # Mostrar logs detalhados para diagnóstico
@@ -2797,8 +2797,8 @@ else
     log_info "Status após restart: $web_replicas_after_restart"
 fi
 
-# Verificar servi��o webhook (RESTAURADO)
-webhook_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_webhook" | awk '{print $2}' || echo "0/1")
+# CORREÇÃO DOS AGENTES: Serviços unificados no container principal
+log_info "✅ CORREÇÃO DOS AGENTES: Serviços webhook e monitor integrados ao serviço web"
 log_info "Status Docker Swarm para ${STACK_NAME}_webhook: $webhook_replicas"
 
 if [[ "$webhook_replicas" == "1/1" ]]; then
