@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██���      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -344,7 +344,7 @@ try {
         fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
         console.log('✅ Dependências de build corrigidas proativamente');
     } else {
-        console.log('✅ Dependências de build já estão corretas');
+        console.log('�� Dependências de build já estão corretas');
     }
 } catch (error) {
     console.log('⚠️ Erro na correção proativa, continuando...');
@@ -386,7 +386,7 @@ advanced_dependency_check() {
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
         log_success "✅ server.js inicializa corretamente"
     else
-        log_warning "⚠️ server.js pode ter problemas"
+        log_warning "⚠�� server.js pode ter problemas"
     fi
     
     # Verificar estrutura de arquivos necess��rios
@@ -954,7 +954,7 @@ const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const deps = Object.keys(pkg.dependencies || {});
 
-console.log('📦 Validando ' + deps.length + ' depend��ncias...');
+console.log('📦 Validando ' + deps.length + ' dependências...');
 
 let installed = 0;
 let missing = [];
@@ -1027,7 +1027,7 @@ if grep -q '"type": "module"' package.json; then
 fi
 
 # CORREÇÃO CRÍTICA: Corrigir postinstall para funcionar durante Docker build
-log_info "❌ Aplicando correção crítica no package.json..."
+log_info "🔧 Aplicando correção crítica no package.json..."
 if grep -q '"postinstall": "npm run check-deps"' package.json; then
     log_info "Corrigindo postinstall para compatibilidade com Docker build"
     # Criar backup
@@ -1036,7 +1036,7 @@ if grep -q '"postinstall": "npm run check-deps"' package.json; then
     # Aplicar correç��o usando Node.js para evitar problemas com aspas
     cat > /tmp/postinstall-fix.js << 'EOF'
 const fs = require('fs');
-console.log('���� Aplicando correção crítica no package.json...');
+console.log('����� Aplicando correção crítica no package.json...');
 
 try {
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
@@ -2694,7 +2694,7 @@ log_info "   Serviços: $(grep -c "image: kryonix-plataforma" docker-stack.yml) 
 
 # CORREÇÃO: Bypass total do dry-run que está travando
 log_warning "⚡ Bypassing dry-run (problema conhecido de travamento)"
-log_info "🚀 Validação simples e deploy direto..."
+log_info "🚀 Valida��ão simples e deploy direto..."
 
 # Validação básica apenas
 if [ ! -f "docker-stack.yml" ]; then
@@ -2794,7 +2794,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
         log_warning "⚠️ Docker rodando mas HTTP não responde"
-        WEB_STATUS="⚠��� RUNNING (1/1) mas HTTP falha"
+        WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
         log_info "📋 Logs do servi��o web (últimas 10 linhas):"
@@ -2975,7 +2975,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ❌ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
-echo -e "${CYAN}${BOLD}🧪 TESTES WEBHOOK:${RESET}"
+echo -e "${CYAN}${BOLD}�� TESTES WEBHOOK:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Local:${RESET} $LOCAL_WEBHOOK_STATUS"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} $EXTERNAL_WEBHOOK_STATUS"
 echo ""
