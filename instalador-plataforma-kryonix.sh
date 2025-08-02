@@ -69,7 +69,7 @@ STEP_DESCRIPTIONS=(
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
-    "Configurando logs e backup ❌��️"
+    "Configurando logs e backup 📄️"
     "Deploy final integrado ��"
     "Testando webhook e relatório final ❌��"
     "Configurando monitoramento contínuo 📈"
@@ -88,8 +88,8 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔❌ ███❌██╔╝ ╚████╔╝ ██║   ██║██╔██�� █❌║██║ ╚███╔❌      ║"
-    echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗���█║██║ ██╔██╗      ║"
-    echo    "║     ██��  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
+    echo    "║     ██���  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -344,7 +344,7 @@ try {
         fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
         console.log('✅ Dependências de build corrigidas proativamente');
     } else {
-        console.log('✅ Dependências de build já est��o corretas');
+        console.log('✅ Dependências de build já est����o corretas');
     }
 } catch (error) {
     console.log('⚠️ Erro na correção proativa, continuando...');
@@ -796,7 +796,7 @@ log_info "❌ Objetivo: Sempre pegar versão mais recente com dependências atua
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
     error_step
-    log_error "Falha no clone fresh do reposit��rio GitHub"
+    log_error "Falha no clone fresh do repositório GitHub"
     exit 1
 fi
 
@@ -1306,7 +1306,7 @@ app.post('/api/github-webhook', (req, res) => {
     const signature = req.get('X-Hub-Signature-256');
     const event = req.get('X-GitHub-Event');
 
-    console.log('🔗 Webhook KRYONIX recebido:', {
+    console.log('�� Webhook KRYONIX recebido:', {
         event: event || 'NONE',
         ref: payload.ref || 'N/A',
         repository: payload.repository?.name || 'N/A',
@@ -1446,7 +1446,7 @@ if docker service ls | grep -q "traefik"; then
     fi
     log_info "🔐 Resolver SSL detectado: $CERT_RESOLVER"
 else
-    log_warning "⚠❌ Traefik n��o encontrado - KRYONIX funcionará localmente"
+    log_warning "⚠❌ Traefik não encontrado - KRYONIX funcionará localmente"
 fi
 
 log_success "✅ Verificação do Traefik concluída"
@@ -1954,7 +1954,7 @@ EOF
 
         *)
             log_info "🔧 Aplicando correção genérica..."
-            # Aplicar todas as correç����es possíveis
+            # Aplicar todas as correç��es possíveis
             echo 'console.log("Emergency check passed");' > check-dependencies.js
             cp package.json package.json.emergency-backup
             sed -i 's/"postinstall":.*/"postinstall": "echo \\"Emergency build mode\\"",/' package.json
@@ -2763,7 +2763,7 @@ if [ "$deploy_success" = true ]; then
         fi
     else
         log_error "❌ Stack NÃO foi criada no Docker Swarm!"
-        log_error "��� Stacks existentes: $(docker stack ls --format '{{.Name}}' | tr '\n' ' ')"
+        log_error "🔍 Stacks existentes: $(docker stack ls --format '{{.Name}}' | tr '\n' ' ')"
         exit 1
     fi
 else
