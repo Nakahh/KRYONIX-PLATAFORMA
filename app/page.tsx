@@ -77,11 +77,65 @@ export default function HomePage() {
   ]
 
   const progress = [
-    { part: 1, title: 'Autenticação Keycloak', status: 'completed', description: 'Sistema multi-tenant com biometria' },
-    { part: 2, title: 'Base de Dados PostgreSQL', status: 'completed', description: 'Database isolado por cliente' },
-    { part: 3, title: 'Storage MinIO', status: 'in_progress', description: 'Armazenamento de arquivos' },
-    { part: 4, title: 'Cache Redis', status: 'pending', description: 'Cache distribuído' },
-    { part: 5, title: 'Proxy Traefik', status: 'pending', description: 'Balanceamento e SSL' }
+    // FASE 1: FUNDAÇÃO (PARTES 1-10)
+    { part: 1, title: 'Autenticação Keycloak', status: 'completed', description: 'Sistema multi-tenant com biometria', slug: 'autenticacao-keycloak' },
+    { part: 2, title: 'Base de Dados PostgreSQL', status: 'completed', description: 'Database isolado por cliente', slug: 'database-postgresql' },
+    { part: 3, title: 'Storage MinIO', status: 'in_progress', description: 'Armazenamento de arquivos', slug: 'storage-minio' },
+    { part: 4, title: 'Cache Redis', status: 'pending', description: 'Cache distribuído', slug: 'cache-redis' },
+    { part: 5, title: 'Proxy Traefik', status: 'pending', description: 'Balanceamento e SSL', slug: 'proxy-traefik' },
+    { part: 6, title: 'Monitoramento Grafana', status: 'pending', description: 'Dashboards de sistema', slug: 'monitoramento-grafana' },
+    { part: 7, title: 'Mensageria RabbitMQ', status: 'pending', description: 'Comunicação entre sistemas', slug: 'mensageria-rabbitmq' },
+    { part: 8, title: 'Backup Automático', status: 'pending', description: 'Proteção dos dados', slug: 'backup-automatico' },
+    { part: 9, title: 'Segurança Básica', status: 'pending', description: 'Proteções fundamentais', slug: 'seguranca-basica' },
+    { part: 10, title: 'API Gateway', status: 'pending', description: 'Porta de entrada das APIs', slug: 'api-gateway' },
+
+    // FASE 2: INTERFACE E CORE (PARTES 11-25)
+    { part: 11, title: 'Interface Principal', status: 'pending', description: 'Interface mobile-first', slug: 'interface-principal' },
+    { part: 12, title: 'Dashboard Administrativo', status: 'pending', description: 'Painel de controle', slug: 'dashboard-admin' },
+    { part: 13, title: 'Sistema de Usuários', status: 'pending', description: 'Gestão de usuários', slug: 'sistema-usuarios' },
+    { part: 14, title: 'Permissões e Roles', status: 'pending', description: 'Controle de acesso', slug: 'permissoes-roles' },
+    { part: 15, title: 'Módulo de Configuração', status: 'pending', description: 'Configurações gerais', slug: 'modulo-configuracao' },
+    { part: 16, title: 'Sistema de Notificações', status: 'pending', description: 'Avisos e alertas', slug: 'sistema-notificacoes' },
+    { part: 17, title: 'Email Marketing', status: 'pending', description: 'Marketing automatizado', slug: 'email-marketing' },
+    { part: 18, title: 'Analytics e BI', status: 'pending', description: 'Relatórios inteligentes', slug: 'analytics-bi' },
+    { part: 19, title: 'Gestão de Documentos', status: 'pending', description: 'Organização de arquivos', slug: 'gestao-documentos' },
+    { part: 20, title: 'Performance e Otimização', status: 'pending', description: 'Velocidade do sistema', slug: 'performance-otimizacao' },
+    { part: 21, title: 'Sistema de Logs', status: 'pending', description: 'Auditoria e rastreamento', slug: 'sistema-logs' },
+    { part: 22, title: 'Configuração Multi-Idioma', status: 'pending', description: 'Internacionalização', slug: 'multi-idioma' },
+    { part: 23, title: 'Sistema de Themes', status: 'pending', description: 'Personalização visual', slug: 'sistema-themes' },
+    { part: 24, title: 'Gestão de Plugins', status: 'pending', description: 'Extensibilidade', slug: 'gestao-plugins' },
+    { part: 25, title: 'Sistema de Webhooks', status: 'pending', description: 'Integrações externas', slug: 'sistema-webhooks' },
+
+    // FASE 3: INTELIGÊNCIA ARTIFICIAL (PARTES 26-35)
+    { part: 26, title: 'Configuração IA', status: 'pending', description: 'Setup da inteligência artificial', slug: 'configuracao-ia' },
+    { part: 27, title: 'Comunicação IA', status: 'pending', description: 'IA conversacional', slug: 'comunicacao-ia' },
+    { part: 28, title: 'Mobile e PWA', status: 'pending', description: 'Aplicativo instalável', slug: 'mobile-pwa' },
+    { part: 29, title: 'Sistema de Analytics IA', status: 'pending', description: 'Análises avançadas', slug: 'analytics-ia' },
+    { part: 30, title: 'IA e Machine Learning', status: 'pending', description: 'Aprendizado automático', slug: 'ia-machine-learning' },
+    { part: 31, title: 'Automação e Workflows', status: 'pending', description: 'Processos automáticos', slug: 'automacao-workflows' },
+    { part: 32, title: 'APIs e Integrações', status: 'pending', description: 'Conexões externas', slug: 'apis-integracoes' },
+    { part: 33, title: 'Análise Preditiva', status: 'pending', description: 'Previsão do futuro', slug: 'analise-preditiva' },
+    { part: 34, title: 'Recomendações IA', status: 'pending', description: 'Sugestões automáticas', slug: 'recomendacoes-ia' },
+    { part: 35, title: 'Auto-scaling IA', status: 'pending', description: 'Crescimento automático', slug: 'auto-scaling-ia' },
+
+    // FASE 4: COMUNICAÇÃO (PARTES 36-45)
+    { part: 36, title: 'Evolution API (WhatsApp)', status: 'pending', description: 'WhatsApp Business', slug: 'evolution-api' },
+    { part: 37, title: 'Chatwoot (Atendimento)', status: 'pending', description: 'Central de atendimento', slug: 'chatwoot-atendimento' },
+    { part: 38, title: 'Typebot Workflows', status: 'pending', description: 'Chatbots inteligentes', slug: 'typebot-workflows' },
+    { part: 39, title: 'N8N Automação', status: 'pending', description: 'Automações avançadas', slug: 'n8n-automacao' },
+    { part: 40, title: 'Mautic Marketing', status: 'pending', description: 'Marketing automation', slug: 'mautic-marketing' },
+    { part: 41, title: 'Email Marketing Avançado', status: 'pending', description: 'Emails profissionais', slug: 'email-marketing-avancado' },
+    { part: 42, title: 'SMS e Push Notifications', status: 'pending', description: 'Notificações móveis', slug: 'sms-push-notifications' },
+    { part: 43, title: 'Integração Redes Sociais', status: 'pending', description: 'Gestão redes sociais', slug: 'integracao-redes-sociais' },
+    { part: 44, title: 'Integração CRM', status: 'pending', description: 'Gestão de clientes', slug: 'integracao-crm' },
+    { part: 45, title: 'Agendamento Inteligente', status: 'pending', description: 'Agenda com IA', slug: 'agendamento-inteligente' },
+
+    // FASE 5: MÓDULOS ESPECIALIZADOS (PARTES 46-50)
+    { part: 46, title: 'Análise Comercial Avançada', status: 'pending', description: 'Inteligência comercial', slug: 'analise-comercial' },
+    { part: 47, title: 'Atendimento Omnichannel', status: 'pending', description: 'Atendimento multicanal', slug: 'atendimento-omnichannel' },
+    { part: 48, title: 'CRM Funil de Vendas', status: 'pending', description: 'Pipeline de vendas', slug: 'crm-funil-vendas' },
+    { part: 49, title: 'Portal Cliente e Treinamento', status: 'pending', description: 'Portal personalizado', slug: 'portal-cliente-treinamento' },
+    { part: 50, title: 'Whitelabel Customizável', status: 'pending', description: 'Marca própria', slug: 'whitelabel-customizavel' }
   ]
 
   if (!mounted) {
