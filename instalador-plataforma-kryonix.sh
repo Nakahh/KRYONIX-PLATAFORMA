@@ -90,7 +90,7 @@ show_banner() {
     echo    "║     █████╔❌ ███❌██╔╝ ╚████╔╝ ██║   ██║██╔██�� █❌║██║ ╚███╔❌      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "���     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -925,7 +925,7 @@ try {
 }
 
 if (missing.length === 0) {
-    console.log('🎉 Todas as dependências críticas instaladas!');
+    console.log('�� Todas as dependências críticas instaladas!');
     console.log('✅ Instaladas: ' + installed + '/' + deps.length);
     console.log('📊 Resumo da verificação:');
     console.log('   Dependências críticas: ' + deps.length);
@@ -1418,7 +1418,7 @@ fi
 
 log_info "🎯 Rede configurada: $DOCKER_NETWORK (CORREÇÃO aplicada)"
 
-# CORREÇÃO: A função ensure_kryonix_network() já fez a verificação e criação
+# CORREÇ��O: A função ensure_kryonix_network() já fez a verificação e criação
 # Removido código duplicado que causava erro
 
 log_success "�� Rede Docker configurada: $DOCKER_NETWORK"
@@ -1596,7 +1596,7 @@ for service_file in webhook-listener.js kryonix-monitor.js; do
 done
 
 # CORREÇÃO: Aplicar correções de TypeScript antes do build
-log_info "�� Aplicando corre��ões de TypeScript para resolver erros de build..."
+log_info "�� Aplicando correções de TypeScript para resolver erros de build..."
 
 # Correção 1: Arquivo postgres-config.ts - função executeTransaction
 if [ -f "lib/database/postgres-config.ts" ]; then
@@ -1862,7 +1862,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "typescript_error")
-            log_info "🔧 Aplicando corre��ões gerais de TypeScript..."
+            log_info "🔧 Aplicando correções gerais de TypeScript..."
             # Aplicar todas as correções de TypeScript
             if [ -f "lib/database/postgres-config.ts" ]; then
                 sed -i 's/export async function executeTransaction<T>(/export async function executeTransaction<T = any>(/g' lib/database/postgres-config.ts
@@ -2612,7 +2612,7 @@ DIAGNOSTIC_EOF
        -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
         log "🌐 Webhook externo KRYONIX funcionando!"
     else
-        log "⚠️ Webhook externo KRYONIX pode ter problemas"
+        log "��️ Webhook externo KRYONIX pode ter problemas"
     fi
 }
 
@@ -2769,7 +2769,7 @@ if [ "$deploy_success" = true ]; then
 else
     error_step
     log_error "❌ FALHA em todas as $max_deploy_attempts tentativas de deploy"
-    log_error "���� Último erro: $deploy_output"
+    log_error "📋 Último erro: $deploy_output"
     exit 1
 fi
 
@@ -2998,7 +2998,7 @@ echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
 echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
 echo ""
 echo -e "${RED}${BOLD}🚀 CORREÇÕES DOS 5 AGENTES APLICADAS (resolve 0/1 replicas):${RESET}"
-echo -e "    ${BLUE}│${RESET} �� CRÍTICO: Serviços unificados em um container"
+echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Serviços unificados em um container"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Placement constraints flexibilizados (preferences: spread)"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Health check otimizado (0.0.0.0:8080, 15s interval, 60s start)"
 echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CPU)"
