@@ -86,7 +86,7 @@ show_banner() {
     echo    "╔══════════════════��══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║���█║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║����█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -553,7 +553,7 @@ fresh_git_clone() {
         log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
         return 1
     fi
-    log_success "✅ Conectividade e token validados"
+    log_success "�� Conectividade e token validados"
 
     # Clone com opções específicas para versão mais recente
     local clone_attempts=0
@@ -1251,7 +1251,7 @@ app.get('/dashboard', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`�� KRYONIX Monitor rodando em http://0.0.0.0:${PORT}`);
+  console.log(`��� KRYONIX Monitor rodando em http://0.0.0.0:${PORT}`);
 });
 MONITOR_EOF
     log_success "✅ kryonix-monitor.js criado"
@@ -2805,7 +2805,6 @@ MONITOR_STATUS="✅ INTEGRADO (no serviço web)"
     # Mostrar logs do webhook se houver problema
     log_info "���� Logs do webhook:"
     docker service logs "${STACK_NAME}_webhook" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
-fi
 
 # Verificar serviço monitor
 monitor_replicas=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_monitor" | awk '{print $2}' || echo "0/1")
@@ -2875,7 +2874,7 @@ log_info "📈 Configurando monitoramento contínuo de dependências..."
 cat > dependency-monitor.sh << 'MONITOR_EOF'
 #!/bin/bash
 
-# Monitor contínuo de dependências KRYONIX
+# Monitor cont��nuo de dependências KRYONIX
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deps-monitor.log"
 
