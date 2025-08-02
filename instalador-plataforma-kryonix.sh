@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚════════════════════════════════���══════════════════������══���═══��═════╝"
+    echo    "╚═══════════════════════════════������══════════════════������══���═══��═════╝"
     echo -e "${RESET}\n"
 
 
@@ -790,7 +790,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "�� Iniciando clone FRESH para garantir versão MAIS RECENTE..."
+log_info "��� Iniciando clone FRESH para garantir versão MAIS RECENTE..."
 log_info "��� Objetivo: Sempre pegar versão mais recente com depend��ncias atualizadas!"
 
 # Fazer clone fresh
@@ -1027,7 +1027,7 @@ if grep -q '"type": "module"' package.json; then
 fi
 
 # CORREÇÃO CRÍTICA: Corrigir postinstall para funcionar durante Docker build
-log_info "🔧 Aplicando correção crítica no package.json..."
+log_info "��� Aplicando correção crítica no package.json..."
 if grep -q '"postinstall": "npm run check-deps"' package.json; then
     log_info "Corrigindo postinstall para compatibilidade com Docker build"
     # Criar backup
@@ -2138,7 +2138,7 @@ services:
 networks:
   Kryonix-NET:
     external: true
-WORKING_STACK_EOF
+AGENT_CORRECTED_STACK_EOF
 
 # Validação simples
 if [ ! -f docker-stack.yml ]; then
@@ -2946,7 +2946,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════════════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�����══════════════��═�����═══════════════════════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
