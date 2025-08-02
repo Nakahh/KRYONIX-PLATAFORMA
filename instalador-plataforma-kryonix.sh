@@ -70,7 +70,7 @@ STEP_DESCRIPTIONS=(
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
     "Configurando logs e backup 📄️"
-    "Deploy final integrado ��"
+    "Deploy final integrado 🚀"
     "Testando webhook e relatório final ❌��"
     "Configurando monitoramento contínuo 📈"
 )
@@ -89,7 +89,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔❌ ███❌██╔╝ ╚████╔╝ ██║   ██║██╔██�� █❌║██║ ╚███╔❌      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
-    echo    "║     ██���  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██��  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ❌═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -344,7 +344,7 @@ try {
         fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
         console.log('✅ Dependências de build corrigidas proativamente');
     } else {
-        console.log('✅ Dependências de build já est����o corretas');
+        console.log('✅ Dependências de build já est��o corretas');
     }
 } catch (error) {
     console.log('⚠️ Erro na correção proativa, continuando...');
@@ -1306,7 +1306,7 @@ app.post('/api/github-webhook', (req, res) => {
     const signature = req.get('X-Hub-Signature-256');
     const event = req.get('X-GitHub-Event');
 
-    console.log('�� Webhook KRYONIX recebido:', {
+    console.log('🔗 Webhook KRYONIX recebido:', {
         event: event || 'NONE',
         ref: payload.ref || 'N/A',
         repository: payload.repository?.name || 'N/A',
@@ -1694,7 +1694,7 @@ if [ -f "next.config.js" ] && grep -q "ignoreDuringBuilds" next.config.js 2>/dev
     correction_count=$((correction_count + 1))
 fi
 
-log_info "📊 Total de correções aplicadas: $correction_count/4"
+log_info "�� Total de correções aplicadas: $correction_count/4"
 
 if [ $correction_count -gt 0 ]; then
     log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
@@ -2383,7 +2383,7 @@ deploy() {
     current_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
     remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
 
-    log "📌 Commit local: $current_commit"
+    log "�� Commit local: $current_commit"
     log "🌐 Commit remoto: $remote_commit"
     log "📝 Mensagem: $current_msg"
 
@@ -2675,7 +2675,7 @@ if ! docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
 fi
 
 # Verificar se YAML está válido primeiro
-log_info "🔍 Validando YAML antes do deploy..."
+log_info "���� Validando YAML antes do deploy..."
 
 # Verificar se arquivo YAML existe e tem conteúdo
 if [ ! -f docker-stack.yml ]; then
@@ -2910,7 +2910,7 @@ if command -v ncu >/dev/null 2>&1; then
     updates_available=$(ncu --jsonUpgraded 2>/dev/null | jq -r 'keys | length' 2>/dev/null || echo "0")
     
     if [ "$updates_available" -gt 0 ]; then
-        log_monitor "📦 $updates_available atualizaç��es de dependências disponíveis"
+        log_monitor "���� $updates_available atualizaç��es de dependências disponíveis"
         
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
