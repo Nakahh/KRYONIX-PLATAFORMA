@@ -547,7 +547,7 @@ fresh_git_clone() {
     cd "$target_dir"
 
     # Testar conectividade e autenticação antes de tentar clone
-    log_info "��� Testando conectividade com GitHub..."
+    log_info "🔍 Testando conectividade com GitHub..."
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
         log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
@@ -1134,7 +1134,7 @@ INDEXHTML_EOF
     log_success "✅ public/index.html criado"
 fi
 
-# 6. Criar outros arquivos de serviços se não existirem
+# 6. Criar outros arquivos de servi��os se não existirem
 if [ ! -f "webhook-listener.js" ]; then
     log_info "Criando webhook-listener.js..."
     cat > webhook-listener.js << 'WEBHOOK_EOF'
@@ -1638,7 +1638,7 @@ else
     log_warning "⚠���� lib/database/api.ts não encontrado"
 fi
 
-# Correção 4: Otimizar next.config.js para builds mais r��pidos
+# Correção 4: Otimizar next.config.js para builds mais rápidos
 if [ -f "next.config.js" ]; then
     log_info "🔧 Otimizando next.config.js para build mais r����pido..."
 
@@ -1850,7 +1850,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "typescript_error")
-            log_info "🔧 Aplicando corre��ões gerais de TypeScript..."
+            log_info "🔧 Aplicando corre���ões gerais de TypeScript..."
             # Aplicar todas as correções de TypeScript
             if [ -f "lib/database/postgres-config.ts" ]; then
                 sed -i 's/export async function executeTransaction<T>(/export async function executeTransaction<T = any>(/g' lib/database/postgres-config.ts
@@ -2753,7 +2753,7 @@ else
 fi
 
 # Aguardar estabilização adequada para 3 serviços (otimizado)
-log_info "Aguardando estabilização dos servi��os (90s com configurações otimizadas)..."
+log_info "Aguardando estabilização dos serviços (90s com configurações otimizadas)..."
 sleep 90
 
 # Verificar serviços com validação específica para Next.js
@@ -2971,7 +2971,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════��═══════════════════════������════════════${RESET}"
+echo -e "${CYAN}══════��═══════════════════════������══���═════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -2993,10 +2993,10 @@ echo -e "${PURPLE}${BOLD}📊 VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
 echo -e "Execute para verificar se as correções funcionaram:"
 echo -e "${YELLOW}docker service ls${RESET}"
 echo ""
-echo -e "Resultado esperado após as correções:"
-echo -e "${GREEN}Kryonix_monitor   1/1        kryonix-plataforma:latest${RESET}"
+echo -e "Resultado esperado após as CORREÇÕES DOS AGENTES:"
 echo -e "${GREEN}Kryonix_web       1/1        kryonix-plataforma:latest${RESET}"
-echo -e "${GREEN}Kryonix_webhook   1/1        kryonix-plataforma:latest${RESET}"
+echo -e "${YELLOW}NOTA: Apenas 1 serviço após unificação pelos agentes${RESET}"
+echo -e "${YELLOW}      webhook e monitor integrados no serviço web${RESET}"
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
 echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
 echo -e "    ${BLUE}│${RESET} ����� Atualização automática de dependências a cada deploy"
