@@ -89,7 +89,7 @@ show_banner() {
     echo    "║     ██║ █���╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚█��██║██║██╔��� ██��     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██��   ╚██████╔╝██║ ╚█��██║██║██╔��� ██��     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -317,7 +317,7 @@ const fs = require('fs');
 try {
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
-    /* Dependências críticas para build do Next.js que devem estar em dependencies */
+    /* Depend��ncias críticas para build do Next.js que devem estar em dependencies */
     const criticalBuildDeps = {
         'autoprefixer': '^10.0.1',
         'postcss': '^8',
@@ -547,13 +547,13 @@ fresh_git_clone() {
     cd "$target_dir"
 
     # Testar conectividade e autenticaç��o antes de tentar clone
-    log_info "🔍 Testando conectividade com GitHub..."
+    # Testando conectividade...
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
         log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
         return 1
     fi
-    log_success "�� Conectividade e token validados"
+    # Token validado
 
     # Clone com opções específicas para versão mais recente
     local clone_attempts=0
@@ -1326,7 +1326,7 @@ app.post('/api/github-webhook', (req, res) => {
     if (isValidEvent && isValidRef) {
         console.log('🚀 Deploy automático KRYONIX iniciado para:', payload.ref);
 
-        /* Executar deploy automático com atualização de dependências */
+        /* Executar deploy automático com atualiza��ão de dependências */
         exec('bash ' + DEPLOY_SCRIPT + ' webhook', (error, stdout, stderr) => {
             if (error) {
                 console.error('❌ Erro no deploy automático KRYONIX:', error);
@@ -2675,7 +2675,7 @@ log_info "🔍 Validando YAML antes do deploy..."
 
 # Verificar se arquivo YAML existe e tem conteúdo
 if [ ! -f docker-stack.yml ]; then
-    log_error "❌ Arquivo docker-stack.yml não existe!"
+    log_error "��� Arquivo docker-stack.yml não existe!"
     exit 1
 fi
 
@@ -2749,7 +2749,7 @@ if [ "$deploy_success" = true ]; then
         if [ $services_count -gt 0 ]; then
             log_success "✅ Serviços criados com sucesso!"
 
-            # Listar serviços criados
+            # Listar servi��os criados
             log_info "📋 Serviços KRYONIX criados:"
             docker service ls --format "{{.Name}} {{.Replicas}}" | grep "^${STACK_NAME}_" | while read service_info; do
                 log_info "   - $service_info"
@@ -2942,7 +2942,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═❌══════════════════════����═══════��════❌═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��══════���❌❌�══════════════��═❌��═══════════════════════════❌════════❌❌❌══${RESET}"
+echo -e "${GREEN}${BOLD}��══════���❌❌�══════════════��═❌����══════════════════════════❌════════❌❌❌══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX INSTALLER v2.0${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
