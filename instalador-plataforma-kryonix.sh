@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   █��║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -796,7 +796,7 @@ log_info "❌ Objetivo: Sempre pegar versão mais recente com dependências atua
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
     error_step
-    log_error "Falha no clone fresh do repositório GitHub"
+    log_error "Falha no clone fresh do reposit��rio GitHub"
     exit 1
 fi
 
@@ -1769,7 +1769,7 @@ else
             rm -rf .next/cache
 
             # Limpar cache npm
-            log_info "🗑️ Limpando cache npm..."
+            log_info "��️ Limpando cache npm..."
             npm cache clean --force
 
             # Reinstalar dependências críticas do Next.js
@@ -1889,7 +1889,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "missing_autoprefixer"|"missing_postcss"|"missing_tailwind")
-            log_info "❌� Aplicando correção para dependências de build CSS/TailwindCSS..."
+            log_info "🔧 Aplicando correção para dependências de build CSS/TailwindCSS..."
             # Corrigir package.json movendo dependências de build para dependencies
             cp package.json package.json.build-backup
             cat > /tmp/fix-build-deps.js << 'EOF'
@@ -2763,7 +2763,7 @@ if [ "$deploy_success" = true ]; then
         fi
     else
         log_error "❌ Stack NÃO foi criada no Docker Swarm!"
-        log_error "🔍 Stacks existentes: $(docker stack ls --format '{{.Name}}' | tr '\n' ' ')"
+        log_error "�� Stacks existentes: $(docker stack ls --format '{{.Name}}' | tr '\n' ' ')"
         exit 1
     fi
 else
