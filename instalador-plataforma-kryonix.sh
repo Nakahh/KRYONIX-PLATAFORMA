@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   █��║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -796,7 +796,7 @@ log_info "❌ Objetivo: Sempre pegar versão mais recente com dependências atua
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
     error_step
-    log_error "Falha no clone fresh do reposit��rio GitHub"
+    log_error "Falha no clone fresh do repositório GitHub"
     exit 1
 fi
 
@@ -1306,7 +1306,7 @@ app.post('/api/github-webhook', (req, res) => {
     const signature = req.get('X-Hub-Signature-256');
     const event = req.get('X-GitHub-Event');
 
-    console.log('🔗 Webhook KRYONIX recebido:', {
+    console.log('��� Webhook KRYONIX recebido:', {
         event: event || 'NONE',
         ref: payload.ref || 'N/A',
         repository: payload.repository?.name || 'N/A',
@@ -1769,7 +1769,7 @@ else
             rm -rf .next/cache
 
             # Limpar cache npm
-            log_info "��️ Limpando cache npm..."
+            log_info "🗑️ Limpando cache npm..."
             npm cache clean --force
 
             # Reinstalar dependências críticas do Next.js
@@ -1954,7 +1954,7 @@ EOF
 
         *)
             log_info "🔧 Aplicando correção genérica..."
-            # Aplicar todas as correç��es possíveis
+            # Aplicar todas as correções possíveis
             echo 'console.log("Emergency check passed");' > check-dependencies.js
             cp package.json package.json.emergency-backup
             sed -i 's/"postinstall":.*/"postinstall": "echo \\"Emergency build mode\\"",/' package.json
@@ -2763,7 +2763,7 @@ if [ "$deploy_success" = true ]; then
         fi
     else
         log_error "❌ Stack NÃO foi criada no Docker Swarm!"
-        log_error "�� Stacks existentes: $(docker stack ls --format '{{.Name}}' | tr '\n' ' ')"
+        log_error "🔍 Stacks existentes: $(docker stack ls --format '{{.Name}}' | tr '\n' ' ')"
         exit 1
     fi
 else
