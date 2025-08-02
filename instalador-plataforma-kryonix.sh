@@ -86,7 +86,7 @@ show_banner() {
     echo    "╔══════════════════��══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║����█║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║������█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -1512,7 +1512,7 @@ EXPOSE 8080
 
 # CORREÇÃO CRÍTICA: Health check otimizado para Docker Swarm (start_period adequado)
 HEALTHCHECK --interval=60s --timeout=30s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+    CMD curl -f http://0.0.0.0:8080/health || exit 1
 
 # Comando de start com dumb-init para signal handling
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
