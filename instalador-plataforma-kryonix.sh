@@ -86,7 +86,7 @@ show_banner() {
     echo    "╔══════════════════��══════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║���█║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  �������║���█║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔╝      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -2799,14 +2799,8 @@ fi
 
 # CORREÇÃO DOS AGENTES: Serviços unificados no container principal
 log_info "✅ CORREÇÃO DOS AGENTES: Serviços webhook e monitor integrados ao serviço web"
-log_info "Status Docker Swarm para ${STACK_NAME}_webhook: $webhook_replicas"
-
-if [[ "$webhook_replicas" == "1/1" ]]; then
-    log_success "Serviço webhook funcionando (1/1)"
-    WEBHOOK_STATUS="✅ ONLINE (1/1)"
-else
-    log_warning "Serviço webhook com problemas: $webhook_replicas"
-    WEBHOOK_STATUS="❌ PROBLEMA ($webhook_replicas)"
+WEBHOOK_STATUS="✅ INTEGRADO (no serviço web)"
+MONITOR_STATUS="✅ INTEGRADO (no serviço web)"
 
     # Mostrar logs do webhook se houver problema
     log_info "���� Logs do webhook:"
@@ -3009,7 +3003,7 @@ echo -e "    ${BLUE}│${RESET} ����� Atualização automática de dep
 echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
-echo -e "    ${BLUE}│${RESET} ✅ Logs detalhados de todas as atualizações"
+echo -e "    ${BLUE}│${RESET} ��� Logs detalhados de todas as atualizações"
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
 echo ""
