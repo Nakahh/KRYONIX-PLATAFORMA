@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║���█║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔��      ║"
     echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -2924,7 +2924,7 @@ complete_step
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═���══════════════════════���════════��════���═══════════════════��════════${RESET}"
+echo -e "${GREEN}${BOLD}═���════════════════���═════���════════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════════════════════���════════���������══${RESET}"
 echo ""
@@ -2940,7 +2940,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commi
 
 # Verificação especial para PR #22 (como no instalador antigo)
 if echo "$final_commit_msg" | grep -qi "#22"; then
-    echo -e "    ${BLUE}│${RESET} ${YELLOW}⚠️ AVISO:${RESET} Detectada referência ao PR #22"
+    echo -e "    ${BLUE}��${RESET} ${YELLOW}⚠️ AVISO:${RESET} Detectada referência ao PR #22"
     echo -e "    ${BLUE}│${RESET} ${YELLOW}   Isso pode significar que PR #22 É a versão mais recente${RESET}"
     echo -e "    ${BLUE}│${RESET} ${YELLOW}   ou há um problema de sincronização com GitHub${RESET}"
 else
@@ -2978,7 +2978,7 @@ echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
 echo -e "${CYAN}${BOLD}Events:${RESET} Just push events"
 echo ""
 echo -e "${RED}${BOLD}🚀 CORREÇÕES DOS 5 AGENTES APLICADAS (resolve 0/1 replicas):${RESET}"
-echo -e "    ${BLUE}��${RESET} ��� Rede fixada para Kryonix-NET (resolve conflito de rede)"
+echo -e "    ${BLUE}│${RESET} ✅ CRÍTICO: Serviços unificados em um container"
 echo -e "    ${BLUE}│${RESET} ✅ Dockerfile simplificado (single-stage, sem complexidade)"
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados (start_period=30s, timeout=30s)"
 echo -e "    ${BLUE}│${RESET} ✅ Placement constraints (node.role == manager)"
