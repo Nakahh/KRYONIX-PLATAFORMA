@@ -86,8 +86,8 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ��█║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     ██║ █���╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██��     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║              ${WHITE}Deploy Inteligente e Automatizado${BLUE}                ║"
     echo    "║                                                                 ║"
-    echo    "╚═══════════════════════════════════════════════════��═════════════╝"
+    echo    "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -372,7 +372,7 @@ advanced_dependency_check() {
             
             # Correção automática
             if node fix-dependencies.js 2>&1 | tee /tmp/deps-fix.log; then
-                log_success "✅ Correção automática aplicada"
+                log_success "�� Correção automática aplicada"
             else
                 log_warning "��️ Correção manual pode ser necess��ria"
             fi
@@ -420,7 +420,7 @@ advanced_dependency_check() {
 ensure_kryonix_network() {
     local network_name="Kryonix-NET"
 
-    log_info "🔧 CORREÇÃO: Garantindo rede $network_name (baseado no instalador que funcionava)..."
+    log_info "���� CORREÇÃO: Garantindo rede $network_name (baseado no instalador que funcionava)..."
 
     # Verificar se rede já existe
     if docker network ls --format "{{.Name}}" | grep -q "^${network_name}$" 2>/dev/null; then
@@ -733,13 +733,9 @@ show_banner
 # Detecção automática do ambiente (como no instalador antigo que funcionava)
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
-echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
-echo -e "${BLUE}├─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
-echo -e "${BLUE}├─ Usuário: $(whoami)${RESET}"
-echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
-echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
+echo -e "${BLUE}📍 Servidor: ${WHITE}$(hostname)${RESET}"
 echo ""
-echo -e "${GREEN}${BOLD}✅ Nuclear cleanup + Clone fresh + Garantia versão mais recente!${RESET}\n"
+echo -e "${GREEN}${BOLD}🚀 Iniciando instalação automatizada...${RESET}\n"
 
 # Inicializar primeira etapa
 next_step
@@ -1036,7 +1032,7 @@ if grep -q '"postinstall": "npm run check-deps"' package.json; then
     # Aplicar correç��o usando Node.js para evitar problemas com aspas
     cat > /tmp/postinstall-fix.js << 'EOF'
 const fs = require('fs');
-console.log('🔧 Aplicando correção crítica no package.json...');
+console.log('🔧 Aplicando corre��ão crítica no package.json...');
 
 try {
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
@@ -1634,7 +1630,7 @@ fi
 
 # Correção 3: Arquivo api.ts - variável module em destructuring
 if [ -f "lib/database/api.ts" ]; then
-    log_info "���� Corrigindo destructuring em api.ts..."
+    log_info "🔧 Corrigindo destructuring em api.ts..."
 
     # Backup do arquivo original
     cp lib/database/api.ts lib/database/api.ts.bak
@@ -2797,7 +2793,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
-        log_info "📋 Logs do servi��o web (últimas 10 linhas):"
+        log_info "���� Logs do servi��o web (últimas 10 linhas):"
         docker service logs "${STACK_NAME}_web" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
     fi
 else
