@@ -519,7 +519,7 @@ fresh_git_clone() {
     local branch="${3:-main}"
     local pat_token="$4"
     
-    log_info "🔄 Clone FRESH garantindo vers��o MAIS RECENTE..."
+    # Baixando código fonte...
     
     # Configurar Git globalmente ANTES de tentar clone
     git config --global user.name "KRYONIX Deploy"
@@ -1477,7 +1477,7 @@ WORKDIR /app
 # Copiar package.json primeiro (para cache de layers)
 COPY package*.json ./
 
-# CORREÇÃO CRÍTICA: Copiar arquivos de dependências ANTES da instalação
+# CORRE��ÃO CRÍTICA: Copiar arquivos de dependências ANTES da instalação
 COPY check-dependencies.js ./
 COPY validate-dependencies.js ./
 COPY fix-dependencies.js ./
@@ -2694,7 +2694,7 @@ log_info "🚀 Validação simples e deploy direto..."
 
 # Validação básica apenas
 if [ ! -f "docker-stack.yml" ]; then
-    log_error "❌ docker-stack.yml não encontrado!"
+    log_error "�� docker-stack.yml não encontrado!"
     exit 1
 fi
 
