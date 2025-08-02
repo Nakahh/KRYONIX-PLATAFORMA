@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██��� ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚══════════════════════════════════════════���════════════════════════╝"
+    echo    "╚════════════════════════════════════════════════════════════════���══╝"
     echo -e "${RESET}\n"
 
 
@@ -466,7 +466,7 @@ test_service_health() {
 
 # FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
-    log_info "❌�� NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
+    log_info "🧹 NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
     
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -1405,7 +1405,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "🔧 CORREÇÃO: Configurando rede Kryonix-NET (baseada no instalador que funcionava)..."
+log_info "🔧 CORRE��ÃO: Configurando rede Kryonix-NET (baseada no instalador que funcionava)..."
 
 # Detectar automaticamente a rede do Traefik
 DOCKER_NETWORK=$(ensure_kryonix_network)
@@ -2991,7 +2991,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA��ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════��═════════════��═════════❌❌════════════${RESET}"
+echo -e "${CYAN}══════��═══════════════════════❌❌════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
