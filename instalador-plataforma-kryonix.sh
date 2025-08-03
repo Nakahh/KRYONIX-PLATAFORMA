@@ -83,7 +83,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  █��╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗��█╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -207,11 +207,16 @@ log_success() {
     echo -e "\n${GREEN}✅ $1${RESET}"
 }
 
-# Funções de controle de etapas
-# Controle simplificado de etapas
+# Funções de controle de etapas com animação moderna
 next_step() {
     CURRENT_STEP=$((CURRENT_STEP + 1))
     if [ $CURRENT_STEP -le $TOTAL_STEPS ]; then
+        # Pequena animação de transição
+        if [ $CURRENT_STEP -gt 1 ]; then
+            show_loading_animation "Preparando próxima etapa" 1
+        fi
+
+        # Mostrar barra de progresso moderna
         show_progress $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}"
     fi
 }
