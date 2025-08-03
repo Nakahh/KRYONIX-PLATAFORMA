@@ -85,7 +85,7 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo "╔═══════════════════════════════════════════════════════════════════╗"
     echo "║                                                                   ║"
-    echo "║     ██╗  ██╗██████╗ █��╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
+    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
@@ -94,7 +94,7 @@ show_banner() {
     echo "║                                                                   ║"
     echo -e "║                    ${WHITE}INSTALADOR AUTOMÁTICO KRYONIX${BLUE}                   ║"
     echo -e "║                   ${CYAN}Plataforma SaaS Empresarial${BLUE}                     ║"
-    echo "║                                                                   ║"
+    echo "��                                                                   ║"
     echo "╚═══════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo ""
@@ -120,33 +120,13 @@ show_progress() {
     fi
 }
 
-# Função para logs que aparecem abaixo da barra
-log_below_bar() {
-    local type="$1"
-    local message="$2"
-    local color=""
-    local prefix=""
+# Log simplificado (apenas para erros críticos)
+log_critical() {
+    echo -e "\n${RED}❌ ERRO: $1${RESET}"
+}
 
-    case $type in
-        "info")
-            color="$CYAN"
-            prefix="[INFO]"
-            ;;
-        "success")
-            color="$GREEN"
-            prefix="[SUCESSO]"
-            ;;
-        "warning")
-            color="$YELLOW"
-            prefix="[AVISO]"
-            ;;
-        "error")
-            color="$RED"
-            prefix="[ERRO]"
-            ;;
-    esac
-
-    echo -e "    ${color}ℹ${RESET} ${color}${prefix}${RESET} $message"
+log_success() {
+    echo -e "\n${GREEN}✅ $1${RESET}"
 }
 
 # Funções de controle de etapas
@@ -688,7 +668,7 @@ echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RE
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}📁─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
-echo -e "${BLUE}├📁 Usuário: $(whoami)${RESET}"
+echo -e "${BLUE}��📁 Usuário: $(whoami)${RESET}"
 echo -e "${BLUE}├─ SO: $(uname -s) $(uname -r)${RESET}"
 echo -e "${BLUE}└─ Docker: $(docker --version 2>/dev/null || echo 'Não detectado')${RESET}"
 echo ""
