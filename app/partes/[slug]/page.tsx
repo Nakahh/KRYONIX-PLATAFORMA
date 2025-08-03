@@ -55,13 +55,13 @@ export default function PartPage({ params }: { params: { slug: string } }) {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Parte não encontrada</h1>
           <p className="text-gray-600 mb-6">Esta parte não foi encontrada ou ainda não foi implementada.</p>
-          <div className="space-y-2">
-            <Link href="/progresso" className="btn-primary block">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Ver Progresso Completo
+          <div className="space-y-3">
+            <Link href="/progresso" className="inline-flex items-center space-x-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200 font-medium">
+              <ArrowLeft className="w-4 h-4" />
+              <span>Ver Progresso</span>
             </Link>
-            <Link href="/" className="btn-secondary block">
-              Voltar à Homepage
+            <Link href="/" className="inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium">
+              Voltar
             </Link>
           </div>
         </div>
