@@ -27,6 +27,11 @@ export default function PartPage({ params }: { params: { slug: string } }) {
   const [part, setPart] = useState<Part | null>(null)
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [clickedIcons, setClickedIcons] = useState({
+    whatsapp: false,
+    email: false,
+    instagram: false
+  })
 
   useEffect(() => {
     setMounted(true)
