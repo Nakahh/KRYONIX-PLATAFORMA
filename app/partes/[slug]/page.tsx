@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { ArrowLeft, CheckCircle, Clock, AlertCircle, Sparkles, Code2, Database, Shield, Zap } from 'lucide-react'
 import LoadingScreen from '../../components/LoadingScreen'
 import ProgressBar from '../../components/ProgressBar'
+import ThemeToggle from '../../components/ThemeToggle'
 import { partsData } from '../../../lib/data/parts-data'
 
 interface Part {
