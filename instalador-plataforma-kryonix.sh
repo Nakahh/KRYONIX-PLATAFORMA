@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
-    echo    "║     ██╔═██╗ ██��══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   █��║██║╚██╗██║██║ ██╔██╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo    "║                                                                   ║"
@@ -276,7 +276,7 @@ auto_update_dependencies() {
     fi
 
     # Limpar cache npm
-    log_info "🔍 Limpando cache npm..."
+    log_info "��� Limpando cache npm..."
     npm cache clean --force >/dev/null 2>&1 || true
 
     # Reinstalar dependências com versões atualizadas
@@ -2720,7 +2720,7 @@ if [ "$deploy_success" = true ]; then
     sleep 5
 
     if docker stack ls --format "{{.Name}}" | grep -q "^${STACK_NAME}$"; then
-        log_success "✅ Stack $STACK_NAME confirmada no Docker Swarm"
+        log_success "�� Stack $STACK_NAME confirmada no Docker Swarm"
 
         # Verificar serviços com timeout
         log_info "🔍 Aguardando criação dos serviços..."
@@ -2951,7 +2951,7 @@ echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicação Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} 🔍 DEPLOYADO"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ✅ DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
 echo -e "${CYAN}${BOLD}🧪 TESTES WEBHOOK:${RESET}"
