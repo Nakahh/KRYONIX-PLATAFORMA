@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  █��║   ██║██║╚██╗██║██║ ██╔██╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo    "║                                                                   ║"
@@ -504,7 +504,7 @@ nuclear_cleanup() {
         fi
     fi
 
-    # Criar diret��rio fresh com permissões corretas
+    # Criar diret📁rio fresh com permissões corretas
     sudo mkdir -p "$PROJECT_DIR"
     sudo chown -R $USER:$USER "$PROJECT_DIR"
 
@@ -609,7 +609,7 @@ fresh_git_clone() {
                 break
             fi
 
-            log_warning "⚠🔍 Tentativa de clone $clone_attempts falhou"
+            log_warning "⚠️ Tentativa de clone $clone_attempts falhou"
             if [ $clone_attempts -lt $max_attempts ]; then
                 sleep 5
             fi
@@ -690,7 +690,7 @@ verify_fresh_clone() {
         fi
     fi
 
-    log_success "✅ Verifica��ão do clone passou"
+    log_success "✅ Verificação do clone passou"
     return 0
 }
 
@@ -1545,7 +1545,7 @@ else
 fi
 
 # Verificação completa de arquivos necessários (ATUALIZADA com arquivos criados automaticamente)
-log_info "�� Verificando TODOS os arquivos necessários para Docker build..."
+log_info "🔍 Verificando TODOS os arquivos necessários para Docker build..."
 required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js" "next.config.js" "public/index.html")
 missing_files=()
 
@@ -1635,7 +1635,7 @@ if [ -f "lib/database/api.ts" ]; then
 
     log_success "✅ api.ts corrigido"
 else
-    log_warning "⚠🔍� lib/database/api.ts não encontrado"
+    log_warning "⚠����� lib/database/api.ts não encontrado"
 fi
 
 # Correção 4: Otimizar next.config.js para builds mais rápidos
@@ -2906,7 +2906,7 @@ fi
 if curl -f -s "http://localhost:8080/health" >/dev/null; then
     log_monitor "✅ Serviços KRYONIX funcionando"
 else
-    log_monitor "❌ Problemas detectados nos serviços KRYONIX"
+    log_monitor "��� Problemas detectados nos serviços KRYONIX"
 fi
 MONITOR_EOF
 
