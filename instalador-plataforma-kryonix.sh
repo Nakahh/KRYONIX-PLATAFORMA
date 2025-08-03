@@ -177,7 +177,7 @@ auto_update_dependencies() {
     fi
 
     # Limpar cache npm
-    log_info "🔍 Limpando cache npm..."
+ 
     npm cache clean --force >/dev/null 2>&1 || true
 
     # Reinstalar dependências com versões atualizadas
@@ -260,7 +260,7 @@ EOF
 
 # Função de verifica📁ão avançada de dependências
 advanced_dependency_check() {
-    log_info "🔍 Executando verificação avançada de dependências..."
+ 
 
     # Executar verificador próprio do projeto
     if [ -f "check-dependencies.js" ]; then
@@ -367,7 +367,7 @@ test_service_health() {
 
 # FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
-    log_info "🔍📁 NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
+ 
 
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -448,7 +448,7 @@ fresh_git_clone() {
     cd "$target_dir"
 
     # Testar conectividade e autenticação antes de tentar clone
-    log_info "🔍 Testando conectividade com GitHub..."
+ 
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
         log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
@@ -462,7 +462,7 @@ fresh_git_clone() {
 
     while [ $clone_attempts -lt $max_attempts ]; do
         clone_attempts=$((clone_attempts + 1))
-        log_info "🔍 Tentativa de clone $clone_attempts/$max_attempts..."
+ 
 
         # Limpar qualquer clone parcial
         sudo rm -rf ./* .[^.]* ..?* 2>/dev/null || true
@@ -485,8 +485,8 @@ fresh_git_clone() {
             latest_remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
             current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
 
-            log_info "🔍 Remoto mais recente: $latest_remote_commit"
-            log_info "🔍 Local atual: $current_local_commit"
+ 
+ 
 
             # Forçar atualização para absoluto mais recente se diferente
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
@@ -526,7 +526,7 @@ verify_fresh_clone() {
     local target_dir="$1"
     local expected_branch="${2:-main}"
 
-    log_info "🔍 Verificando integridade do clone fresh..."
+ 
 
     cd "$target_dir"
 
@@ -582,7 +582,7 @@ verify_fresh_clone() {
             log_warning "⚠️ Commit mais recente disponível: $latest_commit"
 
             # Tentar atualizar para o mais recente
-            log_info "🔍 Tentando atualizar para o commit mais recente..."
+ 
             if git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null; then
                 new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
                 new_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
@@ -692,7 +692,7 @@ next_step
 
 
 log_info "📁 Iniciando clone FRESH para garantir versão MAIS RECENTE..."
-log_info "🔍 Objetivo: Sempre pegar versão mais recente com depend📁ncias atualizadas!"
+ 
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
@@ -768,7 +768,7 @@ next_step
 # ============================================================================
 
 
-log_info "🔍 Executando verificação avançada de dependências..."
+ 
 
 # Executar verificação avançada
 if ! advanced_dependency_check; then
@@ -1423,7 +1423,7 @@ DOCKERFILE_EOF
 log_info "Fazendo build da imagem Docker..."
 
 # Verificação pré-build para Next.js
-log_info "🔍 Verificando requisitos específicos para Next.js..."
+ 
 
 # Verificar se arquivos Next.js essenciais existem
 nextjs_files=("app/page.tsx" "app/layout.tsx" "next.config.js" "tailwind.config.js")
@@ -1446,7 +1446,7 @@ else
 fi
 
 # Verificação completa de arquivos necessários (ATUALIZADA com arquivos criados automaticamente)
-log_info "🔍 Verificando TODOS os arquivos necessários para Docker build..."
+ 
 required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js" "next.config.js" "public/index.html")
 missing_files=()
 
@@ -1466,7 +1466,7 @@ if [ ${#missing_files[@]} -gt 0 ]; then
 fi
 
 # Verificação adicional espec📁fica do instalador antigo
-log_info "🔍 Verificação adicional de integridade dos arquivos..."
+ 
 
 # Verificar se server.js tem o endpoint webhook
 if grep -q "/api/github-webhook" server.js; then
@@ -1559,7 +1559,7 @@ else
 fi
 
 # Verificar se as correções foram aplicadas (versão simplificada)
-log_info "🔍 Verificando se as correções foram aplicadas..."
+ 
 correction_count=0
 
 # Verificaç📁o simplificada para evitar travamentos
@@ -1592,7 +1592,7 @@ else
 fi
 
 # CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
-log_info "🔍 Verificação proativa de builds corrompidos..."
+ 
 
 if [ -d ".next" ]; then
     log_info "⚠️ Diretório .next existe - removendo para garantir build limpo..."
@@ -1601,7 +1601,7 @@ if [ -d ".next" ]; then
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
-    log_info "🔍📁️ Nenhum build anterior encontrado - continuando"
+ 
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -1645,7 +1645,7 @@ else
         build_error_type="unknown"
     fi
 
-    log_info "🔍 Tipo de erro detectado: $build_error_type"
+ 
 
     case $build_error_type in
         "webpack_chunks_corrupted")
@@ -1734,7 +1734,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "eslint_module_variable")
-            log_info "🔍 Aplicando correção para variável 'module' conflitante..."
+ 
             if [ -f "lib/database/init.ts" ]; then
                 sed -i 's/for (const module of modules)/for (const dbModule of modules)/g' lib/database/init.ts
                 sed -i 's/checkDatabaseHealth(module)/checkDatabaseHealth(dbModule)/g' lib/database/init.ts
@@ -1778,7 +1778,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "missing_autoprefixer"|"missing_postcss"|"missing_tailwind")
-            log_info "🔍� Aplicando correção para dependências de build CSS/TailwindCSS..."
+ 
             # Corrigir package.json movendo dependências de build para dependencies
             cp package.json package.json.build-backup
             cat > /tmp/fix-build-deps.js << 'EOF'
@@ -2555,7 +2555,7 @@ if ! docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
 fi
 
 # Verificar se YAML está válido primeiro
-log_info "🔍 Validando YAML antes do deploy..."
+ 
 
 # Verificar se arquivo YAML existe e tem conteúdo
 if [ ! -f docker-stack.yml ]; then
@@ -2617,14 +2617,14 @@ done
 
 if [ "$deploy_success" = true ]; then
     # Verificação REAL se stack foi criada
-    log_info "🔍 Verificando se stack foi realmente criada..."
+ 
     sleep 5
 
     if docker stack ls --format "{{.Name}}" | grep -q "^${STACK_NAME}$"; then
         log_success "✅ Stack $STACK_NAME confirmada no Docker Swarm"
 
         # Verificar serviços com timeout
-        log_info "🔍 Aguardando criação dos serviços..."
+ 
         sleep 10
 
         services_count=$(docker service ls --format "{{.Name}}" | grep "^${STACK_NAME}_" | wc -l)
@@ -2704,7 +2704,7 @@ WEBHOOK_STATUS="✅ INTEGRADO (no serviço web)"
 MONITOR_STATUS="✅ INTEGRADO (no serviço web)"
 
     # Mostrar logs do webhook se houver problema
-    log_info "🔍� Logs do webhook:"
+ 
     docker service logs "${STACK_NAME}_webhook" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
 
 # Verificar serviço monitor
