@@ -317,26 +317,53 @@ export default function HomePage() {
                   href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group"
+                  className="group cursor-pointer"
                   title="WhatsApp"
+                  onClick={(e) => {
+                    handleIconClick('whatsapp')
+                  }}
                 >
-                  <MessageCircle className="w-8 h-8 text-gray-400 group-hover:text-green-500 group-active:fill-green-500 transition-all duration-200" />
+                  <MessageCircle
+                    className={`w-8 h-8 transition-all duration-200 ${
+                      clickedIcons.whatsapp
+                        ? 'text-green-500 fill-green-500'
+                        : 'text-gray-400 group-hover:text-green-500'
+                    }`}
+                  />
                 </a>
                 <a
                   href="mailto:contato@kryonix.com.br"
-                  className="group"
+                  className="group cursor-pointer"
                   title="Email"
+                  onClick={(e) => {
+                    handleIconClick('email')
+                  }}
                 >
-                  <Mail className="w-8 h-8 text-gray-400 group-hover:text-blue-500 group-active:fill-blue-500 transition-all duration-200" />
+                  <Mail
+                    className={`w-8 h-8 transition-all duration-200 ${
+                      clickedIcons.email
+                        ? 'text-blue-500 fill-blue-500'
+                        : 'text-gray-400 group-hover:text-blue-500'
+                    }`}
+                  />
                 </a>
                 <a
                   href="https://instagram.com/kryon.ix"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group"
+                  className="group cursor-pointer"
                   title="Instagram"
+                  onClick={(e) => {
+                    handleIconClick('instagram')
+                  }}
                 >
-                  <Instagram className="w-8 h-8 text-gray-400 group-hover:text-purple-500 group-active:fill-purple-500 transition-all duration-200" />
+                  <Instagram
+                    className={`w-8 h-8 transition-all duration-200 ${
+                      clickedIcons.instagram
+                        ? 'text-purple-500 fill-purple-500'
+                        : 'text-gray-400 group-hover:text-purple-500'
+                    }`}
+                  />
                 </a>
               </div>
             </div>
