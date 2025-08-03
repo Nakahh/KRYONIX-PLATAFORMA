@@ -87,7 +87,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚��█████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ���═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -196,7 +196,7 @@ auto_update_dependencies() {
         log_info "📥 Tentativa de instalação $install_attempts/$max_attempts..."
 
         if npm install --no-audit --no-fund --prefer-offline 2>&1 | tee /tmp/npm-install.log; then
-            log_success "✅ Dependências instaladas com sucesso"
+            log_success "✅ Depend��ncias instaladas com sucesso"
             break
         else
             log_warning "⚠️ Falha na tentativa $install_attempts"
@@ -1598,7 +1598,7 @@ fi
 
 
 if [ -d ".next" ]; then
-    log_info "⚠️ Diretório .next existe - removendo para garantir build limpo..."
+    log_info "��️ Diretório .next existe - removendo para garantir build limpo..."
     rm -rf .next
     rm -rf node_modules/.cache 2>/dev/null || true
     npm cache clean --force >/dev/null 2>&1 || true
@@ -1610,7 +1610,7 @@ log_info "Iniciando Docker build multi-stage com Next.js..."
 if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build.log; then
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
-    log_success "�� Imagem criada: kryonix-plataforma:$TIMESTAMP"
+    log_success "🎉 Imagem criada: kryonix-plataforma:$TIMESTAMP"
 else
 
     log_error "❌ Falha no build da imagem Docker"
