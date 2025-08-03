@@ -45,6 +45,10 @@ export default function PartPage({ params }: { params: { slug: string } }) {
     )
   }
 
+  if (loading) {
+    return <LoadingScreen onComplete={handleLoadingComplete} />
+  }
+
   if (!part) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
