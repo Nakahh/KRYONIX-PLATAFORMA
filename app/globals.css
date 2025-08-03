@@ -89,6 +89,15 @@
   .gradient-text {
     @apply bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent;
   }
+
+  /* Transições suaves para modo escuro */
+  .card-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .text-transition {
+    @apply transition-colors duration-300 ease-in-out;
+  }
 }
 
 @layer utilities {
