@@ -1,25 +1,30 @@
 # Multi-stage build para otimização
-FROM node:18-bullseye-slim AS builder
+FROM node:18-alpine AS builder
 
 # Instalar dependências de build
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
+    curl \
+    wget \
+    bash \
     git \
     python3 \
     make \
     g++ \
-    && rm -rf /var/lib/apt/lists/*
+    dumb-init
 
 WORKDIR /app
 
-# Copiar package files
+# Copiar package files primeiro para aproveitar cache do Docker
 COPY package*.json ./
+
+# Verificar se outros arquivos de config existem antes de copiar
 COPY next.config.js ./
-COPY tailwind.config.js ./
-COPY postcss.config.js ./
-COPY tsconfig.json ./
+COPY tailwind.config.js* ./
+COPY postcss.config.js* ./
+COPY tsconfig.json* ./
 
 # Instalar todas as dependências (incluindo dev)
-RUN npm install && npm cache clean --force
+RUN npm ci && npm cache clean --force
 
 # Copiar código fonte
 COPY app/ ./app/
@@ -30,21 +35,19 @@ COPY lib/ ./lib/
 RUN npm run build
 
 # Stage de produção
-FROM node:18-bullseye-slim AS production
+FROM node:18-alpine AS production
 
 # Instalar dependências do sistema
-RUN apt-get update && apt-get install -y \
-    tini \
+RUN apk add --no-cache \
     curl \
+    wget \
     bash \
     git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Instalar npm-check-updates globalmente
-RUN npm install -g npm-check-updates
+    dumb-init
 
 # Criar usuário não-root
-RUN groupadd -r kryonix && useradd -r -g kryonix kryonix
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S kryonix -u 1001
 
 WORKDIR /app
 
@@ -53,32 +56,33 @@ COPY package*.json ./
 COPY next.config.js ./
 
 # Instalar apenas dependências de produção
-RUN npm install --production && npm cache clean --force
+RUN npm ci --only=production && npm cache clean --force || \
+    npm install --only=production && npm cache clean --force
 
 # Copiar arquivos buildados do stage anterior
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 
-# Copiar código da aplicação
+# Copiar código da aplicação (verificar se existem antes de copiar)
 COPY server.js ./
 COPY webhook-listener.js ./
 COPY kryonix-monitor.js ./
-COPY webhook-deploy.sh ./
 COPY check-dependencies.js ./
 COPY validate-dependencies.js ./
 COPY fix-dependencies.js ./
+
+# Copiar webhook-deploy.sh apenas se existir
+COPY webhook-deploy.sh* ./
+
+# Copiar código da aplicação
 COPY app/ ./app/
 COPY lib/ ./lib/
 
-# Copiar outros arquivos necessários se existirem
-COPY *.config.js ./
-COPY *.md ./
-
-# Tornar scripts executáveis
-RUN chmod +x webhook-deploy.sh
+# Tornar scripts executáveis se existirem
+RUN [ -f "webhook-deploy.sh" ] && chmod +x webhook-deploy.sh || true
 
 # Configurar permissões
-RUN chown -R kryonix:kryonix /app
+RUN chown -R kryonix:nodejs /app && chmod -R 755 /app
 
 USER kryonix
 
@@ -89,6 +93,6 @@ EXPOSE 8080 8082 8084
 HEALTHCHECK --interval=30s --timeout=15s --start-period=120s --retries=5 \
     CMD curl -f http://localhost:8080/health || exit 1
 
-# Comando de start com tini
-ENTRYPOINT ["/usr/bin/tini", "--"]
+# Comando de start com dumb-init
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["node", "server.js"]
