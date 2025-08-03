@@ -143,16 +143,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link href="/whatsapp" className="btn-primary">
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Acompanhar Desenvolvimento
-              </Link>
-              <Link href="/progresso" className="btn-secondary">
-                <BarChart3 className="w-5 h-5 mr-2" />
-                Ver Progresso Completo
-              </Link>
-            </div>
+
 
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
