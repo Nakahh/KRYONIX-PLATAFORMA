@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                   ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}         ║"
     echo    "║                                                                   ║"
-    echo    "╚═══════════════════════════════════════════════════════════════════╝"
+    echo    "╚══════════════════════════════════════════════════════════════════��╝"
     echo -e "${RESET}\n"
 
 
@@ -156,7 +156,7 @@ animate_progress_bar() {
     for ((j=1; j<=filled; j++)); do echo -ne "█"; done
 
     # Desenhar barra vazia
-    for ((j=filled+1; j<=BAR_WIDTH; j++)); do echo -ne "��"; done
+    for ((j=filled+1; j<=BAR_WIDTH; j++)); do echo -ne "░"; done
 
     echo -ne "] ${target_progress}% ${status_icon}${RESET}"
 
@@ -2952,7 +2952,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç����o Web:${RESET} ${WEB_
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ��� DEPLOYADO"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
+echo -e "    ${BLUE}���${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
 echo -e "${CYAN}${BOLD}🧪 TESTES WEBHOOK:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Local:${RESET} $LOCAL_WEBHOOK_STATUS"
