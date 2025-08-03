@@ -41,7 +41,7 @@ DIM='\033[2m'
 # Emojis e caracteres especiais - CORRIGIDO para compatibilidade
 CHECKMARK='✅'
 CROSS='❌'
-ARROW='��'
+ARROW='->'
 GEAR='⚙'
 ROCKET='🚀'
 WRENCH='🔧'
@@ -98,8 +98,8 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██��� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║█��╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -122,7 +122,7 @@ show_banner() {
 init_progress_system() {
     # Banner animado de inicialização
     printf "\n${BOLD}${BLUE}"
-    printf "╔═══════════════════════════════════════════════════════════════════════════════════╗\n"
+    printf "╔═════════���═════════════════════════════════════════════════════════════════════════╗\n"
     printf "║                                                                                   ║\n"
     printf "║                      🚀 SISTEMA DE INSTALAÇÃO KRYONIX 🚀                         ║\n"
     printf "║                                                                                   ║\n"
@@ -260,7 +260,7 @@ show_progress() {
         printf "\n${BOLD}${BRIGHT_GREEN}"
         printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
-        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━���━━━━━━━🎉${RESET}\n\n"
+        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
     else
         # Pequena pausa para animação suave
         sleep 0.2
@@ -626,7 +626,7 @@ fresh_git_clone() {
 
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
-        log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
+        log_info "�� Verifique se o PAT token tem permissões 'repo' para repositórios privados"
         return 1
     fi
     log_success "📁 Conectividade e token validados"
@@ -717,7 +717,7 @@ verify_fresh_clone() {
     commit_date=$(git log -1 --pretty=format:"%ci" 2>/dev/null || echo "N/A")
     author=$(git log -1 --pretty=format:"%an" 2>/dev/null || echo "N/A")
 
-    log_info "📊 Informa��ões do repositório:"
+    log_info "📊 Informações do repositório:"
     log_info "   Commit: $commit_hash"
     log_info "   Mensagem: $commit_msg"
     log_info "   Data: $commit_date"
@@ -2934,7 +2934,7 @@ if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
     EXTERNAL_WEBHOOK_STATUS="✅ FUNCIONANDO"
 else
-    EXTERNAL_WEBHOOK_STATUS="⚠�� VERIFICAR"
+    EXTERNAL_WEBHOOK_STATUS="⚠️ VERIFICAR"
 fi
 
 
@@ -3000,7 +3000,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��═════════════���════════��═════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
