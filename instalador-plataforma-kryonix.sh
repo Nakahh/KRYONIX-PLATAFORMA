@@ -111,7 +111,7 @@ show_progress() {
     local filled=$((progress / 2))
 
     printf "\r${CYAN}[%-50s] %d%% ${RESET}%s" \
-        "$(printf "%*s" $filled "" | tr ' ' '█')" \
+        "$(printf "%*s" $filled "" | tr ' ' '#')" \
         "$progress" \
         "$description"
 
@@ -385,7 +385,7 @@ nuclear_cleanup() {
     # Desmontar qualquer mount no diretório
     sudo umount "$PROJECT_DIR"/* 2>/dev/null || true
 
-    # REMOÇÃO COMPLETA - incluindo arquivos ocultos, .git, tudo
+    # REMO��ÃO COMPLETA - incluindo arquivos ocultos, .git, tudo
     if [ -d "$PROJECT_DIR" ]; then
         log_info "🗑️ Removendo tudo de $PROJECT_DIR (incluindo .git)..."
 
@@ -831,7 +831,7 @@ try {
 if (missing.length === 0) {
     console.log('🎉 Todas as dependências críticas instaladas!');
     console.log('✅ Instaladas: ' + installed + '/' + deps.length);
-    console.log('📊 Resumo da verificação:');
+    console.log('�� Resumo da verificação:');
     console.log('   Dependências críticas: ' + deps.length);
     console.log('   Instaladas com sucesso: ' + installed);
     try {
