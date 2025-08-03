@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, CheckCircle, Clock, AlertCircle, Sparkles, Code2, Database, Shield, Zap } from 'lucide-react'
+import LoadingScreen from '../../components/LoadingScreen'
+import ProgressBar from '../../components/ProgressBar'
 import { partsData } from '../../../lib/data/parts-data'
 
 interface Part {
@@ -292,7 +294,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
                       ></div>
                     </div>
                     <div className="text-xs text-gray-500">
-                      {part.status === 'completed' && 'Implementação conclu��da e testada'}
+                      {part.status === 'completed' && 'Implementação concluída e testada'}
                       {part.status === 'in_progress' && 'Em desenvolvimento ativo'}
                       {part.status === 'pending' && 'Aguardando início do desenvolvimento'}
                     </div>
