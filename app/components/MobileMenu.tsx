@@ -63,7 +63,7 @@ export default function MobileMenu() {
             </div>
             <div>
               <h2 className="text-xl font-bold gradient-text">KRYONIX</h2>
-              <p className="text-xs text-gray-600">Plataforma SaaS IA</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Plataforma SaaS IA</p>
             </div>
           </div>
 
@@ -77,8 +77,8 @@ export default function MobileMenu() {
                 className={`
                   flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200
                   ${item.active 
-                    ? 'bg-primary-100 text-primary-700 border-l-4 border-primary-500' 
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-l-4 border-primary-500' 
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
                   }
                 `}
               >
@@ -90,12 +90,12 @@ export default function MobileMenu() {
 
           {/* Footer */}
           <div className="absolute bottom-6 left-6 right-6">
-            <div className="border-t border-gray-200 pt-4">
-              <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+              <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                 <div className="status-online"></div>
                 <span>Sistema Online</span>
               </div>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                 © 2025 KRYONIX
               </p>
             </div>
