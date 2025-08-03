@@ -64,7 +64,7 @@ export default function ProgressoPage() {
                 className="rounded-lg"
               />
               <div className="flex items-center space-x-2">
-                <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                <div className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-green-400 bg-clip-text text-transparent">
                   KRYONIX
                 </div>
                 <div className="flex items-center space-x-1">
