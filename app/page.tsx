@@ -23,6 +23,11 @@ import ProgressBar from './components/ProgressBar'
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [clickedIcons, setClickedIcons] = useState({
+    whatsapp: false,
+    email: false,
+    instagram: false
+  })
 
   useEffect(() => {
     setMounted(true)
