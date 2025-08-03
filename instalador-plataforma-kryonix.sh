@@ -99,7 +99,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ��█╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   █���║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -1539,7 +1539,7 @@ RUN apk add --no-cache \
     git \
     dumb-init
 
-# Criar usuário n��o-root
+# Criar usuário não-root
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S kryonix -u 1001
 
@@ -2451,7 +2451,7 @@ deploy() {
 
     # Instalar dependências
     log "📦 Instalando dependências..."
-    npm install --production
+    npm install --production --silent >/dev/null 2>&1
 
     # Rebuild da imagem
     log "🏗️ Fazendo rebuild da imagem Docker..."
@@ -2752,7 +2752,7 @@ log_info "   Serviços: $(grep -c "image: kryonix-plataforma" docker-stack.yml) 
 log_warning "⚡ Bypassing dry-run (problema conhecido de travamento)"
 log_info "🚀 Validação simples e deploy direto..."
 
-# Validação b��sica apenas
+# Validação básica apenas
 if [ ! -f "docker-stack.yml" ]; then
     log_error "❌ docker-stack.yml não encontrado!"
     exit 1
@@ -2917,7 +2917,7 @@ next_step
 # ============================================================================
 
 
-log_info "📁 Testando webhook e preparando relat��rio final..."
+log_info "📁 Testando webhook e preparando relatório final..."
 
 # Testar webhook local
 if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
@@ -3000,7 +3000,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════��═══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
@@ -3092,5 +3092,5 @@ echo ""
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Instalador completo criado com sucesso!${RESET}"
 else
-    echo -e "${RED}❌ Problemas na criação do instalador${RESET}"
+    echo -e "${RED}��� Problemas na criação do instalador${RESET}"
 fi
