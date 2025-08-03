@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Kryonix',
-  description: 'Plataforma empresarial multi-tenant com 32 stacks tecnológicas integradas e automação completa por inteligência artificial.',
+  description: 'Plataforma SaaS 100% Autônoma por IA',
   keywords: ['saas', 'ia', 'automação', 'multi-tenant', 'whatsapp', 'crm', 'brasil'],
   authors: [{ name: 'KRYONIX', url: 'https://www.kryonix.com.br' }],
   creator: 'Vitor Jayme Fernandes Ferreira',
@@ -32,10 +32,10 @@ export const metadata: Metadata = {
     shortcut: '/favicon.png',
   },
   openGraph: {
-    title: 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
-    description: 'Plataforma empresarial multi-tenant com 32 stacks integradas, WhatsApp Business, CRM inteligente, automação 24/7 e muito mais. Criação de clientes em 2-5 minutos.',
+    title: 'Kryonix',
+    description: 'Plataforma SaaS 100% Autônoma por IA',
     url: 'https://www.kryonix.com.br',
-    siteName: 'KRYONIX',
+    siteName: 'Kryonix',
     locale: 'pt_BR',
     type: 'website',
     images: [
@@ -43,15 +43,16 @@ export const metadata: Metadata = {
         url: '/logo-kryonix.png',
         width: 1200,
         height: 630,
-        alt: 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
+        alt: 'Kryonix - Plataforma SaaS 100% Autônoma por IA',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
-    description: 'Plataforma empresarial multi-tenant com 32 stacks integradas e automação completa por IA.',
+    title: 'Kryonix',
+    description: 'Plataforma SaaS 100% Autônoma por IA',
     images: ['/logo-kryonix.png'],
+    creator: '@kryonix',
   },
   robots: {
     index: true,

@@ -21,6 +21,40 @@ log() {
     echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
 }
 
+# Auto-update dependencies function
+auto_update_dependencies() {
+    log "📦 Atualizando dependências automaticamente..."
+
+    # Backup
+    cp package.json package.json.backup || true
+
+    # Install npm-check-updates if not exists
+    if ! command -v ncu >/dev/null 2>&1; then
+        log "📦 Instalando npm-check-updates..."
+        npm install -g npm-check-updates >/dev/null 2>&1 || true
+    fi
+
+    # Update dependencies
+    if command -v ncu >/dev/null 2>&1; then
+        log "🔄 Verificando atualizações disponíveis..."
+        ncu --upgrade --target minor >/dev/null 2>&1 || true
+        log "✅ Dependências atualizadas para versões compatíveis"
+    fi
+
+    # Clean and reinstall
+    log "🧹 Limpando cache e reinstalando..."
+    npm cache clean --force >/dev/null 2>&1 || true
+    rm -rf node_modules package-lock.json 2>/dev/null || true
+
+    if npm install --production --no-audit --no-fund; then
+        log "✅ Dependências instaladas com sucesso"
+    else
+        log "⚠️ Problemas na instalação, restaurando backup..."
+        cp package.json.backup package.json || true
+        npm install --production >/dev/null 2>&1 || true
+    fi
+}
+
 # Função para atualizar dependências automaticamente
 auto_update_dependencies() {
     log "📦 Atualizando dependências automaticamente..."

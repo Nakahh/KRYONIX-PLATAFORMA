@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Configuracoes de encoding seguro para evitar problemas com caracteres especiais
+# Configura📁ões de encoding seguro para evitar problemas com caracteres especiais
 export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
 export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
@@ -41,7 +41,7 @@ DIM='\033[2m'
 # Emojis e caracteres especiais - CORRIGIDO para compatibilidade
 CHECKMARK='✅'
 CROSS='❌'
-ARROW='->'
+ARROW='→'
 GEAR='⚙'
 ROCKET='🚀'
 WRENCH='🔧'
@@ -55,7 +55,7 @@ DOMAIN_NAME="kryonix.com.br"
 DOCKER_NETWORK="Kryonix-NET"  # CORREÇÃO: Fixado para rede que funcionava
 STACK_NAME="Kryonix"
 
-# Configurações CI/CD - Credenciais funcionais extraídas do instalador antigo
+# Configurações CI/CD - Credenciais configuradas para operação 100% automática
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PAT_TOKEN="${PAT_TOKEN:-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}"
 WEBHOOK_SECRET="${WEBHOOK_SECRET:-Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8}"
@@ -86,7 +86,7 @@ STEP_DESCRIPTIONS=(
 )
 
 # ============================================================================
-# FUNCOES DE INTERFACE E PROGRESSO - CORRIGIDAS PARA ASCII
+# FUN��ÕES DE INTERFACE E PROGRESSO - CORRIGIDAS PARA ASCII
 # ============================================================================
 
 # Banner principal do instalador
@@ -95,11 +95,11 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██╗  █��╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗��█╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚████��█╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -109,9 +109,6 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
-
-
-
 
 
     echo ""
@@ -144,128 +141,78 @@ init_progress_system() {
 }
 
 # Barra de progresso ultra moderna com animação
-# Barra de progresso ultra moderna com animação fluida
 show_progress() {
     local step=$1
     local total=$2
     local description="$3"
     local progress=$((step * 100 / total))
-    local bar_width=70
+    local bar_width=60
     local filled=$((progress * bar_width / 100))
     local empty=$((bar_width - filled))
-    
-    # Limpar linhas anteriores se não for a primeira vez
-    if [ $step -gt 1 ]; then
-        printf "\033[8A\033[J"  # Move 8 linhas para cima e limpa até o final
-    fi
-    
-    # Header moderno com cantos arredondados
-    printf "${BOLD}${BRIGHT_BLUE}╭"
-    printf "─%.0s" $(seq 1 $((bar_width + 24)))
+
+    # Limpar linha atual
+    printf "\r\033[K"
+
+    # Cabeçalho da barra
+    printf "${BOLD}${WHITE}╭"
+    printf "─%.0s" $(seq 1 $((bar_width + 20)))
     printf "╮${RESET}\n"
-    
-    # Linha do título
-    printf "${BOLD}${BRIGHT_BLUE}│${RESET} ${BOLD}${WHITE}KRYONIX INSTALLER${RESET} "
-    local title_padding=$((bar_width + 6))
-    printf "%*s" $title_padding ""
-    printf "${BOLD}${BRIGHT_BLUE}│${RESET}\n"
-    
-    # Separador
-    printf "${BOLD}${BRIGHT_BLUE}├"
-    printf "─%.0s" $(seq 1 $((bar_width + 24)))
-    printf "┤${RESET}\n"
-    
+
     # Linha principal da barra
-    printf "${BOLD}${BRIGHT_BLUE}│${RESET} "
-    
-    # Barra de progresso com efeito visual moderno
+    printf "${BOLD}${WHITE}│${RESET} "
+
+    # Barra de progresso preenchida (azul brilhante)
     if [ $filled -gt 0 ]; then
-        # Usar diferentes intensidades para criar efeito visual
+        printf "${BOLD}${BLUE}"
         for i in $(seq 1 $filled); do
-            local intensity=$((i * 100 / filled))
-            if [ $intensity -gt 80 ]; then
-                printf "${BOLD}${BRIGHT_CYAN}█${RESET}"
-            elif [ $intensity -gt 60 ]; then
-                printf "${BOLD}${CYAN}█${RESET}"
-            elif [ $intensity -gt 40 ]; then
-                printf "${BOLD}${BLUE}█${RESET}"
+            if [ $i -eq $filled ] && [ $progress -lt 100 ]; then
+                printf "▶"  # Seta animada no final
             else
-                printf "${DIM}${BLUE}█${RESET}"
-            fi
-        done
-        
-        # Seta animada no final (se não estiver completo)
-        if [ $progress -lt 100 ]; then
-            case $((step % 3)) in
-                0) printf "${BOLD}${BRIGHT_YELLOW}▶${RESET}" ;;
-                1) printf "${BOLD}${YELLOW}▷${RESET}" ;;
-                2) printf "${BOLD}${BRIGHT_YELLOW}▶${RESET}" ;;
-            esac
-            filled=$((filled + 1))
-            empty=$((empty - 1))
-        fi
-    fi
-    
-    # Barra vazia com padrão pontilhado
-    if [ $empty -gt 0 ]; then
-        printf "${DIM}${GRAY}"
-        for i in $(seq 1 $empty); do
-            if [ $((i % 3)) -eq 0 ]; then
-                printf "·"
-            else
-                printf "░"
+                printf "█"
             fi
         done
         printf "${RESET}"
     fi
-    
-    # Status e porcentagem
-    printf " ${BOLD}${BRIGHT_BLUE}│${RESET} ${BOLD}${WHITE}%3d%%${RESET} " "$progress"
-    
-    # Indicador de status giratório ultra moderno
-    case $((step % 8)) in
-        0) printf "${BRIGHT_YELLOW}⠋${RESET}" ;;
-        1) printf "${BRIGHT_YELLOW}⠙${RESET}" ;;
-        2) printf "${BRIGHT_YELLOW}⠹${RESET}" ;;
-        3) printf "${BRIGHT_YELLOW}⠸${RESET}" ;;
-        4) printf "${BRIGHT_YELLOW}⠼${RESET}" ;;
-        5) printf "${BRIGHT_YELLOW}⠴${RESET}" ;;
-        6) printf "${BRIGHT_YELLOW}⠦${RESET}" ;;
-        7) printf "${BRIGHT_YELLOW}⠧${RESET}" ;;
-    esac
-    
-    printf " ${BOLD}${BRIGHT_BLUE}│${RESET}\n"
-    
-    # Linha de informação da etapa
-    printf "${BOLD}${BRIGHT_BLUE}│${RESET} ${BOLD}${PURPLE}Etapa ${step}/${total}:${RESET} %-*s ${BOLD}${BRIGHT_BLUE}│${RESET}\n" $((bar_width + 8)) "$description"
-    
-    # Rodapé
-    printf "${BOLD}${BRIGHT_BLUE}╰"
-    printf "─%.0s" $(seq 1 $((bar_width + 24)))
-    printf "╯${RESET}\n"
-    
-    # Status detalhado embaixo
-    printf "\n${BOLD}${BRIGHT_CYAN}⚡ Status:${RESET} "
-    case $progress in
-        0-20) printf "${YELLOW}Inicializando...${RESET}" ;;
-        21-40) printf "${BRIGHT_BLUE}Configurando ambiente...${RESET}" ;;
-        41-60) printf "${PURPLE}Instalando dependências...${RESET}" ;;
-        61-80) printf "${CYAN}Compilando aplicação...${RESET}" ;;
-        81-99) printf "${BRIGHT_GREEN}Finalizando instalação...${RESET}" ;;
-        100) printf "${BOLD}${BRIGHT_GREEN}✅ CONCLUÍDO COM SUCESSO!${RESET}" ;;
-    esac
-    printf "\n"
-    
-    # Efeito visual final se completo
-    if [ $step -eq $total ]; then
-        printf "\n${BOLD}${BRIGHT_GREEN}"
-        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
-        printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
-        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
-    else
-        # Pequena pausa para animação suave
-        sleep 0.2
+
+    # Barra vazia (cinza claro)
+    if [ $empty -gt 0 ]; then
+        printf "${BOLD}\033[90m"  # Cinza escuro
+        printf "░%.0s" $(seq 1 $empty)
+        printf "${RESET}"
     fi
+
+    # Porcentagem e status
+    printf " ${BOLD}${WHITE}│${RESET} "
+    printf "${BOLD}${CYAN}%3d%%${RESET} " "$progress"
+
+    # Indicador de status animado
+    case $((step % 4)) in
+        0) printf "${YELLOW}●${RESET}" ;;
+        1) printf "${YELLOW}◐${RESET}" ;;
+        2) printf "${YELLOW}◑${RESET}" ;;
+        3) printf "${YELLOW}◒${RESET}" ;;
+    esac
+
+    printf " ${BOLD}${WHITE}│${RESET}\n"
+
+    # Rodapé da barra
+    printf "${BOLD}${WHITE}╰"
+    printf "─%.0s" $(seq 1 $((bar_width + 20)))
+    printf "╯${RESET}\n"
+
+    # Descrição da etapa atual
+    printf "${BOLD}${PURPLE}🔄 ${RESET}${BOLD}Executando:${RESET} ${CYAN}%s${RESET}\n" "$description"
+    printf "${BOLD}${WHITE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}\n\n"
+
+    # Mover cursor para cima para sobrescrever na próxima chamada
+    if [ $step -ne $total ]; then
+        printf "\033[6A"  # Move 6 linhas para cima
+    else
+        printf "${BOLD}${GREEN}🎉 Instalação concluída com sucesso!${RESET}\n\n"
+    fi
+
+    # Pequena pausa para efeito visual
+    sleep 0.1
 }
 
 # Animação de carregamento entre etapas
@@ -319,7 +266,7 @@ log_error() {
 }
 
 # ============================================================================
-# FUNCOES DE ATUALIZACAO AUTOMATICA DE DEPENDENCIAS
+# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
 # ============================================================================
 
 # Função para atualizar dependências automaticamente
@@ -334,7 +281,7 @@ auto_update_dependencies() {
 
     # Backup do package.json original
     cp package.json package.json.backup
-    log_info "Backup do package.json criado"
+    log_info "���� Backup do package.json criado"
 
     # Atualizar para versões mais recentes (mantendo compatibilidade)
 
@@ -368,8 +315,8 @@ auto_update_dependencies() {
         install_attempts=$((install_attempts + 1))
         log_info "📥 Tentativa de instalação $install_attempts/$max_attempts..."
 
-        if npm install --no-audit --no-fund --prefer-offline --silent >/dev/null 2>&1; then
-            log_success "Dependencias instaladas com sucesso"
+        if npm install --no-audit --no-fund --prefer-offline 2>&1 | tee /tmp/npm-install.log; then
+            log_success "✅ Depend��ncias instaladas com sucesso"
             break
         else
             log_warning "⚠️ Falha na tentativa $install_attempts"
@@ -441,14 +388,14 @@ advanced_dependency_check() {
     # Executar verificador próprio do projeto
     if [ -f "check-dependencies.js" ]; then
         log_info "📋 Executando verificador específico do KRYONIX..."
-        if node check-dependencies.js >/dev/null 2>&1; then
+        if node check-dependencies.js 2>&1 | tee /tmp/deps-check.log; then
             log_success "✅ Verificação espec📁fica passou"
         else
             log_error "📁 Verificação específica falhou"
             log_info "📋 Tentando correção automática..."
 
             # Correção automática
-            if node fix-dependencies.js >/dev/null 2>&1; then
+            if node fix-dependencies.js 2>&1 | tee /tmp/deps-fix.log; then
                 log_success "✅ Correção automática aplicada"
             else
                 log_warning "📁️ Correção manual pode ser necess📁ria"
@@ -490,7 +437,7 @@ advanced_dependency_check() {
 }
 
 # ============================================================================
-# FUNCOES AUXILIARES CENTRALIZADAS
+# FUNÇÕES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
 # CORREÇÃO: Fun📁ão simplificada para garantir rede Kryonix-NET
@@ -599,14 +546,14 @@ fresh_git_clone() {
 
 
     # Configurar Git globalmente ANTES de tentar clone
-    git config --global user.name "KRYONIX Deploy" >/dev/null 2>&1
-    git config --global user.email "deploy@kryonix.com.br" >/dev/null 2>&1
-    git config --global pull.rebase false >/dev/null 2>&1
-    git config --global init.defaultBranch main >/dev/null 2>&1
-    git config --global --add safe.directory "$target_dir" >/dev/null 2>&1
-    git config --global http.postBuffer 524288000 >/dev/null 2>&1
-    git config --global core.compression 0 >/dev/null 2>&1
-    git config --global http.sslVerify true >/dev/null 2>&1
+    git config --global user.name "KRYONIX Deploy"
+    git config --global user.email "deploy@kryonix.com.br"
+    git config --global pull.rebase false
+    git config --global init.defaultBranch main
+    git config --global --add safe.directory "$target_dir"
+    git config --global http.postBuffer 524288000
+    git config --global core.compression 0
+    git config --global http.sslVerify true
 
     # Limpar credenciais antigas
     git config --global --unset-all credential.helper 2>/dev/null || true
@@ -645,13 +592,13 @@ fresh_git_clone() {
 
         log_info "Tentando clone com credenciais armazenadas..."
 
-        if git clone --quiet \
+        if git clone --verbose \
                     --single-branch \
                     --branch "$branch" \
                     --depth 1 \
                     --no-tags \
                     "$auth_url" \
-                    . >/dev/null 2>&1; then
+                    . 2>&1; then
 
             # Imediatamente buscar refs mais recentes
             log_info "📡 Buscando refs mais recentes para garantir versão mais atualizada..."
@@ -1765,7 +1712,7 @@ fi
 log_info "📊 Total de correções aplicadas: $correction_count/4"
 
 if [ $correction_count -gt 0 ]; then
-    log_success "🎉 Correç��es de TypeScript aplicadas com sucesso!"
+    log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
 else
     log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
 fi
@@ -1783,7 +1730,7 @@ fi
 
 # Build com logs detalhados para diagnóstico
 log_info "Iniciando Docker build multi-stage com Next.js..."
-if docker build --no-cache -t kryonix-plataforma:latest . >/dev/null 2>&1; then
+if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build.log; then
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
     log_success "🎉 Imagem criada: kryonix-plataforma:$TIMESTAMP"
@@ -1951,7 +1898,7 @@ ANTICORRUPTION_CONFIG_EOF
                 sed -i 's/cleanDistDir: true,/cleanDistDir: true,\n  eslint: { ignoreDuringBuilds: true },\n  typescript: { ignoreBuildErrors: true },/g' next.config.js
                 log_success "✅ next.config.js otimizado para pular validações"
             fi
-            log_success "✅ Todas as corre��ões de TypeScript aplicadas"
+            log_success "✅ Todas as correções de TypeScript aplicadas"
             ;;
 
         "missing_autoprefixer"|"missing_postcss"|"missing_tailwind")
@@ -2409,7 +2356,7 @@ deploy() {
 
     log "📥 Clone FRESH da vers📁o mais recente..."
 
-    # Configurar Git e credenciais para reposit��rio privado
+    # Configurar Git e credenciais para repositório privado
     git config --global user.name "KRYONIX Deploy" 2>/dev/null || true
     git config --global user.email "deploy@kryonix.com.br" 2>/dev/null || true
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
@@ -2452,7 +2399,7 @@ deploy() {
 
     # Instalar dependências
     log "📦 Instalando dependências..."
-    npm install --production --silent >/dev/null 2>&1
+    npm install --production
 
     # Rebuild da imagem
     log "🏗️ Fazendo rebuild da imagem Docker..."
@@ -2473,7 +2420,7 @@ deploy() {
         local max_attempts=3
         local attempt=1
 
-        log "��� Verificando saúde do serviço $service_name..."
+        log "🔍 Verificando saúde do serviço $service_name..."
 
         while [ $attempt -le $max_attempts ]; do
             log "Tentativa $attempt/$max_attempts para $service_name"
@@ -3001,7 +2948,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══��══════════════════════��══��══════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
@@ -3018,7 +2965,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commi
 # Verificação especial para PR #22 (como no instalador antigo)
 if echo "$final_commit_msg" | grep -qi "#22"; then
     echo -e "    ${BLUE}│${RESET} ${YELLOW}⚠️ AVISO:${RESET} Detectada referência ao PR #22"
-    echo -e "    ${BLUE}���${RESET} ${YELLOW}   Isso pode significar que PR #22 É a versão mais recente${RESET}"
+    echo -e "    ${BLUE}│${RESET} ${YELLOW}   Isso pode significar que PR #22 É a versão mais recente${RESET}"
     echo -e "    ${BLUE}│${RESET} ${YELLOW}   ou há um problema de sincronização com GitHub${RESET}"
 else
     echo -e "    ${BLUE}│${RESET} ${GREEN}✅ Confirmado:${RESET} Não está no PR #22 - versão mais recente"
@@ -3077,7 +3024,7 @@ echo -e "${YELLOW}      webhook e monitor integrados no servi��o web${RESET}
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
 echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
 echo -e "    ${BLUE}│${RESET} 📋 Atualização automática de dependências a cada deploy"
-echo -e "    ${BLUE}���${RESET} ✅ Verificação contínua de dependências (a cada hora)"
+echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
 echo -e "    ${BLUE}│${RESET} 📋 Logs detalhados de todas as atualizações"
@@ -3093,5 +3040,5 @@ echo ""
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Instalador completo criado com sucesso!${RESET}"
 else
-    echo -e "${RED}��� Problemas na criação do instalador${RESET}"
+    echo -e "${RED}❌ Problemas na criação do instalador${RESET}"
 fi
