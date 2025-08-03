@@ -37,6 +37,13 @@ export default function HomePage() {
     setLoading(false)
   }
 
+  const handleIconClick = (iconType: 'whatsapp' | 'email' | 'instagram') => {
+    setClickedIcons(prev => ({
+      ...prev,
+      [iconType]: !prev[iconType]
+    }))
+  }
+
   const features = [
     {
       icon: Shield,
