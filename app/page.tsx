@@ -19,10 +19,15 @@ import ProgressBar from './components/ProgressBar'
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const handleLoadingComplete = () => {
+    setLoading(false)
+  }
 
   const features = [
     {
