@@ -286,19 +286,19 @@ export default function ProgressoPage() {
               </div>
             </div>
 
-            {/* System Status Section - Left Aligned */}
+            {/* System Status Section - Centered */}
             <div className="text-center">
               <h3 className="font-semibold mb-4 text-white">Status do Sistema</h3>
               <div className="space-y-3 text-sm">
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center justify-center space-x-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-gray-400">Desenvolvimento Ativo</span>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center justify-center space-x-2">
                   <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
                   <span className="text-gray-400">Monitoramento 24/7</span>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center justify-center space-x-2">
                   <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
                   <span className="text-gray-400">Backup Automático</span>
                 </div>
