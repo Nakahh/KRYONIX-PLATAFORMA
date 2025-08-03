@@ -86,7 +86,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ██║ █���╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -1579,16 +1579,20 @@ fi
 # Verificar se server.js tem o endpoint webhook
 if grep -q "/api/github-webhook" server.js; then
     # Webhook endpoint OK
+    :
 else
     # Webhook endpoint não encontrado
+    :
 fi
 
 # Verificar se arquivos de servi��os têm health check
 for service_file in webhook-listener.js kryonix-monitor.js; do
     if [ -f "$service_file" ] && grep -q "/health" "$service_file"; then
         # Health check OK
+        :
     else
         # Health check ausente
+        :
     fi
 done
 
@@ -1950,7 +1954,7 @@ EOF
             ;;
 
         *)
-            log_info "🔧 Aplicando correção genérica..."
+            log_info "🔧 Aplicando correç��o genérica..."
             # Aplicar todas as correções possíveis
             echo 'console.log("Emergency check passed");' > check-dependencies.js
             cp package.json package.json.emergency-backup
