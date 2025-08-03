@@ -122,11 +122,6 @@ export default function HomePage() {
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-success-100 text-success-700 text-sm font-medium mb-6">
-                <CheckCircle className="w-4 h-4 mr-2" />
-                EM DESENVOLVIMENTO - 53 PARTES PLANEJADAS
-              </div>
-              
               <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-balance">
                 <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Plataforma SaaS</span>
                 <br />

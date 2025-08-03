@@ -79,11 +79,6 @@ export default function ProgressoPage() {
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-success-100 text-success-700 text-sm font-medium mb-6">
-                <CheckCircle className="w-4 h-4 mr-2" />
-                PROGRESSO COMPLETO - 53 PARTES DETALHADAS
-              </div>
-              
               <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-balance">
                 <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Progresso</span>
                 <br />
