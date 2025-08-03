@@ -358,7 +358,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+      <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -371,12 +371,15 @@ export default function HomePage() {
               />
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-green-400 bg-clip-text text-transparent">KRYONIX</h1>
-                <p className="text-xs text-gray-600">Plataforma SaaS 100% Autônoma por IA</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400">Plataforma SaaS 100% Autônoma por IA</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
-              <span className="text-sm text-gray-600">Sistema Online</span>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Sistema Online</span>
+              </div>
+              <ThemeToggle />
             </div>
           </div>
         </div>
