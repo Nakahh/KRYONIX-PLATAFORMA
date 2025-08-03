@@ -11,7 +11,8 @@ import {
   BarChart3,
   MessageCircle,
   Instagram,
-  Mail
+  Mail,
+  Send
 } from 'lucide-react'
 import MobileMenu from '../components/MobileMenu'
 import LoadingScreen from '../components/LoadingScreen'
