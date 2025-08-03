@@ -335,7 +335,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
               <ProgressBar compact />
               <div className="mt-4 text-center">
                 <Link href="/progresso" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium">
-                  Ver todas as partes →
+                  Ver todas as partes ���
                 </Link>
               </div>
             </div>
@@ -419,7 +419,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
                   <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 transform ${
                     clickedIcons.whatsapp
                       ? 'bg-[#25D366] text-white scale-110 shadow-xl shadow-green-500/25'
-                      : 'bg-green-50 text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-green-500/25'
+                      : 'bg-green-50 dark:bg-green-900/20 text-[#25D366] dark:text-green-300 group-hover:bg-[#25D366] group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-green-500/25'
                   }`}>
                     <svg
                       className="w-5 h-5"
