@@ -148,7 +148,7 @@ log_error() {
 
 # Função para atualizar dependências automaticamente
 auto_update_dependencies() {
-    log_info "🔄 Iniciando atualização automática de dependências..."
+ 
 
     # Verificar se package.json existe
     if [ ! -f "package.json" ]; then
@@ -161,7 +161,7 @@ auto_update_dependencies() {
     log_info "📦 Backup do package.json criado"
 
     # Atualizar para versões mais recentes (mantendo compatibilidade)
-    log_info "🔄 Atualizando dependências para versões mais recentes..."
+ 
 
     # Usar npm-check-updates se disponível, senão instalar
     if ! command -v ncu >/dev/null 2>&1; then
@@ -171,7 +171,7 @@ auto_update_dependencies() {
 
     # Atualizar dependências com verificação de compatibilidade
     if command -v ncu >/dev/null 2>&1; then
-        log_info "🔄 Verificando atualiza📁ões disponíveis..."
+ 
         ncu --upgrade --target minor >/dev/null 2>&1 || true
         log_success "✅ Dependências atualizadas para versões menores compatíveis"
     fi
@@ -198,7 +198,7 @@ auto_update_dependencies() {
         else
             log_warning "⚠️ Falha na tentativa $install_attempts"
             if [ $install_attempts -lt $max_attempts ]; then
-                log_info "🔄 Tentando novamente em 5 segundos..."
+ 
                 sleep 5
             fi
         fi
@@ -420,7 +420,7 @@ fresh_git_clone() {
     local branch="${3:-main}"
     local pat_token="$4"
 
-    log_info "🔄 Clone FRESH garantindo vers📁o MAIS RECENTE..."
+ 
 
     # Configurar Git globalmente ANTES de tentar clone
     git config --global user.name "KRYONIX Deploy"
@@ -490,7 +490,7 @@ fresh_git_clone() {
 
             # Forçar atualização para absoluto mais recente se diferente
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
-                log_info "🔄 Atualizando para commit absoluto mais recente..."
+ 
                 git fetch origin HEAD 2>/dev/null || true
                 git reset --hard FETCH_HEAD 2>/dev/null || true
                 current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
@@ -775,7 +775,7 @@ if ! advanced_dependency_check; then
     log_warning "⚠️ Problemas detectados nas dependências"
 
     # Tentar instalação básica como fallback
-    log_info "🔄 Tentando instalação básica como fallback..."
+ 
     npm install --no-audit --no-fund 2>/dev/null || true
 fi
 
@@ -1851,7 +1851,7 @@ EOF
     esac
 
     # Tentar build com correções aplicadas
-    log_info "🔄 Tentando build novamente com correções aplicadas..."
+ 
     if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build-retry.log; then
         TIMESTAMP=$(date +%Y%m%d_%H%M%S)
         docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
@@ -1859,7 +1859,7 @@ EOF
 
         # Restaurar arquivos originais se houver backup
         if [ -f "package.json.emergency-backup" ]; then
-            log_info "🔄 Restaurando package.json original..."
+ 
             mv package.json.emergency-backup package.json
         fi
     else
@@ -2609,7 +2609,7 @@ while [ $deploy_attempts -lt $max_deploy_attempts ] && [ "$deploy_success" = fal
     else
         log_warning "⚠️ Tentativa $deploy_attempts falhou: $deploy_output"
         if [ $deploy_attempts -lt $max_deploy_attempts ]; then
-            log_info "🔄 Aguardando 10s antes da próxima tentativa..."
+ 
             sleep 10
         fi
     fi
@@ -2689,7 +2689,7 @@ else
     docker service logs "${STACK_NAME}_web" --tail 20 2>/dev/null || log_warning "Logs não disponíveis"
 
     # Tentar restart forçado
-    log_info "🔄 Tentando restart forçado do serviço..."
+ 
     docker service update --force "${STACK_NAME}_web" >/dev/null 2>&1 || true
 
     # Aguardar um pouco e verificar novamente
