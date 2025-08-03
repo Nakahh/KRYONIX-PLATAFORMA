@@ -38,11 +38,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
   }
 
   if (!mounted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-500"></div>
-      </div>
-    )
+    return null
   }
 
   if (loading) {
