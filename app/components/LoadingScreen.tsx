@@ -23,7 +23,7 @@ export default function LoadingScreen({ onComplete, duration = 1000 }: LoadingSc
   if (!isVisible) return null
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
       {/* Main Container */}
       <div className="relative flex flex-col items-center justify-center">
         
@@ -31,7 +31,7 @@ export default function LoadingScreen({ onComplete, duration = 1000 }: LoadingSc
         <div className="relative mb-8">
           {/* Logo Container */}
           <div className="relative w-48 h-48 flex items-center justify-center">
-            <div className="w-40 h-40 rounded-full bg-white shadow-2xl flex items-center justify-center relative overflow-hidden">
+            <div className="w-40 h-40 rounded-full bg-white dark:bg-gray-800 shadow-2xl flex items-center justify-center relative overflow-hidden">
               <Image
                 src="/logo-kryonix.png"
                 alt="KRYONIX"
@@ -55,7 +55,7 @@ export default function LoadingScreen({ onComplete, duration = 1000 }: LoadingSc
                   cx="50"
                   cy="50"
                   r="45"
-                  stroke="rgba(229, 231, 235, 0.3)"
+                  stroke="rgba(229, 231, 235, 0.3)" className="dark:stroke-gray-600"
                   strokeWidth="2"
                   fill="none"
                 />

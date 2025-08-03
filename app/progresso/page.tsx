@@ -16,11 +16,17 @@ import {
 import MobileMenu from '../components/MobileMenu'
 import LoadingScreen from '../components/LoadingScreen'
 import ProgressBar from '../components/ProgressBar'
+import ThemeToggle from '../components/ThemeToggle'
 import { partsData } from '../../lib/data/parts-data'
 
 export default function ProgressoPage() {
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [clickedIcons, setClickedIcons] = useState({
+    whatsapp: false,
+    email: false,
+    instagram: false
+  })
 
   useEffect(() => {
     setMounted(true)
@@ -28,6 +34,20 @@ export default function ProgressoPage() {
 
   const handleLoadingComplete = () => {
     setLoading(false)
+  }
+
+  const handleIconClick = (iconType: 'whatsapp' | 'email' | 'instagram') => {
+    setClickedIcons(prev => ({
+      ...prev,
+      [iconType]: true
+    }))
+
+    setTimeout(() => {
+      setClickedIcons(prev => ({
+        ...prev,
+        [iconType]: false
+      }))
+    }, 200)
   }
 
   // Estatísticas
@@ -44,165 +64,195 @@ export default function ProgressoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
       <MobileMenu />
-
+      
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="inline-flex items-center space-x-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200">
-              <ArrowLeft className="w-4 h-4" />
-              <span className="font-medium">Voltar</span>
+      <header className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Link 
+              href="/" 
+              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Voltar</span>
             </Link>
-            <div className="flex items-center space-x-3">
-              <Image
-                src="/logo-kryonix.png"
-                alt="KRYONIX Logo"
-                width={32}
-                height={32}
-                className="rounded-lg"
-              />
-              <div className="flex items-center space-x-2">
-                <div className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-green-400 bg-clip-text text-transparent">
-                  KRYONIX
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
-                  <span className="text-xs text-gray-600 hidden sm:block">Online</span>
-                </div>
-              </div>
+          </div>
+          
+          <div className="flex items-center space-x-3">
+            <Image 
+              src="/logo-kryonix.png" 
+              alt="KRYONIX" 
+              width={32} 
+              height={32} 
+              className="rounded-lg"
+            />
+            <span className="text-xl font-bold gradient-text">KRYONIX</span>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 text-sm">
+              <div className="status-online"></div>
+              <span className="text-gray-600 dark:text-gray-300">Online</span>
             </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-              <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-balance">
-                <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Progresso</span>
-                <br />
-                <span className="text-gray-900">Desenvolvimento KRYONIX</span>
-              </h1>
+      <div className="container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-sm font-medium mb-4">
+            <BarChart3 className="w-4 h-4 mr-2" />
+            Progresso
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+            Desenvolvimento <span className="gradient-text">KRYONIX</span>
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            Acompanhe o desenvolvimento detalhado de todas as 53 partes da plataforma SaaS 100% autônoma por IA.
+          </p>
+        </div>
 
-              <p className="text-xl text-gray-600 mb-8 text-balance max-w-2xl mx-auto">
-                Acompanhe o desenvolvimento detalhado de todas as 53 partes da plataforma SaaS 100% autônoma por IA.
-              </p>
+        {/* Progress Bar */}
+        <div className="mb-12">
+          <ProgressBar />
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 text-center">
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
             </div>
-
-            {/* Progress Bar */}
-            <div className="mb-8">
-              <ProgressBar compact={true} showDetails={false} className="max-w-2xl mx-auto" />
+            <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">{completed}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Concluídas</div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 text-center">
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">{inProgress}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Em Andamento</div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 text-center">
+            <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+            </div>
+            <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-1">{pending}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Pendentes</div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 text-center">
+            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-6 h-6 bg-purple-600 dark:bg-purple-400 rounded-full"></div>
+            </div>
+            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-1">53</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Total</div>
+          </div>
+        </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-                <div className="text-2xl font-bold text-success-600">{completed}</div>
-                <div className="text-sm text-gray-600">Concluídas</div>
-              </div>
-              <div className="card text-center">
-                <div className="text-2xl font-bold text-primary-600">{inProgress}</div>
-                <div className="text-sm text-gray-600">Em Andamento</div>
-              </div>
-              <div className="card text-center">
-                <div className="text-2xl font-bold text-yellow-600">{pending}</div>
-                <div className="text-sm text-gray-600">Pendentes</div>
-              </div>
-              <div className="card text-center">
-                <div className="text-2xl font-bold text-purple-600">53</div>
-                <div className="text-sm text-gray-600">Total</div>
+        {/* Progress Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Todas as Partes</h2>
+                <p className="text-gray-600 dark:text-gray-400">{partsData.length} partes do projeto</p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-
-
-      {/* Progress Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Todas as Partes
-              </h2>
-              <p className="text-lg text-gray-600">
-                {partsData.length} partes do projeto
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
+          
+          <div className="p-6">
+            <div className="space-y-4">
               {partsData.map((item) => (
                 <Link
                   key={item.part}
                   href={`/partes/${item.slug}`}
-                  className={`card hover:shadow-lg cursor-pointer transition-all duration-300 ${
-                    item.status === 'in_progress' ? 'ring-2 ring-primary-500' : ''
-                  }`}
+                  className="block group"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-4">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold ${
-                        item.status === 'completed' ? 'bg-success-500 text-white' :
-                        item.status === 'in_progress' ? 'bg-primary-500 text-white' :
-                        'bg-gray-200 text-gray-600'
+                  <div className="flex items-start space-x-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 transition-all duration-200 hover:shadow-md">
+                    <div className="flex-shrink-0">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        item.status === 'completed' 
+                          ? 'bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400' 
+                          : item.status === 'in_progress' 
+                          ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' 
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
                       }`}>
-                        {item.status === 'completed' ? <CheckCircle className="w-6 h-6" /> : item.part}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-lg">{item.title}</h3>
-                        <p className="text-sm text-gray-600 mb-2">{item.description}</p>
-                        <div className="text-xs text-primary-600 font-medium">{item.phase}</div>
+                        {item.status === 'completed' && <CheckCircle className="w-6 h-6" />}
+                        {item.status === 'in_progress' && <Clock className="w-6 h-6" />}
+                        {item.status === 'pending' && <AlertTriangle className="w-6 h-6" />}
                       </div>
                     </div>
-                    <div className="flex flex-col items-end space-y-2">
-                      {item.status === 'completed' && (
-                        <span className="px-3 py-1 text-xs bg-success-100 text-success-700 rounded-full font-medium">Concluída</span>
-                      )}
-                      {item.status === 'in_progress' && (
-                        <span className="px-3 py-1 text-xs bg-primary-100 text-primary-700 rounded-full font-medium">Em Andamento</span>
-                      )}
-                      {item.status === 'pending' && (
-                        <span className="px-3 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full font-medium">Pendente</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="border-t pt-4">
-                    <p className="text-sm text-gray-600 mb-3">{item.simple_description}</p>
-                    <div className="flex flex-wrap gap-1">
-                      {item.technologies.slice(0, 3).map((tech, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium"
-                        >
-                          {tech}
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                          Parte {item.part}
                         </span>
-                      ))}
-                      {item.technologies.length > 3 && (
-                        <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">
-                          +{item.technologies.length - 3} mais
-                        </span>
-                      )}
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                          {item.title}
+                        </h3>
+                      </div>
+                      
+                      <p className="text-gray-600 dark:text-gray-400 mb-3 leading-relaxed">
+                        {item.description}
+                      </p>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <span className="text-sm text-gray-500 dark:text-gray-400">{item.phase}</span>
+                          <div className="flex items-center space-x-2">
+                            {item.status === 'completed' && (
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300">
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                Concluída
+                              </span>
+                            )}
+                            {item.status === 'in_progress' && (
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300">
+                                <Clock className="w-3 h-3 mr-1" />
+                                Em Andamento
+                              </span>
+                            )}
+                            {item.status === 'pending' && (
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                                <AlertTriangle className="w-3 h-3 mr-1" />
+                                Pendente
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{item.simple_description}</p>
+                        <div className="flex items-center space-x-2 mt-2">
+                          {item.technologies.slice(0, 3).map((tech, index) => (
+                            <span key={index} className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-primary-100 dark:bg-primary-900/20 text-primary-800 dark:text-primary-300">
+                              {tech}
+                            </span>
+                          ))}
+                          {item.technologies.length > 3 && (
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              +{item.technologies.length - 3} mais
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </Link>
               ))}
             </div>
-
-            <div className="mt-12">
-              <ProgressBar className="max-w-4xl mx-auto" />
-            </div>
           </div>
         </div>
-      </section>
-
-
+      </div>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-6">
@@ -237,8 +287,15 @@ export default function ProgressoPage() {
                   rel="noopener noreferrer"
                   className="group cursor-pointer relative"
                   title="WhatsApp"
+                  onClick={(e) => {
+                    handleIconClick('whatsapp')
+                  }}
                 >
-                  <div className="w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 transform bg-green-50 text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-green-500/25">
+                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 transform ${
+                    clickedIcons.whatsapp
+                      ? 'bg-[#25D366] text-white scale-110 shadow-xl shadow-green-500/25'
+                      : 'bg-green-50 dark:bg-green-900/20 text-[#25D366] dark:text-green-300 group-hover:bg-[#25D366] group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-green-500/25'
+                  }`}>
                     <svg
                       className="w-5 h-5"
                       viewBox="0 0 24 24"
@@ -252,8 +309,15 @@ export default function ProgressoPage() {
                   href="mailto:contato@kryonix.com.br"
                   className="group cursor-pointer relative"
                   title="Email"
+                  onClick={(e) => {
+                    handleIconClick('email')
+                  }}
                 >
-                  <div className="w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 transform bg-blue-50 text-blue-500 group-hover:bg-blue-500 group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-blue-500/25">
+                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 transform ${
+                    clickedIcons.email
+                      ? 'bg-blue-500 text-white scale-110 shadow-xl shadow-blue-500/25'
+                      : 'bg-blue-50 dark:bg-blue-900/20 text-blue-500 dark:text-blue-300 group-hover:bg-blue-500 group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-blue-500/25'
+                  }`}>
                     <svg
                       className="w-5 h-5"
                       viewBox="0 0 24 24"
@@ -272,14 +336,21 @@ export default function ProgressoPage() {
                   rel="noopener noreferrer"
                   className="group cursor-pointer relative"
                   title="Instagram"
+                  onClick={(e) => {
+                    handleIconClick('instagram')
+                  }}
                 >
-                  <div className="w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 transform bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 text-purple-600 group-hover:from-purple-500 group-hover:via-pink-500 group-hover:to-orange-400 group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-purple-500/25">
+                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 transform ${
+                    clickedIcons.instagram
+                      ? 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white scale-110 shadow-xl shadow-purple-500/25'
+                      : 'bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-orange-900/20 text-purple-600 dark:text-purple-300 group-hover:from-purple-500 group-hover:via-pink-500 group-hover:to-orange-400 group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-purple-500/25'
+                  }`}>
                     <svg
                       className="w-5 h-5"
                       viewBox="0 0 24 24"
                       fill="currentColor"
                     >
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.40s-.644-1.44-1.439-1.44z"/>
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                     </svg>
                   </div>
                 </a>

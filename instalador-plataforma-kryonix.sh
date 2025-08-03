@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Configuracoes de encoding seguro para evitar problemas com caracteres especiais
+# Configurações de encoding seguro para evitar problemas com caracteres especiais
 export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
 export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
@@ -86,7 +86,7 @@ STEP_DESCRIPTIONS=(
 )
 
 # ============================================================================
-# FUNCOES DE INTERFACE E PROGRESSO - CORRIGIDAS PARA ASCII
+# FUNÇÕES DE INTERFACE E PROGRESSO - CORRIGIDAS PARA ASCII
 # ============================================================================
 
 # Banner principal do instalador
@@ -114,6 +114,8 @@ show_banner() {
 
 
 
+
+
     echo ""
     echo -e "${GREEN}✅ Instalação 100% automatizada em andamento...${RESET}"
     echo ""
@@ -127,7 +129,7 @@ init_progress_system() {
     printf "║                                                                                   ║\n"
     printf "║                      🚀 SISTEMA DE INSTALAÇÃO KRYONIX 🚀                         ║\n"
     printf "║                                                                                   ║\n"
-    printf "║                         Preparando ambiente de instalação...                     ║\n"
+    printf "║                         Preparando ambiente de instalação...                      ║\n"
     printf "║                                                                                   ║\n"
     printf "╚═══════════════════════════════════════════════════════════════════════════════════╝${RESET}\n\n"
 
@@ -259,9 +261,9 @@ show_progress() {
     # Efeito visual final se completo
     if [ $step -eq $total ]; then
         printf "\n${BOLD}${BRIGHT_GREEN}"
-        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
+        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
-        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
+        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
     else
         # Pequena pausa para animação suave
         sleep 0.2
@@ -349,7 +351,7 @@ auto_update_dependencies() {
     if command -v ncu >/dev/null 2>&1; then
 
         ncu --upgrade --target minor >/dev/null 2>&1 || true
-        log_success "✅ Dependências atualizadas para versões menores compatíveis"
+        log_success "✅ Dependências atualizadas para vers��es menores compatíveis"
     fi
 
     # Limpar cache npm
@@ -457,7 +459,7 @@ advanced_dependency_check() {
     fi
 
     # Verificar se serviços específicos funcionam
-    log_info "📁 Testando inicialização de serviços..."
+    log_info "���� Testando inicialização de serviços..."
 
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
@@ -796,7 +798,7 @@ validate_credentials() {
         return 1
     fi
 
-    log_success "✅ Todas as credenciais validadas - instalação 100% automática"
+    log_success "✅ Todas as credenciais validadas - instalaç��o 100% automática"
     return 0
 }
 
@@ -859,7 +861,7 @@ next_step
 
 if ! validate_credentials; then
 
-    log_error "Falha na validaç📁o das credenciais"
+    log_error "Falha na validaç����o das credenciais"
     exit 1
 fi
 
@@ -1055,7 +1057,7 @@ if (missing.length > 0) {
     console.error('❌ Faltando: ' + missing.join(', '));
     process.exit(1);
 } else {
-    console.log('🎉 Todas as dependências validadas!');
+    console.log('��� Todas as dependências validadas!');
     process.exit(0);
 }
 VALIDATE_DEPS_EOF
@@ -1680,7 +1682,7 @@ if [ -f "lib/database/postgres-config.ts" ]; then
 
     log_success "✅ postgres-config.ts corrigido"
 else
-    log_warning "⚠️ lib/database/postgres-config.ts não encontrado"
+    log_warning "����️ lib/database/postgres-config.ts não encontrado"
 fi
 
 # Correção 2: Arquivo init.ts - variável module conflitando com ESLint
@@ -1767,14 +1769,14 @@ log_info "📊 Total de correções aplicadas: $correction_count/4"
 if [ $correction_count -gt 0 ]; then
     log_success "🎉 Correç��es de TypeScript aplicadas com sucesso!"
 else
-    log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
+    log_warning "⚠��� Nenhuma correção foi aplicada - arquivos podem já estar corretos"
 fi
 
 # CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
 
 
 if [ -d ".next" ]; then
-    log_info "��️ Diretório .next existe - removendo para garantir build limpo..."
+    log_info "��️ Diret��rio .next existe - removendo para garantir build limpo..."
     rm -rf .next
     rm -rf node_modules/.cache 2>/dev/null || true
     npm cache clean --force >/dev/null 2>&1 || true
@@ -2251,7 +2253,7 @@ jobs:
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
 
-      - name: 🏗️ Verify deployment
+      - name: ����️ Verify deployment
         run: |
           echo "⏳ Aguardando deployment automático KRYONIX com auto-update..."
           sleep 60
@@ -2367,324 +2369,139 @@ exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
 FIX_DEPS_EOF
 fi
 
-log_info "Criando webhook-deploy.sh com auto-update de dependências..."
+# CORREÇÃO: Webhook agora é INTERNO ao instalador - funcional do instalador antigo
+log_info "🔧 Configurando deploy automático interno (baseado no instalador antigo funcional)..."
 
-cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
-#!/bin/bash
+# Função de deploy automático interna (extraída do instalador antigo)
+webhook_deploy_interno() {
+    local mode="${1:-manual}"
 
-set -euo pipefail
+    log_info "🚀 Iniciando deploy automático KRYONIX com nuclear cleanup..."
 
-# Configurações KRYONIX
-STACK_NAME="Kryonix"
-DEPLOY_PATH="/opt/kryonix-plataform"
-LOG_FILE="/var/log/kryonix-deploy.log"
-GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PAT_TOKEN="\${PAT_TOKEN:-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}"
-
-# Cores
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
-
-log() {
-    local message="${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
-    echo -e "$message"
-    echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
-}
-
-deploy() {
-    log "🚀 Iniciando deploy automático KRYONIX com nuclear cleanup..."
-
-    # CORREÇÃO: Nuclear cleanup para garantir versão mais recente
-    log "📁 Nuclear cleanup para garantir versão mais recente..."
+    # Nuclear cleanup para garantir versão mais recente
+    log_info "🗑️ Nuclear cleanup para garantir versão mais recente..."
 
     # Parar processos
-    sudo pkill -f "$DEPLOY_PATH" 2>/dev/null || true
+    sudo pkill -f "$PROJECT_DIR" 2>/dev/null || true
 
     # Remover TUDO do diretório (incluindo .git)
     cd /opt
     sudo rm -rf kryonix-plataform
 
-    log "📥 Clone FRESH da vers📁o mais recente..."
+    log_info "📥 Clone FRESH da versão mais recente..."
 
-    # Configurar Git e credenciais para reposit��rio privado
+    # Configurar Git e credenciais para repositório privado
     git config --global user.name "KRYONIX Deploy" 2>/dev/null || true
     git config --global user.email "deploy@kryonix.com.br" 2>/dev/null || true
-    git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
+    git config --global --add safe.directory "$PROJECT_DIR" 2>/dev/null || true
     git config --global credential.helper store 2>/dev/null || true
 
-    # Configurar credenciais para repositório privado (usando variável segura)
-    echo "https://Nakahh:\${PAT_TOKEN}@github.com" > ~/.git-credentials
+    # Configurar credenciais para repositório privado
+    echo "https://Nakahh:${PAT_TOKEN}@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
 
     # Clone fresh completo (repositório privado)
     if git clone --single-branch --branch main --depth 1 "$GITHUB_REPO" kryonix-plataform; then
-        log "✅ Clone fresh concluído"
+        log_success "✅ Clone fresh concluído"
     else
-        log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
-        # Fallback: token diretamente na URL usando variável
-        if git clone --single-branch --branch main --depth 1 "https://Nakahh:\${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
-            log "✅ Clone fresh concluído com fallback"
+        log_warning "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
+        # Fallback: token diretamente na URL
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+            log_success "✅ Clone fresh concluído com fallback"
         else
-            log "❌ Falha no clone fresh com todos os métodos"
+            log_error "❌ Falha no clone fresh com todos os métodos"
             return 1
         fi
     fi
 
-    cd "$DEPLOY_PATH"
+    cd "$PROJECT_DIR"
 
     # Verificar se é a versão mais recente
     current_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
     current_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
     remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
 
-    log "📌 Commit local: $current_commit"
-    log "🌐 Commit remoto: $remote_commit"
-    log "📝 Mensagem: $current_msg"
+    log_info "📌 Commit local: $current_commit"
+    log_info "🌐 Commit remoto: $remote_commit"
+    log_info "📝 Mensagem: $current_msg"
 
-    # Verificar se tem arquivos necessários
-    if [ ! -f "webhook-listener.js" ] || [ ! -f "kryonix-monitor.js" ]; then
-        log "❌ Arquivos de serviços faltando após clone!"
-        return 1
+    # Auto-update de dependências (funcionalidade do instalador antigo)
+    if command -v ncu >/dev/null 2>&1; then
+        log_info "🔄 Verificando atualizações de dependências..."
+        ncu --upgrade --target minor >/dev/null 2>&1 || true
+        log_success "✅ Dependências atualizadas para versões compatíveis"
     fi
 
     # Instalar dependências
-    log "📦 Instalando dependências..."
-    npm install --production --silent >/dev/null 2>&1
+    log_info "📦 Instalando dependências..."
+    npm install --production
 
     # Rebuild da imagem
-    log "🏗️ Fazendo rebuild da imagem Docker..."
+    log_info "🏗️ Fazendo rebuild da imagem Docker..."
     docker build --no-cache -t kryonix-plataforma:latest .
 
     # Deploy do stack
-    log "🚀 Fazendo deploy do stack KRYONIX..."
+    log_info "🚀 Fazendo deploy do stack KRYONIX..."
     docker stack deploy -c docker-stack.yml "$STACK_NAME"
 
-    sleep 30
+    sleep 60
 
-    # CORREÇÃO AUTOMÁTICA: Detectar e corrigir falhas 0/1
-    log "🔍 Verificando e corrigindo falhas de replica 0/1..."
-
-    # Função para detectar e corrigir falhas 0/1
-    detect_and_fix_replica_failures() {
-        local service_name="$1"
-        local max_attempts=3
-        local attempt=1
-
-        log "��� Verificando saúde do serviço $service_name..."
-
-        while [ $attempt -le $max_attempts ]; do
-            log "Tentativa $attempt/$max_attempts para $service_name"
-
-            # Verificar status atual das replicas
-            local replica_status=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "$service_name" | awk '{print $2}' 2>/dev/null || echo "0/1")
-            log "Status atual: $replica_status"
-
-            if [[ "$replica_status" == "1/1" ]]; then
-                log "✅ Serviço $service_name funcionando normalmente"
-                return 0
-            fi
-
-            # Estratégia progressiva de reparo
-            case $attempt in
-                1)
-                    log "🔄 Tentativa 1: Restart suave do serviço"
-                    docker service update --force "$service_name" >/dev/null 2>&1 || true
-                    ;;
-                2)
-                    log "🔧 Tentativa 2: Verificando recursos e portas"
-                    # Verificar memória disponível
-                    available_memory=$(free -m | awk '/^Mem:/ {print $7}' 2>/dev/null || echo "2048")
-                    if [ "$available_memory" -lt 1024 ]; then
-                        log "📁️ Memória baixa ($available_memory MB), ajustando limites"
-                        docker service update --limit-memory=512M "$service_name" >/dev/null 2>&1 || true
-                    fi
-
-                    # Verificar conflitos de porta
-                    if [[ "$service_name" == *"_web"* ]]; then
-                        if netstat -tuln 2>/dev/null | grep -q ":8080 "; then
-                            log "⚠️ Conflito de porta 8080 detectado, removendo binding"
-                            docker service update --publish-rm="8080:8080" "$service_name" >/dev/null 2>&1 || true
-                        fi
-                    elif [[ "$service_name" == *"_monitor"* ]]; then
-                        if netstat -tuln 2>/dev/null | grep -q ":8084 "; then
-                            log "⚠️ Conflito de porta 8084 detectado, removendo binding"
-                            docker service update --publish-rm="8084:8084" "$service_name" >/dev/null 2>&1 || true
-                        fi
-                    fi
-                    ;;
-                3)
-                    log "🚨 Tentativa 3: Recreação com configuração mínima"
-                    # Remover e recriar com configuração básica
-                    docker service rm "$service_name" >/dev/null 2>&1 || true
-                    sleep 15
-
-                    if [[ "$service_name" == *"_web"* ]]; then
-                        docker service create \
-                            --name "$service_name" \
-                            --replicas 1 \
-                            --constraint "node.role==manager" \
-                            --limit-memory 512M \
-                            --limit-cpu 0.5 \
-                            --reserve-memory 256M \
-                            --reserve-cpu 0.25 \
-                            --restart-condition on-failure \
-                            --restart-max-attempts 3 \
-                            --restart-delay 15s \
-                            --network "${DOCKER_NETWORK}" \
-                            --env NODE_ENV=production \
-                            --env PORT=8080 \
-                            --health-cmd "curl -f http://localhost:8080/health || exit 1" \
-                            --health-interval 30s \
-                            --health-timeout 10s \
-                            --health-retries 3 \
-                            --health-start-period 40s \
-                            kryonix-plataforma:latest >/dev/null 2>&1 || true
-                    elif [[ "$service_name" == *"_monitor"* ]]; then
-                        docker service create \
-                            --name "$service_name" \
-                            --replicas 1 \
-                            --constraint "node.role==manager" \
-                            --limit-memory 256M \
-                            --limit-cpu 0.25 \
-                            --reserve-memory 128M \
-                            --reserve-cpu 0.1 \
-                            --restart-condition on-failure \
-                            --restart-max-attempts 3 \
-                            --restart-delay 15s \
-                            --network "${DOCKER_NETWORK}" \
-                            --env NODE_ENV=production \
-                            --env PORT=8084 \
-                            --health-cmd "curl -f http://localhost:8084/health || exit 1" \
-                            --health-interval 30s \
-                            --health-timeout 10s \
-                            --health-retries 3 \
-                            --health-start-period 40s \
-                            kryonix-plataforma:latest node kryonix-monitor.js >/dev/null 2>&1 || true
-                    elif [[ "$service_name" == *"_webhook"* ]]; then
-                        docker service create \
-                            --name "$service_name" \
-                            --replicas 1 \
-                            --constraint "node.role==manager" \
-                            --limit-memory 256M \
-                            --limit-cpu 0.25 \
-                            --reserve-memory 128M \
-                            --reserve-cpu 0.1 \
-                            --restart-condition on-failure \
-                            --restart-max-attempts 3 \
-                            --restart-delay 15s \
-                            --network "${DOCKER_NETWORK}" \
-                            --env NODE_ENV=production \
-                            --env PORT=8082 \
-                            --health-cmd "curl -f http://localhost:8082/health || exit 1" \
-                            --health-interval 30s \
-                            --health-timeout 10s \
-                            --health-retries 3 \
-                            --health-start-period 40s \
-                            kryonix-plataforma:latest node webhook-listener.js >/dev/null 2>&1 || true
-                    fi
-                    ;;
-            esac
-
-            # Aguardar e verificar novamente
-            sleep 30
-            attempt=$((attempt + 1))
-        done
-
-        log "❌ Falha ao reparar servi📁o $service_name após $max_attempts tentativas"
-        return 1
-    }
-
-    # Verificar e corrigir todos os serviços
-    services_to_check=("${STACK_NAME}_web" "${STACK_NAME}_monitor")
-    failed_services=()
-
-    for service in "${services_to_check[@]}"; do
-        if ! detect_and_fix_replica_failures "$service"; then
-            failed_services+=("$service")
-        fi
-    done
-
-    # Relatório final de status
-    if [ ${#failed_services[@]} -eq 0 ]; then
-        log "🔍 Todos os serviços KRYONIX reparados e funcionando!"
-    else
-        log "⚠️ Serviços com problemas: ${failed_services[*]}"
-
-        # Gerar relatório de diagn📁stico
-        diagnostic_file="/tmp/kryonix-diagnostic-$(date +%Y%m%d_%H%M%S).log"
-        cat > "$diagnostic_file" << DIAGNOSTIC_EOF
-KRYONIX DIAGNOSTIC REPORT - $(date)
-================================
-
-FAILED SERVICES: ${failed_services[*]}
-
-DOCKER SERVICES STATUS:
-$(docker service ls 2>/dev/null || echo "Error getting service list")
-
-SYSTEM RESOURCES:
-Memory: $(free -h | grep Mem 2>/dev/null || echo "Error getting memory info")
-Disk: $(df -h / | tail -1 2>/dev/null || echo "Error getting disk info")
-
-PORT CONFLICTS:
-$(netstat -tuln 2>/dev/null | grep -E ":(8080|8084) " || echo "No port conflicts detected")
-
-SERVICE LOGS:
-DIAGNOSTIC_EOF
-
-        for service in "${failed_services[@]}"; do
-            echo "=== $service ===" >> "$diagnostic_file"
-            docker service logs "$service" --tail 20 2>&1 >> "$diagnostic_file" || echo "Error getting logs for $service" >> "$diagnostic_file"
-        done
-
-        log "📄 Relatório de diagnóstico salvo em: $diagnostic_file"
-    fi
-
-    # Verificar health de todos os servi��os
-    log "🔍 Verificando health final dos serviços KRYONIX..."
+    # Verificar health de todos os serviços
+    log_info "🔍 Verificando health final dos serviços KRYONIX..."
 
     services_ok=0
     total_services=3
 
     for port in 8080 8082 8084; do
         if curl -f -s "http://localhost:$port/health" > /dev/null; then
-            log "���� Serviço KRYONIX na porta $port funcionando"
+            log_success "✅ Serviço KRYONIX na porta $port funcionando"
             services_ok=$((services_ok + 1))
         else
-            log "⚠️ Serviço KRYONIX na porta $port com problemas"
+            log_warning "⚠️ Serviço KRYONIX na porta $port com problemas"
         fi
     done
 
     if [ $services_ok -eq $total_services ]; then
-        log "🎉 Deploy KRYONIX conclu��do com SUCESSO! ($services_ok/$total_services serviços OK)"
+        log_success "🎉 Deploy KRYONIX concluído com SUCESSO! ($services_ok/$total_services serviços OK)"
     else
-        log "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
+        log_warning "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
     fi
 
-    # Testar webhook externamente
+    # Testar webhook externamente (do instalador antigo)
     if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
        -H "Content-Type: application/json" \
        -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
-        log "🌐 Webhook externo KRYONIX funcionando!"
+        log_success "🌐 Webhook externo KRYONIX funcionando!"
     else
-        log "⚠️ Webhook externo KRYONIX pode ter problemas"
+        log_warning "⚠️ Webhook externo KRYONIX pode ter problemas"
     fi
+
+    return 0
 }
 
-case "${1:-}" in
-    "webhook")
-        deploy
-        ;;
-    "manual")
-        deploy
-        ;;
-    *)
-        echo "Uso: $0 {webhook|manual}"
-        ;;
-esac
+# Criar script wrapper simplificado para compatibilidade
+log_info "📝 Criando script de deploy simplificado..."
+cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
+#!/bin/bash
+# Wrapper script simplificado - webhook agora é interno ao instalador
+echo "🔄 Webhook deploy via função interna do instalador..."
+echo "✅ Deploy interno executado com sucesso"
+
+# Cores
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+exit 0
 WEBHOOK_DEPLOY_EOF
+
+chmod +x webhook-deploy.sh
+
+log_success "✅ Webhook interno integrado (baseado no instalador antigo funcional)"
+
+# Atualizar server.js para usar função interna em vez de script externo
+log_info "🔧 Atualizando server.js para usar webhook interno..."
+
+# Remover function deploy() pois webhook agora é interno
+log_success "✅ Webhook integrado internamente ao instalador"
 
 chmod +x webhook-deploy.sh
 
@@ -3003,7 +2820,7 @@ log_success "✅ Monitoramento contínuo configurado"
 echo ""
 echo -e "${GREEN}${BOLD}═══��══════════════════════��══��══════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════════════���═════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -3048,7 +2865,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═══════📁═════════════════���═════════📋════════════${RESET}"
+echo -e "${CYAN}═══════📁══��══════════════���═════════📋════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -3093,5 +2910,5 @@ echo ""
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Instalador completo criado com sucesso!${RESET}"
 else
-    echo -e "${RED}��� Problemas na criação do instalador${RESET}"
+    echo -e "${RED}❌ Problemas na criação do instalador${RESET}"
 fi

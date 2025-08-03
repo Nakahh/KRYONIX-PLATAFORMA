@@ -32,26 +32,26 @@ export default function MobileMenu() {
       {/* Menu Button - Visible only on mobile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden fixed top-4 right-4 z-50 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center"
+        className="md:hidden fixed top-4 right-4 z-50 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center"
       >
         {isOpen ? (
-          <X className="w-6 h-6 text-gray-600" />
+          <X className="w-6 h-6 text-gray-600 dark:text-white" />
         ) : (
-          <Menu className="w-6 h-6 text-gray-600" />
+          <Menu className="w-6 h-6 text-gray-600 dark:text-white" />
         )}
       </button>
 
       {/* Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-40 md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Mobile Menu */}
       <div className={`
-        fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-40 
+        fixed top-0 right-0 h-full w-80 bg-white dark:bg-gray-900 shadow-xl z-40 
         transform transition-transform duration-300 ease-in-out md:hidden
         ${isOpen ? 'translate-x-0' : 'translate-x-full'}
       `}>
@@ -63,7 +63,7 @@ export default function MobileMenu() {
             </div>
             <div>
               <h2 className="text-xl font-bold gradient-text">KRYONIX</h2>
-              <p className="text-xs text-gray-600">Plataforma SaaS IA</p>
+              <p className="text-xs text-gray-600 dark:text-gray-300">Plataforma SaaS IA</p>
             </div>
           </div>
 
@@ -77,8 +77,8 @@ export default function MobileMenu() {
                 className={`
                   flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200
                   ${item.active 
-                    ? 'bg-primary-100 text-primary-700 border-l-4 border-primary-500' 
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-l-4 border-primary-500' 
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
                   }
                 `}
               >
@@ -90,12 +90,12 @@ export default function MobileMenu() {
 
           {/* Footer */}
           <div className="absolute bottom-6 left-6 right-6">
-            <div className="border-t border-gray-200 pt-4">
-              <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+              <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-300">
                 <div className="status-online"></div>
                 <span>Sistema Online</span>
               </div>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-gray-400 dark:text-gray-300 mt-2">
                 © 2025 KRYONIX
               </p>
             </div>

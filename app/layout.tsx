@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { ThemeProvider } from '@/lib/contexts/theme-context'
+import ThemeScript from './components/ThemeScript'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -78,16 +80,19 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
+        <ThemeScript />
         <link rel="icon" href="/favicon.png" />
         <link rel="icon" href="/favicon-16x16.png" sizes="16x16" />
         <link rel="icon" href="/favicon-32x32.png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className={`${inter.className} antialiased`}>
-        <div id="root">
-          {children}
-        </div>
+      <body className={`${inter.className} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}>
+        <ThemeProvider>
+          <div id="root">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   )
