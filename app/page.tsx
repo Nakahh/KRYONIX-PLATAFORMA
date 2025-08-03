@@ -295,8 +295,7 @@ export default function HomePage() {
             </div>
             
             <div>
-              <h3 className="font-semibold mb-4">Contato</h3>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center justify-center space-x-4">
                 <a
                   href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
                   target="_blank"
@@ -306,6 +305,7 @@ export default function HomePage() {
                 >
                   <MessageCircle className="w-6 h-6" />
                 </a>
+                <span className="text-white font-semibold">Contato</span>
                 <a
                   href="mailto:contato@kryonix.com.br"
                   className="text-gray-400 hover:text-blue-500 transition-colors duration-200"
