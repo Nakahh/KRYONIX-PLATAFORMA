@@ -85,7 +85,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║���█║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -103,22 +103,79 @@ show_banner() {
     echo ""
 }
 
-# Barra de progresso limpa
+# Barra de progresso ultra moderna com animação
 show_progress() {
     local step=$1
     local total=$2
     local description="$3"
     local progress=$((step * 100 / total))
-    local filled=$((progress / 2))
+    local bar_width=60
+    local filled=$((progress * bar_width / 100))
+    local empty=$((bar_width - filled))
 
-    printf "\r${CYAN}[%-50s] %d%% ${RESET}%s" \
-        "$(printf "%*s" $filled "" | tr ' ' '#')" \
-        "$progress" \
-        "$description"
+    # Limpar linha atual
+    printf "\r\033[K"
 
-    if [ $step -eq $total ]; then
-        echo ""
+    # Cabeçalho da barra
+    printf "${BOLD}${WHITE}╭"
+    printf "─%.0s" $(seq 1 $((bar_width + 20)))
+    printf "╮${RESET}\n"
+
+    # Linha principal da barra
+    printf "${BOLD}${WHITE}│${RESET} "
+
+    # Barra de progresso preenchida (azul brilhante)
+    if [ $filled -gt 0 ]; then
+        printf "${BOLD}${BLUE}"
+        for i in $(seq 1 $filled); do
+            if [ $i -eq $filled ] && [ $progress -lt 100 ]; then
+                printf "▶"  # Seta animada no final
+            else
+                printf "█"
+            fi
+        done
+        printf "${RESET}"
     fi
+
+    # Barra vazia (cinza claro)
+    if [ $empty -gt 0 ]; then
+        printf "${BOLD}\033[90m"  # Cinza escuro
+        printf "░%.0s" $(seq 1 $empty)
+        printf "${RESET}"
+    fi
+
+    # Porcentagem e status
+    printf " ${BOLD}${WHITE}│${RESET} "
+    printf "${BOLD}${CYAN}%3d%%${RESET} " "$progress"
+
+    # Indicador de status animado
+    case $((step % 4)) in
+        0) printf "${YELLOW}●${RESET}" ;;
+        1) printf "${YELLOW}◐${RESET}" ;;
+        2) printf "${YELLOW}◑${RESET}" ;;
+        3) printf "${YELLOW}◒${RESET}" ;;
+    esac
+
+    printf " ${BOLD}${WHITE}│${RESET}\n"
+
+    # Rodapé da barra
+    printf "${BOLD}${WHITE}╰"
+    printf "─%.0s" $(seq 1 $((bar_width + 20)))
+    printf "╯${RESET}\n"
+
+    # Descrição da etapa atual
+    printf "${BOLD}${PURPLE}🔄 ${RESET}${BOLD}Executando:${RESET} ${CYAN}%s${RESET}\n" "$description"
+    printf "${BOLD}${WHITE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}\n\n"
+
+    # Mover cursor para cima para sobrescrever na próxima chamada
+    if [ $step -ne $total ]; then
+        printf "\033[6A"  # Move 6 linhas para cima
+    else
+        printf "${BOLD}${GREEN}🎉 Instalação concluída com sucesso!${RESET}\n\n"
+    fi
+
+    # Pequena pausa para efeito visual
+    sleep 0.1
 }
 
 # Log simplificado (apenas para erros críticos)
@@ -2828,7 +2885,7 @@ log_success "✅ Monitoramento contínuo configurado"
 echo ""
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
