@@ -22,6 +22,11 @@ import { partsData } from '../../lib/data/parts-data'
 export default function ProgressoPage() {
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [clickedIcons, setClickedIcons] = useState({
+    whatsapp: false,
+    email: false,
+    instagram: false
+  })
 
   useEffect(() => {
     setMounted(true)
