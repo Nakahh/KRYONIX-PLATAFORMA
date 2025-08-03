@@ -101,9 +101,6 @@ show_banner() {
     echo -e "${RESET}\n"
 
 
-
-
-
     echo -e "${GREEN}🚀 Instalação inteligente com deploy automático${RESET}"
     echo -e "${CYAN}💫 Arquitetura moderna e otimizada${RESET}"
     echo -e "${PURPLE}⚡ Configuração zero-touch${RESET}\n"
