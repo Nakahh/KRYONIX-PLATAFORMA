@@ -86,7 +86,7 @@ show_banner() {
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
-    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
+    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██��╝ ██╗       ║"
     echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚��╝╚═╝  ╚═╝       ║"
     echo "║                                                                   ║"
     echo -e "║                    ${WHITE}INSTALADOR AUTOMÁTICO KRYONIX${BLUE}                   ║"
@@ -143,7 +143,7 @@ log_error() {
 }
 
 # ============================================================================
-# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPEND📁NCIAS
+# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
 # ============================================================================
 
 # Função para atualizar dependências automaticamente
@@ -158,7 +158,7 @@ auto_update_dependencies() {
 
     # Backup do package.json original
     cp package.json package.json.backup
-    log_info "��� Backup do package.json criado"
+    log_info "📦 Backup do package.json criado"
 
     # Atualizar para versões mais recentes (mantendo compatibilidade)
     log_info "🔄 Atualizando dependências para versões mais recentes..."
@@ -1333,7 +1333,7 @@ if docker service ls | grep -q "traefik"; then
     if docker service logs $TRAEFIK_SERVICE 2>/dev/null | grep -q "letsencrypt"; then
         CERT_RESOLVER="letsencrypt"
     fi
-    log_info "🔐 Resolver SSL detectado: $CERT_RESOLVER"
+    log_info "���� Resolver SSL detectado: $CERT_RESOLVER"
 else
     log_warning "⚠🔍 Traefik não encontrado - KRYONIX funcionará localmente"
 fi
@@ -1609,7 +1609,7 @@ log_info "Iniciando Docker build multi-stage com Next.js..."
 if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build.log; then
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
-    log_success "✅ Imagem criada: kryonix-plataforma:$TIMESTAMP"
+    log_success "�� Imagem criada: kryonix-plataforma:$TIMESTAMP"
 else
     error_step
     log_error "❌ Falha no build da imagem Docker"
