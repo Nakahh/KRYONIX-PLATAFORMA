@@ -115,7 +115,7 @@ export default function ProgressoPage() {
   }
 
   if (loading) {
-    return <LoadingScreen onComplete={handleLoadingComplete} />
+    return <LoadingScreen onComplete={handleLoadingComplete} duration={1000} />
   }
 
   return (
