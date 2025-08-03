@@ -114,6 +114,10 @@ export default function ProgressoPage() {
     )
   }
 
+  if (loading) {
+    return <LoadingScreen onComplete={handleLoadingComplete} />
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
       <MobileMenu />
@@ -413,7 +417,7 @@ export default function ProgressoPage() {
                   <span className="text-xl font-bold">KRYONIX</span>
                 </div>
                 <p className="text-gray-400 text-sm">
-                  Plataforma SaaS 100% Aut��noma por IA
+                  Plataforma SaaS 100% Autônoma por IA
                 </p>
               </div>
               
