@@ -123,18 +123,20 @@ export default function LoadingScreen({ onComplete, duration = 3000 }: LoadingSc
         </div>
 
         {/* Progress Bar */}
-        <div className="w-80 mb-4">
-          <div className="flex justify-between text-xs text-gray-500 mb-2">
+        <div className="w-96 mb-6">
+          <div className="flex justify-between text-sm text-gray-600 mb-3 font-medium">
             <span>Carregando sistema...</span>
-            <span>{progress}%</span>
+            <span className="tabular-nums">{progress}%</span>
           </div>
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 rounded-full transition-all duration-300 ease-out relative"
+          <div className="h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+            <div
+              className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 rounded-full transition-all duration-500 ease-out relative"
               style={{ width: `${progress}%` }}
             >
               {/* Shimmer effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer"></div>
+              {/* Progress glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-green-400/20 blur-sm"></div>
             </div>
           </div>
         </div>
