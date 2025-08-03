@@ -87,8 +87,8 @@ show_banner() {
     echo    "║                                                                   ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ��"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║���█║ ██╔██╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo    "║                                                                   ║"
@@ -242,7 +242,7 @@ log_error() {
 }
 
 # ============================================================================
-# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPEND📁NCIAS
+# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
 # ============================================================================
 
 # Função para atualizar dependências automaticamente
@@ -499,7 +499,7 @@ nuclear_cleanup() {
         # Verificação final
         if [ -d "$PROJECT_DIR" ]; then
             error_step
-            log_error "❌ Falha na remoção completa do diret��rio: $PROJECT_DIR"
+            log_error "❌ Falha na remoção completa do diretório: $PROJECT_DIR"
             exit 1
         fi
     fi
@@ -921,7 +921,7 @@ try {
     console.log('📦 Módulos instalados: ' + (require('fs').readdirSync('node_modules').length || 0));
     console.log('📋 Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
 } catch(e) {
-    console.log('���� Estatísticas não disponíveis');
+    console.log('📊 Estatísticas não disponíveis');
 }
 
 if (missing.length === 0) {
@@ -2970,7 +2970,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA📁ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════����═══════════════════════🔍🔍════════════${RESET}"
+echo -e "${CYAN}══════📁═══════════════════════🔍🔍════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -2988,7 +2988,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
 echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
 
 echo ""
-echo -e "${PURPLE}${BOLD}�� VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
+echo -e "${PURPLE}${BOLD}📊 VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
 echo -e "Execute para verificar se as correções funcionaram:"
 echo -e "${YELLOW}docker service ls${RESET}"
 echo ""
