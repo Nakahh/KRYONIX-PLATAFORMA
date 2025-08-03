@@ -69,9 +69,9 @@ STEP_DESCRIPTIONS=(
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
-    "Configurando logs e backup �����️"
-    "Deploy final integrado ��"
-    "Testando webhook e relatório final �����"
+    "Configurando logs e backup 🗄️"
+    "Deploy final integrado 🚀"
+    "Testando webhook e relatório final 📊"
     "Configurando monitoramento contínuo 📈"
 )
 
@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                   ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔█���╗ ██║██║ ╚███╔╝        ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                   ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}         ║"
     echo    "║                                                                   ║"
-    echo    "╚══════════════════════════════════════════════════════════════════��╝"
+    echo    "╚══════════════════════════════════════════════════���════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -1308,7 +1308,7 @@ app.post('/api/github-webhook', (req, res) => {
             console.log('❌ Assinatura inválida do webhook');
             return res.status(401).json({ error: 'Invalid signature' });
         }
-        console.log('��� Assinatura do webhook verificada');
+        console.log('���� Assinatura do webhook verificada');
     }
 
     /* Processar apenas push events na main/master */
@@ -2952,7 +2952,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç����o Web:${RESET} ${WEB_
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} ��� DEPLOYADO"
-echo -e "    ${BLUE}���${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
+echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
 echo -e "${CYAN}${BOLD}🧪 TESTES WEBHOOK:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Local:${RESET} $LOCAL_WEBHOOK_STATUS"
@@ -2992,7 +2992,7 @@ echo -e "${PURPLE}${BOLD}📊 VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
 echo -e "Execute para verificar se as correções funcionaram:"
 echo -e "${YELLOW}docker service ls${RESET}"
 echo ""
-echo -e "Resultado esperado após as CORREÇÕES DOS AGENTES:"
+echo -e "Resultado esperado ap��s as CORREÇÕES DOS AGENTES:"
 echo -e "${GREEN}Kryonix_web       1/1        kryonix-plataforma:latest${RESET}"
 echo -e "${YELLOW}NOTA: Apenas 1 serviço após unificação pelos agentes${RESET}"
 echo -e "${YELLOW}      webhook e monitor integrados no serviço web${RESET}"
