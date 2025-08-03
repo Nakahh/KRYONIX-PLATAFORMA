@@ -86,8 +86,8 @@ show_banner() {
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
-    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██��╝ ██╗       ║"
-    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚��╝╚═╝  ╚═╝       ║"
+    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
+    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo "║                                                                   ║"
     echo -e "║                    ${WHITE}INSTALADOR AUTOMÁTICO KRYONIX${BLUE}                   ║"
     echo -e "║                   ${CYAN}Plataforma SaaS Empresarial${BLUE}                     ║"
@@ -148,7 +148,7 @@ log_error() {
 
 # Função para atualizar dependências automaticamente
 auto_update_dependencies() {
- 
+
 
     # Verificar se package.json existe
     if [ ! -f "package.json" ]; then
@@ -161,7 +161,7 @@ auto_update_dependencies() {
     log_info "📦 Backup do package.json criado"
 
     # Atualizar para versões mais recentes (mantendo compatibilidade)
- 
+
 
     # Usar npm-check-updates se disponível, senão instalar
     if ! command -v ncu >/dev/null 2>&1; then
@@ -171,13 +171,13 @@ auto_update_dependencies() {
 
     # Atualizar dependências com verificação de compatibilidade
     if command -v ncu >/dev/null 2>&1; then
- 
+
         ncu --upgrade --target minor >/dev/null 2>&1 || true
         log_success "✅ Dependências atualizadas para versões menores compatíveis"
     fi
 
     # Limpar cache npm
- 
+
     npm cache clean --force >/dev/null 2>&1 || true
 
     # Reinstalar dependências com versões atualizadas
@@ -198,7 +198,7 @@ auto_update_dependencies() {
         else
             log_warning "⚠️ Falha na tentativa $install_attempts"
             if [ $install_attempts -lt $max_attempts ]; then
- 
+
                 sleep 5
             fi
         fi
@@ -260,7 +260,7 @@ EOF
 
 # Função de verifica📁ão avançada de dependências
 advanced_dependency_check() {
- 
+
 
     # Executar verificador próprio do projeto
     if [ -f "check-dependencies.js" ]; then
@@ -367,7 +367,7 @@ test_service_health() {
 
 # FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
- 
+
 
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -399,7 +399,7 @@ nuclear_cleanup() {
 
         # Verificação final
         if [ -d "$PROJECT_DIR" ]; then
-            
+
             log_error "❌ Falha na remoção completa do diretório: $PROJECT_DIR"
             exit 1
         fi
@@ -420,7 +420,7 @@ fresh_git_clone() {
     local branch="${3:-main}"
     local pat_token="$4"
 
- 
+
 
     # Configurar Git globalmente ANTES de tentar clone
     git config --global user.name "KRYONIX Deploy"
@@ -448,10 +448,10 @@ fresh_git_clone() {
     cd "$target_dir"
 
     # Testar conectividade e autenticação antes de tentar clone
- 
+
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
-        log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
+        log_info "💡 Verifique se o PAT token tem permissões 'repo' para reposit��rios privados"
         return 1
     fi
     log_success "📁 Conectividade e token validados"
@@ -462,7 +462,7 @@ fresh_git_clone() {
 
     while [ $clone_attempts -lt $max_attempts ]; do
         clone_attempts=$((clone_attempts + 1))
- 
+
 
         # Limpar qualquer clone parcial
         sudo rm -rf ./* .[^.]* ..?* 2>/dev/null || true
@@ -485,12 +485,12 @@ fresh_git_clone() {
             latest_remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
             current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
 
- 
- 
+
+
 
             # Forçar atualização para absoluto mais recente se diferente
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
- 
+
                 git fetch origin HEAD 2>/dev/null || true
                 git reset --hard FETCH_HEAD 2>/dev/null || true
                 current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
@@ -526,7 +526,7 @@ verify_fresh_clone() {
     local target_dir="$1"
     local expected_branch="${2:-main}"
 
- 
+
 
     cd "$target_dir"
 
@@ -582,7 +582,7 @@ verify_fresh_clone() {
             log_warning "⚠️ Commit mais recente disponível: $latest_commit"
 
             # Tentar atualizar para o mais recente
- 
+
             if git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null; then
                 new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
                 new_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
@@ -650,7 +650,7 @@ next_step
 # ============================================================================
 
 if ! docker info | grep -q "Swarm: active"; then
-    
+
     log_error "Docker Swarm não está ativo!"
     log_info "Execute: docker swarm init"
     exit 1
@@ -666,7 +666,7 @@ next_step
 
 
 if ! nuclear_cleanup; then
-    
+
     log_error "Falha no nuclear cleanup"
     exit 1
 fi
@@ -679,7 +679,7 @@ next_step
 
 
 if ! validate_credentials; then
-    
+
     log_error "Falha na validaç📁o das credenciais"
     exit 1
 fi
@@ -692,11 +692,11 @@ next_step
 
 
 log_info "📁 Iniciando clone FRESH para garantir versão MAIS RECENTE..."
- 
+
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
-    
+
     log_error "Falha no clone fresh do repositório GitHub"
     exit 1
 fi
@@ -707,7 +707,7 @@ verify_fresh_clone "$PROJECT_DIR" "main"
 verification_result=$?
 
 if [ $verification_result -eq 1 ]; then
-    
+
     log_error "Falha na verificação do clone"
     exit 1
 elif [ $verification_result -eq 2 ]; then
@@ -719,13 +719,13 @@ cd "$PROJECT_DIR"
 
 # Verificar arquivos essenciais
 if [ ! -f "package.json" ]; then
-    
+
     log_error "package.json não encontrado no repositório!"
     exit 1
 fi
 
 if [ ! -f "server.js" ]; then
-    
+
     log_error "server.js não encontrado no repositório!"
     exit 1
 fi
@@ -768,14 +768,14 @@ next_step
 # ============================================================================
 
 
- 
+
 
 # Executar verificação avançada
 if ! advanced_dependency_check; then
     log_warning "⚠️ Problemas detectados nas dependências"
 
     # Tentar instalação básica como fallback
- 
+
     npm install --no-audit --no-fund 2>/dev/null || true
 fi
 
@@ -1300,7 +1300,7 @@ log_info "🔧 CORREÇÃO: Configurando rede Kryonix-NET (baseada no instalador 
 DOCKER_NETWORK=$(ensure_kryonix_network)
 
 if [ -z "$DOCKER_NETWORK" ]; then
-    
+
     log_error "❌ Falha na detecção automática da rede"
     exit 1
 fi
@@ -1423,7 +1423,7 @@ DOCKERFILE_EOF
 log_info "Fazendo build da imagem Docker..."
 
 # Verificação pré-build para Next.js
- 
+
 
 # Verificar se arquivos Next.js essenciais existem
 nextjs_files=("app/page.tsx" "app/layout.tsx" "next.config.js" "tailwind.config.js")
@@ -1446,7 +1446,7 @@ else
 fi
 
 # Verificação completa de arquivos necessários (ATUALIZADA com arquivos criados automaticamente)
- 
+
 required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js" "next.config.js" "public/index.html")
 missing_files=()
 
@@ -1460,13 +1460,13 @@ for file in "${required_files[@]}"; do
 done
 
 if [ ${#missing_files[@]} -gt 0 ]; then
-    
+
     log_error "❌ Arquivos obrigatórios faltando para Docker build: ${missing_files[*]}"
     exit 1
 fi
 
 # Verificação adicional espec📁fica do instalador antigo
- 
+
 
 # Verificar se server.js tem o endpoint webhook
 if grep -q "/api/github-webhook" server.js; then
@@ -1559,7 +1559,7 @@ else
 fi
 
 # Verificar se as correções foram aplicadas (versão simplificada)
- 
+
 correction_count=0
 
 # Verificaç📁o simplificada para evitar travamentos
@@ -1592,7 +1592,7 @@ else
 fi
 
 # CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
- 
+
 
 if [ -d ".next" ]; then
     log_info "⚠️ Diretório .next existe - removendo para garantir build limpo..."
@@ -1601,7 +1601,7 @@ if [ -d ".next" ]; then
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
 else
- 
+
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -1611,7 +1611,7 @@ if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
     log_success "�� Imagem criada: kryonix-plataforma:$TIMESTAMP"
 else
-    
+
     log_error "❌ Falha no build da imagem Docker"
 
     # Sistema avançado de detecção e correção de erros
@@ -1645,7 +1645,7 @@ else
         build_error_type="unknown"
     fi
 
- 
+
 
     case $build_error_type in
         "webpack_chunks_corrupted")
@@ -1734,7 +1734,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "eslint_module_variable")
- 
+
             if [ -f "lib/database/init.ts" ]; then
                 sed -i 's/for (const module of modules)/for (const dbModule of modules)/g' lib/database/init.ts
                 sed -i 's/checkDatabaseHealth(module)/checkDatabaseHealth(dbModule)/g' lib/database/init.ts
@@ -1778,7 +1778,7 @@ ANTICORRUPTION_CONFIG_EOF
             ;;
 
         "missing_autoprefixer"|"missing_postcss"|"missing_tailwind")
- 
+
             # Corrigir package.json movendo dependências de build para dependencies
             cp package.json package.json.build-backup
             cat > /tmp/fix-build-deps.js << 'EOF'
@@ -1851,7 +1851,7 @@ EOF
     esac
 
     # Tentar build com correções aplicadas
- 
+
     if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build-retry.log; then
         TIMESTAMP=$(date +%Y%m%d_%H%M%S)
         docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
@@ -1859,7 +1859,7 @@ EOF
 
         # Restaurar arquivos originais se houver backup
         if [ -f "package.json.emergency-backup" ]; then
- 
+
             mv package.json.emergency-backup package.json
         fi
     else
@@ -2543,7 +2543,7 @@ log_info "Fazendo deploy do stack KRYONIX completo..."
 
 # Verificar se docker-stack.yml existe
 if [ ! -f "docker-stack.yml" ]; then
-    
+
     log_error "❌ Arquivo docker-stack.yml não encontrado!"
     exit 1
 fi
@@ -2555,7 +2555,7 @@ if ! docker network ls --format "{{.Name}}" | grep -q "^Kryonix-NET$"; then
 fi
 
 # Verificar se YAML está válido primeiro
- 
+
 
 # Verificar se arquivo YAML existe e tem conteúdo
 if [ ! -f docker-stack.yml ]; then
@@ -2609,7 +2609,7 @@ while [ $deploy_attempts -lt $max_deploy_attempts ] && [ "$deploy_success" = fal
     else
         log_warning "⚠️ Tentativa $deploy_attempts falhou: $deploy_output"
         if [ $deploy_attempts -lt $max_deploy_attempts ]; then
- 
+
             sleep 10
         fi
     fi
@@ -2617,14 +2617,14 @@ done
 
 if [ "$deploy_success" = true ]; then
     # Verificação REAL se stack foi criada
- 
+
     sleep 5
 
     if docker stack ls --format "{{.Name}}" | grep -q "^${STACK_NAME}$"; then
         log_success "✅ Stack $STACK_NAME confirmada no Docker Swarm"
 
         # Verificar serviços com timeout
- 
+
         sleep 10
 
         services_count=$(docker service ls --format "{{.Name}}" | grep "^${STACK_NAME}_" | wc -l)
@@ -2647,7 +2647,7 @@ if [ "$deploy_success" = true ]; then
         exit 1
     fi
 else
-    
+
     log_error "❌ FALHA em todas as $max_deploy_attempts tentativas de deploy"
     log_error "📋 Último erro: $deploy_output"
     exit 1
@@ -2689,7 +2689,7 @@ else
     docker service logs "${STACK_NAME}_web" --tail 20 2>/dev/null || log_warning "Logs não disponíveis"
 
     # Tentar restart forçado
- 
+
     docker service update --force "${STACK_NAME}_web" >/dev/null 2>&1 || true
 
     # Aguardar um pouco e verificar novamente
@@ -2704,7 +2704,7 @@ WEBHOOK_STATUS="✅ INTEGRADO (no serviço web)"
 MONITOR_STATUS="✅ INTEGRADO (no serviço web)"
 
     # Mostrar logs do webhook se houver problema
- 
+
     docker service logs "${STACK_NAME}_webhook" --tail 10 2>/dev/null || log_warning "Logs não disponíveis"
 
 # Verificar serviço monitor
