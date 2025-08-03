@@ -23,11 +23,16 @@ import { partsData } from '../../lib/data/parts-data'
 
 export default function ProgressoPage() {
   const [mounted, setMounted] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [selectedPhase, setSelectedPhase] = useState('TODAS')
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const handleLoadingComplete = () => {
+    setLoading(false)
+  }
 
   const features = [
     {
@@ -408,7 +413,7 @@ export default function ProgressoPage() {
                   <span className="text-xl font-bold">KRYONIX</span>
                 </div>
                 <p className="text-gray-400 text-sm">
-                  Plataforma SaaS 100% Autônoma por IA
+                  Plataforma SaaS 100% Aut��noma por IA
                 </p>
               </div>
               
