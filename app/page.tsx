@@ -78,14 +78,14 @@ export default function HomePage() {
   ]
 
   const modules = [
-    { name: 'Análise Avançada e BI', price: 'R$ 99', status: 'available' },
-    { name: 'Agendamento Inteligente', price: 'R$ 119', status: 'available' },
-    { name: 'Atendimento Omnichannel', price: 'R$ 159', status: 'available' },
-    { name: 'CRM & Funil de Vendas', price: 'R$ 179', status: 'available' },
-    { name: 'Email Marketing Multicanal', price: 'R$ 219', status: 'available' },
-    { name: 'Gestão Redes Sociais', price: 'R$ 239', status: 'available' },
-    { name: 'Portal do Cliente', price: 'R$ 269', status: 'available' },
-    { name: 'Whitelabel Customizável', price: 'R$ 299', status: 'available' }
+    { name: 'Análise Avançada e BI', price: 'R$ 99', status: 'unavailable' },
+    { name: 'Agendamento Inteligente', price: 'R$ 119', status: 'unavailable' },
+    { name: 'Atendimento Omnichannel', price: 'R$ 159', status: 'unavailable' },
+    { name: 'CRM & Funil de Vendas', price: 'R$ 179', status: 'unavailable' },
+    { name: 'Email Marketing Multicanal', price: 'R$ 219', status: 'unavailable' },
+    { name: 'Gestão Redes Sociais', price: 'R$ 239', status: 'unavailable' },
+    { name: 'Portal do Cliente', price: 'R$ 269', status: 'unavailable' },
+    { name: 'Whitelabel Customizável', price: 'R$ 299', status: 'unavailable' }
   ]
 
   const stacks = [
