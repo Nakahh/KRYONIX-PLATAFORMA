@@ -15,7 +15,8 @@ import {
   Globe,
   Phone,
   Instagram,
-  Mail
+  Mail,
+  Send
 } from 'lucide-react'
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
