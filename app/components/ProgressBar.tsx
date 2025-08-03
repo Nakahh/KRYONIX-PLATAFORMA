@@ -77,14 +77,14 @@ export default function ProgressBar({ className = '', showDetails = true, compac
           </div>
           <div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Progresso do Desenvolvimento</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Acompanhe em tempo real</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Acompanhe em tempo real</p>
           </div>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
             {Math.round(animatedProgress)}%
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">Concluído</div>
+          <div className="text-xs text-gray-500 dark:text-gray-300">Concluído</div>
         </div>
       </div>
 
@@ -101,7 +101,7 @@ export default function ProgressBar({ className = '', showDetails = true, compac
 
       {/* Progress Bar */}
       <div className="mb-6">
-        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
           <span>Parte {currentPart} de {totalParts}</span>
           <span>{completedParts} concluídas • {inProgressParts} em andamento</span>
         </div>
@@ -137,14 +137,14 @@ export default function ProgressBar({ className = '', showDetails = true, compac
                 <CheckCircle className="w-5 h-5 text-green-500" />
               </div>
               <div className="text-xl font-bold text-green-600 dark:text-green-400">{completedParts}</div>
-              <div className="text-xs text-green-700 dark:text-green-300">Concluídas</div>
+              <div className="text-xs text-green-700 dark:text-green-200">Concluídas</div>
             </div>
             <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
               <div className="flex items-center justify-center mb-2">
                 <Clock className="w-5 h-5 text-blue-500" />
               </div>
               <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{inProgressParts}</div>
-              <div className="text-xs text-blue-700 dark:text-blue-300">Em Andamento</div>
+              <div className="text-xs text-blue-700 dark:text-blue-200">Em Andamento</div>
             </div>
             <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <div className="flex items-center justify-center mb-2">
