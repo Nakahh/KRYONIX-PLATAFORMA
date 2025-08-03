@@ -331,13 +331,13 @@ export default function PartPage({ params }: { params: { slug: string } }) {
                       href="/progresso"
                       className="block w-full text-center py-2 px-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium"
                     >
-                      Ver Progresso Completo
+                      Ver Progresso
                     </Link>
                     <Link
                       href="/"
                       className="block w-full text-center py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
                     >
-                      Voltar à Homepage
+                      Voltar
                     </Link>
                   </div>
                 </div>
