@@ -79,7 +79,7 @@ export default function HomePage() {
     'N8N', 'Mautic', 'Ollama', 'Dify AI', 'Supabase', 'Next.js',
     'React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Python',
     'RabbitMQ', 'Nginx', 'Linux', 'SSL/TLS', 'Backup', 'Monitoramento',
-    'Segurança', 'Performance', 'Automa��ão', 'APIs'
+    'Segurança', 'Performance', 'Automação', 'APIs'
   ]
 
   if (!mounted) {
@@ -91,7 +91,7 @@ export default function HomePage() {
   }
 
   if (loading) {
-    return <LoadingScreen onComplete={handleLoadingComplete} />
+    return <LoadingScreen onComplete={handleLoadingComplete} duration={1000} />
   }
 
   return (
