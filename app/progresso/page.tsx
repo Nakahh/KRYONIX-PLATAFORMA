@@ -34,58 +34,7 @@ export default function ProgressoPage() {
     setLoading(false)
   }
 
-  const features = [
-    {
-      icon: Shield,
-      title: 'Autenticação Avançada',
-      description: 'Sistema multi-tenant com Keycloak, autenticação biométrica e WhatsApp OTP'
-    },
-    {
-      icon: Bot,
-      title: 'IA 100% Autônoma',
-      description: '15 agentes especializados trabalhando 24/7 para automatizar tudo'
-    },
-    {
-      icon: Smartphone,
-      title: 'Mobile-First',
-      description: '80% dos usuários são mobile - interface otimizada para dispositivos móveis'
-    },
-    {
-      icon: MessageCircle,
-      title: 'WhatsApp Business',
-      description: 'Integração completa com Evolution API para comunicação empresarial'
-    },
-    {
-      icon: BarChart3,
-      title: 'Analytics Avançado',
-      description: 'Business Intelligence com Grafana, métricas em tempo real'
-    },
-    {
-      icon: Globe,
-      title: 'Multi-Tenancy',
-      description: 'Isolamento completo entre clientes, criação automática em 2-5 minutos'
-    }
-  ]
 
-  const modules = [
-    { name: 'Análise Avançada e BI', price: 'R$ 99', status: 'available' },
-    { name: 'Agendamento Inteligente', price: 'R$ 119', status: 'available' },
-    { name: 'Atendimento Omnichannel', price: 'R$ 159', status: 'available' },
-    { name: 'CRM & Funil de Vendas', price: 'R$ 179', status: 'available' },
-    { name: 'Email Marketing Multicanal', price: 'R$ 219', status: 'available' },
-    { name: 'Gestão Redes Sociais', price: 'R$ 239', status: 'available' },
-    { name: 'Portal do Cliente', price: 'R$ 269', status: 'available' },
-    { name: 'Whitelabel Customizável', price: 'R$ 299', status: 'available' }
-  ]
-
-  const stacks = [
-    'Keycloak', 'PostgreSQL', 'MinIO', 'Redis', 'Traefik', 'Docker',
-    'Grafana', 'Prometheus', 'Evolution API', 'Chatwoot', 'Typebot',
-    'N8N', 'Mautic', 'Ollama', 'Dify AI', 'Supabase', 'Next.js',
-    'React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Python',
-    'RabbitMQ', 'Nginx', 'Linux', 'SSL/TLS', 'Backup', 'Monitoramento',
-    'Segurança', 'Performance', 'Automação', 'APIs'
-  ]
 
   // Filtrar partes por fase
   const phases = [
