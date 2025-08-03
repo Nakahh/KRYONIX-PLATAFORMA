@@ -79,7 +79,7 @@ export default function HomePage() {
     'N8N', 'Mautic', 'Ollama', 'Dify AI', 'Supabase', 'Next.js',
     'React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Python',
     'RabbitMQ', 'Nginx', 'Linux', 'SSL/TLS', 'Backup', 'Monitoramento',
-    'Segurança', 'Performance', 'Automação', 'APIs'
+    'Segurança', 'Performance', 'Automa��ão', 'APIs'
   ]
 
   if (!mounted) {
@@ -264,20 +264,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-primary-600 to-success-600">
-        <div className="container-custom text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Acompanhe o Desenvolvimento
-            </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              Veja o progresso detalhado das 53 partes do projeto
-            </p>
-            <Link href="/progresso" className="btn-secondary bg-white text-primary-600 hover:bg-gray-50">
-              <BarChart3 className="w-5 h-5 mr-2" />
-              Ver Progresso Completo
-            </Link>
+      {/* Progress Section */}
+      <section className="py-16 bg-gradient-to-br from-blue-50 to-green-50">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Acompanhe o Desenvolvimento
+              </h2>
+              <p className="text-xl text-gray-600 mb-8">
+                Veja o progresso detalhado das 53 partes do projeto
+              </p>
+            </div>
+
+            <ProgressBar className="mb-8" />
+
+            <div className="text-center">
+              <Link href="/progresso" className="btn-primary">
+                <BarChart3 className="w-5 h-5 mr-2" />
+                Ver Progresso Completo
+              </Link>
+            </div>
           </div>
         </div>
       </section>
