@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔��█╗        ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗��█║██║ ██╔██╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo    "║                                                                   ║"
@@ -102,7 +102,7 @@ show_banner() {
 
 
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Problemas 0/1 replicas resolvidos pelos 5 agentes${RESET}"
-echo -e "${CYAN}��️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
+echo -e "${CYAN}🛠️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
 echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container único${RESET}"
 echo -e "${PURPLE}⚙️ OTIMIZADO: Health check 0.0.0.0:8080 + 1G RAM + placement flexível${RESET}\n"
 }
@@ -365,7 +365,7 @@ advanced_dependency_check() {
     if [ -f "check-dependencies.js" ]; then
         log_info "📋 Executando verificador específico do KRYONIX..."
         if node check-dependencies.js 2>&1 | tee /tmp/deps-check.log; then
-            log_success "✅ Verificação espec📁fica passou"
+            log_success "✅ Verificação específica passou"
         else
             log_error "📁 Verificação específica falhou"
             log_info "📋 Tentando correção automática..."
@@ -1274,7 +1274,7 @@ const path = require('path');
 const WEBHOOK_SECRET = '$WEBHOOK_SECRET';
 const DEPLOY_SCRIPT = path.join(__dirname, 'webhook-deploy.sh');
 
-/* Função para verificar assinatura do GitHub */
+/* Funç��o para verificar assinatura do GitHub */
 const verifyGitHubSignature = (payload, signature) => {
     if (!signature) return false;
 
@@ -1353,7 +1353,7 @@ WEBHOOK_EOF
     log_success "✅ Webhook completo adicionado ao server.js"
     WEBHOOK_EXISTS=false
 else
-    log_info "���️ Webhook já existe no server.js - pulando criação"
+    log_info "ℹ��� Webhook já existe no server.js - pulando criação"
     WEBHOOK_EXISTS=true
 fi
 
@@ -1579,7 +1579,7 @@ for service_file in webhook-listener.js kryonix-monitor.js; do
     if [ -f "$service_file" ] && grep -q "/health" "$service_file"; then
         log_success "✅ Health check encontrado em $service_file"
     else
-        log_warning "⚠���� Health check pode estar faltando em $service_file"
+        log_warning "⚠🔍 Health check pode estar faltando em $service_file"
     fi
 done
 
@@ -1871,7 +1871,7 @@ ANTICORRUPTION_CONFIG_EOF
             # Otimizar next.config.js para pular validações TypeScript durante build
             if [ -f "next.config.js" ] && ! grep -q "ignoreDuringBuilds" next.config.js; then
                 sed -i 's/cleanDistDir: true,/cleanDistDir: true,\n  eslint: { ignoreDuringBuilds: true },\n  typescript: { ignoreBuildErrors: true },/g' next.config.js
-                log_success "��� next.config.js otimizado para pular validações"
+                log_success "✅ next.config.js otimizado para pular validações"
             fi
             log_success "✅ Todas as correções de TypeScript aplicadas"
             ;;
