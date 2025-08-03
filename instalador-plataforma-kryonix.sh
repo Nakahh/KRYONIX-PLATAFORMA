@@ -454,7 +454,7 @@ fresh_git_clone() {
 
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
-        log_info "💡 Verifique se o PAT token tem permissões 'repo' para reposit��rios privados"
+        log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
         return 1
     fi
     log_success "📁 Conectividade e token validados"
@@ -1336,7 +1336,7 @@ if docker service ls | grep -q "traefik"; then
     if docker service logs $TRAEFIK_SERVICE 2>/dev/null | grep -q "letsencrypt"; then
         CERT_RESOLVER="letsencrypt"
     fi
-    log_info "🔒 Resolver SSL detectado: $CERT_RESOLVER"
+    log_info "���� Resolver SSL detectado: $CERT_RESOLVER"
 else
     log_warning "⚠🔍 Traefik não encontrado - KRYONIX funcionará localmente"
 fi
@@ -2872,7 +2872,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA📁ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═══���══📁══════════════════════���📋════════════${RESET}"
+echo -e "${CYAN}═══���══📁══���═══════════════════���📋════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
