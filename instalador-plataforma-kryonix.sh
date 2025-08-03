@@ -86,7 +86,7 @@ STEP_DESCRIPTIONS=(
 )
 
 # ============================================================================
-# FUN��ÕES DE INTERFACE E PROGRESSO - CORRIGIDAS PARA ASCII
+# FUNCOES DE INTERFACE E PROGRESSO - CORRIGIDAS PARA ASCII
 # ============================================================================
 
 # Banner principal do instalador
@@ -99,7 +99,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║█��╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -122,7 +122,7 @@ show_banner() {
 init_progress_system() {
     # Banner animado de inicialização
     printf "\n${BOLD}${BLUE}"
-    printf "╔═════════���═════════════════════════════════════════════════════════════════════════╗\n"
+    printf "╔═══════════════════════════════════════════════════════════════════════════════════╗\n"
     printf "║                                                                                   ║\n"
     printf "║                      🚀 SISTEMA DE INSTALAÇÃO KRYONIX 🚀                         ║\n"
     printf "║                                                                                   ║\n"
@@ -626,7 +626,7 @@ fresh_git_clone() {
 
     if ! curl -f -s -H "Authorization: token ${pat_token}" https://api.github.com/repos/Nakahh/KRYONIX-PLATAFORMA >/dev/null; then
         log_error "❌ Falha na conectividade ou token inválido para repositório privado"
-        log_info "�� Verifique se o PAT token tem permissões 'repo' para repositórios privados"
+        log_info "💡 Verifique se o PAT token tem permissões 'repo' para repositórios privados"
         return 1
     fi
     log_success "📁 Conectividade e token validados"
@@ -2592,7 +2592,7 @@ deploy() {
             attempt=$((attempt + 1))
         done
 
-        log "❌ Falha ao reparar servi📁o $service_name após $max_attempts tentativas"
+        log "❌ Falha ao reparar servi��o $service_name após $max_attempts tentativas"
         return 1
     }
 
@@ -3000,7 +3000,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══��═════════════���════════��═════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
