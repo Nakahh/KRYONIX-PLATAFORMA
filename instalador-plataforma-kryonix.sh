@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██��� ██╔██╗        ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔��█╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo    "║                                                                   ║"
@@ -102,7 +102,7 @@ show_banner() {
 
 
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Problemas 0/1 replicas resolvidos pelos 5 agentes${RESET}"
-echo -e "${CYAN}🛠️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
+echo -e "${CYAN}��️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
 echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container único${RESET}"
 echo -e "${PURPLE}⚙️ OTIMIZADO: Health check 0.0.0.0:8080 + 1G RAM + placement flexível${RESET}\n"
 }
@@ -357,7 +357,7 @@ EOF
     return 0
 }
 
-# Função de verifica📁ão avançada de dependências
+# Função de verificação avançada de dependências
 advanced_dependency_check() {
     log_info "🔍 Executando verificação avançada de dependências..."
 
@@ -1005,7 +1005,7 @@ exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
                 console.error('❌ Correção alternativa também falhou:', error2.message);
                 process.exit(1);
             } else {
-                console.log('✅ Dependências corrigidas com m��todo alternativo');
+                console.log('✅ Dependências corrigidas com método alternativo');
                 console.log(stdout2);
                 process.exit(0);
             }
@@ -1353,7 +1353,7 @@ WEBHOOK_EOF
     log_success "✅ Webhook completo adicionado ao server.js"
     WEBHOOK_EXISTS=false
 else
-    log_info "ℹ️ Webhook já existe no server.js - pulando criação"
+    log_info "���️ Webhook já existe no server.js - pulando criação"
     WEBHOOK_EXISTS=true
 fi
 
@@ -1579,7 +1579,7 @@ for service_file in webhook-listener.js kryonix-monitor.js; do
     if [ -f "$service_file" ] && grep -q "/health" "$service_file"; then
         log_success "✅ Health check encontrado em $service_file"
     else
-        log_warning "⚠🔍 Health check pode estar faltando em $service_file"
+        log_warning "⚠���� Health check pode estar faltando em $service_file"
     fi
 done
 
@@ -1818,7 +1818,7 @@ const nextConfig = {
 module.exports = nextConfig
 ANTICORRUPTION_CONFIG_EOF
 
-            log_success "��� Correção de build corrompido aplicada"
+            log_success "✅ Correção de build corrompido aplicada"
             ;;
 
         "typescript_postgres_config")
@@ -1871,7 +1871,7 @@ ANTICORRUPTION_CONFIG_EOF
             # Otimizar next.config.js para pular validações TypeScript durante build
             if [ -f "next.config.js" ] && ! grep -q "ignoreDuringBuilds" next.config.js; then
                 sed -i 's/cleanDistDir: true,/cleanDistDir: true,\n  eslint: { ignoreDuringBuilds: true },\n  typescript: { ignoreBuildErrors: true },/g' next.config.js
-                log_success "✅ next.config.js otimizado para pular validações"
+                log_success "��� next.config.js otimizado para pular validações"
             fi
             log_success "✅ Todas as correções de TypeScript aplicadas"
             ;;
