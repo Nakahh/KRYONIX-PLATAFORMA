@@ -229,7 +229,7 @@ export default function HomePage() {
                 <h3 className="font-semibold text-gray-900 mb-3 text-sm">
                   {module.name}
                 </h3>
-                <span className="badge-success">Disponível</span>
+                <span className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full font-medium">Indisponível</span>
               </div>
             ))}
           </div>
