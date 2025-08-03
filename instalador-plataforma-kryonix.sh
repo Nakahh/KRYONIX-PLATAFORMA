@@ -2329,7 +2329,7 @@ deploy() {
                     # Verificar conflitos de porta
                     if [[ "$service_name" == *"_web"* ]]; then
                         if netstat -tuln 2>/dev/null | grep -q ":8080 "; then
-                            log "���️ Conflito de porta 8080 detectado, removendo binding"
+                            log "⚠️ Conflito de porta 8080 detectado, removendo binding"
                             docker service update --publish-rm="8080:8080" "$service_name" >/dev/null 2>&1 || true
                         fi
                     elif [[ "$service_name" == *"_monitor"* ]]; then
