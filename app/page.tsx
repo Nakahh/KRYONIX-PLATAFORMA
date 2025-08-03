@@ -327,14 +327,17 @@ export default function HomePage() {
                   }}
                 >
                   <div className="relative">
-                    <Send
-                      className={`w-8 h-8 transition-all duration-300 transform ${
-                        clickedIcons.whatsapp
-                          ? 'text-green-500 fill-green-500 scale-110 rotate-12'
-                          : 'text-gray-400 group-hover:text-green-500 group-hover:scale-105'
-                      }`}
-                    />
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform ${
+                      clickedIcons.whatsapp
+                        ? 'bg-green-500 text-white scale-110 shadow-lg shadow-green-500/30'
+                        : 'bg-green-50 text-green-600 group-hover:bg-green-500 group-hover:text-white group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-green-500/30'
+                    }`}>
+                      <MessageCircle
+                        className="w-5 h-5"
+                        fill="currentColor"
+                      />
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
                   </div>
                 </a>
                 <a
@@ -346,14 +349,16 @@ export default function HomePage() {
                   }}
                 >
                   <div className="relative">
-                    <Mail
-                      className={`w-8 h-8 transition-all duration-300 transform ${
-                        clickedIcons.email
-                          ? 'text-blue-500 fill-blue-500 scale-110'
-                          : 'text-gray-400 group-hover:text-blue-500 group-hover:scale-105'
-                      }`}
-                    />
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform ${
+                      clickedIcons.email
+                        ? 'bg-blue-500 text-white scale-110 shadow-lg shadow-blue-500/30'
+                        : 'bg-blue-50 text-blue-600 group-hover:bg-blue-500 group-hover:text-white group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-blue-500/30'
+                    }`}>
+                      <AtSign
+                        className="w-5 h-5"
+                      />
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
                   </div>
                 </a>
                 <a
@@ -367,14 +372,16 @@ export default function HomePage() {
                   }}
                 >
                   <div className="relative">
-                    <Instagram
-                      className={`w-8 h-8 transition-all duration-300 transform ${
-                        clickedIcons.instagram
-                          ? 'text-purple-500 fill-purple-500 scale-110'
-                          : 'text-gray-400 group-hover:text-purple-500 group-hover:scale-105'
-                      }`}
-                    />
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform bg-gradient-to-br ${
+                      clickedIcons.instagram
+                        ? 'from-purple-500 via-pink-500 to-orange-500 text-white scale-110 shadow-lg shadow-purple-500/30'
+                        : 'from-purple-50 via-pink-50 to-orange-50 text-purple-600 group-hover:from-purple-500 group-hover:via-pink-500 group-hover:to-orange-500 group-hover:text-white group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-purple-500/30'
+                    }`}>
+                      <Camera
+                        className="w-5 h-5"
+                      />
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
                   </div>
                 </a>
               </div>
