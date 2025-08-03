@@ -118,7 +118,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20">
+      <section className="py-12">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
