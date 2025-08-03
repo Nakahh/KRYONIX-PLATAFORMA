@@ -536,7 +536,7 @@ export default function HomePage() {
                     </h3>
                     <div className="grid md:grid-cols-2 gap-3">
                       {modules[selectedModule].features.map((feature, idx) => (
-                        <div key={idx} className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
+                        <div key={idx} className="flex items-start space-x-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                           <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
                           <span className="text-gray-700">{feature}</span>
                         </div>
