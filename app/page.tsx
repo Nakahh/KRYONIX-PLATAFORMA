@@ -523,7 +523,7 @@ export default function HomePage() {
                 <div className="p-6 space-y-6">
                   {/* Descrição */}
                   <div>
-                    <p className="text-lg text-gray-700 leading-relaxed">{modules[selectedModule].description}</p>
+                    <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">{modules[selectedModule].description}</p>
                   </div>
 
                   {/* Funcionalidades */}
