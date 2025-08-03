@@ -25,12 +25,17 @@ interface Part {
 export default function PartPage({ params }: { params: { slug: string } }) {
   const [part, setPart] = useState<Part | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     setMounted(true)
     const foundPart = partsData.find(p => p.slug === params.slug)
     setPart(foundPart || null)
   }, [params.slug])
+
+  const handleLoadingComplete = () => {
+    setLoading(false)
+  }
 
   if (!mounted) {
     return (
