@@ -73,7 +73,7 @@ STEP_DESCRIPTIONS=(
 )
 
 # ============================================================================
-# FUNÇÕES DE INTERFACE E PROGRESSO - CORRIGIDAS PARA ASCII
+# FUN��ÕES DE INTERFACE E PROGRESSO - CORRIGIDAS PARA ASCII
 # ============================================================================
 
 # Banner principal do instalador
@@ -86,8 +86,8 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═���  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚��█████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -2482,7 +2482,7 @@ DIAGNOSTIC_EOF
     done
 
     if [ $services_ok -eq $total_services ]; then
-        log "🎉 Deploy KRYONIX concluído com SUCESSO! ($services_ok/$total_services serviços OK)"
+        log "🎉 Deploy KRYONIX conclu��do com SUCESSO! ($services_ok/$total_services serviços OK)"
     else
         log "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
     fi
