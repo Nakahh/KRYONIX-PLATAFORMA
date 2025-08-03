@@ -83,7 +83,7 @@ export default function HomePage() {
     {
       icon: Smartphone,
       title: 'Mobile-First',
-      description: '80% dos usuários s��o mobile - interface otimizada para dispositivos móveis'
+      description: '80% dos usuários são mobile - interface otimizada para dispositivos móveis'
     },
     {
       icon: MessageCircle,
@@ -463,7 +463,7 @@ export default function HomePage() {
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              8 Módulos SaaS Disponíveis
+              8 M��dulos SaaS Disponíveis
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
               Escolha os módulos ideais para seu negócio
@@ -616,13 +616,13 @@ export default function HomePage() {
       </section>
 
       {/* Tech Stack */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               32+ Tecnologias Integradas
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-300">
               Stack completa para máxima performance e escalabilidade
             </p>
           </div>
@@ -631,7 +631,7 @@ export default function HomePage() {
             {stacks.map((tech, index) => (
               <span
                 key={index}
-                className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm hover:shadow-md transition-shadow duration-200"
+                className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:shadow-md transition-all duration-200"
               >
                 {tech}
               </span>
