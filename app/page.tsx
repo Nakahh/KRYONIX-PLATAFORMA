@@ -133,18 +133,6 @@ export default function HomePage() {
                 Transforme seu negócio com nossa plataforma inteligente: WhatsApp Business,
                 CRM avançado, automação completa e muito mais.
               </p>
-
-              <div className="flex justify-center mb-8">
-                <a
-                  href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                >
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Falar no WhatsApp
-                </a>
-              </div>
             </div>
 
 
@@ -309,11 +297,13 @@ export default function HomePage() {
               <div className="space-y-2 text-sm text-gray-400">
                 <div>📧 contato@kryonix.com.br</div>
                 <a
-                  href="tel:+5517981805327"
-                  className="inline-flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg transition-all duration-200 text-sm border border-gray-600 hover:border-gray-500"
+                  href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-all duration-200 text-sm border border-green-500 hover:border-green-400"
                 >
-                  <Phone className="w-4 h-4" />
-                  <span>+55 17 98180-5327</span>
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Falar no WhatsApp</span>
                 </a>
                 <div>🌐 www.kryonix.com.br</div>
               </div>
