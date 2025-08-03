@@ -399,7 +399,7 @@ nuclear_cleanup() {
 
         # Verificação final
         if [ -d "$PROJECT_DIR" ]; then
-            error_step
+            
             log_error "❌ Falha na remoção completa do diretório: $PROJECT_DIR"
             exit 1
         fi
@@ -650,53 +650,53 @@ next_step
 # ============================================================================
 
 if ! docker info | grep -q "Swarm: active"; then
-    error_step
+    
     log_error "Docker Swarm não está ativo!"
     log_info "Execute: docker swarm init"
     exit 1
 fi
 
 log_success "Docker Swarm detectado e ativo"
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 2: NUCLEAR CLEANUP COMPLETO
 # ============================================================================
 
-processing_step
+
 if ! nuclear_cleanup; then
-    error_step
+    
     log_error "Falha no nuclear cleanup"
     exit 1
 fi
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 3: VALIDAR CREDENCIAIS PRÉ-CONFIGURADAS
 # ============================================================================
 
-processing_step
+
 if ! validate_credentials; then
-    error_step
+    
     log_error "Falha na validaç📁o das credenciais"
     exit 1
 fi
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 4: CLONE FRESH DA VERSÃO MAIS RECENTE
 # ============================================================================
 
-processing_step
+
 log_info "📁 Iniciando clone FRESH para garantir versão MAIS RECENTE..."
 log_info "🔍 Objetivo: Sempre pegar versão mais recente com depend📁ncias atualizadas!"
 
 # Fazer clone fresh
 if ! fresh_git_clone "$GITHUB_REPO" "$PROJECT_DIR" "main" "$PAT_TOKEN"; then
-    error_step
+    
     log_error "Falha no clone fresh do repositório GitHub"
     exit 1
 fi
@@ -707,7 +707,7 @@ verify_fresh_clone "$PROJECT_DIR" "main"
 verification_result=$?
 
 if [ $verification_result -eq 1 ]; then
-    error_step
+    
     log_error "Falha na verificação do clone"
     exit 1
 elif [ $verification_result -eq 2 ]; then
@@ -719,13 +719,13 @@ cd "$PROJECT_DIR"
 
 # Verificar arquivos essenciais
 if [ ! -f "package.json" ]; then
-    error_step
+    
     log_error "package.json não encontrado no repositório!"
     exit 1
 fi
 
 if [ ! -f "server.js" ]; then
-    error_step
+    
     log_error "server.js não encontrado no repositório!"
     exit 1
 fi
@@ -745,14 +745,14 @@ else
     log_success "✅ Confirmado: Não está no PR #22 - versão mais recente obtida"
 fi
 
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 5: ATUALIZAR DEPENDÊNCIAS AUTOMATICAMENTE
 # ============================================================================
 
-processing_step
+
 log_info "📦 Iniciando atualização automática de dependências..."
 
 # Executar atualização automática
@@ -760,14 +760,14 @@ if ! auto_update_dependencies; then
     log_warning "⚠️ Problemas na atualiza📁ão, continuando com dependências originais"
 fi
 
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 6: VERIFICAR E CORRIGIR DEPENDÊNCIAS
 # ============================================================================
 
-processing_step
+
 log_info "🔍 Executando verificação avançada de dependências..."
 
 # Executar verificação avançada
@@ -779,14 +779,14 @@ if ! advanced_dependency_check; then
     npm install --no-audit --no-fund 2>/dev/null || true
 fi
 
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 7: CRIAR ARQUIVOS DE SERVIÇOS
 # ============================================================================
 
-processing_step
+
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
 # CORREÇÃO CRÍTICA: Criar arquivos de dependências ANTES de qualquer build
@@ -1259,14 +1259,14 @@ else
 fi
 
 log_success "✅ Todos os arquivos de serviços verificados/criados"
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 8: CONFIGURAR FIREWALL
 # ============================================================================
 
-processing_step
+
 log_info "Configurando firewall do sistema..."
 
 if command -v ufw >/dev/null 2>&1; then
@@ -1286,21 +1286,21 @@ elif command -v firewall-cmd >/dev/null 2>&1; then
 fi
 
 log_success "Firewall configurado para todos os serviços"
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 9: DETECTAR REDE TRAEFIK
 # ============================================================================
 
-processing_step
+
 log_info "🔧 CORREÇÃO: Configurando rede Kryonix-NET (baseada no instalador que funcionava)..."
 
 # Detectar automaticamente a rede do Traefik
 DOCKER_NETWORK=$(ensure_kryonix_network)
 
 if [ -z "$DOCKER_NETWORK" ]; then
-    error_step
+    
     log_error "❌ Falha na detecção automática da rede"
     exit 1
 fi
@@ -1311,14 +1311,14 @@ log_info "🎯 Rede configurada: $DOCKER_NETWORK (CORREÇÃO aplicada)"
 # Removido código duplicado que causava erro
 
 log_success "📁 Rede Docker configurada: $DOCKER_NETWORK"
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 10: VERIFICAR TRAEFIK
 # ============================================================================
 
-processing_step
+
 log_info "Verificando Traefik e configurando resolvers SSL..."
 
 CERT_RESOLVER="letsencrypt"  # CORREÇÃO: Resolver correto baseado no Traefik atual
@@ -1339,14 +1339,14 @@ else
 fi
 
 log_success "✅ Verificação do Traefik concluída"
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 11: CRIAR IMAGEM DOCKER
 # ============================================================================
 
-processing_step
+
 log_info "Criando Dockerfile otimizado para todos os serviços..."
 
 cat > Dockerfile << 'DOCKERFILE_EOF'
@@ -1460,7 +1460,7 @@ for file in "${required_files[@]}"; do
 done
 
 if [ ${#missing_files[@]} -gt 0 ]; then
-    error_step
+    
     log_error "❌ Arquivos obrigatórios faltando para Docker build: ${missing_files[*]}"
     exit 1
 fi
@@ -1611,7 +1611,7 @@ if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
     log_success "�� Imagem criada: kryonix-plataforma:$TIMESTAMP"
 else
-    error_step
+    
     log_error "❌ Falha no build da imagem Docker"
 
     # Sistema avançado de detecção e correção de erros
@@ -1912,14 +1912,14 @@ EMERGENCY_DOCKERFILE
     fi
 fi
 
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 12: PREPARAR STACK COM TRAEFIK PRIORIDADE MÁXIMA
 # ============================================================================
 
-processing_step
+
 log_info "🚀 Criando docker-stack.yml com Traefik PRIORIDADE MÁXIMA para webhook..."
 
 # CORREÇÃO COMPLETA: Criar YAML simples baseado no instalador antigo que funcionava 100%
@@ -2037,14 +2037,14 @@ log_info "   ✅ CRÍTICO: Recursos adequados (1G RAM, 1.0 CPU)"
 log_info "   ✅ CRÍTICO: Update/rollback config adicionados"
 log_info "   ✅ CRÍTICO: Webhook com prioridade máxima (10000)"
 log_info "   ✅ CORREÇÃO: Problemas 0/1 replicas resolvidos"
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 13: CONFIGURAR GITHUB ACTIONS
 # ============================================================================
 
-processing_step
+
 log_info "Configurando CI/CD com GitHub Actions..."
 
 mkdir -p .github/workflows
@@ -2094,14 +2094,14 @@ jobs:
 GITHUB_ACTIONS_EOF
 
 log_success "GitHub Actions configurado com auto-update"
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 14: CRIAR WEBHOOK DEPLOY
 # ============================================================================
 
-processing_step
+
 
 # Criar arquivos de dependências necessários (identificado pelo agente)
 log_info "🔧 Criando arquivos de dependências necessários para Docker build..."
@@ -2512,14 +2512,14 @@ WEBHOOK_DEPLOY_EOF
 chmod +x webhook-deploy.sh
 
 log_success "✅ Webhook deploy criado com auto-update"
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 15: CONFIGURAR LOGS E BACKUP
 # ============================================================================
 
-processing_step
+
 log_info "Configurando sistema de logs..."
 
 # Criar logs
@@ -2528,14 +2528,14 @@ sudo touch /var/log/kryonix-deploy.log 2>/dev/null || touch ./deploy.log
 sudo chown $USER:$USER /var/log/kryonix-deploy.log 2>/dev/null || true
 
 log_success "Sistema de logs configurado"
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 16: DEPLOY FINAL INTEGRADO
 # ============================================================================
 
-processing_step
+
 log_info "🚀 Iniciando deploy final com todos os serviços..."
 
 # Deploy do stack com diagnóstico melhorado
@@ -2543,7 +2543,7 @@ log_info "Fazendo deploy do stack KRYONIX completo..."
 
 # Verificar se docker-stack.yml existe
 if [ ! -f "docker-stack.yml" ]; then
-    error_step
+    
     log_error "❌ Arquivo docker-stack.yml não encontrado!"
     exit 1
 fi
@@ -2647,7 +2647,7 @@ if [ "$deploy_success" = true ]; then
         exit 1
     fi
 else
-    error_step
+    
     log_error "❌ FALHA em todas as $max_deploy_attempts tentativas de deploy"
     log_error "📋 Último erro: $deploy_output"
     exit 1
@@ -2733,14 +2733,14 @@ else
     WEBHOOK_STATUS="❌ PROBLEMA (verificar endpoint)"
 fi
 
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 17: TESTE WEBHOOK E RELATÓRIO FINAL
 # ============================================================================
 
-processing_step
+
 log_info "📁 Testando webhook e preparando relatório final..."
 
 # Testar webhook local
@@ -2761,14 +2761,14 @@ else
     EXTERNAL_WEBHOOK_STATUS="⚠️ VERIFICAR"
 fi
 
-complete_step
+
 next_step
 
 # ============================================================================
 # ETAPA 18: CONFIGURAR MONITORAMENTO CONTÍNUO
 # ============================================================================
 
-processing_step
+
 log_info "📈 Configurando monitoramento contínuo de dependências..."
 
 # Criar script de monitoramento
@@ -2817,7 +2817,7 @@ chmod +x dependency-monitor.sh
 (crontab -l 2>/dev/null || true; echo "0 * * * * cd $PROJECT_DIR && ./dependency-monitor.sh") | crontab -
 
 log_success "✅ Monitoramento contínuo configurado"
-complete_step
+
 
 # ============================================================================
 # RELATÓRIO FINAL COMPLETO
