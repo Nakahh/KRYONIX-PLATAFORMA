@@ -93,7 +93,7 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═════════════════════════════════════════════════════════════════╗"
+    echo    "╔══════════════════════════════════════════════════════════��══════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
@@ -2252,7 +2252,7 @@ jobs:
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
 
-      - name: 🏗️ Verify deployment
+      - name: ����️ Verify deployment
         run: |
           echo "⏳ Aguardando deployment automático KRYONIX com auto-update..."
           sleep 60
@@ -2499,14 +2499,8 @@ log_success "✅ Webhook interno integrado (baseado no instalador antigo funcion
 # Atualizar server.js para usar função interna em vez de script externo
 log_info "🔧 Atualizando server.js para usar webhook interno..."
 
-deploy() {
-    log "🚀 Iniciando deploy automático KRYONIX com nuclear cleanup..."
-
-    # CORREÇÃO: Nuclear cleanup para garantir versão mais recente
-    log "📁 Nuclear cleanup para garantir versão mais recente..."
-
-    # Parar processos
-    sudo pkill -f "$DEPLOY_PATH" 2>/dev/null || true
+# Remover function deploy() pois webhook agora é interno
+log_success "✅ Webhook integrado internamente ao instalador"
 
     # Remover TUDO do diretório (incluindo .git)
     cd /opt
