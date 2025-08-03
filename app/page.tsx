@@ -28,6 +28,7 @@ export default function HomePage() {
     email: false,
     instagram: false
   })
+  const [selectedModule, setSelectedModule] = useState<number | null>(null)
 
   useEffect(() => {
     setMounted(true)
