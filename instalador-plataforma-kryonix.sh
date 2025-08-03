@@ -99,7 +99,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ��███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -333,7 +333,7 @@ auto_update_dependencies() {
 
     # Backup do package.json original
     cp package.json package.json.backup
-    log_info "���� Backup do package.json criado"
+    log_info "Backup do package.json criado"
 
     # Atualizar para versões mais recentes (mantendo compatibilidade)
 
@@ -2752,7 +2752,7 @@ log_info "   Serviços: $(grep -c "image: kryonix-plataforma" docker-stack.yml) 
 log_warning "⚡ Bypassing dry-run (problema conhecido de travamento)"
 log_info "🚀 Validação simples e deploy direto..."
 
-# Validação básica apenas
+# Validação b��sica apenas
 if [ ! -f "docker-stack.yml" ]; then
     log_error "❌ docker-stack.yml não encontrado!"
     exit 1
@@ -2917,7 +2917,7 @@ next_step
 # ============================================================================
 
 
-log_info "📁 Testando webhook e preparando relatório final..."
+log_info "📁 Testando webhook e preparando relat��rio final..."
 
 # Testar webhook local
 if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
@@ -3000,7 +3000,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════��═══════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
