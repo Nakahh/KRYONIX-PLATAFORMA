@@ -46,7 +46,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
   }
 
   if (loading) {
-    return <LoadingScreen onComplete={handleLoadingComplete} />
+    return <LoadingScreen onComplete={handleLoadingComplete} duration={1000} />
   }
 
   if (!part) {
