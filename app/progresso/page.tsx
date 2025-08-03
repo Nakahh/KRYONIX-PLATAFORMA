@@ -18,7 +18,6 @@ import { partsData } from '../../lib/data/parts-data'
 export default function ProgressoPage() {
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [selectedPhase, setSelectedPhase] = useState('TODAS')
 
   useEffect(() => {
     setMounted(true)
@@ -27,22 +26,6 @@ export default function ProgressoPage() {
   const handleLoadingComplete = () => {
     setLoading(false)
   }
-
-
-
-  // Filtrar partes por fase
-  const phases = [
-    'TODAS',
-    'FASE 1: FUNDAÇÃO',
-    'FASE 2: INTERFACE E CORE',
-    'FASE 3: INTELIGÊNCIA ARTIFICIAL',
-    'FASE 4: COMUNICAÇÃO',
-    'FASE 5: MÓDULOS ESPECIALIZADOS'
-  ]
-
-  const filteredParts = selectedPhase === 'TODAS' 
-    ? partsData 
-    : partsData.filter(part => part.phase === selectedPhase)
 
   // Estatísticas
   const completed = partsData.filter(p => p.status === 'completed').length
