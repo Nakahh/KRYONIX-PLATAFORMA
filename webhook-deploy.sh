@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# Configurações KRYONIX
+# Configurações KRYONIX - FUNCIONAL DO INSTALADOR ANTIGO
 STACK_NAME="Kryonix"
 DEPLOY_PATH="/opt/kryonix-plataform"
 LOG_FILE="/var/log/kryonix-deploy.log"
@@ -21,7 +21,7 @@ log() {
     echo -e "$message" >> "$LOG_FILE" 2>/dev/null || echo -e "$message" >> "./deploy.log" 2>/dev/null || true
 }
 
-# Auto-update dependencies function
+# Auto-update dependencies function - FUNCIONAL DO INSTALADOR ANTIGO
 auto_update_dependencies() {
     log "📦 Atualizando dependências automaticamente..."
 
@@ -55,44 +55,10 @@ auto_update_dependencies() {
     fi
 }
 
-# Função para atualizar dependências automaticamente
-auto_update_dependencies() {
-    log "📦 Atualizando dependências automaticamente..."
-    
-    # Backup
-    cp package.json package.json.backup || true
-    
-    # Instalar npm-check-updates se não existir
-    if ! command -v ncu >/dev/null 2>&1; then
-        log "📦 Instalando npm-check-updates..."
-        npm install -g npm-check-updates >/dev/null 2>&1 || true
-    fi
-    
-    # Atualizar dependências
-    if command -v ncu >/dev/null 2>&1; then
-        log "🔄 Verificando atualizações disponíveis..."
-        ncu --upgrade --target minor >/dev/null 2>&1 || true
-        log "✅ Dependências atualizadas para versões compatíveis"
-    fi
-    
-    # Limpar e reinstalar
-    log "🧹 Limpando cache e reinstalando..."
-    npm cache clean --force >/dev/null 2>&1 || true
-    rm -rf node_modules package-lock.json 2>/dev/null || true
-    
-    if npm install --production --no-audit --no-fund; then
-        log "✅ Dependências instaladas com sucesso"
-    else
-        log "⚠️ Problemas na instalação, restaurando backup..."
-        cp package.json.backup package.json || true
-        npm install --production >/dev/null 2>&1 || true
-    fi
-}
-
 deploy() {
-    log "🚀 Iniciando deploy automático KRYONIX com auto-update..."
+    log "🚀 Iniciando deploy automático KRYONIX com nuclear cleanup..."
 
-    # Nuclear cleanup para garantir versão mais recente
+    # CORREÇÃO: Nuclear cleanup para garantir versão mais recente
     log "🧹 Nuclear cleanup para garantir versão mais recente..."
 
     # Parar processos
@@ -108,16 +74,42 @@ deploy() {
     git config --global user.name "KRYONIX Deploy" 2>/dev/null || true
     git config --global user.email "deploy@kryonix.com.br" 2>/dev/null || true
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
+    git config --global credential.helper store 2>/dev/null || true
 
-    # Clone fresh completo
-    if git clone --single-branch --branch main --depth 1 "$GITHUB_REPO" kryonix-plataform; then
+    # Configurar credenciais para repositório privado
+    echo "https://Nakahh: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@github.com" > ~/.git-credentials
+    chmod 600 ~/.git-credentials
+
+    # Clone fresh completo (repositório privado)
+    if git clone --single-branch --branch main --depth 1 "https://github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
         log "✅ Clone fresh concluído"
     else
-        log "❌ Falha no clone fresh"
-        return 1
+        log "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
+        # Fallback: token diretamente na URL
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh: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@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+            log "✅ Clone fresh concluído com fallback"
+        else
+            log "❌ Falha no clone fresh com todos os métodos"
+            return 1
+        fi
     fi
 
     cd "$DEPLOY_PATH"
+
+    # Verificar se é a versão mais recente
+    current_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+    current_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
+    remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
+
+    log "📌 Commit local: $current_commit"
+    log "🌐 Commit remoto: $remote_commit"
+    log "📝 Mensagem: $current_msg"
+
+    # Verificar se tem arquivos necessários
+    if [ ! -f "webhook-listener.js" ] || [ ! -f "kryonix-monitor.js" ]; then
+        log "❌ Arquivos de serviços faltando após clone!"
+        return 1
+    fi
 
     # NOVA FUNCIONALIDADE: Auto-update de dependências
     auto_update_dependencies
@@ -141,6 +133,10 @@ deploy() {
         fi
     fi
 
+    # Instalar dependências
+    log "📦 Instalando dependências..."
+    npm install --production
+
     # Rebuild da imagem
     log "🏗️ Fazendo rebuild da imagem Docker..."
     docker build --no-cache -t kryonix-plataforma:latest .
@@ -154,10 +150,22 @@ deploy() {
     # Verificar health de todos os serviços
     log "🔍 Verificando health dos serviços KRYONIX..."
 
-    if curl -f -s "http://localhost:8080/health" > /dev/null; then
-        log "✅ Serviço KRYONIX funcionando"
+    services_ok=0
+    total_services=3
+
+    for port in 8080 8082 8084; do
+        if curl -f -s "http://localhost:$port/health" > /dev/null; then
+            log "✅ Serviço KRYONIX na porta $port funcionando"
+            services_ok=$((services_ok + 1))
+        else
+            log "⚠️ Serviço KRYONIX na porta $port com problemas"
+        fi
+    done
+
+    if [ $services_ok -eq $total_services ]; then
+        log "🎉 Deploy KRYONIX concluído com SUCESSO! ($services_ok/$total_services serviços OK)"
     else
-        log "⚠️ Serviço KRYONIX com problemas"
+        log "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
     fi
 
     # Testar webhook externamente
@@ -168,8 +176,6 @@ deploy() {
     else
         log "⚠️ Webhook externo KRYONIX pode ter problemas"
     fi
-
-    log "🎉 Deploy KRYONIX concluído com auto-update de dependências!"
 }
 
 case "${1:-}" in
