@@ -275,78 +275,83 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-3">
+      <footer className="bg-gray-900 text-white py-6">
         <div className="container-custom">
-          <div className="grid md:grid-cols-3 gap-2 mb-2">
-            <div>
-              <div className="flex items-center space-x-3 mb-4">
+          <div className="grid md:grid-cols-3 gap-8 mb-6">
+            {/* Logo Section - Centered */}
+            <div className="text-center">
+              <div className="flex flex-col items-center space-y-3 mb-4">
                 <Image
                   src="/logo-kryonix.png"
                   alt="KRYONIX Logo"
-                  width={32}
-                  height={32}
+                  width={48}
+                  height={48}
                   className="rounded-lg"
                 />
-                <span className="text-xl font-bold">KRYONIX</span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-green-400 bg-clip-text text-transparent">
+                  KRYONIX
+                </span>
               </div>
               <p className="text-gray-400 text-sm">
                 Plataforma SaaS 100% Autônoma por IA
               </p>
             </div>
-            
-            <div>
-              <div className="flex items-center justify-center space-x-4">
+
+            {/* Contact Section - Centered */}
+            <div className="text-center">
+              <h3 className="font-semibold mb-4 text-white">Contato</h3>
+              <div className="flex items-center justify-center space-x-6">
                 <a
                   href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-green-500 transition-colors duration-200"
+                  className="group"
                   title="WhatsApp"
                 >
-                  <MessageCircle className="w-6 h-6" />
+                  <MessageCircle className="w-8 h-8 text-gray-400 group-hover:text-green-500 group-active:fill-green-500 transition-all duration-200" />
                 </a>
-                <span className="text-white font-semibold">Contato</span>
                 <a
                   href="mailto:contato@kryonix.com.br"
-                  className="text-gray-400 hover:text-blue-500 transition-colors duration-200"
+                  className="group"
                   title="Email"
                 >
-                  <Mail className="w-6 h-6" />
+                  <Mail className="w-8 h-8 text-gray-400 group-hover:text-blue-500 group-active:fill-blue-500 transition-all duration-200" />
                 </a>
                 <a
                   href="https://instagram.com/kryon.ix"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-purple-500 transition-colors duration-200"
+                  className="group"
                   title="Instagram"
                 >
-                  <Instagram className="w-6 h-6" />
+                  <Instagram className="w-8 h-8 text-gray-400 group-hover:text-purple-500 group-active:fill-purple-500 transition-all duration-200" />
                 </a>
               </div>
             </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Status do Sistema</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center space-x-2">
-                  <div className="status-online"></div>
+
+            {/* System Status Section - Centered */}
+            <div className="text-center">
+              <h3 className="font-semibold mb-4 text-white">Status do Sistema</h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-gray-400">Desenvolvimento Ativo</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className="status-online"></div>
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
                   <span className="text-gray-400">Monitoramento 24/7</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className="status-online"></div>
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
                   <span className="text-gray-400">Backup Automático</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 pt-2 text-center">
+          <div className="border-t border-gray-800 pt-4 text-center">
             <p className="text-gray-400 text-sm">
-              © 2025 KRYONIX. Desenvolvido por Vitor Jayme Fernandes Ferreira.
+              © 2025 <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-green-400 bg-clip-text text-transparent font-bold">KRYONIX</span>. Desenvolvido por Vitor Jayme Fernandes Ferreira.
             </p>
             <p className="text-gray-500 text-xs mt-2">
               🤖 Assistido por 15 Agentes Especializados em IA
