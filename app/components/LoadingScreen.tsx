@@ -90,12 +90,9 @@ export default function LoadingScreen({ onComplete, duration = 1000 }: LoadingSc
 
         {/* Brand Text */}
         <div className="text-center">
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent">
             KRYONIX
           </h1>
-          <p className="text-gray-600 text-lg font-medium tracking-wide opacity-80">
-            Plataforma SaaS 100% Autônoma por IA
-          </p>
         </div>
       </div>
     </div>
