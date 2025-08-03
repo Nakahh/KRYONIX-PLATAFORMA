@@ -12,7 +12,8 @@ import {
   CheckCircle,
   Clock,
   Sparkles,
-  Globe
+  Globe,
+  Phone
 } from 'lucide-react'
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
@@ -129,9 +130,21 @@ export default function HomePage() {
               </h1>
               
               <p className="text-xl text-gray-600 mb-8 text-balance max-w-2xl mx-auto">
-                Transforme seu negócio com nossa plataforma inteligente: WhatsApp Business, 
+                Transforme seu negócio com nossa plataforma inteligente: WhatsApp Business,
                 CRM avançado, automação completa e muito mais.
               </p>
+
+              <div className="flex justify-center mb-8">
+                <a
+                  href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Falar no WhatsApp
+                </a>
+              </div>
             </div>
 
 
@@ -295,7 +308,10 @@ export default function HomePage() {
               <h3 className="font-semibold mb-4">Contato</h3>
               <div className="space-y-2 text-sm text-gray-400">
                 <div>📧 contato@kryonix.com.br</div>
-                <div>📱 +55 17 98180-5327</div>
+                <div className="flex items-center space-x-2">
+                  <Phone className="w-4 h-4" />
+                  <span>+55 17 98180-5327</span>
+                </div>
                 <div>🌐 www.kryonix.com.br</div>
               </div>
             </div>
