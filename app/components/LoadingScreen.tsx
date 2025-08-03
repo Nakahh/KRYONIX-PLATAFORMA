@@ -53,53 +53,58 @@ export default function LoadingScreen({ onComplete, duration = 3000 }: LoadingSc
       {/* Main Loading Container */}
       <div className="relative flex flex-col items-center justify-center">
         
-        {/* Rotating Gradient Ring */}
-        <div className="relative w-32 h-32 mb-8">
-          {/* Outer rotating gradient */}
-          <div className="absolute inset-0 animate-spin-slow">
-            <div className="w-full h-full rounded-full bg-gradient-conic from-blue-500 via-purple-500 via-green-500 via-yellow-500 to-blue-500 p-1">
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 via-white to-green-50"></div>
-            </div>
-          </div>
-          
-          {/* Middle rotating gradient - opposite direction */}
-          <div className="absolute inset-2 animate-spin-reverse">
-            <div className="w-full h-full rounded-full bg-gradient-conic from-green-400 via-blue-400 via-purple-400 via-pink-400 to-green-400 p-1">
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-50 via-white to-green-50"></div>
-            </div>
-          </div>
-          
-          {/* Inner pulsing gradient */}
-          <div className="absolute inset-4 animate-pulse">
-            <div className="w-full h-full rounded-full bg-gradient-radial from-blue-200 via-transparent to-green-200"></div>
-          </div>
-          
-          {/* Logo Container */}
-          <div className="absolute inset-6 flex items-center justify-center">
-            <div className="relative w-16 h-16 rounded-full bg-white shadow-xl flex items-center justify-center backdrop-blur-sm border border-white/20">
+        {/* Modern Semicircle Animation */}
+        <div className="relative w-40 h-40 mb-8">
+          {/* Logo Container - Full Size */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative w-32 h-32 rounded-full bg-white shadow-2xl flex items-center justify-center backdrop-blur-sm border border-white/10 overflow-hidden">
               <Image
                 src="/logo-kryonix.png"
                 alt="KRYONIX"
-                width={40}
-                height={40}
+                width={120}
+                height={120}
                 className="rounded-lg"
                 priority
               />
-              
-              {/* Logo glow effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-green-400/20 animate-pulse"></div>
+
+              {/* Logo inner glow effect */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/10 to-green-400/10 animate-pulse"></div>
+
+              {/* Subtle inner shadow */}
+              <div className="absolute inset-0 rounded-full shadow-inner"></div>
             </div>
           </div>
-          
-          {/* Orbiting dots */}
+
+          {/* Animated Semicircle Spinner */}
+          <div className="absolute inset-0 animate-spin-elegant">
+            <div className="relative w-full h-full">
+              {/* Top semicircle */}
+              <div className="absolute top-0 left-0 w-full h-1/2 overflow-hidden">
+                <div className="w-full h-full border-4 border-transparent border-t-blue-500 rounded-full animate-pulse-glow"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Second Semicircle - Opposite */}
+          <div className="absolute inset-0 animate-spin-elegant-reverse">
+            <div className="relative w-full h-full">
+              {/* Bottom semicircle */}
+              <div className="absolute bottom-0 left-0 w-full h-1/2 overflow-hidden rotate-180">
+                <div className="w-full h-full border-4 border-transparent border-t-green-500 rounded-full animate-pulse-glow"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Floating gradient orbs */}
           <div className="absolute inset-0 animate-spin-slow">
             <div className="relative w-full h-full">
-              <div className="absolute top-0 left-1/2 w-2 h-2 bg-blue-500 rounded-full transform -translate-x-1/2 animate-pulse"></div>
-              <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-green-500 rounded-full transform -translate-x-1/2 animate-pulse"></div>
-              <div className="absolute left-0 top-1/2 w-2 h-2 bg-purple-500 rounded-full transform -translate-y-1/2 animate-pulse"></div>
-              <div className="absolute right-0 top-1/2 w-2 h-2 bg-pink-500 rounded-full transform -translate-y-1/2 animate-pulse"></div>
+              <div className="absolute -top-1 left-1/2 w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full transform -translate-x-1/2 animate-bounce shadow-lg"></div>
+              <div className="absolute -bottom-1 left-1/2 w-3 h-3 bg-gradient-to-r from-green-400 to-green-600 rounded-full transform -translate-x-1/2 animate-bounce shadow-lg" style={{ animationDelay: '0.5s' }}></div>
             </div>
           </div>
+
+          {/* Outer glow ring */}
+          <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-green-500/20 animate-pulse blur-xl"></div>
         </div>
 
         {/* Brand Text */}
