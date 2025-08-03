@@ -140,31 +140,7 @@ export default function ProgressoPage() {
         </div>
       </section>
 
-      {/* Phase Filter */}
-      <section className="py-8 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              Filtrar por Fase de Desenvolvimento
-            </h2>
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
-              {phases.map((phase) => (
-                <button
-                  key={phase}
-                  onClick={() => setSelectedPhase(phase)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedPhase === phase
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {phase}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* Progress Section */}
       <section className="py-16 bg-gray-50">
