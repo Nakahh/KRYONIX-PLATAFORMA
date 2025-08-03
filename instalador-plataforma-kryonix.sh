@@ -103,6 +103,30 @@ show_banner() {
     echo ""
 }
 
+# Inicialização moderna da barra de progresso
+init_progress_system() {
+    # Banner animado de inicialização
+    printf "\n${BOLD}${BLUE}"
+    printf "╔═══════════════════════════════════════════════════════════════════════════════════╗\n"
+    printf "║                                                                                   ║\n"
+    printf "║                      🚀 SISTEMA DE INSTALAÇÃO KRYONIX 🚀                         ║\n"
+    printf "║                                                                                   ║\n"
+    printf "║                         Preparando ambiente de instalação...                     ║\n"
+    printf "║                                                                                   ║\n"
+    printf "╚═══════════════════════════════════════════════════════════════════════════════════╝${RESET}\n\n"
+
+    # Animação de inicialização
+    printf "${BOLD}${CYAN}Inicializando sistema de progresso${RESET} "
+    for i in {1..20}; do
+        printf "${BLUE}█${RESET}"
+        sleep 0.05
+    done
+    printf " ${GREEN}✓${RESET}\n\n"
+
+    sleep 1
+    clear
+}
+
 # Barra de progresso ultra moderna com animação
 show_progress() {
     local step=$1
@@ -298,7 +322,7 @@ auto_update_dependencies() {
     fi
 
     # Correção proativa para dependências de build do Next.js
-    log_info "🔧 Aplicando correção proativa para dependências de build..."
+    log_info "�� Aplicando correção proativa para dependências de build..."
     cat > /tmp/proactive-build-fix.js << 'EOF'
 const fs = require('fs');
 try {
@@ -912,7 +936,7 @@ try {
 }
 
 if (missing.length === 0) {
-    console.log('🎉 Todas as dependências críticas instaladas!');
+    console.log('�� Todas as dependências críticas instaladas!');
     console.log('✅ Instaladas: ' + installed + '/' + deps.length);
     console.log('📊 Resumo da verificação:');
     console.log('   Dependências críticas: ' + deps.length);
@@ -2766,7 +2790,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
     fi
 else
     log_error "🔍 Serviço web com problemas no Docker Swarm: $web_replicas"
-    WEB_STATUS="❌ FAILED ($web_replicas)"
+    WEB_STATUS="��� FAILED ($web_replicas)"
 
     # Mostrar logs detalhados para diagnóstico
     log_info "📋 Logs detalhados do serviço com problema:"
@@ -2908,7 +2932,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
