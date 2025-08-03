@@ -174,6 +174,11 @@ export default function ProgressoPage() {
               </p>
             </div>
 
+            {/* Progress Bar */}
+            <div className="mb-8">
+              <ProgressBar compact={true} showDetails={false} className="max-w-2xl mx-auto" />
+            </div>
+
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8">
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
