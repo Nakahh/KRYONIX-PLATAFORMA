@@ -43,6 +43,20 @@ export default function PartPage({ params }: { params: { slug: string } }) {
     setLoading(false)
   }
 
+  const handleIconClick = (iconType: 'whatsapp' | 'email' | 'instagram') => {
+    setClickedIcons(prev => ({
+      ...prev,
+      [iconType]: true
+    }))
+
+    setTimeout(() => {
+      setClickedIcons(prev => ({
+        ...prev,
+        [iconType]: false
+      }))
+    }, 200)
+  }
+
   if (!mounted) {
     return null
   }
