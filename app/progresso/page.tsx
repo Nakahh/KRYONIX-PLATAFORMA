@@ -197,13 +197,8 @@ export default function ProgressoPage() {
               ))}
             </div>
 
-            <div className="mt-12 text-center">
-              <p className="text-lg font-semibold text-gray-700 mb-2">
-                53 Partes Técnicas Completas
-              </p>
-              <p className="text-sm text-gray-500">
-                Clique em qualquer parte para ver os detalhes técnicos completos
-              </p>
+            <div className="mt-12">
+              <ProgressBar className="max-w-4xl mx-auto" />
             </div>
           </div>
         </div>
