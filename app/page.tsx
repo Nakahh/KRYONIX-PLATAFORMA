@@ -463,7 +463,7 @@ export default function HomePage() {
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              8 M��dulos SaaS Disponíveis
+              8 Módulos SaaS Disponíveis
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
               Escolha os módulos ideais para seu negócio
@@ -641,14 +641,14 @@ export default function HomePage() {
       </section>
 
       {/* Progress Section */}
-      <section className="py-16 bg-gradient-to-br from-blue-50 to-green-50">
+      <section className="py-16 bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-700">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                 Acompanhe o Desenvolvimento
               </h2>
-              <p className="text-xl text-gray-600 mb-8">
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
                 Veja o progresso detalhado das 53 partes do projeto
               </p>
             </div>
