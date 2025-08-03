@@ -227,10 +227,13 @@ export default function ProgressoPage() {
                 <h3 className="font-semibold mb-4">Contato</h3>
                 <div className="space-y-2 text-sm text-gray-400">
                   <div>📧 contato@kryonix.com.br</div>
-                  <div className="flex items-center space-x-2">
+                  <a
+                    href="tel:+5517981805327"
+                    className="inline-flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg transition-all duration-200 text-sm border border-gray-600 hover:border-gray-500"
+                  >
                     <Phone className="w-4 h-4" />
                     <span>+55 17 98180-5327</span>
-                  </div>
+                  </a>
                   <div>🌐 www.kryonix.com.br</div>
                 </div>
               </div>
