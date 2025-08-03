@@ -295,7 +295,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8 mb-6">
             {/* Logo Section - Centered */}
             <div className="text-center">
-              <div className="flex flex-col items-center space-y-3 mb-4">
+              <div className="flex items-center justify-center space-x-3 mb-4">
                 <Image
                   src="/logo-kryonix.png"
                   alt="KRYONIX Logo"
