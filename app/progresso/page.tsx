@@ -46,7 +46,7 @@ export default function ProgressoPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
       <MobileMenu />
-      
+
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -87,7 +87,7 @@ export default function ProgressoPage() {
                 <br />
                 <span className="text-gray-900">Desenvolvimento KRYONIX</span>
               </h1>
-              
+
               <p className="text-xl text-gray-600 mb-8 text-balance max-w-2xl mx-auto">
                 Acompanhe o desenvolvimento detalhado de todas as 53 partes da plataforma SaaS 100% autônoma por IA.
               </p>
@@ -172,7 +172,7 @@ export default function ProgressoPage() {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="border-t pt-4">
                     <p className="text-sm text-gray-600 mb-3">{item.simple_description}</p>
                     <div className="flex flex-wrap gap-1">
@@ -205,84 +205,93 @@ export default function ProgressoPage() {
 
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-3">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-2 mb-2">
-              <div>
-                <div className="flex items-center space-x-3 mb-4">
-                  <Image
-                    src="/logo-kryonix.png"
-                    alt="KRYONIX Logo"
-                    width={32}
-                    height={32}
-                    className="rounded-lg"
+      <footer className="bg-gray-900 text-white py-6">
+        <div className="container-custom">
+          <div className="grid md:grid-cols-3 gap-8 mb-6">
+            {/* Logo Section - Centered */}
+            <div className="text-center">
+              <div className="flex flex-col items-center space-y-3 mb-4">
+                <Image
+                  src="/logo-kryonix.png"
+                  alt="KRYONIX Logo"
+                  width={48}
+                  height={48}
+                  className="rounded-lg"
+                />
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-green-400 bg-clip-text text-transparent">
+                  KRYONIX
+                </span>
+              </div>
+              <p className="text-gray-400 text-sm">
+                Plataforma SaaS 100% Autônoma por IA
+              </p>
+            </div>
+
+            {/* Contact Section - Centered */}
+            <div className="text-center">
+              <h3 className="font-semibold mb-4 text-white">Contato</h3>
+              <div className="flex items-center justify-center space-x-6">
+                <a
+                  href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group cursor-pointer"
+                  title="WhatsApp"
+                >
+                  <MessageCircle
+                    className="w-8 h-8 transition-all duration-200 text-gray-400 group-hover:text-green-500"
                   />
-                  <span className="text-xl font-bold">KRYONIX</span>
-                </div>
-                <p className="text-gray-400 text-sm">
-                  Plataforma SaaS 100% Autônoma por IA
-                </p>
-              </div>
-              
-              <div>
-                <div className="flex items-center justify-center space-x-4">
-                  <a
-                    href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-green-500 transition-colors duration-200"
-                    title="WhatsApp"
-                  >
-                    <MessageCircle className="w-6 h-6" />
-                  </a>
-                  <span className="text-white font-semibold">Contato</span>
-                  <a
-                    href="mailto:contato@kryonix.com.br"
-                    className="text-gray-400 hover:text-blue-500 transition-colors duration-200"
-                    title="Email"
-                  >
-                    <Mail className="w-6 h-6" />
-                  </a>
-                  <a
-                    href="https://instagram.com/kryon.ix"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-purple-500 transition-colors duration-200"
-                    title="Instagram"
-                  >
-                    <Instagram className="w-6 h-6" />
-                  </a>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="font-semibold mb-4">Status do Sistema</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <div className="status-online"></div>
-                    <span className="text-gray-400">Desenvolvimento Ativo</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="status-online"></div>
-                    <span className="text-gray-400">Monitoramento 24/7</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="status-online"></div>
-                    <span className="text-gray-400">Backup Automático</span>
-                  </div>
-                </div>
+                </a>
+                <a
+                  href="mailto:contato@kryonix.com.br"
+                  className="group cursor-pointer"
+                  title="Email"
+                >
+                  <Mail
+                    className="w-8 h-8 transition-all duration-200 text-gray-400 group-hover:text-blue-500"
+                  />
+                </a>
+                <a
+                  href="https://instagram.com/kryon.ix"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group cursor-pointer"
+                  title="Instagram"
+                >
+                  <Instagram
+                    className="w-8 h-8 transition-all duration-200 text-gray-400 group-hover:text-purple-500"
+                  />
+                </a>
               </div>
             </div>
 
-            <div className="border-t border-gray-800 pt-2 text-center">
-              <p className="text-gray-400 text-sm">
-                © 2025 KRYONIX. Desenvolvido por Vitor Jayme Fernandes Ferreira.
-              </p>
-              <p className="text-gray-500 text-xs mt-2">
-                🤖 Assistido por 15 Agentes Especializados em IA
-              </p>
+            {/* System Status Section - Centered */}
+            <div className="text-center">
+              <h3 className="font-semibold mb-4 text-white">Status do Sistema</h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-gray-400">Desenvolvimento Ativo</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span className="text-gray-400">Monitoramento 24/7</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+                  <span className="text-gray-400">Backup Automático</span>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <div className="border-t border-gray-800 pt-4 text-center">
+            <p className="text-gray-400 text-sm">
+              © 2025 <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-green-400 bg-clip-text text-transparent font-bold">KRYONIX</span>. Desenvolvido por Vitor Jayme Fernandes Ferreira.
+            </p>
+            <p className="text-gray-500 text-xs mt-2">
+              🤖 Assistido por 15 Agentes Especializados em IA
+            </p>
           </div>
         </div>
       </footer>
