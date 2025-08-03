@@ -32,26 +32,26 @@ export default function MobileMenu() {
       {/* Menu Button - Visible only on mobile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden fixed top-4 right-4 z-50 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center"
+        className="md:hidden fixed top-4 right-4 z-50 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center"
       >
         {isOpen ? (
-          <X className="w-6 h-6 text-gray-600" />
+          <X className="w-6 h-6 text-gray-600 dark:text-gray-300" />
         ) : (
-          <Menu className="w-6 h-6 text-gray-600" />
+          <Menu className="w-6 h-6 text-gray-600 dark:text-gray-300" />
         )}
       </button>
 
       {/* Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-40 md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Mobile Menu */}
       <div className={`
-        fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-40 
+        fixed top-0 right-0 h-full w-80 bg-white dark:bg-gray-900 shadow-xl z-40 
         transform transition-transform duration-300 ease-in-out md:hidden
         ${isOpen ? 'translate-x-0' : 'translate-x-full'}
       `}>
