@@ -259,7 +259,7 @@ show_progress() {
     # Efeito visual final se completo
     if [ $step -eq $total ]; then
         printf "\n${BOLD}${BRIGHT_GREEN}"
-        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
+        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
         printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
     else
@@ -1680,7 +1680,7 @@ if [ -f "lib/database/postgres-config.ts" ]; then
 
     log_success "✅ postgres-config.ts corrigido"
 else
-    log_warning "⚠️ lib/database/postgres-config.ts não encontrado"
+    log_warning "��️ lib/database/postgres-config.ts não encontrado"
 fi
 
 # Correção 2: Arquivo init.ts - variável module conflitando com ESLint
@@ -2367,8 +2367,118 @@ exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
 FIX_DEPS_EOF
 fi
 
-log_info "Criando webhook-deploy.sh com auto-update de dependências..."
+# CORREÇÃO: Webhook agora é INTERNO ao instalador - funcional do instalador antigo
+log_info "🔧 Configurando deploy automático interno (baseado no instalador antigo funcional)..."
 
+# Função de deploy automático interna (extraída do instalador antigo)
+webhook_deploy_interno() {
+    local mode="${1:-manual}"
+
+    log_info "🚀 Iniciando deploy automático KRYONIX com nuclear cleanup..."
+
+    # Nuclear cleanup para garantir versão mais recente
+    log_info "🗑️ Nuclear cleanup para garantir versão mais recente..."
+
+    # Parar processos
+    sudo pkill -f "$PROJECT_DIR" 2>/dev/null || true
+
+    # Remover TUDO do diretório (incluindo .git)
+    cd /opt
+    sudo rm -rf kryonix-plataform
+
+    log_info "📥 Clone FRESH da versão mais recente..."
+
+    # Configurar Git e credenciais para repositório privado
+    git config --global user.name "KRYONIX Deploy" 2>/dev/null || true
+    git config --global user.email "deploy@kryonix.com.br" 2>/dev/null || true
+    git config --global --add safe.directory "$PROJECT_DIR" 2>/dev/null || true
+    git config --global credential.helper store 2>/dev/null || true
+
+    # Configurar credenciais para repositório privado
+    echo "https://Nakahh:${PAT_TOKEN}@github.com" > ~/.git-credentials
+    chmod 600 ~/.git-credentials
+
+    # Clone fresh completo (repositório privado)
+    if git clone --single-branch --branch main --depth 1 "$GITHUB_REPO" kryonix-plataform; then
+        log_success "✅ Clone fresh concluído"
+    else
+        log_warning "⚠️ Clone com credenciais store falhou, tentando com token na URL..."
+        # Fallback: token diretamente na URL
+        if git clone --single-branch --branch main --depth 1 "https://Nakahh:${PAT_TOKEN}@github.com/Nakahh/KRYONIX-PLATAFORMA.git" kryonix-plataform; then
+            log_success "✅ Clone fresh concluído com fallback"
+        else
+            log_error "❌ Falha no clone fresh com todos os métodos"
+            return 1
+        fi
+    fi
+
+    cd "$PROJECT_DIR"
+
+    # Verificar se é a versão mais recente
+    current_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
+    current_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
+    remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
+
+    log_info "📌 Commit local: $current_commit"
+    log_info "🌐 Commit remoto: $remote_commit"
+    log_info "📝 Mensagem: $current_msg"
+
+    # Auto-update de dependências (funcionalidade do instalador antigo)
+    if command -v ncu >/dev/null 2>&1; then
+        log_info "🔄 Verificando atualizações de dependências..."
+        ncu --upgrade --target minor >/dev/null 2>&1 || true
+        log_success "✅ Dependências atualizadas para versões compatíveis"
+    fi
+
+    # Instalar dependências
+    log_info "📦 Instalando dependências..."
+    npm install --production
+
+    # Rebuild da imagem
+    log_info "🏗️ Fazendo rebuild da imagem Docker..."
+    docker build --no-cache -t kryonix-plataforma:latest .
+
+    # Deploy do stack
+    log_info "🚀 Fazendo deploy do stack KRYONIX..."
+    docker stack deploy -c docker-stack.yml "$STACK_NAME"
+
+    sleep 60
+
+    # Verificar health de todos os serviços
+    log_info "🔍 Verificando health final dos serviços KRYONIX..."
+
+    services_ok=0
+    total_services=3
+
+    for port in 8080 8082 8084; do
+        if curl -f -s "http://localhost:$port/health" > /dev/null; then
+            log_success "✅ Serviço KRYONIX na porta $port funcionando"
+            services_ok=$((services_ok + 1))
+        else
+            log_warning "⚠️ Serviço KRYONIX na porta $port com problemas"
+        fi
+    done
+
+    if [ $services_ok -eq $total_services ]; then
+        log_success "🎉 Deploy KRYONIX concluído com SUCESSO! ($services_ok/$total_services serviços OK)"
+    else
+        log_warning "⚠️ Deploy KRYONIX com problemas ($services_ok/$total_services serviços OK)"
+    fi
+
+    # Testar webhook externamente (do instalador antigo)
+    if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
+       -H "Content-Type: application/json" \
+       -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
+        log_success "🌐 Webhook externo KRYONIX funcionando!"
+    else
+        log_warning "⚠️ Webhook externo KRYONIX pode ter problemas"
+    fi
+
+    return 0
+}
+
+# Criar script wrapper simplificado para compatibilidade
+log_info "📝 Criando script de deploy simplificado..."
 cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 #!/bin/bash
 
