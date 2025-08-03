@@ -3,18 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { 
-  ArrowLeft, 
-  CheckCircle, 
-  Clock, 
+import {
+  ArrowLeft,
+  CheckCircle,
+  Clock,
   AlertTriangle,
-  Shield,
-  Bot,
-  Smartphone,
-  MessageCircle,
-  BarChart3,
-  Globe,
-  Sparkles
+  BarChart3
 } from 'lucide-react'
 import MobileMenu from '../components/MobileMenu'
 import LoadingScreen from '../components/LoadingScreen'
