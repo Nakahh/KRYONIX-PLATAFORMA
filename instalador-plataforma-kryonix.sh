@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚██��█╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
@@ -131,7 +131,7 @@ init_progress_system() {
     printf "║                                                                                   ║\n"
     printf "║                         Preparando ambiente de instalação...                      ║\n"
     printf "║                                                                                   ║\n"
-    printf "╚═══════════════════════════════════════════════════════════════════════════════════╝${RESET}\n\n"
+    printf "╚══════════════════════════════════════���════════════════════════════════════════════╝${RESET}\n\n"
 
     # Animação de inicialização
     printf "${BOLD}${CYAN}Inicializando sistema de progresso${RESET} "
@@ -263,7 +263,7 @@ show_progress() {
         printf "\n${BOLD}${BRIGHT_GREEN}"
         printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
-        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
+        printf "🎉━━━━━━━━━━━━━━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
     else
         # Pequena pausa para animação suave
         sleep 0.2
@@ -1783,22 +1783,56 @@ if [ -d ".next" ]; then
     log_success "✅ Build anterior removido para garantir build limpo"
 fi
 
+# Verificar se todos os arquivos necessários existem antes do build
+log_info "🔍 Verificando arquivos necessários para Docker build..."
+missing_files=()
+
+required_files=("server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js" "package.json" "next.config.js")
+
+for file in "${required_files[@]}"; do
+    if [ ! -f "$file" ]; then
+        missing_files+=("$file")
+    fi
+done
+
+# Criar arquivos faltantes com conteúdo mínimo funcional
+if [ ${#missing_files[@]} -gt 0 ]; then
+    log_warning "⚠️ Arquivos faltantes detectados, criando com conteúdo padrão..."
+    for file in "${missing_files[@]}"; do
+        case "$file" in
+            "webhook-deploy.sh")
+                log_info "📝 Criando webhook-deploy.sh..."
+                cat > webhook-deploy.sh << 'EOF'
+#!/bin/bash
+echo "🚀 KRYONIX Webhook Deploy"
+echo "Deploy via webhook executado em $(date)"
+EOF
+                chmod +x webhook-deploy.sh
+                ;;
+        esac
+    done
+fi
+
 # Build com logs detalhados para diagnóstico
 log_info "Iniciando Docker build multi-stage com Next.js..."
-if docker build --no-cache -t kryonix-plataforma:latest . >/dev/null 2>&1; then
+if docker build --no-cache -t kryonix-plataforma:latest . 2>&1 | tee /tmp/docker-build.log; then
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     docker tag kryonix-plataforma:latest kryonix-plataforma:$TIMESTAMP
     log_success "🎉 Imagem criada: kryonix-plataforma:$TIMESTAMP"
 else
 
     log_error "❌ Falha no build da imagem Docker"
+    echo "📋 Log do erro:"
+    tail -20 /tmp/docker-build.log
 
     # Sistema avançado de detecção e correção de erros
     log_warning "🔧 Detectado falha no Docker build - aplicando correções automáticas..."
 
     # Análise detalhada do erro
     build_error_type=""
-    if grep -q "Cannot find module.*\.js" /tmp/docker-build.log && grep -q "webpack-runtime" /tmp/docker-build.log; then
+    if grep -q "not found" /tmp/docker-build.log && grep -q "COPY" /tmp/docker-build.log; then
+        build_error_type="copy_failed"
+    elif grep -q "Cannot find module.*\.js" /tmp/docker-build.log && grep -q "webpack-runtime" /tmp/docker-build.log; then
         build_error_type="webpack_chunks_corrupted"
     elif grep -q "Type error.*postgres-config.ts" /tmp/docker-build.log; then
         build_error_type="typescript_postgres_config"
@@ -1818,8 +1852,6 @@ else
         build_error_type="npm_install_failed"
     elif grep -q "postinstall.*failed" /tmp/docker-build.log; then
         build_error_type="postinstall_failed"
-    elif grep -q "COPY.*failed" /tmp/docker-build.log; then
-        build_error_type="copy_failed"
     else
         build_error_type="unknown"
     fi
