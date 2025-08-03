@@ -65,6 +65,14 @@
     animation: spin-elegant-reverse 2s ease-in-out infinite;
   }
 
+  .animate-circle-progress {
+    animation: circle-progress 1s ease-out forwards;
+  }
+
+  .animate-dot-rotation {
+    animation: dot-rotation 1s ease-out forwards;
+  }
+
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
