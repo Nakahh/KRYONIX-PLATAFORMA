@@ -99,7 +99,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ��███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  █��║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "��     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -368,7 +368,7 @@ auto_update_dependencies() {
         log_info "📥 Tentativa de instalação $install_attempts/$max_attempts..."
 
         if npm install --no-audit --no-fund --prefer-offline --silent >/dev/null 2>&1; then
-            log_success "✅ Depend��ncias instaladas com sucesso"
+            log_success "Dependencias instaladas com sucesso"
             break
         else
             log_warning "⚠️ Falha na tentativa $install_attempts"
@@ -2752,7 +2752,7 @@ log_info "   Serviços: $(grep -c "image: kryonix-plataforma" docker-stack.yml) 
 log_warning "⚡ Bypassing dry-run (problema conhecido de travamento)"
 log_info "🚀 Validação simples e deploy direto..."
 
-# Validação b��sica apenas
+# Validação básica apenas
 if [ ! -f "docker-stack.yml" ]; then
     log_error "❌ docker-stack.yml não encontrado!"
     exit 1
@@ -2917,7 +2917,7 @@ next_step
 # ============================================================================
 
 
-log_info "📁 Testando webhook e preparando relat��rio final..."
+log_info "📁 Testando webhook e preparando relatório final..."
 
 # Testar webhook local
 if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
@@ -3000,7 +3000,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════��═══════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��══════════════════════��══��══════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
@@ -3017,7 +3017,7 @@ echo -e "    ${BLUE}│${RESET} ${BOLD}Última Alteração:${RESET} $final_commi
 # Verificação especial para PR #22 (como no instalador antigo)
 if echo "$final_commit_msg" | grep -qi "#22"; then
     echo -e "    ${BLUE}│${RESET} ${YELLOW}⚠️ AVISO:${RESET} Detectada referência ao PR #22"
-    echo -e "    ${BLUE}│${RESET} ${YELLOW}   Isso pode significar que PR #22 É a versão mais recente${RESET}"
+    echo -e "    ${BLUE}���${RESET} ${YELLOW}   Isso pode significar que PR #22 É a versão mais recente${RESET}"
     echo -e "    ${BLUE}│${RESET} ${YELLOW}   ou há um problema de sincronização com GitHub${RESET}"
 else
     echo -e "    ${BLUE}│${RESET} ${GREEN}✅ Confirmado:${RESET} Não está no PR #22 - versão mais recente"
@@ -3076,7 +3076,7 @@ echo -e "${YELLOW}      webhook e monitor integrados no servi��o web${RESET}
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
 echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
 echo -e "    ${BLUE}│${RESET} 📋 Atualização automática de dependências a cada deploy"
-echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
+echo -e "    ${BLUE}���${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
 echo -e "    ${BLUE}│${RESET} 📋 Logs detalhados de todas as atualizações"
