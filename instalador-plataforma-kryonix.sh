@@ -83,9 +83,9 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo "╔═════════════��═════════════════════════════════════════════════════╗"
+    echo "╔═══════════════════════════════════════════════════════════════════╗"
     echo "║                                                                   ║"
-    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
+    echo "║     ██╗  ██╗██████╗ █��╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
     echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
@@ -102,63 +102,21 @@ show_banner() {
     echo ""
 }
 
-# Sistema unificado de barra animada - CORRIGIDO
-BAR_WIDTH=50
-CURRENT_STEP_BAR_SHOWN=false
-
-animate_progress_bar() {
+# Barra de progresso limpa
+show_progress() {
     local step=$1
     local total=$2
     local description="$3"
-    local status="$4"
-    local target_progress=$((step * 100 / total))
+    local progress=$((step * 100 / total))
+    local filled=$((progress / 2))
 
-    # Cores baseadas no status
-    local bar_color="$GREEN"
-    local status_icon="🔄"
+    printf "\r${CYAN}[%-50s] %d%% ${RESET}%s" \
+        "$(printf "%*s" $filled "" | tr ' ' '█')" \
+        "$progress" \
+        "$description"
 
-    case $status in
-        "iniciando")
-            bar_color="$YELLOW"
-            status_icon="🔄"
-            ;;
-        "processando")
-            bar_color="$BLUE"
-            status_icon="⚙"
-            ;;
-        "concluido")
-            bar_color="$GREEN"
-            status_icon="✅"
-            ;;
-        "erro")
-            bar_color="$RED"
-            status_icon="❌"
-            ;;
-    esac
-
-    # Mostrar cabeçalho apenas uma vez por etapa
-    if [ "$CURRENT_STEP_BAR_SHOWN" = false ]; then
+    if [ $step -eq $total ]; then
         echo ""
-        echo -e "${status_icon} ${WHITE}${BOLD}Etapa $step/$total: $description${RESET}"
-        CURRENT_STEP_BAR_SHOWN=true
-    fi
-
-    # Atualizar barra na mesma linha
-    local filled=$((target_progress * BAR_WIDTH / 100))
-    echo -ne "\r${bar_color}${BOLD}["
-
-    # Desenhar barra preenchida
-    for ((j=1; j<=filled; j++)); do echo -ne "█"; done
-
-    # Desenhar barra vazia
-    for ((j=filled+1; j<=BAR_WIDTH; j++)); do echo -ne "░"; done
-
-    echo -ne "] ${target_progress}% ${status_icon}${RESET}"
-
-    # Nova linha apenas quando concluído ou erro
-    if [ "$status" = "concluido" ] || [ "$status" = "erro" ]; then
-        echo ""
-        CURRENT_STEP_BAR_SHOWN=false  # Reset para próxima etapa
     fi
 }
 
@@ -680,7 +638,7 @@ verify_fresh_clone() {
             if git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null; then
                 new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
                 new_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
-                log_success "�� Atualizado para: $new_commit - $new_msg"
+                log_success "✅ Atualizado para: $new_commit - $new_msg"
             fi
         fi
     fi
@@ -1488,7 +1446,7 @@ COPY tailwind.config.js ./
 COPY postcss.config.js ./
 COPY tsconfig.json ./
 
-# CORREÇÃO CRÍTICA: Build Next.js necessário para produ��ão com fallback
+# CORREÇÃO CRÍTICA: Build Next.js necessário para produção com fallback
 RUN npm run build || echo "Build falhou, continuando com modo desenvolvimento"
 
 # Otimizar após build - remover devDependencies
@@ -1673,7 +1631,7 @@ if [ -f "lib/database/api.ts" ] && grep -q "dbModule" lib/database/api.ts 2>/dev
 fi
 
 if [ -f "next.config.js" ] && grep -q "ignoreDuringBuilds" next.config.js 2>/dev/null; then
-    log_success "✅ Otimiza��ão next.config.js aplicada"
+    log_success "✅ Otimização next.config.js aplicada"
     correction_count=$((correction_count + 1))
 fi
 
@@ -2400,7 +2358,7 @@ deploy() {
             log "Status atual: $replica_status"
 
             if [[ "$replica_status" == "1/1" ]]; then
-                log "✅ Servi��o $service_name funcionando normalmente"
+                log "✅ Serviço $service_name funcionando normalmente"
                 return 0
             fi
 
@@ -2920,7 +2878,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}══════════��════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERS��O MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
