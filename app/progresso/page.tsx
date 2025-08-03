@@ -8,7 +8,8 @@ import {
   CheckCircle,
   Clock,
   AlertTriangle,
-  BarChart3
+  BarChart3,
+  Phone
 } from 'lucide-react'
 import MobileMenu from '../components/MobileMenu'
 import LoadingScreen from '../components/LoadingScreen'
@@ -226,7 +227,10 @@ export default function ProgressoPage() {
                 <h3 className="font-semibold mb-4">Contato</h3>
                 <div className="space-y-2 text-sm text-gray-400">
                   <div>📧 contato@kryonix.com.br</div>
-                  <div>📱 +55 17 98180-5327</div>
+                  <div className="flex items-center space-x-2">
+                    <Phone className="w-4 h-4" />
+                    <span>+55 17 98180-5327</span>
+                  </div>
                   <div>🌐 www.kryonix.com.br</div>
                 </div>
               </div>
