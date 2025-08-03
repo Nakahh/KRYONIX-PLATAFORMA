@@ -82,10 +82,10 @@ show_banner() {
     echo -e "${BLUE}${BOLD}"
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
+    echo    "║     ██╗  █��╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║���█║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -165,7 +165,7 @@ show_progress() {
 
     # Descrição da etapa atual
     printf "${BOLD}${PURPLE}🔄 ${RESET}${BOLD}Executando:${RESET} ${CYAN}%s${RESET}\n" "$description"
-    printf "${BOLD}${WHITE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}\n\n"
+    printf "${BOLD}${WHITE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}\n\n"
 
     # Mover cursor para cima para sobrescrever na próxima chamada
     if [ $step -ne $total ]; then
@@ -176,6 +176,26 @@ show_progress() {
 
     # Pequena pausa para efeito visual
     sleep 0.1
+}
+
+# Animação de carregamento entre etapas
+show_loading_animation() {
+    local message="$1"
+    local duration=${2:-2}
+
+    printf "${BOLD}${CYAN}⚡ %s${RESET} " "$message"
+
+    for i in $(seq 1 $((duration * 10))); do
+        case $((i % 4)) in
+            0) printf "${YELLOW}⠋${RESET}" ;;
+            1) printf "\b${YELLOW}⠙${RESET}" ;;
+            2) printf "\b${YELLOW}⠹${RESET}" ;;
+            3) printf "\b${YELLOW}⠸${RESET}" ;;
+        esac
+        sleep 0.1
+    done
+
+    printf "\b${GREEN}✓${RESET}\n"
 }
 
 # Log simplificado (apenas para erros críticos)
@@ -346,7 +366,7 @@ advanced_dependency_check() {
 
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
-        log_success "✅ server.js inicializa corretamente"
+        log_success "��� server.js inicializa corretamente"
     else
         log_warning "⚠️ server.js pode ter problemas"
     fi
@@ -881,7 +901,7 @@ try {
     const fs = require('fs');
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     console.log('📦 Módulos instalados: ' + (require('fs').readdirSync('node_modules').length || 0));
-    console.log('📋 Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
+    console.log('�� Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
 } catch(e) {
     console.log('📊 Estatísticas não disponíveis');
 }
@@ -2885,7 +2905,7 @@ log_success "✅ Monitoramento contínuo configurado"
 echo ""
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══��════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2955,7 +2975,7 @@ echo ""
 echo -e "Resultado esperado após as CORREÇÕES DOS AGENTES:"
 echo -e "${GREEN}Kryonix_web       1/1        kryonix-plataforma:latest${RESET}"
 echo -e "${YELLOW}NOTA: Apenas 1 serviço após unificação pelos agentes${RESET}"
-echo -e "${YELLOW}      webhook e monitor integrados no serviço web${RESET}"
+echo -e "${YELLOW}      webhook e monitor integrados no servi��o web${RESET}"
 echo -e "    ${BLUE}│${RESET} ✅ Health checks otimizados"
 echo -e "    ${BLUE}│${RESET} ✅ Validação específica de inicialização"
 echo -e "    ${BLUE}│${RESET} 📋 Atualização automática de dependências a cada deploy"
