@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Configurações de encoding seguro para evitar problemas com caracteres especiais
+# Configura📁ões de encoding seguro para evitar problemas com caracteres especiais
 export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
 export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
@@ -65,7 +65,7 @@ STEP_DESCRIPTIONS=(
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
     "Verificando Traefik 🔍"
-    "Criando imagem Docker 🏗��"
+    "Criando imagem Docker 🏗️"
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
     "Criando webhook deploy 🔗"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                   ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}         ║"
     echo    "║                                                                   ║"
-    echo    "╚═══════════════════════════════════════════════════════════════════╝"
+    echo    "╚══════════════════════════════════════════════════════════════════��╝"
     echo -e "${RESET}\n"
 
 
@@ -242,7 +242,7 @@ log_error() {
 }
 
 # ============================================================================
-# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
+# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPEND📁NCIAS
 # ============================================================================
 
 # Função para atualizar dependências automaticamente
@@ -270,7 +270,7 @@ auto_update_dependencies() {
 
     # Atualizar dependências com verificação de compatibilidade
     if command -v ncu >/dev/null 2>&1; then
-        log_info "🔄 Verificando atualizações disponíveis..."
+        log_info "🔄 Verificando atualiza📁ões disponíveis..."
         ncu --upgrade --target minor >/dev/null 2>&1 || true
         log_success "✅ Dependências atualizadas para versões menores compatíveis"
     fi
@@ -357,7 +357,7 @@ EOF
     return 0
 }
 
-# Função de verificação avançada de dependências
+# Função de verifica📁ão avançada de dependências
 advanced_dependency_check() {
     log_info "🔍 Executando verificação avançada de dependências..."
 
@@ -365,7 +365,7 @@ advanced_dependency_check() {
     if [ -f "check-dependencies.js" ]; then
         log_info "📋 Executando verificador específico do KRYONIX..."
         if node check-dependencies.js 2>&1 | tee /tmp/deps-check.log; then
-            log_success "✅ Verificação específica passou"
+            log_success "✅ Verificação espec📁fica passou"
         else
             log_error "📁 Verificação específica falhou"
             log_info "📋 Tentando correção automática..."
@@ -466,7 +466,7 @@ test_service_health() {
 
 # FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
-    log_info "🧹 NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
+    log_info "🔍📁 NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
 
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -609,7 +609,7 @@ fresh_git_clone() {
                 break
             fi
 
-            log_warning "⚠️ Tentativa de clone $clone_attempts falhou"
+            log_warning "⚠🔍 Tentativa de clone $clone_attempts falhou"
             if [ $clone_attempts -lt $max_attempts ]; then
                 sleep 5
             fi
@@ -1274,7 +1274,7 @@ const path = require('path');
 const WEBHOOK_SECRET = '$WEBHOOK_SECRET';
 const DEPLOY_SCRIPT = path.join(__dirname, 'webhook-deploy.sh');
 
-/* Funç��o para verificar assinatura do GitHub */
+/* Função para verificar assinatura do GitHub */
 const verifyGitHubSignature = (payload, signature) => {
     if (!signature) return false;
 
@@ -1353,7 +1353,7 @@ WEBHOOK_EOF
     log_success "✅ Webhook completo adicionado ao server.js"
     WEBHOOK_EXISTS=false
 else
-    log_info "ℹ��� Webhook já existe no server.js - pulando criação"
+    log_info "ℹ️ Webhook já existe no server.js - pulando criação"
     WEBHOOK_EXISTS=true
 fi
 
@@ -1713,7 +1713,7 @@ else
     error_step
     log_error "❌ Falha no build da imagem Docker"
 
-    # Sistema avançado de detec��ão e correção de erros
+    # Sistema avançado de detecção e correção de erros
     log_warning "🔧 Detectado falha no Docker build - aplicando correções automáticas..."
 
     # Análise detalhada do erro
@@ -2925,9 +2925,9 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════��═══════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
-echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
+echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERS��O MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2970,7 +2970,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA📁ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════📁═══════════════════════🔍🔍════════════${RESET}"
+echo -e "${CYAN}═══���══📁═══════════════════════🔍🔍════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
