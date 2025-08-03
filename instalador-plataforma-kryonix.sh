@@ -89,7 +89,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║█���╔╝ ██╗       ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo    "║                                                                   ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                        ║"
@@ -103,7 +103,7 @@ show_banner() {
 
     echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Problemas 0/1 replicas resolvidos pelos 5 agentes${RESET}"
 echo -e "${CYAN}🛠️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
-echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container ��nico${RESET}"
+echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container único${RESET}"
 echo -e "${PURPLE}⚙️ OTIMIZADO: Health check 0.0.0.0:8080 + 1G RAM + placement flexível${RESET}\n"
 }
 
@@ -359,7 +359,7 @@ EOF
 
 # Função de verifica📁ão avançada de dependências
 advanced_dependency_check() {
-    log_info "🔍 Executando verifica��ão avançada de dependências..."
+    log_info "🔍 Executando verificação avançada de dependências..."
 
     # Executar verificador próprio do projeto
     if [ -f "check-dependencies.js" ]; then
@@ -731,7 +731,7 @@ validate_credentials() {
 show_banner
 
 # Detecção automática do ambiente (como no instalador antigo que funcionava)
-echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
+echo -e "${PURPLE}${BOLD}��� INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
 echo -e "${CYAN}${BOLD}📡 Detectando ambiente do servidor...${RESET}"
 echo -e "${BLUE}🖥️ Servidor: $(hostname)${RESET}"
 echo -e "${BLUE}📁─ IP: $(curl -s -4 ifconfig.me 2>/dev/null || curl -s ipv4.icanhazip.com 2>/dev/null || echo 'localhost')${RESET}"
@@ -852,7 +852,7 @@ next_step
 # ============================================================================
 
 processing_step
-log_info "📦 Iniciando atualização automática de dependências..."
+log_info "📦 Iniciando atualização autom��tica de dependências..."
 
 # Executar atualização automática
 if ! auto_update_dependencies; then
@@ -1584,7 +1584,7 @@ for service_file in webhook-listener.js kryonix-monitor.js; do
 done
 
 # CORREÇÃO: Aplicar correções de TypeScript antes do build
-log_info "��� Aplicando corre📁ões de TypeScript para resolver erros de build..."
+log_info "📁 Aplicando corre📁ões de TypeScript para resolver erros de build..."
 
 # Correção 1: Arquivo postgres-config.ts - função executeTransaction
 if [ -f "lib/database/postgres-config.ts" ]; then
@@ -2772,7 +2772,7 @@ if [[ "$web_replicas" == "1/1" ]]; then
         log_success "✅ HTTP respondendo - Next.js funcionando"
         WEB_STATUS="✅ ONLINE (1/1) + HTTP OK"
     else
-        log_warning "⚠��� Docker rodando mas HTTP não responde"
+        log_warning "⚠️ Docker rodando mas HTTP não responde"
         WEB_STATUS="⚠️ RUNNING (1/1) mas HTTP falha"
 
         # Mostrar logs para diagnóstico
@@ -2794,7 +2794,7 @@ else
     # Aguardar um pouco e verificar novamente
     sleep 30
     web_replicas_after_restart=$(docker service ls --format "{{.Name}} {{.Replicas}}" | grep "${STACK_NAME}_web" | awk '{print $2}' || echo "0/1")
-    log_info "Status após restart: $web_replicas_after_restart"
+    log_info "Status ap��s restart: $web_replicas_after_restart"
 fi
 
 # CORREÇÃO DOS AGENTES: Serviços unificados no container principal
@@ -2857,7 +2857,7 @@ if curl -f -s -X POST "https://kryonix.com.br/api/github-webhook" \
    -d '{"test":true,"ref":"refs/heads/main"}' >/dev/null 2>&1; then
     EXTERNAL_WEBHOOK_STATUS="✅ FUNCIONANDO"
 else
-    EXTERNAL_WEBHOOK_STATUS="⚠️ VERIFICAR"
+    EXTERNAL_WEBHOOK_STATUS="���️ VERIFICAR"
 fi
 
 complete_step
@@ -2927,7 +2927,7 @@ echo -e "${GREEN}${BOLD}══════════════════�
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
-echo -e "${PURPLE}${BOLD}🔍� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
+echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2950,11 +2950,11 @@ echo ""
 echo -e "${CYAN}${BOLD}🌐 STATUS DO SISTEMA:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Aplicaç🔍�o Web:${RESET} ${WEB_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Listener:${RESET} ${WEBHOOK_STATUS:-⚠️ VERIFICANDO}"
-echo -e "    ${BLUE}│${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
+echo -e "    ${BLUE}���${RESET} ${BOLD}Monitor:${RESET} ${MONITOR_STATUS:-⚠️ VERIFICANDO}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Docker Stack:${RESET} 🔍 DEPLOYADO"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Rede Docker:${RESET} ✅ $DOCKER_NETWORK"
 echo ""
-echo -e "${CYAN}${BOLD}���� TESTES WEBHOOK:${RESET}"
+echo -e "${CYAN}${BOLD}🧪 TESTES WEBHOOK:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Local:${RESET} $LOCAL_WEBHOOK_STATUS"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Webhook Externo:${RESET} $EXTERNAL_WEBHOOK_STATUS"
 echo ""
@@ -2970,7 +2970,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA📁ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════📁═══════════════════════🔍🔍════════════${RESET}"
+echo -e "${CYAN}══════📁════════════════════���══🔍🔍════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
