@@ -46,6 +46,17 @@ export default function HomePage() {
     }
   }, [selectedModule])
 
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && selectedModule !== null) {
+        setSelectedModule(null)
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [selectedModule])
+
   const handleLoadingComplete = () => {
     setLoading(false)
   }
