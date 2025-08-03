@@ -440,7 +440,7 @@ advanced_dependency_check() {
     # Executar verificador próprio do projeto
     if [ -f "check-dependencies.js" ]; then
         log_info "📋 Executando verificador específico do KRYONIX..."
-        if node check-dependencies.js 2>&1 | tee /tmp/deps-check.log; then
+        if node check-dependencies.js >/dev/null 2>&1; then
             log_success "✅ Verificação espec📁fica passou"
         else
             log_error "📁 Verificação específica falhou"
@@ -1000,7 +1000,7 @@ try {
     console.log('📦 Módulos instalados: ' + (require('fs').readdirSync('node_modules').length || 0));
     console.log('�� Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
 } catch(e) {
-    console.log('📊 Estatísticas não disponíveis');
+    console.log('�� Estatísticas não disponíveis');
 }
 
 if (missing.length === 0) {
@@ -2018,7 +2018,7 @@ EOF
             ;;
 
         *)
-            log_info "��� Aplicando correção genérica..."
+            log_info "🔧 Aplicando correção genérica..."
             # Aplicar todas as correç📁es possíveis
             echo 'console.log("Emergency check passed");' > check-dependencies.js
             cp package.json package.json.emergency-backup
@@ -2610,7 +2610,7 @@ deploy() {
     if [ ${#failed_services[@]} -eq 0 ]; then
         log "🔍 Todos os serviços KRYONIX reparados e funcionando!"
     else
-        log "⚠️ Serviços com problemas: ${failed_services[*]}"
+        log "⚠��� Serviços com problemas: ${failed_services[*]}"
 
         # Gerar relatório de diagn📁stico
         diagnostic_file="/tmp/kryonix-diagnostic-$(date +%Y%m%d_%H%M%S).log"
@@ -3047,7 +3047,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═══���═══📁═════════════════���═════════📋════════════${RESET}"
+echo -e "${CYAN}═══════📁═════════════════���═════════📋════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
