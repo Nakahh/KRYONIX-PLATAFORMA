@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Configura📁ões de encoding seguro para evitar problemas com caracteres especiais
+# Configurações de encoding seguro para evitar problemas com caracteres especiais
 export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
 export LANG=C.UTF-8 2>/dev/null || export LANG=C
 export LANGUAGE=C
@@ -87,8 +87,8 @@ show_banner() {
     echo    "║                                                                   ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  █��║   ██║██║╚██╗██║██║ ██╔██╗        ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ��"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo    "║                                                                   ║"
@@ -499,7 +499,7 @@ nuclear_cleanup() {
         # Verificação final
         if [ -d "$PROJECT_DIR" ]; then
             error_step
-            log_error "❌ Falha na remoção completa do diretório: $PROJECT_DIR"
+            log_error "❌ Falha na remoção completa do diret��rio: $PROJECT_DIR"
             exit 1
         fi
     fi
@@ -921,7 +921,7 @@ try {
     console.log('📦 Módulos instalados: ' + (require('fs').readdirSync('node_modules').length || 0));
     console.log('📋 Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
 } catch(e) {
-    console.log('📊 Estatísticas não disponíveis');
+    console.log('���� Estatísticas não disponíveis');
 }
 
 if (missing.length === 0) {
@@ -1635,7 +1635,7 @@ if [ -f "lib/database/api.ts" ]; then
 
     log_success "✅ api.ts corrigido"
 else
-    log_warning "⚠����� lib/database/api.ts não encontrado"
+    log_warning "⚠🔍� lib/database/api.ts não encontrado"
 fi
 
 # Correção 4: Otimizar next.config.js para builds mais rápidos
@@ -2906,7 +2906,7 @@ fi
 if curl -f -s "http://localhost:8080/health" >/dev/null; then
     log_monitor "✅ Serviços KRYONIX funcionando"
 else
-    log_monitor "��� Problemas detectados nos serviços KRYONIX"
+    log_monitor "❌ Problemas detectados nos serviços KRYONIX"
 fi
 MONITOR_EOF
 
@@ -2970,7 +2970,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA📁ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════📁═══════════════════════🔍🔍════════════${RESET}"
+echo -e "${CYAN}══════����═══════════════════════🔍🔍════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -2988,7 +2988,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
 echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
 
 echo ""
-echo -e "${PURPLE}${BOLD}📊 VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
+echo -e "${PURPLE}${BOLD}�� VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
 echo -e "Execute para verificar se as correções funcionaram:"
 echo -e "${YELLOW}docker service ls${RESET}"
 echo ""
