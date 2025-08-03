@@ -87,7 +87,7 @@ show_banner() {
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═���  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -385,7 +385,7 @@ nuclear_cleanup() {
     # Desmontar qualquer mount no diretório
     sudo umount "$PROJECT_DIR"/* 2>/dev/null || true
 
-    # REMO��ÃO COMPLETA - incluindo arquivos ocultos, .git, tudo
+    # REMOÇÃO COMPLETA - incluindo arquivos ocultos, .git, tudo
     if [ -d "$PROJECT_DIR" ]; then
         log_info "🗑️ Removendo tudo de $PROJECT_DIR (incluindo .git)..."
 
@@ -573,7 +573,7 @@ verify_fresh_clone() {
         return 2  # Warning, não erro
     fi
 
-    # Verificação específica para PR #22 (preocupação do usuário)
+    # Verificação espec��fica para PR #22 (preocupação do usuário)
     if echo "$commit_msg" | grep -qi "#22"; then
         log_warning "⚠️ Commit atual referencia PR #22 - verificando por versões mais recentes..."
 
@@ -831,7 +831,7 @@ try {
 if (missing.length === 0) {
     console.log('🎉 Todas as dependências críticas instaladas!');
     console.log('✅ Instaladas: ' + installed + '/' + deps.length);
-    console.log('�� Resumo da verificação:');
+    console.log('📊 Resumo da verificação:');
     console.log('   Dependências críticas: ' + deps.length);
     console.log('   Instaladas com sucesso: ' + installed);
     try {
@@ -1336,7 +1336,7 @@ if docker service ls | grep -q "traefik"; then
     if docker service logs $TRAEFIK_SERVICE 2>/dev/null | grep -q "letsencrypt"; then
         CERT_RESOLVER="letsencrypt"
     fi
-    log_info "���� Resolver SSL detectado: $CERT_RESOLVER"
+    log_info "🔒 Resolver SSL detectado: $CERT_RESOLVER"
 else
     log_warning "⚠🔍 Traefik não encontrado - KRYONIX funcionará localmente"
 fi
@@ -1964,7 +1964,7 @@ services:
         - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.path=/health"
         - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=15s"
 
-        # WEBHOOK - PRIORIDADE MÁXIMA (10000)
+        # WEBHOOK - PRIORIDADE M��XIMA (10000)
         - "traefik.http.routers.kryonix-webhook.rule=Host(`kryonix.com.br`) && Path(`/api/github-webhook`)"
         - "traefik.http.routers.kryonix-webhook.entrypoints=web,websecure"
         - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
@@ -2329,7 +2329,7 @@ deploy() {
                     # Verificar conflitos de porta
                     if [[ "$service_name" == *"_web"* ]]; then
                         if netstat -tuln 2>/dev/null | grep -q ":8080 "; then
-                            log "⚠️ Conflito de porta 8080 detectado, removendo binding"
+                            log "���️ Conflito de porta 8080 detectado, removendo binding"
                             docker service update --publish-rm="8080:8080" "$service_name" >/dev/null 2>&1 || true
                         fi
                     elif [[ "$service_name" == *"_monitor"* ]]; then
