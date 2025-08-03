@@ -428,13 +428,13 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Recursos Principais
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-300">
               Tecnologia de ponta com foco em automação e experiência do usuário
             </p>
           </div>
