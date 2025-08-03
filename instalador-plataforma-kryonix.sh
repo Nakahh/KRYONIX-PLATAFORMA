@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║���█║ ██╔██╗        ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██��� ██╔██╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo    "║                                                                   ║"
@@ -270,7 +270,7 @@ auto_update_dependencies() {
 
     # Atualizar dependências com verificação de compatibilidade
     if command -v ncu >/dev/null 2>&1; then
-        log_info "🔄 Verificando atualiza📁ões disponíveis..."
+        log_info "🔄 Verificando atualizações disponíveis..."
         ncu --upgrade --target minor >/dev/null 2>&1 || true
         log_success "✅ Dependências atualizadas para versões menores compatíveis"
     fi
@@ -1005,7 +1005,7 @@ exec('npm install --no-audit --no-fund', (error, stdout, stderr) => {
                 console.error('❌ Correção alternativa também falhou:', error2.message);
                 process.exit(1);
             } else {
-                console.log('✅ Dependências corrigidas com método alternativo');
+                console.log('✅ Dependências corrigidas com m��todo alternativo');
                 console.log(stdout2);
                 process.exit(0);
             }
@@ -1818,7 +1818,7 @@ const nextConfig = {
 module.exports = nextConfig
 ANTICORRUPTION_CONFIG_EOF
 
-            log_success "✅ Correção de build corrompido aplicada"
+            log_success "��� Correção de build corrompido aplicada"
             ;;
 
         "typescript_postgres_config")
