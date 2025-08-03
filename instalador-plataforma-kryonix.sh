@@ -98,7 +98,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══��█╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -262,7 +262,7 @@ show_progress() {
         printf "\n${BOLD}${BRIGHT_GREEN}"
         printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━���━━━━━━━━━��━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
-        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
+        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━🎉${RESET}\n\n"
     else
         # Pequena pausa para animação suave
         sleep 0.2
@@ -350,7 +350,7 @@ auto_update_dependencies() {
     if command -v ncu >/dev/null 2>&1; then
 
         ncu --upgrade --target minor >/dev/null 2>&1 || true
-        log_success "✅ Dependências atualizadas para versões menores compatíveis"
+        log_success "✅ Dependências atualizadas para vers��es menores compatíveis"
     fi
 
     # Limpar cache npm
@@ -797,7 +797,7 @@ validate_credentials() {
         return 1
     fi
 
-    log_success "✅ Todas as credenciais validadas - instalação 100% automática"
+    log_success "✅ Todas as credenciais validadas - instalaç��o 100% automática"
     return 0
 }
 
@@ -1775,7 +1775,7 @@ fi
 
 
 if [ -d ".next" ]; then
-    log_info "��️ Diretório .next existe - removendo para garantir build limpo..."
+    log_info "��️ Diret��rio .next existe - removendo para garantir build limpo..."
     rm -rf .next
     rm -rf node_modules/.cache 2>/dev/null || true
     npm cache clean --force >/dev/null 2>&1 || true
@@ -2864,7 +2864,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═══════📁═════════════════���═════════📋════════════${RESET}"
+echo -e "${CYAN}═══════📁══��══════════════���═════════📋════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -2909,5 +2909,5 @@ echo ""
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Instalador completo criado com sucesso!${RESET}"
 else
-    echo -e "${RED}��� Problemas na criação do instalador${RESET}"
+    echo -e "${RED}❌ Problemas na criação do instalador${RESET}"
 fi
