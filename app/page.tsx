@@ -321,7 +321,7 @@ export default function HomePage() {
         'Suporte para revenda da plataforma'
       ],
       applications: [
-        'Revenda de soluções tecnológicas',
+        'Revenda de solu��ões tecnológicas',
         'Criação de produto próprio',
         'Fortalecimento da marca pessoal',
         'Diferenciação no mercado',
@@ -546,7 +546,7 @@ export default function HomePage() {
 
                   {/* Aplicações */}
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                       <svg className="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                       </svg>
@@ -554,9 +554,9 @@ export default function HomePage() {
                     </h3>
                     <div className="grid gap-3">
                       {modules[selectedModule].applications.map((application, idx) => (
-                        <div key={idx} className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
+                        <div key={idx} className="flex items-start space-x-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                           <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                          <span className="text-gray-700">{application}</span>
+                          <span className="text-gray-700 dark:text-gray-300">{application}</span>
                         </div>
                       ))}
                     </div>
