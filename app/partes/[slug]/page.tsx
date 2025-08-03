@@ -47,18 +47,13 @@ export default function PartPage({ params }: { params: { slug: string } }) {
 
   if (!part) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Parte não encontrada</h1>
-          <p className="text-gray-600 mb-6">Esta parte não foi encontrada ou ainda não foi implementada.</p>
-          <div className="space-y-3">
-            <Link href="/progresso" className="inline-flex items-center space-x-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200 font-medium">
-              <ArrowLeft className="w-4 h-4" />
-              <span>Ver Progresso</span>
-            </Link>
-            <Link href="/" className="inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium">
-              Voltar
-            </Link>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Parte não encontrada</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-8">Esta parte não foi encontrada ou ainda não foi implementada.</p>
+          <div className="space-x-4">
+            <Link href="/progresso" className="btn-primary">Ver Progresso</Link>
+            <Link href="/" className="btn-secondary">Voltar</Link>
           </div>
         </div>
       </div>
@@ -68,11 +63,11 @@ export default function PartPage({ params }: { params: { slug: string } }) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle className="w-6 h-6 text-success-500" />
+        return <CheckCircle className="w-5 h-5" />
       case 'in_progress':
-        return <Clock className="w-6 h-6 text-primary-500" />
+        return <Clock className="w-5 h-5" />
       default:
-        return <AlertCircle className="w-6 h-6 text-yellow-500" />
+        return <AlertCircle className="w-5 h-5" />
     }
   }
 
@@ -90,11 +85,11 @@ export default function PartPage({ params }: { params: { slug: string } }) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'text-success-700 bg-success-100'
+        return 'text-success-700 dark:text-success-400 bg-success-100 dark:bg-success-900/50'
       case 'in_progress':
-        return 'text-primary-700 bg-primary-100'
+        return 'text-primary-700 dark:text-primary-400 bg-primary-100 dark:bg-primary-900/50'
       default:
-        return 'text-yellow-700 bg-yellow-100'
+        return 'text-yellow-700 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/50'
     }
   }
 
@@ -104,267 +99,262 @@ export default function PartPage({ params }: { params: { slug: string } }) {
   const nextPart = currentIndex < partsData.length - 1 ? partsData[currentIndex + 1] : null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/progresso" className="inline-flex items-center space-x-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200">
-              <ArrowLeft className="w-4 h-4" />
-              <span className="font-medium">Voltar</span>
+      <header className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Link 
+              href="/progresso" 
+              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Voltar</span>
             </Link>
-            <div className="flex items-center space-x-3">
-              <Image
-                src="/logo-kryonix.png"
-                alt="KRYONIX Logo"
-                width={32}
-                height={32}
-                className="rounded-lg"
-              />
-              <div className="flex items-center space-x-2">
-                <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-                  KRYONIX
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
-                  <span className="text-xs text-gray-600 hidden sm:block">Online</span>
-                </div>
-              </div>
-            </div>
+          </div>
+          
+          <div className="flex items-center space-x-3">
+            <Image 
+              src="/logo-kryonix.png" 
+              alt="KRYONIX" 
+              width={32} 
+              height={32} 
+              className="rounded-lg"
+            />
+            <span className="text-xl font-bold gradient-text">KRYONIX</span>
+          </div>
+          
+          <div className="flex items-center space-x-2 text-sm">
+            <div className="status-online"></div>
+            <span className="text-gray-600 dark:text-gray-400">Online</span>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            {/* Status Badge */}
-            <div className="flex justify-center mb-6">
-              <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${getStatusColor(part.status)}`}>
-                {getStatusIcon(part.status)}
-                <span className="ml-2">{getStatusText(part.status)}</span>
+      <div className="container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          {/* Status Badge */}
+          <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium mb-4 ${getStatusColor(part.status)}`}>
+            {getStatusIcon(part.status)}
+            <span className="ml-2">{getStatusText(part.status)}</span>
+          </div>
+          
+          {/* Title */}
+          <div className="space-y-4">
+            <p className="text-primary-600 dark:text-primary-400 font-medium">{part.phase}</p>
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-gray-100">
+              Parte {part.part}: <span className="gradient-text">{part.title}</span>
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              {part.description}
+            </p>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Info */}
+          <div className="lg:col-span-2 space-y-8">
+            
+            {/* Description Cards */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+                    <Code2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Descrição Técnica</h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {part.technical_description}
+                </p>
+              </div>
+              
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Em Linguagem Simples</h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {part.simple_description}
+                </p>
               </div>
             </div>
 
-            {/* Title */}
-            <div className="text-center mb-8">
-              <div className="text-sm font-medium text-primary-600 mb-2">{part.phase}</div>
-              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-                <span className="text-primary-600">Parte {part.part}:</span> {part.title}
-              </h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                {part.description}
-              </p>
+            {/* Features */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Principais Funcionalidades</h3>
+              </div>
+              <div className="grid md:grid-cols-2 gap-3">
+                {part.features.map((feature, index) => (
+                  <div key={index} className="flex items-start space-x-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                    <div className="w-2 h-2 bg-purple-500 dark:bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Main Content */}
-      <section className="pb-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-3 gap-8">
-              
-              {/* Main Info */}
-              <div className="lg:col-span-2 space-y-8">
-                
-                {/* Description Cards */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="card">
-                    <div className="flex items-center mb-4">
-                      <Code2 className="w-6 h-6 text-blue-500 mr-3" />
-                      <h3 className="text-lg font-semibold text-gray-900">Descrição Técnica</h3>
-                    </div>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {part.technical_description}
-                    </p>
-                  </div>
-
-                  <div className="card">
-                    <div className="flex items-center mb-4">
-                      <Sparkles className="w-6 h-6 text-green-500 mr-3" />
-                      <h3 className="text-lg font-semibold text-gray-900">Em Linguagem Simples</h3>
-                    </div>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {part.simple_description}
-                    </p>
-                  </div>
+            {/* Benefits */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
                 </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Benefícios para Você</h3>
+              </div>
+              <div className="space-y-3">
+                {part.benefits.map((benefit, index) => (
+                  <div key={index} className="flex items-start space-x-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-gray-700 dark:text-gray-300">{benefit}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-                {/* Features */}
-                <div className="card">
-                  <div className="flex items-center mb-6">
-                    <Zap className="w-6 h-6 text-purple-500 mr-3" />
-                    <h3 className="text-xl font-semibold text-gray-900">Principais Funcionalidades</h3>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-3">
-                    {part.features.map((feature, index) => (
-                      <div key={index} className="flex items-center space-x-3">
-                        <CheckCircle className="w-4 h-4 text-success-500 flex-shrink-0" />
-                        <span className="text-sm text-gray-700">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Benefits */}
-                <div className="card">
-                  <div className="flex items-center mb-6">
-                    <Shield className="w-6 h-6 text-emerald-500 mr-3" />
-                    <h3 className="text-xl font-semibold text-gray-900">Benefícios para Você</h3>
-                  </div>
-                  <div className="space-y-3">
-                    {part.benefits.map((benefit, index) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></div>
-                        <span className="text-sm text-gray-700">{benefit}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Navigation */}
-                <div className="card">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Navegação entre Partes</h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {previousPart && (
-                      <Link 
-                        href={`/partes/${previousPart.slug}`}
-                        className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                      >
-                        <div className="text-xs text-gray-500 mb-1">← Parte Anterior</div>
-                        <div className="font-medium text-gray-900 text-sm">
+            {/* Navigation */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Navegação entre Partes</h3>
+              <div className="flex justify-between space-x-4">
+                <div className="flex-1">
+                  {previousPart && (
+                    <Link href={`/partes/${previousPart.slug}`} className="block group">
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-600 transition-colors">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">← Parte Anterior</div>
+                        <div className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400">
                           {previousPart.part}. {previousPart.title}
                         </div>
-                      </Link>
-                    )}
-                    {nextPart && (
-                      <Link 
-                        href={`/partes/${nextPart.slug}`}
-                        className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-right"
-                      >
-                        <div className="text-xs text-gray-500 mb-1">Próxima Parte →</div>
-                        <div className="font-medium text-gray-900 text-sm">
+                      </div>
+                    </Link>
+                  )}
+                </div>
+                <div className="flex-1">
+                  {nextPart && (
+                    <Link href={`/partes/${nextPart.slug}`} className="block group text-right">
+                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-600 transition-colors">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">Próxima Parte →</div>
+                        <div className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400">
                           {nextPart.part}. {nextPart.title}
                         </div>
-                      </Link>
-                    )}
-                  </div>
+                      </div>
+                    </Link>
+                  )}
                 </div>
               </div>
+            </div>
+          </div>
 
-              {/* Sidebar */}
-              <div className="space-y-6">
-                
-                {/* Technologies */}
-                <div className="card">
-                  <div className="flex items-center mb-4">
-                    <Database className="w-5 h-5 text-indigo-500 mr-2" />
-                    <h3 className="text-lg font-semibold text-gray-900">Tecnologias</h3>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {part.technologies.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            
+            {/* Technologies */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+                  <Database className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Tecnologias</h3>
+              </div>
+              <div className="space-y-2">
+                {part.technologies.map((tech, index) => (
+                  <span key={index} className="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/20 text-primary-800 dark:text-primary-300 rounded-full text-sm font-medium mr-2 mb-2">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
 
-                {/* Status Info */}
-                <div className="card">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Status de Desenvolvimento</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Progresso</span>
-                      <span className="text-sm font-medium text-gray-900">
-                        {part.status === 'completed' ? '100%' : part.status === 'in_progress' ? '75%' : '0%'}
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className={`h-2 rounded-full ${
-                          part.status === 'completed' ? 'bg-success-500' : 
-                          part.status === 'in_progress' ? 'bg-primary-500' : 'bg-gray-300'
-                        }`}
-                        style={{ 
-                          width: part.status === 'completed' ? '100%' : part.status === 'in_progress' ? '75%' : '0%' 
-                        }}
-                      ></div>
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {part.status === 'completed' && 'Implementação concluída e testada'}
-                      {part.status === 'in_progress' && 'Em desenvolvimento ativo'}
-                      {part.status === 'pending' && 'Aguardando início do desenvolvimento'}
-                    </div>
-                  </div>
+            {/* Status Info */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                 </div>
-
-                {/* Progresso Geral */}
-                <div className="card">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Progresso Geral</h3>
-                  <ProgressBar compact={true} showDetails={false} />
-                  <div className="mt-4 text-center">
-                    <Link
-                      href="/progresso"
-                      className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-                    >
-                      Ver todas as partes →
-                    </Link>
-                  </div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Status de Desenvolvimento</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Progresso</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                    {part.status === 'completed' ? '100%' : part.status === 'in_progress' ? '75%' : '0%'}
+                  </span>
                 </div>
-
-                {/* Quick Actions */}
-                <div className="card">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
-                  <div className="space-y-2">
-                    <Link
-                      href="/progresso"
-                      className="block w-full text-center py-2 px-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium"
-                    >
-                      Ver Progresso
-                    </Link>
-                    <Link
-                      href="/"
-                      className="block w-full text-center py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
-                    >
-                      Voltar
-                    </Link>
-                  </div>
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div 
+                    className={`h-2 rounded-full ${
+                      part.status === 'completed' ? 'bg-green-500' : 
+                      part.status === 'in_progress' ? 'bg-blue-500' : 'bg-gray-400'
+                    }`}
+                    style={{ 
+                      width: part.status === 'completed' ? '100%' : 
+                             part.status === 'in_progress' ? '75%' : '0%' 
+                    }}
+                  ></div>
                 </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {part.status === 'completed' && 'Implementação concluída e testada'}
+                  {part.status === 'in_progress' && 'Em desenvolvimento ativo'}
+                  {part.status === 'pending' && 'Aguardando início do desenvolvimento'}
+                </p>
+              </div>
+            </div>
 
-                {/* Part Info */}
-                <div className="card">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Informações da Parte</h3>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Número:</span>
-                      <span className="font-medium">{part.part} de 53</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Fase:</span>
-                      <span className="font-medium text-xs">{part.phase}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Tecnologias:</span>
-                      <span className="font-medium">{part.technologies.length}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Funcionalidades:</span>
-                      <span className="font-medium">{part.features.length}</span>
-                    </div>
-                  </div>
+            {/* Progresso Geral */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+              <ProgressBar compact />
+              <div className="mt-4 text-center">
+                <Link href="/progresso" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium">
+                  Ver todas as partes →
+                </Link>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Ações Rápidas</h3>
+              <div className="space-y-3">
+                <Link href="/progresso" className="block w-full btn-primary text-center">
+                  Ver Progresso
+                </Link>
+                <Link href="/" className="block w-full btn-secondary text-center">
+                  Voltar
+                </Link>
+              </div>
+            </div>
+
+            {/* Part Info */}
+            <div className="bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 rounded-2xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Informações da Parte</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Número:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{part.part} de 53</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Fase:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{part.phase}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Tecnologias:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{part.technologies.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Funcionalidades:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{part.features.length}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   )
 }
