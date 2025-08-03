@@ -129,7 +129,7 @@ init_progress_system() {
     printf "║                                                                                   ║\n"
     printf "║                      🚀 SISTEMA DE INSTALAÇÃO KRYONIX 🚀                         ║\n"
     printf "║                                                                                   ║\n"
-    printf "║                         Preparando ambiente de instalação...                     ���\n"
+    printf "║                         Preparando ambiente de instalação...                      ║\n"
     printf "║                                                                                   ║\n"
     printf "╚═══════════════════════════════════════════════════════════════════════════════════╝${RESET}\n\n"
 
@@ -261,9 +261,9 @@ show_progress() {
     # Efeito visual final se completo
     if [ $step -eq $total ]; then
         printf "\n${BOLD}${BRIGHT_GREEN}"
-        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━���━━━━━━━━━��━━━━━━━━━━━━🎉\n"
+        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
-        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━🎉${RESET}\n\n"
+        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
     else
         # Pequena pausa para animação suave
         sleep 0.2
@@ -1057,7 +1057,7 @@ if (missing.length > 0) {
     console.error('❌ Faltando: ' + missing.join(', '));
     process.exit(1);
 } else {
-    console.log('🎉 Todas as dependências validadas!');
+    console.log('��� Todas as dependências validadas!');
     process.exit(0);
 }
 VALIDATE_DEPS_EOF
@@ -1769,7 +1769,7 @@ log_info "📊 Total de correções aplicadas: $correction_count/4"
 if [ $correction_count -gt 0 ]; then
     log_success "🎉 Correç��es de TypeScript aplicadas com sucesso!"
 else
-    log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
+    log_warning "⚠��� Nenhuma correção foi aplicada - arquivos podem já estar corretos"
 fi
 
 # CORREÇÃO PROATIVA: Limpar builds corrompidos (versão simplificada)
@@ -2820,7 +2820,7 @@ log_success "✅ Monitoramento contínuo configurado"
 echo ""
 echo -e "${GREEN}${BOLD}═══��══════════════════════��══��══════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════════════════════════════���═════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
