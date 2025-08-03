@@ -76,25 +76,25 @@ export default function ProgressBar({ className = '', showDetails = true, compac
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-gray-900">Progresso do Desenvolvimento</h3>
-            <p className="text-sm text-gray-600">Acompanhe em tempo real</p>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Progresso do Desenvolvimento</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Acompanhe em tempo real</p>
           </div>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
             {Math.round(animatedProgress)}%
           </div>
-          <div className="text-xs text-gray-500">Concluído</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">Concluído</div>
         </div>
       </div>
 
       {/* Current Phase */}
       <div className="mb-6">
-        <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-2">
+        <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-sm font-medium mb-2">
           <Clock className="w-4 h-4 mr-1" />
           {getPhase()}
         </div>
-        <div className="text-gray-900 font-semibold">
+        <div className="text-gray-900 dark:text-gray-100 font-semibold">
           Parte {currentPart}: {getCurrentPartName()}
         </div>
       </div>
