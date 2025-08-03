@@ -393,10 +393,10 @@ export default function HomePage() {
               <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-balance">
                 <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Plataforma SaaS</span>
                 <br />
-                <span className="text-gray-900">100% Autônoma por IA</span>
+                <span className="text-gray-900 dark:text-gray-100">100% Autônoma por IA</span>
               </h1>
 
-              <p className="text-xl text-gray-600 mb-8 text-balance max-w-2xl mx-auto">
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 text-balance max-w-2xl mx-auto">
                 Transforme seu negócio com nossa plataforma inteligente: WhatsApp Business,
                 CRM avançado, automação completa e muito mais.
               </p>
