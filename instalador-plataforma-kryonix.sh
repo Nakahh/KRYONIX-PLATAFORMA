@@ -128,7 +128,7 @@ init_progress_system() {
     printf "║                                                                                   ║\n"
     printf "║                         Preparando ambiente de instalação...                     ║\n"
     printf "║                                                                                   ║\n"
-    printf "╚═════════════════════════════════════════════���════════════════��════════════════════╝${RESET}\n\n"
+    printf "╚═══════════════════════════════════════════════════════════════════════════════════╝${RESET}\n\n"
 
     # Animação de inicialização
     printf "${BOLD}${CYAN}Inicializando sistema de progresso${RESET} "
@@ -1764,7 +1764,7 @@ fi
 log_info "📊 Total de correções aplicadas: $correction_count/4"
 
 if [ $correction_count -gt 0 ]; then
-    log_success "🎉 Correções de TypeScript aplicadas com sucesso!"
+    log_success "🎉 Correç��es de TypeScript aplicadas com sucesso!"
 else
     log_warning "⚠️ Nenhuma correção foi aplicada - arquivos podem já estar corretos"
 fi
@@ -1950,7 +1950,7 @@ ANTICORRUPTION_CONFIG_EOF
                 sed -i 's/cleanDistDir: true,/cleanDistDir: true,\n  eslint: { ignoreDuringBuilds: true },\n  typescript: { ignoreBuildErrors: true },/g' next.config.js
                 log_success "✅ next.config.js otimizado para pular validações"
             fi
-            log_success "✅ Todas as correções de TypeScript aplicadas"
+            log_success "✅ Todas as corre��ões de TypeScript aplicadas"
             ;;
 
         "missing_autoprefixer"|"missing_postcss"|"missing_tailwind")
