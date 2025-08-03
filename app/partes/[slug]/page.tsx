@@ -335,7 +335,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
               <ProgressBar compact />
               <div className="mt-4 text-center">
                 <Link href="/progresso" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium">
-                  Ver todas as partes ���
+                  Ver todas as partes →
                 </Link>
               </div>
             </div>
