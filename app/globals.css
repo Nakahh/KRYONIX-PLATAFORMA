@@ -10,6 +10,12 @@
   body {
     background-color: white;
     color: rgb(17 24 39);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html.dark body {
+    background-color: rgb(17 24 39);
+    color: rgb(243 244 246);
   }
 
   /* Prevent body scroll when modal is open */
