@@ -107,7 +107,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚════════════════���════════════════════════════════════════════════╝"
+    echo    "╚═════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -260,7 +260,7 @@ show_progress() {
         printf "\n${BOLD}${BRIGHT_GREEN}"
         printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
-        printf "🎉━━���━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
+        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
     else
         # Pequena pausa para animação suave
         sleep 0.2
@@ -598,14 +598,14 @@ fresh_git_clone() {
 
 
     # Configurar Git globalmente ANTES de tentar clone
-    git config --global user.name "KRYONIX Deploy"
-    git config --global user.email "deploy@kryonix.com.br"
-    git config --global pull.rebase false
-    git config --global init.defaultBranch main
-    git config --global --add safe.directory "$target_dir"
-    git config --global http.postBuffer 524288000
-    git config --global core.compression 0
-    git config --global http.sslVerify true
+    git config --global user.name "KRYONIX Deploy" >/dev/null 2>&1
+    git config --global user.email "deploy@kryonix.com.br" >/dev/null 2>&1
+    git config --global pull.rebase false >/dev/null 2>&1
+    git config --global init.defaultBranch main >/dev/null 2>&1
+    git config --global --add safe.directory "$target_dir" >/dev/null 2>&1
+    git config --global http.postBuffer 524288000 >/dev/null 2>&1
+    git config --global core.compression 0 >/dev/null 2>&1
+    git config --global http.sslVerify true >/dev/null 2>&1
 
     # Limpar credenciais antigas
     git config --global --unset-all credential.helper 2>/dev/null || true
@@ -717,7 +717,7 @@ verify_fresh_clone() {
     commit_date=$(git log -1 --pretty=format:"%ci" 2>/dev/null || echo "N/A")
     author=$(git log -1 --pretty=format:"%an" 2>/dev/null || echo "N/A")
 
-    log_info "�� Informações do repositório:"
+    log_info "📊 Informações do repositório:"
     log_info "   Commit: $commit_hash"
     log_info "   Mensagem: $commit_msg"
     log_info "   Data: $commit_date"
@@ -2018,7 +2018,7 @@ EOF
             ;;
 
         *)
-            log_info "🔧 Aplicando correção genérica..."
+            log_info "��� Aplicando correção genérica..."
             # Aplicar todas as correç📁es possíveis
             echo 'console.log("Emergency check passed");' > check-dependencies.js
             cp package.json package.json.emergency-backup
@@ -3047,7 +3047,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═══════📁═════════════════���═════════📋════════════${RESET}"
+echo -e "${CYAN}═══���═══📁═════════════════���═════════📋════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
