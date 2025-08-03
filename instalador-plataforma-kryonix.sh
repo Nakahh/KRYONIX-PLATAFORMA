@@ -127,48 +127,19 @@ log_success() {
 }
 
 # Funções de controle de etapas
+# Controle simplificado de etapas
 next_step() {
     CURRENT_STEP=$((CURRENT_STEP + 1))
     if [ $CURRENT_STEP -le $TOTAL_STEPS ]; then
-        CURRENT_STEP_BAR_SHOWN=false
-        animate_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "iniciando"
+        show_progress $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}"
     fi
 }
 
-complete_step() {
-    if [ $CURRENT_STEP -le $TOTAL_STEPS ]; then
-        animate_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "concluido"
-        sleep 0.5
-    fi
-}
-
-error_step() {
-    if [ $CURRENT_STEP -le $TOTAL_STEPS ]; then
-        animate_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "erro"
-    fi
-}
-
-processing_step() {
-    if [ $CURRENT_STEP -le $TOTAL_STEPS ]; then
-        animate_progress_bar $CURRENT_STEP $TOTAL_STEPS "${STEP_DESCRIPTIONS[$((CURRENT_STEP-1))]}" "processando"
-    fi
-}
-
-# Funções de log
-log_info() {
-    log_below_bar "info" "$1"
-}
-
-log_success() {
-    log_below_bar "success" "$1"
-}
-
-log_warning() {
-    log_below_bar "warning" "$1"
-}
-
+# Funções de log silenciosas (apenas para depuração)
+log_info() { :; }
+log_warning() { :; }
 log_error() {
-    log_below_bar "error" "$1"
+    echo -e "\n${RED}❌ $1${RESET}" >&2
 }
 
 # ============================================================================
@@ -187,7 +158,7 @@ auto_update_dependencies() {
 
     # Backup do package.json original
     cp package.json package.json.backup
-    log_info "📦 Backup do package.json criado"
+    log_info "��� Backup do package.json criado"
 
     # Atualizar para versões mais recentes (mantendo compatibilidade)
     log_info "🔄 Atualizando dependências para versões mais recentes..."
