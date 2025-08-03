@@ -125,9 +125,12 @@ export default function PartPage({ params }: { params: { slug: string } }) {
             <span className="text-xl font-bold gradient-text">KRYONIX</span>
           </div>
           
-          <div className="flex items-center space-x-2 text-sm">
-            <div className="status-online"></div>
-            <span className="text-gray-600 dark:text-gray-400">Online</span>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 text-sm">
+              <div className="status-online"></div>
+              <span className="text-gray-600 dark:text-gray-300">Online</span>
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
