@@ -16,7 +16,9 @@ import {
   Phone,
   Instagram,
   Mail,
-  Send
+  Send,
+  Camera,
+  AtSign
 } from 'lucide-react'
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
