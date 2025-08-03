@@ -10,7 +10,8 @@ import {
   AlertTriangle,
   BarChart3,
   MessageCircle,
-  Instagram
+  Instagram,
+  Mail
 } from 'lucide-react'
 import MobileMenu from '../components/MobileMenu'
 import LoadingScreen from '../components/LoadingScreen'
@@ -226,25 +227,31 @@ export default function ProgressoPage() {
               
               <div>
                 <h3 className="font-semibold mb-4">Contato</h3>
-                <div className="space-y-2 text-sm text-gray-400">
+                <div className="flex items-center space-x-3">
                   <a
                     href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-all duration-200 text-sm border border-green-500 hover:border-green-400"
+                    className="p-3 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-all duration-200 border border-green-500 hover:border-green-400"
+                    title="WhatsApp"
                   >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>Falar no WhatsApp</span>
+                    <MessageCircle className="w-5 h-5" />
                   </a>
-                  <div>📧 contato@kryonix.com.br</div>
+                  <a
+                    href="mailto:contato@kryonix.com.br"
+                    className="p-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all duration-200 border border-blue-500 hover:border-blue-400"
+                    title="Email"
+                  >
+                    <Mail className="w-5 h-5" />
+                  </a>
                   <a
                     href="https://instagram.com/kryon.ix"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg transition-all duration-200 text-sm border border-purple-500 hover:border-purple-400"
+                    className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg transition-all duration-200 border border-purple-500 hover:border-purple-400"
+                    title="Instagram"
                   >
-                    <Instagram className="w-4 h-4" />
-                    <span>@kryon.ix</span>
+                    <Instagram className="w-5 h-5" />
                   </a>
                 </div>
               </div>
