@@ -14,7 +14,7 @@ export LANGUAGE=C
 # Funcionalidades: Auto-update + Dependencies + Fresh clone + Deploy completo
 # ============================================================================
 
-# Cores e formatação - CORRIGIDO para ASCII seguro
+# Cores e formatação modernas para barra de progresso
 BLUE='\033[1;34m'
 CYAN='\033[1;36m'
 GREEN='\033[1;32m'
@@ -24,6 +24,19 @@ PURPLE='\033[1;35m'
 WHITE='\033[1;37m'
 BOLD='\033[1m'
 RESET='\033[0m'
+
+# Cores extras para barra moderna
+BRIGHT_BLUE='\033[1;94m'
+BRIGHT_GREEN='\033[1;92m'
+BRIGHT_CYAN='\033[1;96m'
+BRIGHT_YELLOW='\033[1;93m'
+GRAY='\033[90m'
+LIGHT_GRAY='\033[37m'
+
+# Efeitos visuais
+BLINK='\033[5m'
+UNDERLINE='\033[4m'
+DIM='\033[2m'
 
 # Emojis e caracteres especiais - CORRIGIDO para compatibilidade
 CHECKMARK='✅'
@@ -2584,7 +2597,7 @@ DIAGNOSTIC_EOF
 
     for port in 8080 8082 8084; do
         if curl -f -s "http://localhost:$port/health" > /dev/null; then
-            log "📁 Serviço KRYONIX na porta $port funcionando"
+            log "���� Serviço KRYONIX na porta $port funcionando"
             services_ok=$((services_ok + 1))
         else
             log "⚠️ Serviço KRYONIX na porta $port com problemas"
@@ -2982,7 +2995,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═══════📁═══════════════════════════📋════════════${RESET}"
+echo -e "${CYAN}═══════📁═════════════════���═════════📋════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
