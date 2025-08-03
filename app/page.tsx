@@ -13,7 +13,8 @@ import {
   Clock,
   Sparkles,
   Globe,
-  Phone
+  Phone,
+  Instagram
 } from 'lucide-react'
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
@@ -305,7 +306,15 @@ export default function HomePage() {
                   <span>Falar no WhatsApp</span>
                 </a>
                 <div>📧 contato@kryonix.com.br</div>
-                <div>🌐 www.kryonix.com.br</div>
+                <a
+                  href="https://instagram.com/kryon.ix"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg transition-all duration-200 text-sm border border-purple-500 hover:border-purple-400"
+                >
+                  <Instagram className="w-4 h-4" />
+                  <span>@kryon.ix</span>
+                </a>
               </div>
             </div>
             
