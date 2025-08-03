@@ -36,6 +36,20 @@ export default function ProgressoPage() {
     setLoading(false)
   }
 
+  const handleIconClick = (iconType: 'whatsapp' | 'email' | 'instagram') => {
+    setClickedIcons(prev => ({
+      ...prev,
+      [iconType]: true
+    }))
+
+    setTimeout(() => {
+      setClickedIcons(prev => ({
+        ...prev,
+        [iconType]: false
+      }))
+    }, 200)
+  }
+
   // Estatísticas
   const completed = partsData.filter(p => p.status === 'completed').length
   const inProgress = partsData.filter(p => p.status === 'in_progress').length
