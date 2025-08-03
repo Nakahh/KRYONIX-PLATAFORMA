@@ -83,21 +83,21 @@ STEP_DESCRIPTIONS=(
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔══════════════════��══════════════════════════════════════════════╗"
-    echo    "║                                                                 ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ���█╔╝██╔═══██╗████╗  ������║����█║╚██╗██╔╝     ║"
-    echo    "║     █████╔╝ ███���██╔╝ ╚████╔╝ ██║   ██║██╔██�� █���║██║ ╚███╔���      ║"
-    echo    "��     ██╔═██�� ██╔══██╗  ╚██╔╝  ██║   ██║██║╚��█╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
-    echo    "║                                                                 ║"
-    echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
-    echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
-    echo    "║                                                                 ║"
-    echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
-    echo    "║                                                                 ║"
-    echo    "╚════════════════════════════════���══════════════════������══���═══��═════╝"
+    echo    "╔═══════════════════════════════════════════════════════════════════╗"
+    echo    "║                                                                   ║"
+    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
+    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
+    echo    "║                                                                   ║"
+    echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                        ║"
+    echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}                 ║"
+    echo    "║                                                                   ║"
+    echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}         ║"
+    echo    "║                                                                   ║"
+    echo    "╚═══════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -248,49 +248,49 @@ log_error() {
 # Função para atualizar dependências automaticamente
 auto_update_dependencies() {
     log_info "🔄 Iniciando atualização automática de dependências..."
-    
+
     # Verificar se package.json existe
     if [ ! -f "package.json" ]; then
         log_error "❌ package.json não encontrado!"
         return 1
     fi
-    
+
     # Backup do package.json original
     cp package.json package.json.backup
     log_info "📦 Backup do package.json criado"
-    
+
     # Atualizar para versões mais recentes (mantendo compatibilidade)
     log_info "������ Atualizando depend��ncias para versões mais recentes..."
-    
+
     # Usar npm-check-updates se disponível, senão instalar
     if ! command -v ncu >/dev/null 2>&1; then
         log_info "📦 Instalando npm-check-updates..."
         npm install -g npm-check-updates >/dev/null 2>&1 || true
     fi
-    
+
     # Atualizar dependências com verificação de compatibilidade
     if command -v ncu >/dev/null 2>&1; then
         log_info "🔄 Verificando atualiza��ões disponíveis..."
         ncu --upgrade --target minor >/dev/null 2>&1 || true
         log_success "✅ Dependências atualizadas para versões menores compatíveis"
     fi
-    
+
     # Limpar cache npm
     log_info "��� Limpando cache npm..."
     npm cache clean --force >/dev/null 2>&1 || true
-    
+
     # Reinstalar dependências com versões atualizadas
     log_info "📦 Reinstalando dependências..."
     rm -rf node_modules package-lock.json 2>/dev/null || true
-    
+
     # Instalação com múltiplas tentativas
     local install_attempts=0
     local max_attempts=3
-    
+
     while [ $install_attempts -lt $max_attempts ]; do
         install_attempts=$((install_attempts + 1))
         log_info "📥 Tentativa de instalação $install_attempts/$max_attempts..."
-        
+
         if npm install --no-audit --no-fund --prefer-offline 2>&1 | tee /tmp/npm-install.log; then
             log_success "✅ Dependências instaladas com sucesso"
             break
@@ -302,7 +302,7 @@ auto_update_dependencies() {
             fi
         fi
     done
-    
+
     if [ $install_attempts -eq $max_attempts ]; then
         log_warning "⚠️ Restaurando package.json original..."
         cp package.json.backup package.json
@@ -360,7 +360,7 @@ EOF
 # Função de verifica��ão avançada de dependências
 advanced_dependency_check() {
     log_info "🔍 Executando verificação avançada de dependências..."
-    
+
     # Executar verificador próprio do projeto
     if [ -f "check-dependencies.js" ]; then
         log_info "📋 Executando verificador específico do KRYONIX..."
@@ -369,7 +369,7 @@ advanced_dependency_check() {
         else
             log_error "�� Verificação específica falhou"
             log_info "📋 Tentando correção automática..."
-            
+
             # Correção automática
             if node fix-dependencies.js 2>&1 | tee /tmp/deps-fix.log; then
                 log_success "✅ Correção automática aplicada"
@@ -378,23 +378,23 @@ advanced_dependency_check() {
             fi
         fi
     fi
-    
+
     # Verificar se serviços específicos funcionam
     log_info "�� Testando inicialização de serviços..."
-    
+
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
         log_success "✅ server.js inicializa corretamente"
     else
         log_warning "⚠️ server.js pode ter problemas"
     fi
-    
+
     # Verificar estrutura de arquivos necess��rios
     log_info "📁 Verificando estrutura de arquivos..."
-    
+
     required_files=("package.json" "server.js")
     missing_files=()
-    
+
     for file in "${required_files[@]}"; do
         if [ -f "$file" ]; then
             log_success "✅ $file encontrado"
@@ -403,12 +403,12 @@ advanced_dependency_check() {
             log_error "❌ $file faltando"
         fi
     done
-    
+
     if [ ${#missing_files[@]} -gt 0 ]; then
         log_error "❌ Arquivos obrigatórios faltando: ${missing_files[*]}"
         return 1
     fi
-    
+
     return 0
 }
 
@@ -445,21 +445,21 @@ test_service_health() {
     local url="$1"
     local max_attempts="${2:-30}"
     local wait_time="${3:-10}"
-    
+
     log_info "Testando conectividade: $url"
-    
+
     for i in $(seq 1 $max_attempts); do
         if curl -f -s -m 10 "$url" >/dev/null 2>&1; then
             log_success "Conectividade confirmada!"
             return 0
         fi
-        
+
         if [ $i -lt $max_attempts ]; then
             log_info "Tentativa $i/$max_attempts - aguardando ${wait_time}s..."
             sleep $wait_time
         fi
     done
-    
+
     log_warning "Conectividade não confirmada após $max_attempts tentativas"
     return 1
 }
@@ -467,35 +467,35 @@ test_service_health() {
 # FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
     log_info "����� NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
-    
+
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
     sleep 15
-    
+
     # Remover TODAS as imagens KRYONIX
     docker images --format "{{.Repository}}:{{.Tag}}" | grep -i kryonix | xargs -r docker rmi -f 2>/dev/null || true
-    
+
     # Parar qualquer processo que possa estar usando o diretório
     sudo pkill -f "$PROJECT_DIR" 2>/dev/null || true
-    
+
     # Desmontar qualquer mount no diretório
     sudo umount "$PROJECT_DIR"/* 2>/dev/null || true
-    
+
     # REMOÇÃO COMPLETA - incluindo arquivos ocultos, .git, tudo
     if [ -d "$PROJECT_DIR" ]; then
         log_info "🗑️ Removendo tudo de $PROJECT_DIR (incluindo .git)..."
-        
+
         # Múltiplas estratégias de remoção
         sudo rm -rf "$PROJECT_DIR"/{*,.[^.]*,..?*} 2>/dev/null || true
         sudo rm -rf "$PROJECT_DIR" 2>/dev/null || true
-        
+
         # Verificar remoção completa
         if [ -d "$PROJECT_DIR" ]; then
             log_warning "Diretório ainda existe, tentando remoção alternativa..."
             sudo find "$PROJECT_DIR" -mindepth 1 -delete 2>/dev/null || true
             sudo rmdir "$PROJECT_DIR" 2>/dev/null || true
         fi
-        
+
         # Verificação final
         if [ -d "$PROJECT_DIR" ]; then
             error_step
@@ -503,11 +503,11 @@ nuclear_cleanup() {
             exit 1
         fi
     fi
-    
+
     # Criar diret��rio fresh com permissões corretas
     sudo mkdir -p "$PROJECT_DIR"
     sudo chown -R $USER:$USER "$PROJECT_DIR"
-    
+
     log_success "�� Nuclear cleanup completo - fresh start garantido"
     return 0
 }
@@ -518,9 +518,9 @@ fresh_git_clone() {
     local target_dir="$2"
     local branch="${3:-main}"
     local pat_token="$4"
-    
+
     log_info "🔄 Clone FRESH garantindo vers��o MAIS RECENTE..."
-    
+
     # Configurar Git globalmente ANTES de tentar clone
     git config --global user.name "KRYONIX Deploy"
     git config --global user.email "deploy@kryonix.com.br"
@@ -543,7 +543,7 @@ fresh_git_clone() {
 
     # URL para repositório privado
     local auth_url="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-    
+
     cd "$target_dir"
 
     # Testar conectividade e autenticação antes de tentar clone
@@ -558,14 +558,14 @@ fresh_git_clone() {
     # Clone com opções específicas para versão mais recente
     local clone_attempts=0
     local max_attempts=3
-    
+
     while [ $clone_attempts -lt $max_attempts ]; do
         clone_attempts=$((clone_attempts + 1))
         log_info "��� Tentativa de clone $clone_attempts/$max_attempts..."
-        
+
         # Limpar qualquer clone parcial
         sudo rm -rf ./* .[^.]* ..?* 2>/dev/null || true
-        
+
         log_info "Tentando clone com credenciais armazenadas..."
 
         if git clone --verbose \
@@ -575,18 +575,18 @@ fresh_git_clone() {
                     --no-tags \
                     "$auth_url" \
                     . 2>&1; then
-            
+
             # Imediatamente buscar refs mais recentes
             log_info "📡 Buscando refs mais recentes para garantir versão mais atualizada..."
             git fetch origin --force --prune --depth=1 2>/dev/null || true
-            
+
             # Obter commit mais recente do remoto
             latest_remote_commit=$(git ls-remote origin HEAD 2>/dev/null | cut -f1 | head -c 8 || echo "unknown")
             current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
-            
+
             log_info "🔍 Remoto mais recente: $latest_remote_commit"
             log_info "🔍 Local atual: $current_local_commit"
-            
+
             # Forçar atualização para absoluto mais recente se diferente
             if [ "$current_local_commit" != "$latest_remote_commit" ] && [ "$latest_remote_commit" != "unknown" ]; then
                 log_info "🔄 Atualizando para commit absoluto mais recente..."
@@ -595,7 +595,7 @@ fresh_git_clone() {
                 current_local_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
                 log_success "✅ Atualizado para mais recente: $current_local_commit"
             fi
-            
+
             log_success "✅ Clone fresh concluído com sucesso"
             return 0
         else
@@ -615,7 +615,7 @@ fresh_git_clone() {
             fi
         fi
     done
-    
+
     log_error "❌ Todas as tentativas de clone falharam"
     return 1
 }
@@ -872,7 +872,7 @@ log_info "🔍 Executando verificação avançada de dependências..."
 # Executar verificação avançada
 if ! advanced_dependency_check; then
     log_warning "⚠️ Problemas detectados nas dependências"
-    
+
     # Tentar instalação básica como fallback
     log_info "🔄 Tentando instalação básica como fallback..."
     npm install --no-audit --no-fund 2>/dev/null || true
@@ -2169,7 +2169,7 @@ jobs:
         run: |
           echo "ℹ️ GitHub webhook automático KRYONIX com dependências sempre atualizadas"
           echo "��� Webhook URL: https://kryonix.com.br/api/github-webhook"
-          
+
           # Verificar se o webhook está respondendo
           curl -f "https://kryonix.com.br/health" || exit 1
 
@@ -2177,7 +2177,7 @@ jobs:
         run: |
           echo "⏳ Aguardando deployment automático KRYONIX com auto-update..."
           sleep 60
-          
+
           # Verificar múltiplas vezes
           for i in {1..10}; do
             if curl -f "https://kryonix.com.br/health"; then
@@ -2187,7 +2187,7 @@ jobs:
             echo "⏳ Tentativa $i/10 - aguardando..."
             sleep 30
           done
-          
+
           echo "⚠️ Verificação manual necessária"
           exit 1
 GITHUB_ACTIONS_EOF
@@ -2887,10 +2887,10 @@ cd "$DEPLOY_PATH" || exit 1
 # Verificar se há atualizações disponíveis
 if command -v ncu >/dev/null 2>&1; then
     updates_available=$(ncu --jsonUpgraded 2>/dev/null | jq -r 'keys | length' 2>/dev/null || echo "0")
-    
+
     if [ "$updates_available" -gt 0 ]; then
         log_monitor "📦 $updates_available atualizaç��es de dependências disponíveis"
-        
+
         # Opcional: Auto-update em horários específicos
         current_hour=$(date +%H)
         if [ "$current_hour" = "03" ]; then  # 3:00 AM
