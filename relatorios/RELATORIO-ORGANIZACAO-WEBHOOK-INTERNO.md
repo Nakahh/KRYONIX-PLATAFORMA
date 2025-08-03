@@ -63,7 +63,7 @@ Todas as solicitações foram executadas com **múltiplos agentes** conforme ped
 ```
 
 ### ✅ **Arquivo Movido:**
-- `RELATORIO-WEBHOOK-FUNCIONAL-APLICADO.md` �� `relatorios/`
+- `RELATORIO-WEBHOOK-FUNCIONAL-APLICADO.md` → `relatorios/`
 
 ---
 
