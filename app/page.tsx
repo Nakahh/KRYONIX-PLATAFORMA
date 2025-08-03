@@ -470,23 +470,26 @@ export default function HomePage() {
             {modules.map((module, index) => (
               <div
                 key={index}
-                className="card hover:shadow-lg transition-all duration-300 text-center group cursor-pointer transform hover:scale-105"
+                className="card hover:shadow-xl transition-all duration-300 text-center group cursor-pointer transform hover:scale-105 hover:border-primary-300 relative overflow-hidden"
                 onClick={() => setSelectedModule(index)}
               >
-                <div className="text-2xl font-bold text-primary-600 mb-2">
-                  {module.price}
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-3 text-sm">
-                  {module.name}
-                </h3>
-                <span className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full font-medium mb-3 inline-block">Indisponível</span>
-                <div className="text-xs text-gray-500 mt-2">
-                  <span className="inline-flex items-center">
-                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Clique para ver detalhes
-                  </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-50 to-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10">
+                  <div className="text-2xl font-bold text-primary-600 mb-2">
+                    {module.price}
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-3 text-sm">
+                    {module.name}
+                  </h3>
+                  <span className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full font-medium mb-3 inline-block">Indisponível</span>
+                  <div className="text-xs text-gray-500 mt-2">
+                    <span className="inline-flex items-center">
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Clique para ver detalhes
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
