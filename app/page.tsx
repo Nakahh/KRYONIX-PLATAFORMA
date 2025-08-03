@@ -34,6 +34,18 @@ export default function HomePage() {
     setMounted(true)
   }, [])
 
+  useEffect(() => {
+    if (selectedModule !== null) {
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.classList.remove('modal-open')
+    }
+
+    return () => {
+      document.body.classList.remove('modal-open')
+    }
+  }, [selectedModule])
+
   const handleLoadingComplete = () => {
     setLoading(false)
   }
