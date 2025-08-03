@@ -572,7 +572,7 @@ export default function HomePage() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                       <a
-                        href="https://wa.me/5517981805327?text=Olá! Tenho interesse no módulo: {modules[selectedModule].name}"
+                        href={`https://wa.me/5517981805327?text=Olá! Tenho interesse no módulo: ${modules[selectedModule].name} (${modules[selectedModule].price}). Gostaria de mais informações sobre quando estará disponível.`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="bg-[#25D366] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#20b954] transition-colors flex items-center justify-center"
