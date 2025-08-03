@@ -1,7 +1,0 @@
-removendo test_progress.sh - apenas demo de barra de progresso
-removendo test-webhook.sh - script de teste independente  
-removendo instalador-backup.sh - backup não referenciado
-removendo Dockerfile.optimized - não é usado pelo sistema
-removendo test-webhook-funcional.sh - teste criado temporariamente
-removendo webhook-deploy.sh - agora integrado internamente no instalador
-removendo remove-temp.txt - arquivo temporário
