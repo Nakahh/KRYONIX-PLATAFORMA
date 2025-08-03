@@ -92,7 +92,7 @@ show_banner() {
     echo -e "║                    ${WHITE}INSTALADOR AUTOMÁTICO KRYONIX${BLUE}                   ║"
     echo -e "║                   ${CYAN}Plataforma SaaS Empresarial${BLUE}                     ║"
     echo "║                                                                   ║"
-    echo "╚═══════════════════════════════════════════════════════════════════╝"
+    echo "╚═══════════════════════════════════════════════════════���═══════════╝"
     echo -e "${RESET}"
     echo ""
     echo -e "${GREEN}✅ Instalação 100% automatizada em andamento...${RESET}"
@@ -1600,8 +1600,6 @@ if [ -d ".next" ]; then
     rm -rf node_modules/.cache 2>/dev/null || true
     npm cache clean --force >/dev/null 2>&1 || true
     log_success "✅ Build anterior removido para garantir build limpo"
-else
-
 fi
 
 # Build com logs detalhados para diagnóstico
@@ -2824,7 +2822,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═════════════════════════════════════════════════════════════���═════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════���═══════${RESET}"
 echo ""
