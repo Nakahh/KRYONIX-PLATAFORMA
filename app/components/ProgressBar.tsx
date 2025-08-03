@@ -101,16 +101,16 @@ export default function ProgressBar({ className = '', showDetails = true, compac
 
       {/* Progress Bar */}
       <div className="mb-6">
-        <div className="flex justify-between text-sm text-gray-600 mb-2">
+        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
           <span>Parte {currentPart} de {totalParts}</span>
           <span>{completedParts} concluídas • {inProgressParts} em andamento</span>
         </div>
         
-        <div className="h-4 bg-gray-100 rounded-full overflow-hidden relative">
+        <div className="h-4 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden relative">
           {/* Background segments */}
           <div className="absolute inset-0 flex">
             {[...Array(totalParts)].map((_, i) => (
-              <div key={i} className="flex-1 border-r border-gray-200 last:border-r-0"></div>
+              <div key={i} className="flex-1 border-r border-gray-200 dark:border-gray-600 last:border-r-0"></div>
             ))}
           </div>
           
@@ -132,11 +132,11 @@ export default function ProgressBar({ className = '', showDetails = true, compac
         <>
           {/* Stats Grid */}
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="text-center p-4 bg-green-50 rounded-lg">
+            <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
               <div className="flex items-center justify-center mb-2">
                 <CheckCircle className="w-5 h-5 text-green-500" />
               </div>
-              <div className="text-xl font-bold text-green-600">{completedParts}</div>
+              <div className="text-xl font-bold text-green-600 dark:text-green-400">{completedParts}</div>
               <div className="text-xs text-green-700">Concluídas</div>
             </div>
             <div className="text-center p-4 bg-blue-50 rounded-lg">
