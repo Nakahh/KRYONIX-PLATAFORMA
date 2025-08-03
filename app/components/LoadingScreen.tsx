@@ -109,12 +109,17 @@ export default function LoadingScreen({ onComplete, duration = 3000 }: LoadingSc
 
         {/* Brand Text */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent animate-pulse mb-2">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent mb-3">
             KRYONIX
           </h1>
-          <p className="text-gray-600 text-sm font-medium">
+          <p className="text-gray-600 text-base font-medium tracking-wide">
             Plataforma SaaS 100% Autônoma por IA
           </p>
+          <div className="flex items-center justify-center mt-3 space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+          </div>
         </div>
 
         {/* Progress Bar */}
