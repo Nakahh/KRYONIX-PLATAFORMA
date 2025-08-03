@@ -88,7 +88,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   █��║██║╚██╗██║██║ ██╔██╗        ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
     echo    "║                                                                   ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                   ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}         ║"
     echo    "║                                                                   ║"
-    echo    "╚═══════════════════════════════════════════════════════════════════╝"
+    echo    "╚══════════════════════════════════════════════════════════════════��╝"
     echo -e "${RESET}\n"
 
 
@@ -260,7 +260,7 @@ auto_update_dependencies() {
     log_info "📦 Backup do package.json criado"
 
     # Atualizar para versões mais recentes (mantendo compatibilidade)
-    log_info "🔍🔍 Atualizando depend📁ncias para versões mais recentes..."
+    log_info "🔄 Atualizando dependências para versões mais recentes..."
 
     # Usar npm-check-updates se disponível, senão instalar
     if ! command -v ncu >/dev/null 2>&1; then
@@ -276,7 +276,7 @@ auto_update_dependencies() {
     fi
 
     # Limpar cache npm
-    log_info "��� Limpando cache npm..."
+    log_info "🔍 Limpando cache npm..."
     npm cache clean --force >/dev/null 2>&1 || true
 
     # Reinstalar dependências com versões atualizadas
@@ -2720,7 +2720,7 @@ if [ "$deploy_success" = true ]; then
     sleep 5
 
     if docker stack ls --format "{{.Name}}" | grep -q "^${STACK_NAME}$"; then
-        log_success "�� Stack $STACK_NAME confirmada no Docker Swarm"
+        log_success "✅ Stack $STACK_NAME confirmada no Docker Swarm"
 
         # Verificar serviços com timeout
         log_info "🔍 Aguardando criação dos serviços..."
@@ -2927,7 +2927,7 @@ echo -e "${GREEN}${BOLD}══════════════════�
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
-echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
+echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERS��O MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2970,7 +2970,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA📁ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}══════📁═══════════════════════🔍🔍════════════${RESET}"
+echo -e "${CYAN}═══���══📁═══════════════════════🔍🔍════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
