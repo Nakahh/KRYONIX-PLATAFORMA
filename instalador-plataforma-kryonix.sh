@@ -86,7 +86,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗��█╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   ██║   ╚████��█╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -740,6 +740,9 @@ validate_credentials() {
 
 # Mostrar banner
 show_banner
+
+# Inicializar sistema de progresso moderno
+init_progress_system
 
 # Detecção automática do ambiente (como no instalador antigo que funcionava)
 echo -e "${PURPLE}${BOLD}🚀 INSTALADOR KRYONIX - CLONE FRESH + VERSÃO MAIS RECENTE${RESET}"
@@ -1626,7 +1629,7 @@ if [ -f "lib/database/init.ts" ]; then
     sed -i 's/checkDatabaseHealth(module)/checkDatabaseHealth(dbModule)/g' lib/database/init.ts
     sed -i 's/status\[module\]/status[dbModule]/g' lib/database/init.ts
 
-    log_success "✅ init.ts corrigido"
+    log_success "��� init.ts corrigido"
 else
     log_warning "⚠️ lib/database/init.ts não encontrado"
 fi
@@ -2792,7 +2795,7 @@ else
     log_error "🔍 Serviço web com problemas no Docker Swarm: $web_replicas"
     WEB_STATUS="��� FAILED ($web_replicas)"
 
-    # Mostrar logs detalhados para diagnóstico
+    # Mostrar logs detalhados para diagn��stico
     log_info "📋 Logs detalhados do serviço com problema:"
     docker service logs "${STACK_NAME}_web" --tail 20 2>/dev/null || log_warning "Logs não disponíveis"
 
@@ -2932,7 +2935,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══��════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
