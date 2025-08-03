@@ -137,21 +137,21 @@ export default function ProgressBar({ className = '', showDetails = true, compac
                 <CheckCircle className="w-5 h-5 text-green-500" />
               </div>
               <div className="text-xl font-bold text-green-600 dark:text-green-400">{completedParts}</div>
-              <div className="text-xs text-green-700">Concluídas</div>
+              <div className="text-xs text-green-700 dark:text-green-300">Concluídas</div>
             </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
+            <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
               <div className="flex items-center justify-center mb-2">
                 <Clock className="w-5 h-5 text-blue-500" />
               </div>
-              <div className="text-xl font-bold text-blue-600">{inProgressParts}</div>
-              <div className="text-xs text-blue-700">Em Andamento</div>
+              <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{inProgressParts}</div>
+              <div className="text-xs text-blue-700 dark:text-blue-300">Em Andamento</div>
             </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <div className="flex items-center justify-center mb-2">
                 <div className="w-5 h-5 rounded-full bg-gray-400"></div>
               </div>
-              <div className="text-xl font-bold text-gray-600">{totalParts - currentPart}</div>
-              <div className="text-xs text-gray-700">Pendentes</div>
+              <div className="text-xl font-bold text-gray-600 dark:text-gray-300">{totalParts - currentPart}</div>
+              <div className="text-xs text-gray-700 dark:text-gray-400">Pendentes</div>
             </div>
           </div>
 
