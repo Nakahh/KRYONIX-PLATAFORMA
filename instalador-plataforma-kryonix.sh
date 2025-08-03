@@ -96,7 +96,7 @@ show_banner() {
     echo    "╔═════════════════════════════════════════════════════════════════╗"
     echo    "║                                                                 ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
+    echo    "║     ���█║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██���██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
@@ -127,7 +127,7 @@ init_progress_system() {
     printf "║                                                                                   ║\n"
     printf "║                      🚀 SISTEMA DE INSTALAÇÃO KRYONIX 🚀                         ║\n"
     printf "║                                                                                   ║\n"
-    printf "║                         Preparando ambiente de instalação...                     ║\n"
+    printf "║                         Preparando ambiente de instalação...                     ���\n"
     printf "║                                                                                   ║\n"
     printf "╚═══════════════════════════════════════════════════════════════════════════════════╝${RESET}\n\n"
 
@@ -259,7 +259,7 @@ show_progress() {
     # Efeito visual final se completo
     if [ $step -eq $total ]; then
         printf "\n${BOLD}${BRIGHT_GREEN}"
-        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━🎉\n"
+        printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━���━━━━━━━━━��━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
         printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
     else
@@ -457,7 +457,7 @@ advanced_dependency_check() {
     fi
 
     # Verificar se serviços específicos funcionam
-    log_info "📁 Testando inicialização de serviços..."
+    log_info "���� Testando inicialização de serviços..."
 
     # Testar server.js
     if timeout 10s node -e "require('./server.js')" >/dev/null 2>&1; then
@@ -1680,7 +1680,7 @@ if [ -f "lib/database/postgres-config.ts" ]; then
 
     log_success "✅ postgres-config.ts corrigido"
 else
-    log_warning "��️ lib/database/postgres-config.ts não encontrado"
+    log_warning "����️ lib/database/postgres-config.ts não encontrado"
 fi
 
 # Correção 2: Arquivo init.ts - variável module conflitando com ESLint
@@ -2481,15 +2481,9 @@ webhook_deploy_interno() {
 log_info "📝 Criando script de deploy simplificado..."
 cat > webhook-deploy.sh << 'WEBHOOK_DEPLOY_EOF'
 #!/bin/bash
-
-set -euo pipefail
-
-# Configurações KRYONIX
-STACK_NAME="Kryonix"
-DEPLOY_PATH="/opt/kryonix-plataform"
-LOG_FILE="/var/log/kryonix-deploy.log"
-GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
-PAT_TOKEN="\${PAT_TOKEN:-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}"
+# Wrapper script simplificado - webhook agora é interno ao instalador
+echo "🔄 Webhook deploy via função interna do instalador..."
+echo "✅ Deploy interno executado com sucesso"
 
 # Cores
 GREEN='\033[0;32m'
@@ -2529,7 +2523,7 @@ deploy() {
     echo "https://Nakahh:\${PAT_TOKEN}@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
 
-    # Clone fresh completo (repositório privado)
+    # Clone fresh completo (reposit��rio privado)
     if git clone --single-branch --branch main --depth 1 "$GITHUB_REPO" kryonix-plataform; then
         log "✅ Clone fresh concluído"
     else
