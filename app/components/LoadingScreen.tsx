@@ -85,14 +85,7 @@ export default function LoadingScreen({ onComplete, duration = 1000 }: LoadingSc
             </div>
           </div>
           
-          {/* Glowing dot at the end of progress */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-48 h-48 relative">
-              <div className="absolute top-0 left-1/2 w-3 h-3 bg-gradient-to-r from-blue-500 to-green-500 rounded-full transform -translate-x-1/2 -translate-y-1/2 animate-dot-rotation shadow-lg">
-                <div className="w-full h-full bg-gradient-to-r from-blue-400 to-green-400 rounded-full animate-pulse"></div>
-              </div>
-            </div>
-          </div>
+
         </div>
 
         {/* Brand Text */}
