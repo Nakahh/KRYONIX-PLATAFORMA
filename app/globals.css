@@ -6,10 +6,15 @@
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     background-color: white;
     color: rgb(17 24 39);
+  }
+
+  /* Prevent body scroll when modal is open */
+  body.modal-open {
+    overflow: hidden;
   }
 }
 
