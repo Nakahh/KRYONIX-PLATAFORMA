@@ -142,21 +142,26 @@ export default function LoadingScreen({ onComplete, duration = 3000 }: LoadingSc
         </div>
 
         {/* Loading Steps */}
-        <div className="text-center text-xs text-gray-500 min-h-[20px]">
-          {progress < 20 && "Inicializando sistemas..."}
-          {progress >= 20 && progress < 40 && "Carregando módulos IA..."}
-          {progress >= 40 && progress < 60 && "Conectando bases de dados..."}
-          {progress >= 60 && progress < 80 && "Verificando segurança..."}
-          {progress >= 80 && progress < 95 && "Finalizando configurações..."}
-          {progress >= 95 && "Sistema pronto!"}
+        <div className="text-center text-sm text-gray-600 min-h-[24px] font-medium">
+          {progress < 20 && "🚀 Inicializando sistemas..."}
+          {progress >= 20 && progress < 40 && "🤖 Carregando módulos IA..."}
+          {progress >= 40 && progress < 60 && "🗄️ Conectando bases de dados..."}
+          {progress >= 60 && progress < 80 && "🔒 Verificando segurança..."}
+          {progress >= 80 && progress < 95 && "⚙️ Finalizando configurações..."}
+          {progress >= 95 && "✨ Sistema pronto!"}
         </div>
       </div>
 
-      {/* Corner decorations */}
-      <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-blue-300 rounded-tl-lg"></div>
-      <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-green-300 rounded-tr-lg"></div>
-      <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-purple-300 rounded-bl-lg"></div>
-      <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-pink-300 rounded-br-lg"></div>
+      {/* Modern corner decorations */}
+      <div className="absolute top-6 left-6 w-12 h-12 border-l-3 border-t-3 border-blue-400/30 rounded-tl-2xl"></div>
+      <div className="absolute top-6 right-6 w-12 h-12 border-r-3 border-t-3 border-green-400/30 rounded-tr-2xl"></div>
+      <div className="absolute bottom-6 left-6 w-12 h-12 border-l-3 border-b-3 border-purple-400/30 rounded-bl-2xl"></div>
+      <div className="absolute bottom-6 right-6 w-12 h-12 border-r-3 border-b-3 border-pink-400/30 rounded-br-2xl"></div>
+
+      {/* Floating decorative elements */}
+      <div className="absolute top-20 left-20 w-4 h-4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full opacity-20 animate-float"></div>
+      <div className="absolute top-32 right-24 w-3 h-3 bg-gradient-to-r from-green-400 to-green-600 rounded-full opacity-25 animate-float" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute bottom-24 left-32 w-5 h-5 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full opacity-15 animate-float" style={{ animationDelay: '2s' }}></div>
     </div>
   )
 }
