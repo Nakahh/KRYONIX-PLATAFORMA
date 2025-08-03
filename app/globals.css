@@ -57,6 +57,14 @@
     animation: spin-reverse 3s linear infinite;
   }
 
+  .animate-spin-elegant {
+    animation: spin-elegant 2s ease-in-out infinite;
+  }
+
+  .animate-spin-elegant-reverse {
+    animation: spin-elegant-reverse 2s ease-in-out infinite;
+  }
+
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
