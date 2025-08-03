@@ -295,7 +295,6 @@ export default function HomePage() {
             <div>
               <h3 className="font-semibold mb-4">Contato</h3>
               <div className="space-y-2 text-sm text-gray-400">
-                <div>📧 contato@kryonix.com.br</div>
                 <a
                   href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
                   target="_blank"
@@ -305,6 +304,7 @@ export default function HomePage() {
                   <MessageCircle className="w-4 h-4" />
                   <span>Falar no WhatsApp</span>
                 </a>
+                <div>📧 contato@kryonix.com.br</div>
                 <div>🌐 www.kryonix.com.br</div>
               </div>
             </div>
