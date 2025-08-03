@@ -1962,5 +1962,3 @@ echo ""
 
 ---
 
-*Parte 09 de 50 - Projeto KRYONIX SaaS Platform - Versão Multi-Tenant*  
-*Próxima Parte: 10 - API Gateway Multi-Tenant*

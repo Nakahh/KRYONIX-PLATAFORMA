@@ -654,6 +654,3 @@ echo "🔑 Auth: Basic a3J5b25peDpWaXRvckAxMjM0NTY="
 6. **Admin Alerts**: Notificações administrativas críticas
 
 ---
-*Parte 53 de 50+ - Ntfy Integration Updated KRYONIX Platform*
-*Próxima Atualização: Servidor/IP Configuration*
-*🔔 KRYONIX - Notificações Inteligentes Atualizadas*

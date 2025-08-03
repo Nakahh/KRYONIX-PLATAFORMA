@@ -1370,5 +1370,3 @@ echo "==============================================="
 
 ---
 
-*Parte 08 de 50 - Projeto KRYONIX SaaS Platform - Versão Multi-Tenant*  
-*Próxima Parte: 09 - Segurança Básica Multi-Tenant*

@@ -1400,5 +1400,3 @@ curl -s http://localhost:8080/metrics | grep traefik_http_requests_total
 
 ---
 
-*Parte 05 de 50 - Projeto KRYONIX SaaS Platform - Versão Multi-Tenant*  
-*Próxima Parte: 06 - Monitoramento Multi-Tenant*

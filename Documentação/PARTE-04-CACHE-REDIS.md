@@ -1237,5 +1237,3 @@ echo "====================================="
 
 ---
 
-*Parte 04 de 50 - Projeto KRYONIX SaaS Platform - Versão Multi-Tenant*  
-*Próxima Parte: 05 - Proxy Reverso Traefik Multi-Tenant*

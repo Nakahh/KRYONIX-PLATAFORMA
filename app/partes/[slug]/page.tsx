@@ -335,7 +335,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
               <ProgressBar compact />
               <div className="mt-4 text-center">
                 <Link href="/progresso" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium">
-                  Ver todas as partes ���
+                  Ver todas as partes →
                 </Link>
               </div>
             </div>
@@ -353,28 +353,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
               </div>
             </div>
 
-            {/* Part Info */}
-            <div className="bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Informações da Parte</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Número:</span>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">{part.part} de 53</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Fase:</span>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">{part.phase}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Tecnologias:</span>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">{part.technologies.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Funcionalidades:</span>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">{part.features.length}</span>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>

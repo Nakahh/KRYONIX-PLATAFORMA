@@ -775,7 +775,3 @@ npm run test:sdk:auth
 - **Client Auto-Creation**: [/docs/automation/client-creation](https://docs.kryonix.com.br/automation/client-creation)
 
 ---
-
-*Parte 01 de 50 - Projeto KRYONIX SaaS Platform Multi-Tenant*  
-*Próxima Parte: 02 - Base de Dados PostgreSQL Multi-Tenant*  
-*🏢 Arquitetura: Multi-tenant isolado • 📱 Mobile-first • 🤖 Auto-creation • 🔄 SDK Unificado*

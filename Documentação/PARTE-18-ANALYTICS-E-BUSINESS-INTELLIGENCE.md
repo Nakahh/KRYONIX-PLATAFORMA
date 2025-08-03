@@ -1133,5 +1133,3 @@ GROUP BY DATE_TRUNC('day', ue.occurred_at), ue.event_category, ue.event_name, c.
 ```
 
 ---
-*Parte 18 de 50 - Projeto KRYONIX SaaS Platform*
-*Próxima Parte: 19 - Gestão de Documentos e Arquivos*
