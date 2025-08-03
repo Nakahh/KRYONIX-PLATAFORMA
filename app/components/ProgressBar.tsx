@@ -50,7 +50,7 @@ export default function ProgressBar({ className = '', showDetails = true, compac
       <div className={`${className}`}>
         <div className="flex items-center space-x-3">
           <div className="flex-1">
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 rounded-full transition-all duration-1000 ease-out relative"
                 style={{ width: `${animatedProgress}%` }}
@@ -59,7 +59,7 @@ export default function ProgressBar({ className = '', showDetails = true, compac
               </div>
             </div>
           </div>
-          <div className="text-sm font-medium text-gray-700">
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {completedParts + inProgressParts}/{totalParts}
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function ProgressBar({ className = '', showDetails = true, compac
   }
 
   return (
-    <div className={`bg-white rounded-2xl shadow-lg border border-gray-100 p-8 ${className}`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
