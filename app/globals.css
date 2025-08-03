@@ -85,6 +85,10 @@
   .container-custom {
     @apply container mx-auto px-4;
   }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent;
+  }
 }
 
 @layer utilities {
