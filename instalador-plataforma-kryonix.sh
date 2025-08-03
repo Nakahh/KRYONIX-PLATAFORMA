@@ -79,32 +79,27 @@ STEP_DESCRIPTIONS=(
 # FUNÇÕES DE INTERFACE E PROGRESSO - CORRIGIDAS PARA ASCII
 # ============================================================================
 
-# Função para mostrar banner da Plataforma Kryonix - CORRIGIDA
+# Banner principal do instalador
 show_banner() {
     clear
     echo -e "${BLUE}${BOLD}"
-    echo    "╔═══════════════════════════════════════════════════════════════════╗"
-    echo    "║                                                                   ║"
-    echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
-    echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
-    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
-    echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
-    echo    "║                                                                   ║"
-    echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                        ║"
-    echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}                 ║"
-    echo    "║                                                                   ║"
-    echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}         ║"
-    echo    "║                                                                   ║"
-    echo    "╚══════════════════════════════════════════════════════════════════��╝"
-    echo -e "${RESET}\n"
-
-
-    echo -e "${GREEN}🔧 VERSÃO CORRIGIDA: Problemas 0/1 replicas resolvidos pelos 5 agentes${RESET}"
-echo -e "${CYAN}🛠️ CORREÇÕES DOS AGENTES: Serviços unificados + Health checks + Placement${RESET}"
-echo -e "${YELLOW}🚨 RESOLVIDO: 0/1 replicas - Unificação em container único${RESET}"
-echo -e "${PURPLE}⚙️ OTIMIZADO: Health check 0.0.0.0:8080 + 1G RAM + placement flexível${RESET}\n"
+    echo "╔═════════════��═════════════════════════════════════════════════════╗"
+    echo "║                                                                   ║"
+    echo "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
+    echo "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
+    echo "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
+    echo "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
+    echo "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
+    echo "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
+    echo "║                                                                   ║"
+    echo -e "║                    ${WHITE}INSTALADOR AUTOMÁTICO KRYONIX${BLUE}                   ║"
+    echo -e "║                   ${CYAN}Plataforma SaaS Empresarial${BLUE}                     ║"
+    echo "║                                                                   ║"
+    echo "╚═══════════════════════════════════════════════════════════════════╝"
+    echo -e "${RESET}"
+    echo ""
+    echo -e "${GREEN}✅ Instalação 100% automatizada em andamento...${RESET}"
+    echo ""
 }
 
 # Sistema unificado de barra animada - CORRIGIDO
@@ -685,7 +680,7 @@ verify_fresh_clone() {
             if git reset --hard origin/main 2>/dev/null || git reset --hard origin/master 2>/dev/null; then
                 new_commit=$(git rev-parse HEAD 2>/dev/null | head -c 8 || echo "unknown")
                 new_msg=$(git log -1 --pretty=format:"%s" 2>/dev/null || echo "N/A")
-                log_success "✅ Atualizado para: $new_commit - $new_msg"
+                log_success "�� Atualizado para: $new_commit - $new_msg"
             fi
         fi
     fi
@@ -1493,7 +1488,7 @@ COPY tailwind.config.js ./
 COPY postcss.config.js ./
 COPY tsconfig.json ./
 
-# CORREÇÃO CRÍTICA: Build Next.js necessário para produção com fallback
+# CORREÇÃO CRÍTICA: Build Next.js necessário para produ��ão com fallback
 RUN npm run build || echo "Build falhou, continuando com modo desenvolvimento"
 
 # Otimizar após build - remover devDependencies
@@ -1678,7 +1673,7 @@ if [ -f "lib/database/api.ts" ] && grep -q "dbModule" lib/database/api.ts 2>/dev
 fi
 
 if [ -f "next.config.js" ] && grep -q "ignoreDuringBuilds" next.config.js 2>/dev/null; then
-    log_success "✅ Otimização next.config.js aplicada"
+    log_success "✅ Otimiza��ão next.config.js aplicada"
     correction_count=$((correction_count + 1))
 fi
 
@@ -2405,7 +2400,7 @@ deploy() {
             log "Status atual: $replica_status"
 
             if [[ "$replica_status" == "1/1" ]]; then
-                log "✅ Serviço $service_name funcionando normalmente"
+                log "✅ Servi��o $service_name funcionando normalmente"
                 return 0
             fi
 
@@ -2925,7 +2920,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}══════════��════════════════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERS��O MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
