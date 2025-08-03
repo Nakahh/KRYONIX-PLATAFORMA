@@ -236,32 +236,41 @@ export default function ProgressoPage() {
                   href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group cursor-pointer"
+                  className="group cursor-pointer relative"
                   title="WhatsApp"
                 >
-                  <MessageCircle
-                    className="w-8 h-8 transition-all duration-200 text-gray-400 group-hover:text-green-500"
-                  />
+                  <div className="relative">
+                    <Send
+                      className="w-8 h-8 transition-all duration-300 transform text-gray-400 group-hover:text-green-500 group-hover:scale-105"
+                    />
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
                 </a>
                 <a
                   href="mailto:contato@kryonix.com.br"
-                  className="group cursor-pointer"
+                  className="group cursor-pointer relative"
                   title="Email"
                 >
-                  <Mail
-                    className="w-8 h-8 transition-all duration-200 text-gray-400 group-hover:text-blue-500"
-                  />
+                  <div className="relative">
+                    <Mail
+                      className="w-8 h-8 transition-all duration-300 transform text-gray-400 group-hover:text-blue-500 group-hover:scale-105"
+                    />
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
                 </a>
                 <a
                   href="https://instagram.com/kryon.ix"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group cursor-pointer"
+                  className="group cursor-pointer relative"
                   title="Instagram"
                 >
-                  <Instagram
-                    className="w-8 h-8 transition-all duration-200 text-gray-400 group-hover:text-purple-500"
-                  />
+                  <div className="relative">
+                    <Instagram
+                      className="w-8 h-8 transition-all duration-300 transform text-gray-400 group-hover:text-purple-500 group-hover:scale-105"
+                    />
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
                 </a>
               </div>
             </div>
