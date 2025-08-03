@@ -99,7 +99,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ��█╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -447,7 +447,7 @@ advanced_dependency_check() {
             log_info "📋 Tentando correção automática..."
 
             # Correção automática
-            if node fix-dependencies.js 2>&1 | tee /tmp/deps-fix.log; then
+            if node fix-dependencies.js >/dev/null 2>&1; then
                 log_success "✅ Correção automática aplicada"
             else
                 log_warning "📁️ Correção manual pode ser necess📁ria"
@@ -1000,7 +1000,7 @@ try {
     console.log('📦 Módulos instalados: ' + (require('fs').readdirSync('node_modules').length || 0));
     console.log('�� Total de dependências no package.json: ' + Object.keys(pkg.dependencies || {}).length);
 } catch(e) {
-    console.log('�� Estatísticas não disponíveis');
+    console.log('📊 Estatísticas não disponíveis');
 }
 
 if (missing.length === 0) {
@@ -1539,7 +1539,7 @@ RUN apk add --no-cache \
     git \
     dumb-init
 
-# Criar usuário não-root
+# Criar usuário n��o-root
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S kryonix -u 1001
 
@@ -2610,7 +2610,7 @@ deploy() {
     if [ ${#failed_services[@]} -eq 0 ]; then
         log "🔍 Todos os serviços KRYONIX reparados e funcionando!"
     else
-        log "⚠��� Serviços com problemas: ${failed_services[*]}"
+        log "⚠️ Serviços com problemas: ${failed_services[*]}"
 
         # Gerar relatório de diagn📁stico
         diagnostic_file="/tmp/kryonix-diagnostic-$(date +%Y%m%d_%H%M%S).log"
@@ -2752,7 +2752,7 @@ log_info "   Serviços: $(grep -c "image: kryonix-plataforma" docker-stack.yml) 
 log_warning "⚡ Bypassing dry-run (problema conhecido de travamento)"
 log_info "🚀 Validação simples e deploy direto..."
 
-# Validação básica apenas
+# Validação b��sica apenas
 if [ ! -f "docker-stack.yml" ]; then
     log_error "❌ docker-stack.yml não encontrado!"
     exit 1
@@ -2917,7 +2917,7 @@ next_step
 # ============================================================================
 
 
-log_info "📁 Testando webhook e preparando relatório final..."
+log_info "📁 Testando webhook e preparando relat��rio final..."
 
 # Testar webhook local
 if curl -f -s -X POST "http://localhost:8080/api/github-webhook" \
@@ -3000,7 +3000,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════��═══════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
