@@ -244,7 +244,7 @@ show_progress() {
     printf "╯${RESET}\n"
     
     # Status detalhado embaixo
-    printf "\n${BOLD}${BRIGHT_CYAN}⚡ Status:${RESET} "
+    printf "\n${BOLD}${BRIGHT_CYAN}�� Status:${RESET} "
     case $progress in
         0-20) printf "${YELLOW}Inicializando...${RESET}" ;;
         21-40) printf "${BRIGHT_BLUE}Configurando ambiente...${RESET}" ;;
@@ -318,7 +318,7 @@ log_error() {
 }
 
 # ============================================================================
-# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
+# FUNCOES DE ATUALIZACAO AUTOMATICA DE DEPENDENCIAS
 # ============================================================================
 
 # Função para atualizar dependências automaticamente
@@ -968,7 +968,7 @@ next_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
 # CORREÇÃO CRÍTICA: Criar arquivos de dependências ANTES de qualquer build
-log_info "🔧 Criando arquivos de dependências críticas para Docker build..."
+log_info "�� Criando arquivos de dependências críticas para Docker build..."
 
 # 1. check-dependencies.js (OBRIGATÓRIO para package.json postinstall)
 if [ ! -f "check-dependencies.js" ]; then
@@ -2592,7 +2592,7 @@ deploy() {
             attempt=$((attempt + 1))
         done
 
-        log "❌ Falha ao reparar servi��o $service_name após $max_attempts tentativas"
+        log "❌ Falha ao reparar servi📁o $service_name após $max_attempts tentativas"
         return 1
     }
 
