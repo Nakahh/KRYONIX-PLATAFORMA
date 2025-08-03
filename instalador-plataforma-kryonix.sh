@@ -55,7 +55,7 @@ DOMAIN_NAME="kryonix.com.br"
 DOCKER_NETWORK="Kryonix-NET"  # CORREÇÃO: Fixado para rede que funcionava
 STACK_NAME="Kryonix"
 
-# Configurações CI/CD - Credenciais funcionais extraídas do instalador antigo
+# Configura��ões CI/CD - Credenciais funcionais extraídas do instalador antigo
 GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
 PAT_TOKEN="${PAT_TOKEN:-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}"
 WEBHOOK_SECRET="${WEBHOOK_SECRET:-Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8}"
@@ -99,7 +99,7 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ██║  ██╗██║  ██║   █��║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
@@ -244,7 +244,7 @@ show_progress() {
     printf "╯${RESET}\n"
     
     # Status detalhado embaixo
-    printf "\n${BOLD}${BRIGHT_CYAN}�� Status:${RESET} "
+    printf "\n${BOLD}${BRIGHT_CYAN}⚡ Status:${RESET} "
     case $progress in
         0-20) printf "${YELLOW}Inicializando...${RESET}" ;;
         21-40) printf "${BRIGHT_BLUE}Configurando ambiente...${RESET}" ;;
@@ -489,7 +489,7 @@ advanced_dependency_check() {
 }
 
 # ============================================================================
-# FUNÇÕES AUXILIARES CENTRALIZADAS
+# FUNCOES AUXILIARES CENTRALIZADAS
 # ============================================================================
 
 # CORREÇÃO: Fun📁ão simplificada para garantir rede Kryonix-NET
@@ -968,7 +968,7 @@ next_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
 # CORREÇÃO CRÍTICA: Criar arquivos de dependências ANTES de qualquer build
-log_info "�� Criando arquivos de dependências críticas para Docker build..."
+log_info "🔧 Criando arquivos de dependências críticas para Docker build..."
 
 # 1. check-dependencies.js (OBRIGATÓRIO para package.json postinstall)
 if [ ! -f "check-dependencies.js" ]; then
@@ -2244,7 +2244,7 @@ jobs:
 
       - name: 🚀 Deploy via webhook com auto-update
         run: |
-          echo "ℹ️ GitHub webhook automático KRYONIX com dependências sempre atualizadas"
+          echo "��️ GitHub webhook automático KRYONIX com dependências sempre atualizadas"
           echo "🔍 Webhook URL: https://kryonix.com.br/api/github-webhook"
 
           # Verificar se o webhook está respondendo
@@ -2414,7 +2414,7 @@ deploy() {
     git config --global --add safe.directory "$DEPLOY_PATH" 2>/dev/null || true
     git config --global credential.helper store 2>/dev/null || true
 
-    # Configurar credenciais para repositório privado (usando variável segura)
+    # Configurar credenciais para repositório privado (usando vari��vel segura)
     echo "https://Nakahh:\${PAT_TOKEN}@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
 
