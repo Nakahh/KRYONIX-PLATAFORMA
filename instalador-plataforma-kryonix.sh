@@ -86,8 +86,8 @@ show_banner() {
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
-    echo    "║     ██║  ██╗██║  ██║   ██║   ╚��█████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
-    echo    "║     ╚═╝  ╚��╝╚═╝  ���═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
+    echo    "║     █��║  ██╗██║  ██║   ██║   ╚��█████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
+    echo    "║     ╚═╝  ╚═╝╚═╝  ���═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
     echo -e "║                         ${WHITE}PLATAFORMA KRYONIX${BLUE}                      ║"
     echo -e "║                  ${CYAN}Deploy Automático e Profissional${BLUE}               ║"
@@ -891,7 +891,7 @@ if [ ! -f "fix-dependencies.js" ]; then
     log_info "Criando fix-dependencies.js..."
     cat > fix-dependencies.js << 'FIX_DEPS_EOF'
 #!/usr/bin/env node
-/* KRYONIX - Corretor automático de depend���ncias */
+/* KRYONIX - Corretor automático de depend🔍ncias */
 
 console.log('🔧 KRYONIX - Corrigindo dependências...');
 
@@ -992,7 +992,7 @@ const nextConfig = {
   httpAgentOptions: {
     keepAlive: false,
   },
-  // Otimizações para startup rápido
+  // Otimizações para startup r��pido
   onDemandEntries: {
     maxInactiveAge: 25 * 1000,
     pagesBufferLength: 2,
@@ -2872,7 +2872,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURAÇÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═══���══📁══���══════════════════������📋════════════${RESET}"
+echo -e "${CYAN}═══════📁═══════════════════════════📋════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
@@ -2890,7 +2890,7 @@ echo -e "    ${BLUE}│${RESET} ✅ Clone fresh - Sempre repositório limpo"
 echo -e "    ${BLUE}│${RESET} ✅ Webhook funcional - Deploy automático garantido"
 
 echo ""
-echo -e "${PURPLE}${BOLD}���� VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
+echo -e "${PURPLE}${BOLD}📊 VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
 echo -e "Execute para verificar se as correções funcionaram:"
 echo -e "${YELLOW}docker service ls${RESET}"
 echo ""
