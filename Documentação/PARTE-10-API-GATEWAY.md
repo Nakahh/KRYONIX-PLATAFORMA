@@ -1936,5 +1936,3 @@ echo "  Para criar um tenant: ./provision-tenant-gateway.sh empresa001 'Empresa 
 
 ---
 
-*Parte 10 de 50 - Projeto KRYONIX SaaS Platform - Versão Multi-Tenant*  
-*Próxima Parte: 11 - Interface Principal Multi-Tenant*

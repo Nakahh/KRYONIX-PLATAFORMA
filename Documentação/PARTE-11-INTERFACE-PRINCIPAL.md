@@ -1837,5 +1837,3 @@ echo ""
 
 ---
 
-*Parte 11 de 50 - Projeto KRYONIX SaaS Platform - Versão Multi-Tenant*  
-*Próxima Parte: 12 - Dashboard Multi-Tenant Mobile-First*

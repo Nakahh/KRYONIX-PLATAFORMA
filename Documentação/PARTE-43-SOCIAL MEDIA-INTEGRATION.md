@@ -1989,7 +1989,3 @@ echo "📅 Scheduler: https://social.kryonix.com.br/scheduler"
 
 ---
 
-*Documentação criada por: Marketing Expert + Social Media Specialist*  
-*Data: 27 de Janeiro de 2025*  
-*Versão: 1.0*  
-*Status: ✅ Concluída*

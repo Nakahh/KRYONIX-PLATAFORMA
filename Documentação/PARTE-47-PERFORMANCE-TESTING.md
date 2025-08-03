@@ -1708,7 +1708,3 @@ node scripts/auto-optimize-database.js
 
 ---
 
-*Documentação criada por: Performance Expert + Load Testing Specialist*  
-*Data: 27 de Janeiro de 2025*  
-*Versão: 1.0*  
-*Status: ✅ Concluída*
