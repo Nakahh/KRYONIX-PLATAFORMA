@@ -12,7 +12,9 @@ import {
   MessageCircle,
   Instagram,
   Mail,
-  Send
+  Send,
+  Camera,
+  AtSign
 } from 'lucide-react'
 import MobileMenu from '../components/MobileMenu'
 import LoadingScreen from '../components/LoadingScreen'
