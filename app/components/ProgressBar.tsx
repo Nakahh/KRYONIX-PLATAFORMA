@@ -156,14 +156,14 @@ export default function ProgressBar({ className = '', showDetails = true, compac
           </div>
 
           {/* Next Milestone */}
-          <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-4">
+          <div className="bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 rounded-lg p-4">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-bold">{currentPart + 1}</span>
               </div>
               <div>
-                <div className="font-medium text-gray-900">Próxima: Cache Redis</div>
-                <div className="text-sm text-gray-600">Sistema de cache distribuído para performance</div>
+                <div className="font-medium text-gray-900 dark:text-gray-100">Próxima: Cache Redis</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Sistema de cache distribuído para performance</div>
               </div>
             </div>
           </div>
