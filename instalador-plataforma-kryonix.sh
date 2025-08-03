@@ -64,7 +64,7 @@ STEP_DESCRIPTIONS=(
     "Criando arquivos de serviços 📄"
     "Configurando firewall 🔥"
     "Detectando rede Traefik 🔗"
-    "Verificando Traefik �����"
+    "Verificando Traefik 🔍"
     "Criando imagem Docker 🏗️"
     "Preparando stack CORRIGIDO pelos agentes 📋"
     "Configurando GitHub Actions 🚀"
@@ -87,7 +87,7 @@ show_banner() {
     echo    "║                                                                   ║"
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗       ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝       ║"
-    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔█���╗ ██║██║ ╚███╔╝        ║"
+    echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝        ║"
     echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗        ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗       ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝       ║"
@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                   ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}         ║"
     echo    "║                                                                   ║"
-    echo    "╚══════════════════════════════════════════════════���════════════════╝"
+    echo    "╚═══════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -242,7 +242,7 @@ log_error() {
 }
 
 # ============================================================================
-# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPENDÊNCIAS
+# FUNÇÕES DE ATUALIZAÇÃO AUTOMÁTICA DE DEPEND��NCIAS
 # ============================================================================
 
 # Função para atualizar dependências automaticamente
@@ -1308,7 +1308,7 @@ app.post('/api/github-webhook', (req, res) => {
             console.log('❌ Assinatura inválida do webhook');
             return res.status(401).json({ error: 'Invalid signature' });
         }
-        console.log('���� Assinatura do webhook verificada');
+        console.log('��� Assinatura do webhook verificada');
     }
 
     /* Processar apenas push events na main/master */
@@ -2925,7 +2925,7 @@ complete_step
 echo ""
 echo -e "${GREEN}${BOLD}═���══════════════════════�����═══════��════���═══════════════════��════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
-echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═══════════════════════════���════════���������══${RESET}"
+echo -e "${GREEN}${BOLD}��═══════�����══════════════��═���═��═════════════════════════���════════���������══${RESET}"
 echo ""
 echo -e "${PURPLE}${BOLD}���� NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
@@ -2992,7 +2992,7 @@ echo -e "${PURPLE}${BOLD}📊 VERIFICAÇÃO FINAL - RÉPLICAS 1/1:${RESET}"
 echo -e "Execute para verificar se as correções funcionaram:"
 echo -e "${YELLOW}docker service ls${RESET}"
 echo ""
-echo -e "Resultado esperado ap��s as CORREÇÕES DOS AGENTES:"
+echo -e "Resultado esperado após as CORREÇÕES DOS AGENTES:"
 echo -e "${GREEN}Kryonix_web       1/1        kryonix-plataforma:latest${RESET}"
 echo -e "${YELLOW}NOTA: Apenas 1 serviço após unificação pelos agentes${RESET}"
 echo -e "${YELLOW}      webhook e monitor integrados no serviço web${RESET}"
@@ -3002,7 +3002,7 @@ echo -e "    ${BLUE}│${RESET} ������ Atualização automática de 
 echo -e "    ${BLUE}│${RESET} ✅ Verificação contínua de dependências (a cada hora)"
 echo -e "    ${BLUE}│${RESET} ✅ Auto-update programado (3:00 AM diariamente)"
 echo -e "    ${BLUE}│${RESET} ✅ Fallback para dependências originais se houver problemas"
-echo -e "    ${BLUE}│${RESET} ✅ Logs detalhados de todas as atualizações"
+echo -e "    ${BLUE}│${RESET} ��� Logs detalhados de todas as atualizações"
 echo ""
 echo -e "${PURPLE}${BOLD}🚀 KRYONIX PLATFORM READY! 🚀${RESET}"
 echo ""
