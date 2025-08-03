@@ -501,17 +501,17 @@ export default function HomePage() {
 
           {/* Modal de Detalhes do Módulo */}
           {selectedModule !== null && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fadeIn" onClick={() => setSelectedModule(null)}>
-              <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform animate-slideUp" onClick={(e) => e.stopPropagation()}>
-                <div className="p-6 border-b border-gray-200">
+            <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center p-4 z-50 animate-fadeIn" onClick={() => setSelectedModule(null)}>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform animate-slideUp" onClick={(e) => e.stopPropagation()}>
+                <div className="p-6 border-b border-gray-200 dark:border-gray-600">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">{modules[selectedModule].name}</h2>
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{modules[selectedModule].name}</h2>
                       <div className="text-3xl font-bold text-primary-600">{modules[selectedModule].price}</div>
                     </div>
                     <button
                       onClick={() => setSelectedModule(null)}
-                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
                     >
                       <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
