@@ -251,7 +251,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
                   {previousPart && (
                     <Link href={`/partes/${previousPart.slug}`} className="block group">
                       <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-600 transition-colors">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">← Parte Anterior</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">��� Parte Anterior</div>
                         <div className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400">
                           {previousPart.part}. {previousPart.title}
                         </div>
@@ -441,7 +441,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
                   <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 transform ${
                     clickedIcons.email
                       ? 'bg-blue-500 text-white scale-110 shadow-xl shadow-blue-500/25'
-                      : 'bg-blue-50 text-blue-500 group-hover:bg-blue-500 group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-blue-500/25'
+                      : 'bg-blue-50 dark:bg-blue-900/20 text-blue-500 dark:text-blue-300 group-hover:bg-blue-500 group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-blue-500/25'
                   }`}>
                     <svg
                       className="w-5 h-5"
@@ -468,7 +468,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
                   <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 transform ${
                     clickedIcons.instagram
                       ? 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white scale-110 shadow-xl shadow-purple-500/25'
-                      : 'bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 text-purple-600 group-hover:from-purple-500 group-hover:via-pink-500 group-hover:to-orange-400 group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-purple-500/25'
+                      : 'bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-orange-900/20 text-purple-600 dark:text-purple-300 group-hover:from-purple-500 group-hover:via-pink-500 group-hover:to-orange-400 group-hover:text-white group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-purple-500/25'
                   }`}>
                     <svg
                       className="w-5 h-5"
