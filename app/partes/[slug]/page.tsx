@@ -310,18 +310,32 @@ export default function PartPage({ params }: { params: { slug: string } }) {
                   </div>
                 </div>
 
+                {/* Progresso Geral */}
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Progresso Geral</h3>
+                  <ProgressBar compact={true} showDetails={false} />
+                  <div className="mt-4 text-center">
+                    <Link
+                      href="/progresso"
+                      className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                    >
+                      Ver todas as partes →
+                    </Link>
+                  </div>
+                </div>
+
                 {/* Quick Actions */}
                 <div className="card">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
                   <div className="space-y-2">
-                    <Link 
-                      href="/progresso" 
+                    <Link
+                      href="/progresso"
                       className="block w-full text-center py-2 px-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium"
                     >
                       Ver Progresso Completo
                     </Link>
-                    <Link 
-                      href="/" 
+                    <Link
+                      href="/"
                       className="block w-full text-center py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
                     >
                       Voltar à Homepage
