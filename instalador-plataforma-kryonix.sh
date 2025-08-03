@@ -107,7 +107,7 @@ show_banner() {
     echo    "║                                                                 ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}       ║"
     echo    "║                                                                 ║"
-    echo    "╚═════════════════════════════════════════════════════════════════╝"
+    echo    "╚════════════════���════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -260,7 +260,7 @@ show_progress() {
         printf "\n${BOLD}${BRIGHT_GREEN}"
         printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
-        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
+        printf "🎉━━���━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
     else
         # Pequena pausa para animação suave
         sleep 0.2
@@ -644,13 +644,13 @@ fresh_git_clone() {
 
         log_info "Tentando clone com credenciais armazenadas..."
 
-        if git clone --verbose \
+        if git clone --quiet \
                     --single-branch \
                     --branch "$branch" \
                     --depth 1 \
                     --no-tags \
                     "$auth_url" \
-                    . 2>&1; then
+                    . >/dev/null 2>&1; then
 
             # Imediatamente buscar refs mais recentes
             log_info "📡 Buscando refs mais recentes para garantir versão mais atualizada..."
@@ -717,7 +717,7 @@ verify_fresh_clone() {
     commit_date=$(git log -1 --pretty=format:"%ci" 2>/dev/null || echo "N/A")
     author=$(git log -1 --pretty=format:"%an" 2>/dev/null || echo "N/A")
 
-    log_info "📊 Informações do repositório:"
+    log_info "�� Informações do repositório:"
     log_info "   Commit: $commit_hash"
     log_info "   Mensagem: $commit_msg"
     log_info "   Data: $commit_date"
@@ -968,7 +968,7 @@ next_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
 # CORREÇÃO CRÍTICA: Criar arquivos de dependências ANTES de qualquer build
-log_info "🔧 Criando arquivos de dependências cr��ticas para Docker build..."
+log_info "🔧 Criando arquivos de dependências críticas para Docker build..."
 
 # 1. check-dependencies.js (OBRIGATÓRIO para package.json postinstall)
 if [ ! -f "check-dependencies.js" ]; then
@@ -2297,7 +2297,7 @@ let missing = [];
 deps.forEach(dep => {
     try {
         require(dep);
-        console.log('�� ' + dep + ': OK');
+        console.log('✅ ' + dep + ': OK');
     } catch(e) {
         console.error('�� ' + dep + ': FALTANDO');
         missing.push(dep);
