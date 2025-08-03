@@ -98,7 +98,7 @@ show_banner() {
     echo    "║     ██╗  ██╗██████╗ ██╗   ██╗ ██████╗ ███╗   ██╗██╗██╗  ██╗     ║"
     echo    "║     ██║ ██╔╝██╔══██╗╚██╗ ██╔╝██╔═══██╗████╗  ██║██║╚██╗██╔╝     ║"
     echo    "║     █████╔╝ ██████╔╝ ╚████╔╝ ██║   ██║██╔██╗ ██║██║ ╚███╔╝      ║"
-    echo    "║     ██╔═█���╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
+    echo    "║     ██╔═██╗ ██╔══██╗  ╚██╔╝  ██║   ██║██║╚██╗██║██║ ██╔██╗      ║"
     echo    "║     ██║  ██╗██║  ██║   ██║   ╚██████╔╝██║ ╚████║██║██╔╝ ██╗     ║"
     echo    "║     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝     ║"
     echo    "║                                                                 ║"
@@ -260,7 +260,7 @@ show_progress() {
         printf "\n${BOLD}${BRIGHT_GREEN}"
         printf "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
         printf "                        INSTALAÇÃO KRYONIX FINALIZADA                        \n"
-        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━���━━━━━━━━🎉${RESET}\n\n"
+        printf "🎉━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉${RESET}\n\n"
     else
         # Pequena pausa para animação suave
         sleep 0.2
@@ -367,7 +367,7 @@ auto_update_dependencies() {
         install_attempts=$((install_attempts + 1))
         log_info "📥 Tentativa de instalação $install_attempts/$max_attempts..."
 
-        if npm install --no-audit --no-fund --prefer-offline 2>&1 | tee /tmp/npm-install.log; then
+        if npm install --no-audit --no-fund --prefer-offline --silent >/dev/null 2>&1; then
             log_success "✅ Depend��ncias instaladas com sucesso"
             break
         else
@@ -968,7 +968,7 @@ next_step
 log_info "Criando arquivos necessários para TODOS os serviços funcionarem..."
 
 # CORREÇÃO CRÍTICA: Criar arquivos de dependências ANTES de qualquer build
-log_info "🔧 Criando arquivos de dependências críticas para Docker build..."
+log_info "🔧 Criando arquivos de dependências cr��ticas para Docker build..."
 
 # 1. check-dependencies.js (OBRIGATÓRIO para package.json postinstall)
 if [ ! -f "check-dependencies.js" ]; then
@@ -2297,7 +2297,7 @@ let missing = [];
 deps.forEach(dep => {
     try {
         require(dep);
-        console.log('✅ ' + dep + ': OK');
+        console.log('�� ' + dep + ': OK');
     } catch(e) {
         console.error('�� ' + dep + ': FALTANDO');
         missing.push(dep);
@@ -3000,7 +3000,7 @@ log_success "✅ Monitoramento contínuo configurado"
 # ============================================================================
 
 echo ""
-echo -e "${GREEN}${BOLD}═══��══════════════════════���═════════════════════════════════════════${RESET}"
+echo -e "${GREEN}${BOLD}═══��══════════════════════��═════════════════════════════════════════${RESET}"
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════════${RESET}"
 echo ""
