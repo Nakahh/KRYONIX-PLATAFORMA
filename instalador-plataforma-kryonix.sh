@@ -161,7 +161,7 @@ auto_update_dependencies() {
 
     # Backup do package.json original
     cp package.json package.json.backup
-    log_info "📦 Backup do package.json criado"
+    log_info "���� Backup do package.json criado"
 
     # Atualizar para versões mais recentes (mantendo compatibilidade)
 
@@ -573,7 +573,7 @@ verify_fresh_clone() {
         return 2  # Warning, não erro
     fi
 
-    # Verificação espec��fica para PR #22 (preocupação do usuário)
+    # Verificação específica para PR #22 (preocupação do usuário)
     if echo "$commit_msg" | grep -qi "#22"; then
         log_warning "⚠️ Commit atual referencia PR #22 - verificando por versões mais recentes..."
 
@@ -2124,7 +2124,7 @@ deps.forEach(dep => {
         require(dep);
         console.log('✅ ' + dep + ': OK');
     } catch(e) {
-        console.error('🔍 ' + dep + ': FALTANDO');
+        console.error('�� ' + dep + ': FALTANDO');
         missing.push(dep);
     }
 });
