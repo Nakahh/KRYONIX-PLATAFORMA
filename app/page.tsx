@@ -120,7 +120,7 @@ export default function HomePage() {
                 className="rounded-lg"
               />
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">KRYONIX</h1>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-green-400 bg-clip-text text-transparent">KRYONIX</h1>
                 <p className="text-xs text-gray-600">Plataforma SaaS 100% Autônoma por IA</p>
               </div>
             </div>
@@ -142,7 +142,7 @@ export default function HomePage() {
                 <br />
                 <span className="text-gray-900">100% Autônoma por IA</span>
               </h1>
-              
+
               <p className="text-xl text-gray-600 mb-8 text-balance max-w-2xl mx-auto">
                 Transforme seu negócio com nossa plataforma inteligente: WhatsApp Business,
                 CRM avançado, automação completa e muito mais.
