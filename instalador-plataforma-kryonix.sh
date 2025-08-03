@@ -97,7 +97,7 @@ show_banner() {
     echo    "║                                                                   ║"
     echo -e "║         ${WHITE}SaaS 100% Autônomo  |  Mobile-First  |  Português${BLUE}         ║"
     echo    "║                                                                   ║"
-    echo    "╚══════════════════════════════════════════════════════════════════��╝"
+    echo    "╚═══════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}\n"
 
 
@@ -466,7 +466,7 @@ test_service_health() {
 
 # FUNÇÃO: Nuclear cleanup completo
 nuclear_cleanup() {
-    log_info "🔍📁 NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
+    log_info "🧹 NUCLEAR cleanup - removendo TUDO para garantir versão mais recente..."
 
     # Parar e remover todos os containers/serviços KRYONIX
     docker stack rm Kryonix 2>/dev/null || true
@@ -504,7 +504,7 @@ nuclear_cleanup() {
         fi
     fi
 
-    # Criar diret📁rio fresh com permissões corretas
+    # Criar diret��rio fresh com permissões corretas
     sudo mkdir -p "$PROJECT_DIR"
     sudo chown -R $USER:$USER "$PROJECT_DIR"
 
@@ -690,7 +690,7 @@ verify_fresh_clone() {
         fi
     fi
 
-    log_success "✅ Verificação do clone passou"
+    log_success "✅ Verifica��ão do clone passou"
     return 0
 }
 
@@ -1545,7 +1545,7 @@ else
 fi
 
 # Verificação completa de arquivos necessários (ATUALIZADA com arquivos criados automaticamente)
-log_info "🔍 Verificando TODOS os arquivos necessários para Docker build..."
+log_info "�� Verificando TODOS os arquivos necessários para Docker build..."
 required_files=("package.json" "server.js" "webhook-listener.js" "kryonix-monitor.js" "check-dependencies.js" "validate-dependencies.js" "fix-dependencies.js" "next.config.js" "public/index.html")
 missing_files=()
 
@@ -2927,7 +2927,7 @@ echo -e "${GREEN}${BOLD}══════════════════�
 echo -e "${GREEN}${BOLD}                🎉 INSTALAÇÃO KRYONIX CONCLUÍDA                    ${RESET}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════════════${RESET}"
 echo ""
-echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERS��O MAIS RECENTE:${RESET}"
+echo -e "${PURPLE}${BOLD}🔄 NUCLEAR CLEANUP + CLONE FRESH + VERSÃO MAIS RECENTE:${RESET}"
 echo -e "    ${BLUE}│${RESET} ${BOLD}Servidor:${RESET} $(hostname) (IP: $(curl -s ifconfig.me 2>/dev/null || echo 'localhost'))"
 
 # Verificar versão final
@@ -2970,7 +2970,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA📁ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═══���══📁═══════════════════════🔍🔍════════════${RESET}"
+echo -e "${CYAN}══════📁═══════════════════════🔍🔍════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
