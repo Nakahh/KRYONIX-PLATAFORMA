@@ -244,7 +244,7 @@ export default function HomePage() {
         'E-commerces e varejo online',
         'Empresas de educação online',
         'SaaS e empresas de software',
-        'Ag��ncias de marketing',
+        'Agências de marketing',
         'Empresas de cosméticos e moda',
         'Negócios com base de clientes recorrentes'
       ]
@@ -482,7 +482,7 @@ export default function HomePage() {
                   <div className="text-2xl font-bold text-primary-600 mb-2">
                     {module.price}
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-3 text-sm">
+                  <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-gray-900 mb-3 text-sm">
                     {module.name}
                   </h3>
                   <span className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full font-medium mb-3 inline-block">Indisponível</span>
