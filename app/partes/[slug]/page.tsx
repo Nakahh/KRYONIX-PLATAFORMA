@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, CheckCircle, Clock, AlertCircle, Sparkles, Code2, Database, Shield, Zap } from 'lucide-react'
+import LoadingScreen from '../../components/LoadingScreen'
+import ProgressBar from '../../components/ProgressBar'
+import { partsData } from '../../../lib/data/parts-data'
 
 interface Part {
   part: number
@@ -19,91 +22,10 @@ interface Part {
   simple_description: string
 }
 
-const partsData: Part[] = [
-  {
-    part: 1,
-    title: 'Autenticação Keycloak',
-    status: 'completed',
-    description: 'Sistema multi-tenant com biometria',
-    slug: 'autenticacao-keycloak',
-    phase: 'FASE 1: FUNDAÇÃO',
-    technologies: ['Keycloak', 'OAuth 2.0', 'JWT', 'Redis', 'PostgreSQL'],
-    features: [
-      'Login unificado (SSO)',
-      'Autenticação biométrica',
-      'Autenticação via WhatsApp',
-      'Multi-tenant isolado',
-      'Gestão de sessões',
-      'Controle de acesso'
-    ],
-    benefits: [
-      'Segurança máxima para seus dados',
-      'Login rápido e fácil',
-      'Acesso via celular',
-      'Dados totalmente isolados',
-      'Controle total de usuários'
-    ],
-    technical_description: 'Sistema de autenticação enterprise baseado em Keycloak com suporte a múltiplos tenants, integração com biometria via WebAuthn, autenticação via WhatsApp OTP, e gestão completa de identidades com JWT tokens.',
-    simple_description: 'Sistema de login super seguro que permite entrar na plataforma usando impressão digital, reconhecimento facial ou WhatsApp. Cada cliente tem seus dados completamente separados e protegidos.'
-  },
-  {
-    part: 2,
-    title: 'Base de Dados PostgreSQL',
-    status: 'completed',
-    description: 'Database isolado por cliente',
-    slug: 'database-postgresql',
-    phase: 'FASE 1: FUNDAÇÃO',
-    technologies: ['PostgreSQL 15', 'PgBouncer', 'Backup automático', 'Replicação', 'Monitoring'],
-    features: [
-      'Isolamento total por cliente',
-      'Backup automático diário',
-      'Alta disponibilidade',
-      'Performance otimizada',
-      'Monitoramento 24/7',
-      'Migração automática'
-    ],
-    benefits: [
-      'Seus dados nunca se misturam com outros',
-      'Backup automático todos os dias',
-      'Sistema nunca para de funcionar',
-      'Velocidade máxima',
-      'Monitoramento constante'
-    ],
-    technical_description: 'Banco de dados PostgreSQL enterprise com arquitetura multi-tenant, isolamento completo de dados por cliente, backup automático com retenção configurável, alta disponibilidade com replicação master-slave.',
-    simple_description: 'Banco de dados super seguro onde cada cliente tem seus próprios dados completamente separados. Faz backup automático todos os dias e nunca perde informações.'
-  },
-  {
-    part: 3,
-    title: 'Storage MinIO',
-    status: 'in_progress',
-    description: 'Armazenamento de arquivos',
-    slug: 'storage-minio',
-    phase: 'FASE 1: FUNDAÇÃO',
-    technologies: ['MinIO', 'S3 Compatible', 'CDN', 'Compression', 'Encryption'],
-    features: [
-      'Armazenamento ilimitado',
-      'CDN global integrada',
-      'Compressão automática',
-      'Criptografia avançada',
-      'Versionamento de arquivos',
-      'Acesso via API'
-    ],
-    benefits: [
-      'Espaço ilimitado para arquivos',
-      'Arquivos carregam super rápido',
-      'Compressão para economizar espaço',
-      'Arquivos protegidos com criptografia',
-      'Histórico de versões'
-    ],
-    technical_description: 'Sistema de armazenamento distribuído baseado em MinIO com compatibilidade S3, CDN integrada, compressão automática de arquivos, criptografia AES-256 e versionamento.',
-    simple_description: 'Sistema de armazenamento que guarda todos seus arquivos (fotos, documentos, vídeos) de forma segura e rápida. Espaço ilimitado e acesso super rápido de qualquer lugar.'
-  }
-  // Adicione mais partes conforme necessário...
-]
-
 export default function PartPage({ params }: { params: { slug: string } }) {
   const [part, setPart] = useState<Part | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     setMounted(true)
@@ -111,12 +33,16 @@ export default function PartPage({ params }: { params: { slug: string } }) {
     setPart(foundPart || null)
   }, [params.slug])
 
+  const handleLoadingComplete = () => {
+    setLoading(false)
+  }
+
   if (!mounted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-500"></div>
-      </div>
-    )
+    return null
+  }
+
+  if (loading) {
+    return <LoadingScreen onComplete={handleLoadingComplete} duration={1000} />
   }
 
   if (!part) {
@@ -124,11 +50,16 @@ export default function PartPage({ params }: { params: { slug: string } }) {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Parte não encontrada</h1>
-          <p className="text-gray-600 mb-6">Esta parte ainda não foi implementada.</p>
-          <Link href="/" className="btn-primary">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar à Homepage
-          </Link>
+          <p className="text-gray-600 mb-6">Esta parte não foi encontrada ou ainda não foi implementada.</p>
+          <div className="space-y-3">
+            <Link href="/progresso" className="inline-flex items-center space-x-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200 font-medium">
+              <ArrowLeft className="w-4 h-4" />
+              <span>Ver Progresso</span>
+            </Link>
+            <Link href="/" className="inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium">
+              Voltar
+            </Link>
+          </div>
         </div>
       </div>
     )
@@ -167,16 +98,20 @@ export default function PartPage({ params }: { params: { slug: string } }) {
     }
   }
 
+  // Encontrar partes relacionadas (próxima e anterior)
+  const currentIndex = partsData.findIndex(p => p.slug === params.slug)
+  const previousPart = currentIndex > 0 ? partsData[currentIndex - 1] : null
+  const nextPart = currentIndex < partsData.length - 1 ? partsData[currentIndex + 1] : null
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3 text-gray-700 hover:text-primary-600 transition-colors">
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-medium hidden sm:block">Voltar à Homepage</span>
-              <span className="font-medium sm:hidden">Voltar</span>
+            <Link href="/progresso" className="inline-flex items-center space-x-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200">
+              <ArrowLeft className="w-4 h-4" />
+              <span className="font-medium">Voltar</span>
             </Link>
             <div className="flex items-center space-x-3">
               <Image
@@ -289,6 +224,35 @@ export default function PartPage({ params }: { params: { slug: string } }) {
                     ))}
                   </div>
                 </div>
+
+                {/* Navigation */}
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Navegação entre Partes</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {previousPart && (
+                      <Link 
+                        href={`/partes/${previousPart.slug}`}
+                        className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                      >
+                        <div className="text-xs text-gray-500 mb-1">← Parte Anterior</div>
+                        <div className="font-medium text-gray-900 text-sm">
+                          {previousPart.part}. {previousPart.title}
+                        </div>
+                      </Link>
+                    )}
+                    {nextPart && (
+                      <Link 
+                        href={`/partes/${nextPart.slug}`}
+                        className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-right"
+                      >
+                        <div className="text-xs text-gray-500 mb-1">Próxima Parte →</div>
+                        <div className="font-medium text-gray-900 text-sm">
+                          {nextPart.part}. {nextPart.title}
+                        </div>
+                      </Link>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Sidebar */}
@@ -333,25 +297,67 @@ export default function PartPage({ params }: { params: { slug: string } }) {
                         }}
                       ></div>
                     </div>
+                    <div className="text-xs text-gray-500">
+                      {part.status === 'completed' && 'Implementação concluída e testada'}
+                      {part.status === 'in_progress' && 'Em desenvolvimento ativo'}
+                      {part.status === 'pending' && 'Aguardando início do desenvolvimento'}
+                    </div>
                   </div>
                 </div>
 
-                {/* Navigation */}
+                {/* Progresso Geral */}
                 <div className="card">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Navegação</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Progresso Geral</h3>
+                  <ProgressBar compact={true} showDetails={false} />
+                  <div className="mt-4 text-center">
+                    <Link
+                      href="/progresso"
+                      className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                    >
+                      Ver todas as partes →
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
                   <div className="space-y-2">
-                    <Link 
-                      href="/" 
+                    <Link
+                      href="/progresso"
                       className="block w-full text-center py-2 px-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium"
                     >
-                      Ver Todas as Partes
+                      Ver Progresso
                     </Link>
-                    <Link 
-                      href="/progresso" 
+                    <Link
+                      href="/"
                       className="block w-full text-center py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
                     >
-                      Progresso Completo
+                      Voltar
                     </Link>
+                  </div>
+                </div>
+
+                {/* Part Info */}
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Informações da Parte</h3>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Número:</span>
+                      <span className="font-medium">{part.part} de 53</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Fase:</span>
+                      <span className="font-medium text-xs">{part.phase}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Tecnologias:</span>
+                      <span className="font-medium">{part.technologies.length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Funcionalidades:</span>
+                      <span className="font-medium">{part.features.length}</span>
+                    </div>
                   </div>
                 </div>
               </div>
