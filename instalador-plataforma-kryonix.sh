@@ -1964,7 +1964,7 @@ services:
         - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.path=/health"
         - "traefik.http.services.kryonix-web.loadbalancer.healthcheck.interval=15s"
 
-        # WEBHOOK - PRIORIDADE M��XIMA (10000)
+        # WEBHOOK - PRIORIDADE MÁXIMA (10000)
         - "traefik.http.routers.kryonix-webhook.rule=Host(`kryonix.com.br`) && Path(`/api/github-webhook`)"
         - "traefik.http.routers.kryonix-webhook.entrypoints=web,websecure"
         - "traefik.http.routers.kryonix-webhook.service=kryonix-web"
@@ -2466,7 +2466,7 @@ DIAGNOSTIC_EOF
         log "📄 Relatório de diagnóstico salvo em: $diagnostic_file"
     fi
 
-    # Verificar health de todos os serviços
+    # Verificar health de todos os servi��os
     log "🔍 Verificando health final dos serviços KRYONIX..."
 
     services_ok=0
@@ -2872,7 +2872,7 @@ echo -e "${GREEN}${BOLD}✅ Plataforma KRYONIX instalada!${RESET}"
 echo -e "${PURPLE}🚀 Deploy automático ativo - Nuclear cleanup + Clone fresh!${RESET}"
 echo ""
 echo -e "${YELLOW}${BOLD}📋 CONFIGURA📁ÕES DO WEBHOOK GITHUB:${RESET}"
-echo -e "${CYAN}═══���══📁══���═══════════════════���📋════════════${RESET}"
+echo -e "${CYAN}═══���══📁══���══════════════════������📋════════════${RESET}"
 echo -e "${CYAN}${BOLD}URL:${RESET} $WEBHOOK_URL"
 echo -e "${CYAN}${BOLD}Secret:${RESET} $WEBHOOK_SECRET"
 echo -e "${CYAN}${BOLD}Content-Type:${RESET} application/json"
