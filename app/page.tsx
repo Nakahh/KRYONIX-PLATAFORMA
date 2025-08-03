@@ -15,10 +15,7 @@ import {
   Globe,
   Phone,
   Instagram,
-  Mail,
-  Send,
-  Camera,
-  AtSign
+  Mail
 } from 'lucide-react'
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
