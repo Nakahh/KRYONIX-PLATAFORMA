@@ -8,7 +8,10 @@ import {
   CheckCircle,
   Clock,
   AlertTriangle,
-  BarChart3
+  BarChart3,
+  MessageCircle,
+  Instagram,
+  Mail
 } from 'lucide-react'
 import MobileMenu from '../components/MobileMenu'
 import LoadingScreen from '../components/LoadingScreen'
@@ -79,11 +82,6 @@ export default function ProgressoPage() {
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-success-100 text-success-700 text-sm font-medium mb-6">
-                <CheckCircle className="w-4 h-4 mr-2" />
-                PROGRESSO COMPLETO - 53 PARTES DETALHADAS
-              </div>
-              
               <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-balance">
                 <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Progresso</span>
                 <br />
@@ -207,10 +205,10 @@ export default function ProgressoPage() {
 
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-3">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-8 mb-8">
+            <div className="grid md:grid-cols-3 gap-2 mb-2">
               <div>
                 <div className="flex items-center space-x-3 mb-4">
                   <Image
@@ -228,11 +226,33 @@ export default function ProgressoPage() {
               </div>
               
               <div>
-                <h3 className="font-semibold mb-4">Contato</h3>
-                <div className="space-y-2 text-sm text-gray-400">
-                  <div>📧 contato@kryonix.com.br</div>
-                  <div>📱 +55 17 98180-5327</div>
-                  <div>🌐 www.kryonix.com.br</div>
+                <div className="flex items-center justify-center space-x-4">
+                  <a
+                    href="https://wa.me/5517981805327?text=Olá! Gostaria de saber mais sobre a plataforma KRYONIX"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-green-500 transition-colors duration-200"
+                    title="WhatsApp"
+                  >
+                    <MessageCircle className="w-6 h-6" />
+                  </a>
+                  <span className="text-white font-semibold">Contato</span>
+                  <a
+                    href="mailto:contato@kryonix.com.br"
+                    className="text-gray-400 hover:text-blue-500 transition-colors duration-200"
+                    title="Email"
+                  >
+                    <Mail className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://instagram.com/kryon.ix"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-purple-500 transition-colors duration-200"
+                    title="Instagram"
+                  >
+                    <Instagram className="w-6 h-6" />
+                  </a>
                 </div>
               </div>
               
@@ -255,7 +275,7 @@ export default function ProgressoPage() {
               </div>
             </div>
 
-            <div className="border-t border-gray-800 pt-8 text-center">
+            <div className="border-t border-gray-800 pt-2 text-center">
               <p className="text-gray-400 text-sm">
                 © 2025 KRYONIX. Desenvolvido por Vitor Jayme Fernandes Ferreira.
               </p>
