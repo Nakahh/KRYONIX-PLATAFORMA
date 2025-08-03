@@ -131,15 +131,15 @@ export default function ProgressoPage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {selectedPhase === 'TODAS' ? 'Todas as Partes' : selectedPhase}
+                Todas as Partes
               </h2>
               <p className="text-lg text-gray-600">
-                {filteredParts.length} parte{filteredParts.length !== 1 ? 's' : ''} {selectedPhase === 'TODAS' ? 'do projeto' : 'desta fase'}
+                {partsData.length} partes do projeto
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              {filteredParts.map((item) => (
+              {partsData.map((item) => (
                 <Link
                   key={item.part}
                   href={`/partes/${item.slug}`}
