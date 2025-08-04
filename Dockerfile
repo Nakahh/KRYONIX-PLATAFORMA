@@ -68,8 +68,8 @@ COPY server.js ./
 COPY webhook-listener.js ./
 COPY kryonix-monitor.js ./
 COPY check-dependencies.js ./
-COPY validate-dependencies.js ./
-COPY fix-dependencies.js ./
+COPY utils/validate-dependencies.js ./validate-dependencies.js
+COPY utils/fix-dependencies.js ./fix-dependencies.js
 
 # Copiar webhook-deploy.sh apenas se existir
 COPY webhook-deploy.sh* ./
