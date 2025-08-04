@@ -662,7 +662,7 @@ create_keycloak_users() {
     log_info "Criando usuários padrão..."
     
     # Usuário master
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/users" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/users" '{
         "username": "'$KEYCLOAK_ADMIN_USER'",
         "email": "admin@'$DOMAIN_BASE'",
         "firstName": "KRYONIX",
@@ -710,7 +710,7 @@ create_keycloak_users() {
 setup_automation_scripts() {
     log_step "Configurando scripts de automação"
     
-    # Script de criação autom��tica de cliente
+    # Script de criação automática de cliente
     if [ ! -f "$SCRIPTS_DIR/kryonix-create-client.sh" ]; then
         log_info "Criando script de criação de cliente..."
         cat > "$SCRIPTS_DIR/kryonix-create-client.sh" << 'AUTOCREATE_EOF'
