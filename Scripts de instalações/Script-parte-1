@@ -307,7 +307,7 @@ check_external_connectivity() {
 }
 
 # ============================================================================
-# FUNÇ��ES DE SERVIÇOS BASE
+# FUNÇÕES DE SERVIÇOS BASE
 # ============================================================================
 
 # Verificar serviços base necessários
@@ -589,7 +589,7 @@ configure_keycloak_clients() {
     log_info "Configurando clients do Keycloak..."
     
     # Client Frontend
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/clients" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/clients" '{
         "clientId": "kryonix-frontend",
         "name": "KRYONIX Frontend",
         "enabled": true,
