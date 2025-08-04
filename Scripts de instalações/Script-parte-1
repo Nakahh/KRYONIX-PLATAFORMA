@@ -1309,7 +1309,7 @@ main() {
     
     # Configuração do Keycloak
     create_keycloak_config
-    deploy_keycloak
+    check_existing_keycloak
     configure_keycloak_realm
     
     # Configuração de scripts, monitoramento e backup
