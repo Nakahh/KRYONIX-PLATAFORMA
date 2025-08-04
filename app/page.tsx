@@ -20,6 +20,7 @@ import {
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
 import ThemeToggle from './components/ThemeToggle'
+import InteractiveDemo from './components/InteractiveDemo'
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
