@@ -74,7 +74,7 @@ readonly CROSS="❌"
 readonly WARNING="⚠️"
 readonly ROCKET="🚀"
 readonly GEAR="⚙️"
-readonly LOCK="🔐"
+readonly LOCK="����"
 
 # ============================================================================
 # SISTEMA DE LOGGING E CONTROLE
@@ -244,7 +244,7 @@ check_docker_swarm() {
 
 # Verificar espaço em disco
 check_disk_space() {
-    log_step "Verificando espaço em disco"
+    log_step "Verificando espa��o em disco"
     
     local disk_available=$(df / | awk 'NR==2 {print $4}')
     local required_space=5242880  # 5GB em KB
@@ -339,20 +339,35 @@ create_keycloak_config() {
     
     # Criar database para Keycloak
     log_info "Configurando database do Keycloak..."
-    docker exec postgresql-kryonix psql -U postgres -c "
-        SELECT 1 FROM pg_database WHERE datname = 'keycloak';
-    " | grep -q "1" || {
-        docker exec postgresql-kryonix psql -U postgres -c "
-            CREATE DATABASE keycloak WITH 
-                ENCODING 'UTF8' 
-                LC_COLLATE = 'pt_BR.UTF-8' 
-                LC_CTYPE = 'pt_BR.UTF-8'
-                TEMPLATE template0;
-            CREATE USER keycloak_user WITH PASSWORD '$POSTGRES_PASSWORD';
-            GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;
-        "
-        log_info "$CHECK Database do Keycloak criado"
-    }
+
+    # Verificar se o database já existe
+    if ! docker exec postgresql-kryonix psql -U postgres -lqt | cut -d \| -f 1 | grep -qw keycloak; then
+        log_info "Criando database keycloak..."
+
+        # CREATE DATABASE deve ser executado separadamente (fora de transação)
+        docker exec postgresql-kryonix psql -U postgres -c "CREATE DATABASE keycloak WITH ENCODING 'UTF8' LC_COLLATE = 'pt_BR.UTF-8' LC_CTYPE = 'pt_BR.UTF-8' TEMPLATE template0;"
+
+        log_info "$CHECK Database keycloak criado"
+    else
+        log_info "$CHECK Database keycloak já existe"
+    fi
+
+    # Verificar se o usuário já existe
+    if ! docker exec postgresql-kryonix psql -U postgres -t -c "SELECT 1 FROM pg_roles WHERE rolname='keycloak_user'" | grep -q 1; then
+        log_info "Criando usuário keycloak_user..."
+
+        # CREATE USER e GRANT podem ser executados separadamente
+        docker exec postgresql-kryonix psql -U postgres -c "CREATE USER keycloak_user WITH PASSWORD '$POSTGRES_PASSWORD';"
+
+        log_info "$CHECK Usuário keycloak_user criado"
+    else
+        log_info "$CHECK Usuário keycloak_user já existe"
+    fi
+
+    # Garantir privilégios no database
+    log_info "Concedendo privilégios..."
+    docker exec postgresql-kryonix psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;"
+    log_info "$CHECK Privilégios concedidos"
     
     # Criar configuração do Docker Compose
     cat > "$CONFIG_DIR/keycloak.yml" << EOF

@@ -20,6 +20,8 @@ import {
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
 import ThemeToggle from './components/ThemeToggle'
+import InteractiveDemo from './components/InteractiveDemo'
+import ContactForm from './components/ContactForm'
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
@@ -427,6 +429,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Interactive Demo */}
+      <InteractiveDemo />
+
       {/* Features */}
       <section className="py-16 bg-white dark:bg-gray-900">
         <div className="container-custom">
@@ -665,6 +670,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Contact Form */}
+      <ContactForm />
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-6">
         <div className="container-custom">
@@ -684,7 +692,7 @@ export default function HomePage() {
                 </span>
               </div>
               <p className="text-gray-400 text-sm">
-                Plataforma SaaS 100% Autônoma por IA
+                Plataforma SaaS 100% Aut��noma por IA
               </p>
             </div>
 
