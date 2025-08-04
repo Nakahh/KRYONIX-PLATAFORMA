@@ -1062,18 +1062,56 @@ fix_services_and_proxy() {
         fi
     fi
 
-    # 5. Testar acesso HTTPS do Keycloak
+    # 5. Testar acesso HTTPS do Keycloak e corrigir Bad Gateway
     log_info "🔍 Testando acesso HTTPS do Keycloak..."
+
+    # Primeiro teste simples
+    local keycloak_https_working=false
     if curl -f -s --max-time 15 "https://keycloak.$DOMAIN_BASE" >/dev/null 2>&1; then
         log_info "✅ Keycloak HTTPS funcionando em https://keycloak.$DOMAIN_BASE"
+        keycloak_https_working=true
     else
-        log_warn "⚠️ Keycloak HTTPS ainda com problemas"
+        log_warn "⚠️ Keycloak HTTPS com problemas - verificando Bad Gateway..."
+
+        # Verificar se é Bad Gateway específico
+        local http_code=""
+        http_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "https://keycloak.$DOMAIN_BASE" 2>/dev/null || echo "000")
+
+        if [ "$http_code" = "502" ]; then
+            log_error "❌ BAD GATEWAY DETECTADO (502) - Corrigindo..."
+
+            # Corrigir configuração do Traefik
+            if [ "$traefik_found" = "true" ]; then
+                log_info "🔧 Aplicando correção específica para Bad Gateway..."
+
+                # Remover labels antigos e aplicar novos
+                docker service update \
+                    --label-rm traefik.http.services.keycloak.loadbalancer.server.port \
+                    --label-add traefik.http.services.keycloak.loadbalancer.server.port=8080 \
+                    --force \
+                    kryonix-auth_keycloak >/dev/null 2>&1
+
+                sleep 15
+
+                # Testar novamente
+                if curl -f -s --max-time 15 "https://keycloak.$DOMAIN_BASE" >/dev/null 2>&1; then
+                    log_info "✅ Bad Gateway corrigido! Keycloak HTTPS funcionando"
+                    keycloak_https_working=true
+                else
+                    log_warn "⚠️ Bad Gateway ainda presente - pode precisar de mais tempo"
+                fi
+            fi
+        elif [ "$http_code" = "000" ]; then
+            log_warn "⚠️ Timeout de conexão - Traefik pode estar sobrecarregado"
+        else
+            log_warn "⚠️ Código HTTP: $http_code - problema diferente de Bad Gateway"
+        fi
 
         if [ "$traefik_found" = "false" ]; then
             log_warn "Causa provável: Traefik não está rodando"
             log_warn "Solução: Configure um proxy reverso (Traefik/Nginx) para SSL/HTTPS"
-        else
-            log_warn "Aguarde 2-3 minutos para o SSL ser provisionado pelo Traefik"
+        elif [ "$keycloak_https_working" = "false" ]; then
+            log_warn "Aguarde 2-3 minutos para o SSL ser provisionado e Bad Gateway ser resolvido"
         fi
     fi
 
