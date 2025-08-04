@@ -1045,7 +1045,7 @@ fix_services_and_proxy() {
     log_info "   1. Verificar Traefik: docker service logs traefik (se houver)"
     log_info "   2. Recarregar labels: docker service update --force kryonix-auth_keycloak"
     log_info "   3. Aguardar 2-3 minutos para SSL/Traefik se estabilizar"
-    log_info "   4. Keycloak está na porta $KEYCLOAK_PORT internamente (8080 do container)"
+    log_info "   4. Keycloak está na porta 8082 externamente (8080 do container)"
 
     # Salvar informações de estado para referência futura
     cat > "$CONFIG_DIR/.service-status" << STATUS_EOF
