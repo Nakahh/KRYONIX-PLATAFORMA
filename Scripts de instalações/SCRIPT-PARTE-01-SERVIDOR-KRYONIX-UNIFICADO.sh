@@ -1240,6 +1240,10 @@ run_final_tests() {
 # ============================================================================
 
 main() {
+    # CRIAR DIRETÓRIOS NECESSÁRIOS PRIMEIRO (antes de qualquer log)
+    mkdir -p "$LOG_DIR" "$CONFIG_DIR" "$SCRIPTS_DIR" "$BACKUP_DIR" "$CLIENTS_DIR"
+    mkdir -p /etc/traefik/dynamic
+
     # Banner inicial
     echo -e "${BLUE}${BOLD}"
     echo "============================================================================"
@@ -1247,15 +1251,11 @@ main() {
     echo "CONFIGURAÇÃO COMPLETA DE AUTENTICAÇÃO KEYCLOAK MULTI-TENANT"
     echo "============================================================================"
     echo -e "${NC}"
-    
+
     log_info "Iniciando script unificado PARTE 01"
     log_info "Servidor: $SERVER_IP"
     log_info "Domínio: $DOMAIN_BASE"
     log_info "PID: $$"
-    
-    # Criar diretórios necessários
-    mkdir -p "$LOG_DIR" "$CONFIG_DIR" "$SCRIPTS_DIR" "$BACKUP_DIR" "$CLIENTS_DIR"
-    mkdir -p /etc/traefik/dynamic
     
     # Banner de início
     echo -e "${BLUE}========================================${NC}"
