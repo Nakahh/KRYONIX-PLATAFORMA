@@ -1249,10 +1249,6 @@ run_final_tests() {
 # ============================================================================
 
 main() {
-    # CRIAR DIRETÓRIOS NECESSÁRIOS PRIMEIRO (antes de qualquer log)
-    mkdir -p "$LOG_DIR" "$CONFIG_DIR" "$SCRIPTS_DIR" "$BACKUP_DIR" "$CLIENTS_DIR"
-    mkdir -p /etc/traefik/dynamic
-
     # Banner inicial
     echo -e "${BLUE}${BOLD}"
     echo "============================================================================"
