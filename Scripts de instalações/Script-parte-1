@@ -935,7 +935,7 @@ while true; do
     fi
     
     # Verificar PostgreSQL
-    if ! docker exec postgresql-kryonix pg_isready -U postgres > /dev/null 2>&1; then
+    if ! docker exec $POSTGRES_CONTAINER pg_isready -U kryonix > /dev/null 2>&1; then
         log_monitor "🚨 CRÍTICO: PostgreSQL não está respondendo!"
         send_alert "POSTGRESQL OFFLINE - Banco de dados não está respondendo"
     else
