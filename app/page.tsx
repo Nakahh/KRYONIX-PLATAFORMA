@@ -21,6 +21,7 @@ import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
 import ThemeToggle from './components/ThemeToggle'
 import InteractiveDemo from './components/InteractiveDemo'
+import ContactForm from './components/ContactForm'
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
@@ -323,7 +324,7 @@ export default function HomePage() {
       ],
       applications: [
         'Revenda de solu��ões tecnológicas',
-        'Criaç��o de produto pr��prio',
+        'Criação de produto pr��prio',
         'Fortalecimento da marca pessoal',
         'Diferenciação no mercado',
         'Monetização de conhecimento'
