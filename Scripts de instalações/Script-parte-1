@@ -1025,7 +1025,7 @@ log_backup "💾 Iniciando backup KRYONIX completo..."
 
 # Backup Keycloak (database)
 log_backup "🔐 Backup Keycloak..."
-if docker exec postgresql-kryonix pg_dump -U postgres -d keycloak > "$BACKUP_DIR/keycloak_db.sql" 2>/dev/null; then
+if docker exec $POSTGRES_CONTAINER pg_dump -h 127.0.0.1 -U kryonix -d keycloak > "$BACKUP_DIR/keycloak_db.sql" 2>/dev/null; then
     gzip "$BACKUP_DIR/keycloak_db.sql"
     log_backup "✅ Backup Keycloak concluído"
 else
@@ -1091,7 +1091,7 @@ BACKUP_EOF
 
 # Configurar variáveis de ambiente
 setup_environment() {
-    log_step "Configurando variáveis de ambiente"
+    log_step "Configurando vari��veis de ambiente"
     
     if [ ! -f "$CONFIG_DIR/.env" ]; then
         log_info "Criando arquivo de variáveis de ambiente..."
