@@ -1036,7 +1036,7 @@ fix_services_and_proxy() {
     log_info "   • Logs Kryonix: docker service logs Kryonix_web"
     log_info "   • Logs Keycloak: docker service logs kryonix-auth_keycloak"
     log_info "   • Teste Kryonix: curl http://localhost:8080/health"
-    log_info "   • Teste Keycloak: curl http://localhost:$KEYCLOAK_PORT/health/ready"
+    log_info "   • Teste Keycloak: curl http://localhost:8082/health/ready"
     log_info "   • Teste HTTPS: curl -I https://keycloak.$DOMAIN_BASE"
 
     log_info ""
@@ -1805,7 +1805,7 @@ fi
 
 # Calcular tamanho do backup
 BACKUP_SIZE=$(du -sh "$BACKUP_DIR" 2>/dev/null | cut -f1 || echo "N/A")
-log_backup "��� Backup KRYONIX concluído: $BACKUP_DIR ($BACKUP_SIZE)"
+log_backup "✅ Backup KRYONIX concluído: $BACKUP_DIR ($BACKUP_SIZE)"
 
 # Limpar backups antigos (manter últimos 30 dias)
 find /opt/kryonix/backups -type d -name "202*" -mtime +30 -exec rm -rf {} \; 2>/dev/null || true
