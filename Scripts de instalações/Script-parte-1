@@ -681,7 +681,7 @@ create_keycloak_users() {
     }'
     
     # Usuário IA
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/users" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/users" '{
         "username": "kryonix-ai-service",
         "email": "ai@'$DOMAIN_BASE'",
         "firstName": "KRYONIX",
