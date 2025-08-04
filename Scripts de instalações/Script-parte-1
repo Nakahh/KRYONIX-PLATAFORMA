@@ -316,16 +316,19 @@ check_base_services() {
 
     # Verificar PostgreSQL - pode ser postgresql-kryonix ou Supabase
     log_info "Verificando PostgreSQL..."
-    if docker ps --format "table {{.Names}}" | grep -q "postgresql-kryonix"; then
+    if docker ps --format "{{.Names}}" | grep -q "^postgresql-kryonix$"; then
         log_info "$CHECK postgresql-kryonix está rodando"
         export POSTGRES_CONTAINER="postgresql-kryonix"
-    elif docker ps --format "table {{.Names}}" | grep -q "supabase_db"; then
-        POSTGRES_CONTAINER=$(docker ps --filter "name=supabase_db" --format "{{.Names}}" | head -1)
+    elif docker ps --format "{{.Names}}" | grep -q "supabase_db"; then
+        POSTGRES_CONTAINER=$(docker ps --format "{{.Names}}" | grep "supabase_db" | head -1)
         log_info "$CHECK Supabase PostgreSQL está rodando: $POSTGRES_CONTAINER"
         export POSTGRES_CONTAINER="$POSTGRES_CONTAINER"
     else
-        log_error "Nenhum PostgreSQL encontrado (postgresql-kryonix ou supabase_db)!"
-        log_error "Certifique-se que PostgreSQL ou Supabase está rodando"
+        log_error "Nenhum PostgreSQL encontrado!"
+        log_error "Containers disponíveis:"
+        docker ps --format "{{.Names}}" | head -10 | while read container; do
+            log_error "- $container"
+        done
         exit 1
     fi
 
@@ -936,7 +939,7 @@ while true; do
     
     # Verificar PostgreSQL
     if ! docker exec $POSTGRES_CONTAINER pg_isready -U kryonix > /dev/null 2>&1; then
-        log_monitor "🚨 CRÍTICO: PostgreSQL n��o está respondendo!"
+        log_monitor "🚨 CRÍTICO: PostgreSQL não está respondendo!"
         send_alert "POSTGRESQL OFFLINE - Banco de dados não está respondendo"
     else
         log_monitor "✅ PostgreSQL funcionando normalmente"
