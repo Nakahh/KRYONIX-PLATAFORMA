@@ -390,14 +390,14 @@ services:
     container_name: keycloak-kryonix
     command: start
     environment:
-      KEYCLOAK_ADMIN: $KEYCLOAK_ADMIN_USER
-      KEYCLOAK_ADMIN_PASSWORD: $KEYCLOAK_ADMIN_PASSWORD
-      KC_DB: postgres
-      KC_DB_URL: "jdbc:postgresql://172.17.0.1:5432/keycloak"
-      KC_DB_USERNAME: keycloak_user
-      KC_DB_PASSWORD: $POSTGRES_PASSWORD
-      KC_HOSTNAME: keycloak.$DOMAIN_BASE
-      KC_PROXY: edge
+      KEYCLOAK_ADMIN: "$KEYCLOAK_ADMIN_USER"
+      KEYCLOAK_ADMIN_PASSWORD: "$KEYCLOAK_ADMIN_PASSWORD"
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://host.docker.internal:5432/keycloak"
+      KC_DB_USERNAME: "keycloak_user"
+      KC_DB_PASSWORD: "$POSTGRES_PASSWORD"
+      KC_HOSTNAME: "keycloak.$DOMAIN_BASE"
+      KC_PROXY: "edge"
       KC_HTTP_ENABLED: "true"
       KC_HEALTH_ENABLED: "true"
       KC_METRICS_ENABLED: "true"
@@ -431,33 +431,45 @@ EOF
     log_info "$CHECK Configuração do Keycloak criada"
 }
 
-# Deploy do Keycloak
-deploy_keycloak() {
-    log_step "Fazendo deploy do Keycloak"
-    
-    # Verificar se já está rodando
-    if docker ps | grep -q "keycloak-kryonix"; then
-        log_info "$CHECK Keycloak já está rodando"
-        return 0
-    fi
-    
-    # Deploy do stack
-    docker stack deploy -c "$CONFIG_DIR/keycloak.yml" kryonix-auth
-    
-    # Aguardar inicialização
-    log_info "Aguardando Keycloak inicializar..."
-    local max_attempts=30
-    for i in $(seq 1 $max_attempts); do
-        if curl -f -s --max-time 10 "https://keycloak.$DOMAIN_BASE/health/ready" > /dev/null 2>&1; then
-            log_info "$CHECK Keycloak está pronto após $i tentativas"
-            return 0
+# Verificar e configurar Keycloak existente
+check_existing_keycloak() {
+    log_step "Verificando Keycloak existente"
+
+    # Verificar se Keycloak está acessível
+    local keycloak_urls=(
+        "https://keycloak.$DOMAIN_BASE"
+        "https://keycloak.$DOMAIN_BASE/health/ready"
+        "http://localhost:8080"
+        "http://127.0.0.1:8080"
+    )
+
+    local keycloak_found=false
+    local keycloak_url=""
+
+    for url in "${keycloak_urls[@]}"; do
+        if curl -f -s --max-time 10 "$url" > /dev/null 2>&1; then
+            keycloak_found=true
+            keycloak_url="$url"
+            log_info "$CHECK Keycloak encontrado em: $url"
+            break
         fi
-        log_info "Aguardando... ($i/$max_attempts)"
-        sleep 10
     done
-    
-    log_error "Keycloak não ficou pronto no tempo esperado"
-    exit 1
+
+    if [ "$keycloak_found" = false ]; then
+        log_error "❌ Keycloak não encontrado em nenhuma URL"
+        log_error "URLs testadas: ${keycloak_urls[*]}"
+        log_error "Certifique-se que o Keycloak esteja rodando e acessível"
+        exit 1
+    fi
+
+    # Definir URL base do Keycloak (remover /health/ready se presente)
+    export KEYCLOAK_BASE_URL="${keycloak_url%/health/ready}"
+    if [[ "$KEYCLOAK_BASE_URL" == *"localhost"* ]] || [[ "$KEYCLOAK_BASE_URL" == *"127.0.0.1"* ]]; then
+        export KEYCLOAK_BASE_URL="https://keycloak.$DOMAIN_BASE"
+    fi
+
+    log_info "$CHECK Keycloak configurado para: $KEYCLOAK_BASE_URL"
+    return 0
 }
 
 # Função para fazer requisições ao Keycloak com retry
@@ -507,7 +519,7 @@ configure_keycloak_realm() {
         -d "username=$KEYCLOAK_ADMIN_USER" \
         -d "password=$KEYCLOAK_ADMIN_PASSWORD" \
         -d "grant_type=password" \
-        "https://keycloak.$DOMAIN_BASE/realms/master/protocol/openid_connect/token" | \
+        "$KEYCLOAK_BASE_URL/realms/master/protocol/openid_connect/token" | \
         jq -r '.access_token' 2>/dev/null || echo "")
     
     if [ -z "$admin_token" ] || [ "$admin_token" = "null" ]; then
@@ -521,13 +533,13 @@ configure_keycloak_realm() {
     
     # Verificar se realm KRYONIX já existe
     if curl -s -H "Authorization: Bearer $ADMIN_TOKEN" \
-       "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX" > /dev/null 2>&1; then
+       "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX" > /dev/null 2>&1; then
         log_info "$CHECK Realm KRYONIX já existe"
     else
         log_info "Criando Realm KRYONIX..."
         
         # Criar realm com configuração completa
-        keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms" '{
+        keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms" '{
             "realm": "KRYONIX",
             "enabled": true,
             "displayName": "KRYONIX - Plataforma SaaS",
@@ -577,7 +589,7 @@ configure_keycloak_clients() {
     log_info "Configurando clients do Keycloak..."
     
     # Client Frontend
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/clients" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/clients" '{
         "clientId": "kryonix-frontend",
         "name": "KRYONIX Frontend",
         "enabled": true,
@@ -606,7 +618,7 @@ configure_keycloak_clients() {
     }'
     
     # Client Mobile
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/clients" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/clients" '{
         "clientId": "kryonix-mobile-app",
         "name": "KRYONIX Mobile App",
         "enabled": true,
@@ -628,7 +640,7 @@ configure_keycloak_clients() {
     }'
     
     # Client IA
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/clients" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/clients" '{
         "clientId": "kryonix-ai-client",
         "name": "KRYONIX IA Integration",
         "enabled": true,
@@ -650,7 +662,7 @@ create_keycloak_users() {
     log_info "Criando usuários padrão..."
     
     # Usuário master
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/users" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/users" '{
         "username": "'$KEYCLOAK_ADMIN_USER'",
         "email": "admin@'$DOMAIN_BASE'",
         "firstName": "KRYONIX",
@@ -669,7 +681,7 @@ create_keycloak_users() {
     }'
     
     # Usuário IA
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/users" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/users" '{
         "username": "kryonix-ai-service",
         "email": "ai@'$DOMAIN_BASE'",
         "firstName": "KRYONIX",
@@ -930,7 +942,7 @@ send_alert() {
             \"text\": \"🚨 ALERTA KRYONIX\\n\\n$message\\n\\n⏰ $(date '+%d/%m/%Y %H:%M:%S')\"
         }" > /dev/null 2>&1; then
         echo "$(date +%s)" > "$ALERT_COOLDOWN_FILE"
-        log_monitor "���� Alerta enviado: $message"
+        log_monitor "📱 Alerta enviado: $message"
     fi
 }
 
@@ -1241,12 +1253,12 @@ run_final_tests() {
     }
     
     # Testes individuais
-    test_service "Keycloak" "curl -f -s https://keycloak.$DOMAIN_BASE/health/ready"
-    test_service "Realm KRYONIX" "curl -s https://keycloak.$DOMAIN_BASE/realms/KRYONIX/.well-known/openid_configuration | grep -q KRYONIX"
+    test_service "Keycloak" "curl -f -s $KEYCLOAK_BASE_URL/health/ready"
+    test_service "Realm KRYONIX" "curl -s $KEYCLOAK_BASE_URL/realms/KRYONIX/.well-known/openid_configuration | grep -q KRYONIX"
     test_service "PostgreSQL" "docker exec $POSTGRES_CONTAINER pg_isready -U kryonix"
-    
+
     # Teste login admin
-    if test_service "Login Admin" "curl -s -d 'client_id=admin-cli' -d 'username=$KEYCLOAK_ADMIN_USER' -d 'password=$KEYCLOAK_ADMIN_PASSWORD' -d 'grant_type=password' 'https://keycloak.$DOMAIN_BASE/realms/master/protocol/openid_connect/token' | grep -q access_token"; then
+    if test_service "Login Admin" "curl -s -d 'client_id=admin-cli' -d 'username=$KEYCLOAK_ADMIN_USER' -d 'password=$KEYCLOAK_ADMIN_PASSWORD' -d 'grant_type=password' '$KEYCLOAK_BASE_URL/realms/master/protocol/openid_connect/token' | grep -q access_token"; then
         log_info "$CHECK Autenticação admin funcionando"
     else
         log_warn "$WARNING Autenticação admin pode ter problemas"
@@ -1270,7 +1282,7 @@ main() {
     # Banner inicial
     echo -e "${BLUE}${BOLD}"
     echo "============================================================================"
-    echo "�� KRYONIX - SCRIPT UNIFICADO PARTE 01 SERVIDOR"
+    echo "🚀 KRYONIX - SCRIPT UNIFICADO PARTE 01 SERVIDOR"
     echo "CONFIGURAÇÃO COMPLETA DE AUTENTICAÇÃO KEYCLOAK MULTI-TENANT"
     echo "============================================================================"
     echo -e "${NC}"
@@ -1297,7 +1309,7 @@ main() {
     
     # Configuração do Keycloak
     create_keycloak_config
-    deploy_keycloak
+    check_existing_keycloak
     configure_keycloak_realm
     
     # Configuração de scripts, monitoramento e backup
