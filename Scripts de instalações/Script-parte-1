@@ -183,7 +183,7 @@ trap 'error_exit ${LINENO} $?' ERR
 # FUNÇÕES DE VALIDAÇÃO
 # ============================================================================
 
-# Verificar se já est�� rodando
+# Verificar se já está rodando
 check_already_running() {
     if [ -f "$LOCK_FILE" ]; then
         local pid=$(cat "$LOCK_FILE" 2>/dev/null || echo "")
@@ -852,29 +852,25 @@ fix_services_and_proxy() {
     log_info "📊 Status atual dos serviços:"
     docker service ls --format "table {{.Name}}\t{{.Mode}}\t{{.Replicas}}\t{{.Ports}}" 2>/dev/null || true
 
-    # 1. REATIVAÇÃO INTELIGENTE DO KRYONIX_WEB
-    log_info "🔄 Executando reativação inteligente do Kryonix_web..."
+    # 1. GARANTIR KRYONIX_WEB SEMPRE ATIVO
+    log_info "🔄 Garantindo que Kryonix_web esteja sempre ativo..."
 
-    # Verificar se Kryonix_web deve ser reativado
-    local should_reactivate=false
+    # Verificar estado atual do Kryonix_web
     local kryonix_web_status=""
     kryonix_web_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
 
-    if [ "${KRYONIX_WEB_WAS_RUNNING}" = "true" ]; then
-        log_info "📋 Kryonix_web estava rodando antes - deve ser reativado"
-        should_reactivate=true
-    elif echo "$kryonix_web_status" | grep -q "0/"; then
-        log_info "📋 Kryonix_web está pausado - deve ser reativado"
-        should_reactivate=true
+    if echo "$kryonix_web_status" | grep -q "0/"; then
+        log_warn "⚠️ Kryonix_web está pausado - REATIVANDO IMEDIATAMENTE"
+        local should_reactivate=true
     elif [ -z "$kryonix_web_status" ]; then
         log_warn "⚠️ Kryonix_web não encontrado - pode ter sido removido"
-        should_reactivate=false
+        local should_reactivate=false
     elif echo "$kryonix_web_status" | grep -q "1/1"; then
         log_info "✅ Kryonix_web já está ativo e funcionando"
-        should_reactivate=false
+        local should_reactivate=false
     else
-        log_warn "⚠️ Status do Kryonix_web não identificado: $kryonix_web_status"
-        should_reactivate=true
+        log_warn "⚠️ Status do Kryonix_web não identificado: $kryonix_web_status - REATIVANDO"
+        local should_reactivate=true
     fi
 
     # Executar reativação se necessário
@@ -1288,7 +1284,7 @@ configure_keycloak_realm() {
         log_error "Credenciais utilizadas: $KEYCLOAK_ADMIN_USER / $KEYCLOAK_ADMIN_PASSWORD"
         
         # Verificar se Keycloak está realmente funcionando
-        log_info "Verificando status do servi��o Keycloak..."
+        log_info "Verificando status do serviço Keycloak..."
         docker service logs --tail 20 kryonix-auth_keycloak 2>/dev/null || echo "Logs não disponíveis"
         
         # Continuar mesmo assim para mostrar as credenciais
