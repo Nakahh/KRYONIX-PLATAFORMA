@@ -375,7 +375,7 @@ services:
       KEYCLOAK_ADMIN: $KEYCLOAK_ADMIN_USER
       KEYCLOAK_ADMIN_PASSWORD: $KEYCLOAK_ADMIN_PASSWORD
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgresql-kryonix:5432/keycloak
+      KC_DB_URL: jdbc:postgresql://127.0.0.1:5432/keycloak
       KC_DB_USERNAME: keycloak_user
       KC_DB_PASSWORD: $POSTGRES_PASSWORD
       KC_HOSTNAME: keycloak.$DOMAIN_BASE
