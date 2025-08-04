@@ -543,38 +543,7 @@ setup_keycloak_port() {
 
     log_info "✅ Porta 8082 configurada para Keycloak"
     log_info "✅ Kryonix_web será mantido ativo na porta 8080"
-
-    # Função auxiliar para verificar se porta está ocupada
-    is_port_occupied() {
-        local port="$1"
-        local occupied=false
-
-        # Verificar netstat
-        if command -v netstat >/dev/null 2>&1; then
-            local netstat_result=""
-            netstat_result=$(netstat -tlnp 2>/dev/null | grep ":$port ")
-            if [ -n "$netstat_result" ]; then
-                occupied=true
-            fi
-        fi
-
-        # Verificar Docker services
-        if [ "$occupied" = "false" ] && [ -n "$docker_services" ]; then
-            if echo "$docker_services" | grep -q ":$port->"; then
-                occupied=true
-            fi
-        fi
-
-        # Teste direto TCP
-        if [ "$occupied" = "false" ]; then
-            timeout 1 bash -c "echo >/dev/tcp/localhost/$port" >/dev/null 2>&1
-            if [ $? -eq 0 ]; then
-                occupied=true
-            fi
-        fi
-
-        [ "$occupied" = "true" ]
-    }
+}
 
     # Já configurado na função setup_keycloak_port - apenas confirmar
     log_info "$CHECK Keycloak configurado na porta: $KEYCLOAK_PORT (8082)"
@@ -1011,7 +980,7 @@ fix_services_and_proxy() {
     keycloak_final=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "kryonix-auth_keycloak" || echo "não encontrado")
 
     log_info "📋 Kryonix_web: $kryonix_final - Saúde: $kryonix_health"
-    log_info "📋 Keycloak: $keycloak_final - Saúde: $keycloak_health"
+    log_info "���� Keycloak: $keycloak_final - Saúde: $keycloak_health"
     log_info "📋 Traefik: $([ "$traefik_found" = "true" ] && echo "encontrado e configurado" || echo "não encontrado")"
     log_info "📋 Porta Keycloak: $KEYCLOAK_PORT"
     log_info "📋 Conflito Resolvido: $([ "${KRYONIX_WEB_WAS_RUNNING}" = "true" ] && echo "Sim - Kryonix_web foi pausado e reativado" || echo "Não houve conflito")"
