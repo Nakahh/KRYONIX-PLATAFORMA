@@ -618,7 +618,7 @@ configure_keycloak_clients() {
     }'
     
     # Client Mobile
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/clients" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/clients" '{
         "clientId": "kryonix-mobile-app",
         "name": "KRYONIX Mobile App",
         "enabled": true,
