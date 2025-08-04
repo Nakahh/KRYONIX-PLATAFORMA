@@ -1078,14 +1078,14 @@ check_existing_keycloak() {
     log_info "Aguardando Keycloak estar totalmente pronto..."
     sleep 45
 
-    # Verificar se Keycloak está acessível usando a porta configurada
-    local keycloak_port="${KEYCLOAK_PORT:-8080}"
+    # Verificar se Keycloak está acessível na porta 8082
+    local keycloak_port="8082"
     local keycloak_urls=(
-        "http://localhost:$keycloak_port"
-        "http://127.0.0.1:$keycloak_port"
+        "http://localhost:8082"
+        "http://127.0.0.1:8082"
         "https://keycloak.$DOMAIN_BASE"
-        "http://localhost:$keycloak_port/health/ready"
-        "http://127.0.0.1:$keycloak_port/health/ready"
+        "http://localhost:8082/health/ready"
+        "http://127.0.0.1:8082/health/ready"
         "https://keycloak.$DOMAIN_BASE/health/ready"
     )
 
