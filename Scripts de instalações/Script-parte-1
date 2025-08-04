@@ -902,9 +902,9 @@ deploy_keycloak_service() {
     fix_services_and_proxy
 }
 
-# Corrigir serviços e configuração do proxy
+# Corrigir serviços e configuração do proxy COM REATIVAÇÃO INTELIGENTE
 fix_services_and_proxy() {
-    log_step "Corrigindo serviços e configuração do proxy"
+    log_step "Corrigindo serviços e configuração do proxy com reativação inteligente"
 
     # Salvar configuração do set -e
     local old_e_setting="$-"
@@ -913,36 +913,133 @@ fix_services_and_proxy() {
     log_info "📊 Status atual dos serviços:"
     docker service ls --format "table {{.Name}}\t{{.Mode}}\t{{.Replicas}}\t{{.Ports}}" 2>/dev/null || true
 
-    # 1. Verificar e reativar Kryonix_web se necessário
-    log_info "🔄 Verificando status do Kryonix_web..."
+    # 1. REATIVAÇÃO INTELIGENTE DO KRYONIX_WEB
+    log_info "🔄 Executando reativação inteligente do Kryonix_web..."
+
+    # Verificar se Kryonix_web deve ser reativado
+    local should_reactivate=false
     local kryonix_web_status=""
     kryonix_web_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
 
-    if echo "$kryonix_web_status" | grep -q "0/"; then
-        log_warn "⚠️ Kryonix_web está pausado, reativando..."
-        docker service scale Kryonix_web=1 >/dev/null 2>&1
-        local scale_result=$?
-
-        if [ $scale_result -eq 0 ]; then
-            log_info "✅ Comando de reativação do Kryonix_web executado"
-            log_info "Aguardando Kryonix_web ficar pronto..."
-            sleep 25
-
-            # Verificar se foi reativado
-            local new_status=""
-            new_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
-            if echo "$new_status" | grep -q "1/1"; then
-                log_info "✅ Kryonix_web reativado com sucesso!"
-            else
-                log_warn "⚠️ Kryonix_web ainda não está totalmente pronto, mas comando foi executado"
-            fi
-        else
-            log_warn "⚠️ Falha ao reativar Kryonix_web"
-        fi
+    if [ "${KRYONIX_WEB_WAS_RUNNING}" = "true" ]; then
+        log_info "📋 Kryonix_web estava rodando antes - deve ser reativado"
+        should_reactivate=true
+    elif echo "$kryonix_web_status" | grep -q "0/"; then
+        log_info "📋 Kryonix_web está pausado - deve ser reativado"
+        should_reactivate=true
+    elif [ -z "$kryonix_web_status" ]; then
+        log_warn "⚠️ Kryonix_web não encontrado - pode ter sido removido"
+        should_reactivate=false
     elif echo "$kryonix_web_status" | grep -q "1/1"; then
-        log_info "✅ Kryonix_web já está ativo"
+        log_info "✅ Kryonix_web já está ativo e funcionando"
+        should_reactivate=false
     else
         log_warn "⚠️ Status do Kryonix_web não identificado: $kryonix_web_status"
+        should_reactivate=true
+    fi
+
+    # Executar reativação se necessário
+    if [ "$should_reactivate" = "true" ]; then
+        log_warn "🔄 Iniciando processo de reativação do Kryonix_web..."
+
+        # Aguardar Keycloak estar estável antes de reativar
+        log_info "⏳ Aguardando Keycloak estar estável antes da reativação..."
+        sleep 20
+
+        # Verificar se Keycloak está realmente funcionando na nova porta
+        local keycloak_ready=false
+        for attempt in {1..5}; do
+            if curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT/health/ready" >/dev/null 2>&1; then
+                keycloak_ready=true
+                log_info "✅ Keycloak confirmado estável na porta $KEYCLOAK_PORT"
+                break
+            else
+                log_info "⏳ Aguardando Keycloak ficar estável (tentativa $attempt/5)..."
+                sleep 10
+            fi
+        done
+
+        if [ "$keycloak_ready" = "true" ]; then
+            log_info "🔄 Reativando Kryonix_web agora que Keycloak está estável..."
+
+            # Estratégia 1: Scale para 1
+            local reactivation_success=false
+            local max_attempts=3
+
+            for attempt in $(seq 1 $max_attempts); do
+                log_info "🔄 Tentativa $attempt/$max_attempts de reativar Kryonix_web..."
+
+                if docker service scale Kryonix_web=1 >/dev/null 2>&1; then
+                    log_info "✅ Comando de reativação executado (tentativa $attempt)"
+
+                    # Aguardar e verificar se realmente foi reativado
+                    log_info "⏳ Aguardando Kryonix_web ficar pronto..."
+                    sleep 30
+
+                    local new_status=""
+                    new_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
+
+                    if echo "$new_status" | grep -q "1/1"; then
+                        log_info "✅ Kryonix_web reativado com sucesso!"
+                        reactivation_success=true
+
+                        # Teste adicional - verificar se está respondendo
+                        sleep 10
+                        if curl -f -s --max-time 10 "http://localhost:8080/health" >/dev/null 2>&1; then
+                            log_info "✅ Kryonix_web está respondendo corretamente!"
+                        else
+                            log_warn "⚠️ Kryonix_web pode estar com problemas de saúde"
+                        fi
+                        break
+                    elif echo "$new_status" | grep -q "0/1"; then
+                        log_warn "⚠️ Kryonix_web ainda iniciando..."
+                        sleep 15
+
+                        # Verificar novamente
+                        new_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
+                        if echo "$new_status" | grep -q "1/1"; then
+                            log_info "✅ Kryonix_web agora está ativo!"
+                            reactivation_success=true
+                            break
+                        fi
+                    fi
+                else
+                    log_warn "⚠️ Falha no comando de reativação (tentativa $attempt)"
+                fi
+
+                if [ $attempt -lt $max_attempts ]; then
+                    log_info "⏳ Aguardando antes da próxima tentativa..."
+                    sleep 10
+                fi
+            done
+
+            # Estratégia 2: Update --force se scale não funcionou
+            if [ "$reactivation_success" = "false" ]; then
+                log_warn "🔄 Tentando reativação via update --force..."
+                if docker service update --replicas=1 --force Kryonix_web >/dev/null 2>&1; then
+                    log_info "✅ Update --force executado"
+                    sleep 30
+
+                    local final_status=""
+                    final_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
+                    if echo "$final_status" | grep -q "1/1"; then
+                        log_info "✅ Kryonix_web reativado via update --force!"
+                        reactivation_success=true
+                    fi
+                fi
+            fi
+
+            if [ "$reactivation_success" = "false" ]; then
+                log_error "❌ Falha ao reativar Kryonix_web após todas as tentativas"
+                log_error "🔧 Solução manual necessária:"
+                log_error "   docker service scale Kryonix_web=1"
+                log_error "   ou"
+                log_error "   docker service update --replicas=1 --force Kryonix_web"
+            fi
+        else
+            log_warn "⚠️ Keycloak não está estável - adiando reativação do Kryonix_web"
+            log_warn "🔧 Execute manualmente após verificar Keycloak: docker service scale Kryonix_web=1"
+        fi
     fi
 
     # 2. Verificar conectividade local do Keycloak
@@ -1463,7 +1560,7 @@ curl -s --max-time 30 -X POST "https://keycloak.kryonix.com.br/admin/realms" \
     }" > /dev/null
 
 # Criar client
-echo "���� Configurando client..."
+echo "🔧 Configurando client..."
 curl -s --max-time 30 -X POST "https://keycloak.kryonix.com.br/admin/realms/$REALM_NAME/clients" \
     -H "Authorization: Bearer $ADMIN_TOKEN" \
     -H "Content-Type: application/json" \
@@ -2058,7 +2155,7 @@ main() {
 📋 Resumo da configuração:
    🔐 Keycloak: https://keycloak.$DOMAIN_BASE
    👤 Admin: $KEYCLOAK_ADMIN_USER / $KEYCLOAK_ADMIN_PASSWORD
-   🏢 Realm: KRYONIX
+   �� Realm: KRYONIX
    📱 Clients: Frontend, Mobile, IA
    🤖 Scripts: $SCRIPTS_DIR/
    💾 Backups: Diário às 02:00
