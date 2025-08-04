@@ -618,13 +618,15 @@ deploy_keycloak_service() {
     log_info "Fazendo deploy com configuração DEFINITIVA na porta $KEYCLOAK_PORT..."
     log_info "Mapeamento: Host porta $KEYCLOAK_PORT -> Container porta 8080"
 
-    # Criar serviço Docker Swarm com labels corretas do Traefik
+    # Deploy Keycloak diretamente na porta 8082 com labels Traefik corretas
+    log_info "🚀 Deploy Keycloak na porta 8082 com Traefik configurado..."
+
     docker service create \
         --name kryonix-auth_keycloak \
         --network Kryonix-NET \
         --replicas 1 \
         --constraint 'node.role==manager' \
-        --publish "mode=host,target=8080,published=${KEYCLOAK_PORT}" \
+        --publish "8082:8080" \
         --env KEYCLOAK_ADMIN="$KEYCLOAK_ADMIN_USER" \
         --env KEYCLOAK_ADMIN_PASSWORD="$KEYCLOAK_ADMIN_PASSWORD" \
         --env KC_DB=postgres \
@@ -651,9 +653,14 @@ deploy_keycloak_service() {
         --label traefik.http.routers.keycloak.rule="Host(\`keycloak.$DOMAIN_BASE\`)" \
         --label traefik.http.routers.keycloak.entrypoints=web,websecure \
         --label traefik.http.routers.keycloak.service=keycloak \
-        --label traefik.http.routers.keycloak.priority=1000 \
+        --label traefik.http.routers.keycloak.priority=8000 \
         --label traefik.http.routers.keycloak.tls=true \
         --label traefik.http.routers.keycloak.tls.certresolver=letsencrypt \
+        --label traefik.http.routers.keycloak-http.rule="Host(\`keycloak.$DOMAIN_BASE\`)" \
+        --label traefik.http.routers.keycloak-http.entrypoints=web \
+        --label traefik.http.routers.keycloak-http.middlewares=https-redirect \
+        --label traefik.http.middlewares.https-redirect.redirectscheme.scheme=https \
+        --label traefik.http.middlewares.https-redirect.redirectscheme.permanent=true \
         --limit-memory 1g \
         --reserve-memory 512m \
         --restart-condition any \
