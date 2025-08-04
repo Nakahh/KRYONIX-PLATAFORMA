@@ -936,7 +936,7 @@ while true; do
     
     # Verificar PostgreSQL
     if ! docker exec $POSTGRES_CONTAINER pg_isready -U kryonix > /dev/null 2>&1; then
-        log_monitor "🚨 CRÍTICO: PostgreSQL não está respondendo!"
+        log_monitor "🚨 CRÍTICO: PostgreSQL n��o está respondendo!"
         send_alert "POSTGRESQL OFFLINE - Banco de dados não está respondendo"
     else
         log_monitor "✅ PostgreSQL funcionando normalmente"
@@ -1225,7 +1225,7 @@ run_final_tests() {
     # Testes individuais
     test_service "Keycloak" "curl -f -s https://keycloak.$DOMAIN_BASE/health/ready"
     test_service "Realm KRYONIX" "curl -s https://keycloak.$DOMAIN_BASE/realms/KRYONIX/.well-known/openid_configuration | grep -q KRYONIX"
-    test_service "PostgreSQL" "docker exec postgresql-kryonix pg_isready -U postgres"
+    test_service "PostgreSQL" "docker exec $POSTGRES_CONTAINER pg_isready -U kryonix"
     
     # Teste login admin
     if test_service "Login Admin" "curl -s -d 'client_id=admin-cli' -d 'username=$KEYCLOAK_ADMIN_USER' -d 'password=$KEYCLOAK_ADMIN_PASSWORD' -d 'grant_type=password' 'https://keycloak.$DOMAIN_BASE/realms/master/protocol/openid_connect/token' | grep -q access_token"; then
