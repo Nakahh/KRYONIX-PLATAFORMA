@@ -183,7 +183,7 @@ trap 'error_exit ${LINENO} $?' ERR
 # FUNÇÕES DE VALIDAÇÃO
 # ============================================================================
 
-# Verificar se já está rodando
+# Verificar se já est�� rodando
 check_already_running() {
     if [ -f "$LOCK_FILE" ]; then
         local pid=$(cat "$LOCK_FILE" 2>/dev/null || echo "")
@@ -588,88 +588,27 @@ check_port_conflicts() {
         log_info "Porta 8080 detectada como ocupada via teste direto"
     fi
 
-    # Pausar Kryonix_web se detectado conflito
+    # NOVO: NÃO PAUSAR WEB_KRYONIX - Verificar se está rodando para garantir reativação
     if [ "$kryonix_web_found" = "true" ] || [ "$port_8080_occupied" = "true" ]; then
-        log_warn "⚠️ CONFLITO DETECTADO: Porta 8080 está ocupada"
+        log_info "ℹ️ DETECÇÃO: Porta 8080 está ocupada pelo Kryonix_web"
 
-        if [ "$kryonix_web_found" = "true" ]; then
-            log_warn "   → Kryonix_web está usando a porta 8080"
-        fi
-
-        log_warn "Pausando Kryonix_web temporariamente para liberar a porta..."
-
-        # Salvar estado atual do Kryonix_web para restaurar depois
-        export KRYONIX_WEB_WAS_RUNNING=false
+        # Salvar estado para garantir que continue rodando
+        export KRYONIX_WEB_WAS_RUNNING=true
         local current_replicas=""
         current_replicas=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" | awk '{print $2}' || echo "")
 
         if echo "$current_replicas" | grep -q "1/1"; then
-            export KRYONIX_WEB_WAS_RUNNING=true
-            log_info "📋 Kryonix_web estava rodando - será restaurado após deploy do Keycloak"
+            log_info "✅ Kryonix_web está rodando normalmente na porta 8080"
+        elif echo "$current_replicas" | grep -q "0/"; then
+            log_warn "⚠️ Kryonix_web está pausado - será reativado"
+            export KRYONIX_WEB_WAS_RUNNING=true  # Forçar reativação
         fi
 
-        # Tentar pausar com múltiplas tentativas e estratégias
-        local pause_success=false
-        local attempt=1
-        local max_attempts=5
-
-        while [ $attempt -le $max_attempts ] && [ "$pause_success" = "false" ]; do
-            log_info "🔄 Tentativa $attempt/$max_attempts de pausar Kryonix_web..."
-
-            # Estratégia 1: Scale para 0
-            if docker service scale Kryonix_web=0 >/dev/null 2>&1; then
-                log_info "✅ Comando scale executado (tentativa $attempt)"
-                sleep 10
-
-                # Verificar se realmente pausou
-                local service_status=""
-                service_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
-
-                if echo "$service_status" | grep -q "0/" || [ -z "$service_status" ]; then
-                    pause_success=true
-                    log_info "✅ Kryonix_web pausado com sucesso!"
-                    log_info "⏳ Aguardando liberação completa da porta 8080..."
-                    sleep 15
-
-                    # Verificar se porta foi realmente liberada
-                    if ! timeout 2 bash -c 'echo >/dev/tcp/localhost/8080' >/dev/null 2>&1; then
-                        log_info "✅ Porta 8080 liberada com sucesso!"
-                        break
-                    else
-                        log_warn "⚠️ Porta 8080 ainda ocupada, aguardando mais..."
-                        sleep 10
-                    fi
-                fi
-            fi
-
-            # Estratégia 2: Update --force (se scale não funcionou)
-            if [ "$pause_success" = "false" ] && [ $attempt -ge 3 ]; then
-                log_warn "⚠️ Tentando strategy de update --force..."
-                if docker service update --replicas=0 --force Kryonix_web >/dev/null 2>&1; then
-                    sleep 15
-                    if ! timeout 2 bash -c 'echo >/dev/tcp/localhost/8080' >/dev/null 2>&1; then
-                        pause_success=true
-                        log_info "✅ Kryonix_web pausado via update --force!"
-                        break
-                    fi
-                fi
-            fi
-
-            log_warn "⚠️ Tentativa $attempt falhou, aguardando antes da próxima..."
-            sleep 5
-            attempt=$((attempt + 1))
-        done
-
-        if [ "$pause_success" = "false" ]; then
-            log_error "❌ Não foi possível pausar Kryonix_web após $max_attempts tentativas"
-            log_warn "🔄 Continuando com porta alternativa para Keycloak..."
-            export KEYCLOAK_FORCE_ALT_PORT=true
-        else
-            log_info "✅ Conflito de porta resolvido com sucesso!"
-            export KEYCLOAK_FORCE_ALT_PORT=false
-        fi
+        # Usar porta alternativa para Keycloak automaticamente
+        log_info "🔄 Keycloak usará porta alternativa para evitar conflito"
+        export KEYCLOAK_FORCE_ALT_PORT=true
     else
-        log_info "✅ Nenhum conflito de porta detectado"
+        log_info "✅ Porta 8080 disponível"
         export KRYONIX_WEB_WAS_RUNNING=false
         export KEYCLOAK_FORCE_ALT_PORT=false
     fi
@@ -1349,7 +1288,7 @@ configure_keycloak_realm() {
         log_error "Credenciais utilizadas: $KEYCLOAK_ADMIN_USER / $KEYCLOAK_ADMIN_PASSWORD"
         
         # Verificar se Keycloak está realmente funcionando
-        log_info "Verificando status do serviço Keycloak..."
+        log_info "Verificando status do servi��o Keycloak..."
         docker service logs --tail 20 kryonix-auth_keycloak 2>/dev/null || echo "Logs não disponíveis"
         
         # Continuar mesmo assim para mostrar as credenciais
