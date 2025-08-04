@@ -640,7 +640,7 @@ configure_keycloak_clients() {
     }'
     
     # Client IA
-    keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX/clients" '{
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/clients" '{
         "clientId": "kryonix-ai-client",
         "name": "KRYONIX IA Integration",
         "enabled": true,
@@ -710,7 +710,7 @@ create_keycloak_users() {
 setup_automation_scripts() {
     log_step "Configurando scripts de automação"
     
-    # Script de criação automática de cliente
+    # Script de criação autom��tica de cliente
     if [ ! -f "$SCRIPTS_DIR/kryonix-create-client.sh" ]; then
         log_info "Criando script de criação de cliente..."
         cat > "$SCRIPTS_DIR/kryonix-create-client.sh" << 'AUTOCREATE_EOF'
