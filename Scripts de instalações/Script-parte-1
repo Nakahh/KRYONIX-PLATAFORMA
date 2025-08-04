@@ -576,80 +576,11 @@ setup_keycloak_port() {
         [ "$occupied" = "true" ]
     }
 
-    # Encontrar primeira porta disponível - LÓGICA ROBUSTA E INTELIGENTE
-    export KEYCLOAK_PORT=""
-    export KEYCLOAK_BASE_PORT=""
+    # Já configurado na função setup_keycloak_port - apenas confirmar
+    log_info "$CHECK Keycloak configurado na porta: $KEYCLOAK_PORT (8082)"
 
-    # Se forçado a usar porta alternativa, começar com 8081
-    local port_candidates=""
-    if [ "${KEYCLOAK_FORCE_ALT_PORT}" = "true" ]; then
-        port_candidates="8081 8082 8083 8084 8085 8086 9080 9081 9082"
-        log_warn "🔄 Forçando uso de porta alternativa devido ao conflito"
-    else
-        port_candidates="8080 8081 8082 8083 8084 8085 8086"
-    fi
-
-    log_info "🔍 Testando portas candidatas: $port_candidates"
-
-    for port in $port_candidates; do
-        log_info "   → Verificando porta $port..."
-
-        if ! is_port_occupied "$port"; then
-            export KEYCLOAK_PORT=$port
-            export KEYCLOAK_BASE_PORT=$port
-            log_info "$CHECK Porta $port está livre e será usada para Keycloak"
-
-            # Teste adicional para garantir que a porta está realmente livre
-            sleep 2
-            if ! is_port_occupied "$port"; then
-                log_info "$CHECK Porta $port confirmada como livre após dupla verificação"
-                break
-            else
-                log_warn "⚠️ Porta $port foi ocupada durante a verificação, continuando..."
-                export KEYCLOAK_PORT=""
-                export KEYCLOAK_BASE_PORT=""
-            fi
-        else
-            log_info "   ✗ Porta $port ocupada"
-        fi
-    done
-
-    # Fallback para range alto se nenhuma porta padrão estiver disponível
-    if [ -z "$KEYCLOAK_PORT" ]; then
-        log_warn "🔄 Nenhuma porta padrão disponível, testando range alto..."
-
-        for port in 9080 9081 9082 9083 9084 9085; do
-            log_info "   → Testando porta backup $port..."
-            if ! is_port_occupied "$port"; then
-                export KEYCLOAK_PORT=$port
-                export KEYCLOAK_BASE_PORT=$port
-                log_info "$CHECK Usando porta backup: $KEYCLOAK_PORT"
-                break
-            fi
-        done
-    fi
-
-    # Fallback final - usar porta dinâmica alta
-    if [ -z "$KEYCLOAK_PORT" ]; then
-        # Gerar porta aleatória no range 8800-8999
-        local random_port=$((8800 + RANDOM % 200))
-        export KEYCLOAK_PORT=$random_port
-        export KEYCLOAK_BASE_PORT=$random_port
-        log_warn "⚠️ Usando porta dinâmica como último recurso: $KEYCLOAK_PORT"
-    fi
-
-    # Restaurar configuração de exit on error se estava ativa
-    if [[ "$old_e_setting" == *e* ]]; then
-        set -e
-    fi
-
-    log_info "$CHECK Keycloak será configurado na porta: $KEYCLOAK_PORT"
-
-    # Salvar porta escolhida para referência futura
+    # Salvar porta para referência
     echo "$KEYCLOAK_PORT" > "$CONFIG_DIR/.keycloak-port"
-
-    # Aguardar um pouco para garantir que a porta está realmente livre
-    sleep 3
 
     return 0
 }
@@ -1051,7 +982,7 @@ fix_services_and_proxy() {
     docker service ls --format "table {{.Name}}\t{{.Mode}}\t{{.Replicas}}\t{{.Ports}}" 2>/dev/null || true
 
     # 7. Verificação final de saúde dos serviços
-    log_info "🏥 Verificaç��o final de saúde dos serviços:"
+    log_info "🏥 Verificação final de saúde dos serviços:"
 
     # Verificar Kryonix_web
     local kryonix_health="❌ Não respondendo"
@@ -1799,7 +1730,7 @@ SERVICE_EOF
         log_info "$CHECK Serviço de monitoramento criado"
     fi
     
-    # Iniciar servi��o
+    # Iniciar serviço
     if ! systemctl is-active --quiet kryonix-monitor; then
         systemctl start kryonix-monitor
         log_info "$CHECK Serviço de monitoramento iniciado"
