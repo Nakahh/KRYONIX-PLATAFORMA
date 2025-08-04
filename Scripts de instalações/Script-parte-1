@@ -532,86 +532,17 @@ clean_liquibase_locks() {
     log_info "$CHECK Locks Liquibase limpos"
 }
 
-# Verificar conflito de porta ROBUSTO - VERSÃO CORRIGIDA E MELHORADA
-check_port_conflicts() {
-    log_info "🔍 Verificando conflitos de porta de forma robusta e inteligente..."
+# Usar porta 8082 diretamente - SEM VERIFICAÇÕES
+setup_keycloak_port() {
+    log_info "🎯 Configurando Keycloak para porta 8082 diretamente"
 
-    # Desabilitar exit on error para toda a função
-    local old_e_setting="$-"
-    set +e
+    # Configuração direta - sem verificações
+    export KEYCLOAK_PORT="8082"
+    export KEYCLOAK_BASE_PORT="8082"
+    export KRYONIX_WEB_WAS_RUNNING=true  # Sempre garantir que web esteja ativo
 
-    # Mostrar serviços Docker ativos para debug (com proteção contra SIGPIPE)
-    log_info "Debug - Serviços Docker ativos:"
-    local docker_services=""
-    docker_services=$(docker service ls --format "table {{.Name}}\t{{.Ports}}" 2>/dev/null)
-    if [ $? -eq 0 ] && [ -n "$docker_services" ]; then
-        echo "$docker_services" | head -10
-    else
-        log_info "Não foi possível listar serviços Docker"
-    fi
-
-    # Verificar conflitos de porta com múltiplos métodos de detecção
-    local kryonix_web_found=false
-    local kryonix_web_port=""
-
-    # Método 1: Verificar via docker service ls
-    if [ -n "$docker_services" ]; then
-        local web_service_line=""
-        web_service_line=$(echo "$docker_services" | grep "Kryonix_web" || echo "")
-
-        if [ -n "$web_service_line" ]; then
-            log_info "Serviço Kryonix_web encontrado: $web_service_line"
-
-            # Extrair porta do serviço
-            if echo "$web_service_line" | grep -q ":8080->"; then
-                kryonix_web_found=true
-                kryonix_web_port="8080"
-            elif echo "$web_service_line" | grep -q "*:8080->"; then
-                kryonix_web_found=true
-                kryonix_web_port="8080"
-            fi
-        fi
-    fi
-
-    # Método 2: Verificar via netstat se porta 8080 está ocupada
-    local port_8080_occupied=false
-    if command -v netstat >/dev/null 2>&1; then
-        if netstat -tlnp 2>/dev/null | grep -q ":8080 "; then
-            port_8080_occupied=true
-            log_info "Porta 8080 detectada como ocupada via netstat"
-        fi
-    fi
-
-    # Método 3: Teste direto de conexão
-    if timeout 2 bash -c 'echo >/dev/tcp/localhost/8080' >/dev/null 2>&1; then
-        port_8080_occupied=true
-        log_info "Porta 8080 detectada como ocupada via teste direto"
-    fi
-
-    # NOVO: NÃO PAUSAR WEB_KRYONIX - Verificar se está rodando para garantir reativação
-    if [ "$kryonix_web_found" = "true" ] || [ "$port_8080_occupied" = "true" ]; then
-        log_info "ℹ️ DETECÇÃO: Porta 8080 está ocupada pelo Kryonix_web"
-
-        # Salvar estado para garantir que continue rodando
-        export KRYONIX_WEB_WAS_RUNNING=true
-        local current_replicas=""
-        current_replicas=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" | awk '{print $2}' || echo "")
-
-        if echo "$current_replicas" | grep -q "1/1"; then
-            log_info "✅ Kryonix_web está rodando normalmente na porta 8080"
-        elif echo "$current_replicas" | grep -q "0/"; then
-            log_warn "⚠️ Kryonix_web está pausado - será reativado"
-            export KRYONIX_WEB_WAS_RUNNING=true  # Forçar reativação
-        fi
-
-        # Usar porta alternativa para Keycloak automaticamente
-        log_info "🔄 Keycloak usará porta alternativa para evitar conflito"
-        export KEYCLOAK_FORCE_ALT_PORT=true
-    else
-        log_info "✅ Porta 8080 disponível"
-        export KRYONIX_WEB_WAS_RUNNING=false
-        export KEYCLOAK_FORCE_ALT_PORT=false
-    fi
+    log_info "✅ Porta 8082 configurada para Keycloak"
+    log_info "✅ Kryonix_web será mantido ativo na porta 8080"
 
     # Função auxiliar para verificar se porta está ocupada
     is_port_occupied() {
@@ -1120,7 +1051,7 @@ fix_services_and_proxy() {
     docker service ls --format "table {{.Name}}\t{{.Mode}}\t{{.Replicas}}\t{{.Ports}}" 2>/dev/null || true
 
     # 7. Verificação final de saúde dos serviços
-    log_info "🏥 Verificação final de saúde dos serviços:"
+    log_info "🏥 Verificaç��o final de saúde dos serviços:"
 
     # Verificar Kryonix_web
     local kryonix_health="❌ Não respondendo"
@@ -1868,7 +1799,7 @@ SERVICE_EOF
         log_info "$CHECK Serviço de monitoramento criado"
     fi
     
-    # Iniciar serviço
+    # Iniciar servi��o
     if ! systemctl is-active --quiet kryonix-monitor; then
         systemctl start kryonix-monitor
         log_info "$CHECK Serviço de monitoramento iniciado"
