@@ -756,7 +756,7 @@ deploy_keycloak_service() {
     log_info "Fazendo deploy com configuração DEFINITIVA na porta $KEYCLOAK_PORT..."
     log_info "Mapeamento: Host porta $KEYCLOAK_PORT -> Container porta 8080"
 
-    # Criar serviço Docker Swarm com porta dinâmica usando mode=host
+    # Criar serviço Docker Swarm com labels corretas do Traefik
     docker service create \
         --name kryonix-auth_keycloak \
         --network Kryonix-NET \
@@ -782,10 +782,16 @@ deploy_keycloak_service() {
         --env KC_PROXY_ADDRESS_FORWARDING=true \
         --env JAVA_OPTS="-Xms256m -Xmx512m -Djava.net.preferIPv4Stack=true" \
         --label traefik.enable=true \
+        --label traefik.docker.network=Kryonix-NET \
+        --label traefik.http.services.keycloak.loadbalancer.server.port=8080 \
+        --label traefik.http.services.keycloak.loadbalancer.healthcheck.path=/health/ready \
+        --label traefik.http.services.keycloak.loadbalancer.healthcheck.interval=15s \
         --label traefik.http.routers.keycloak.rule="Host(\`keycloak.$DOMAIN_BASE\`)" \
+        --label traefik.http.routers.keycloak.entrypoints=web,websecure \
+        --label traefik.http.routers.keycloak.service=keycloak \
+        --label traefik.http.routers.keycloak.priority=1000 \
         --label traefik.http.routers.keycloak.tls=true \
         --label traefik.http.routers.keycloak.tls.certresolver=letsencrypt \
-        --label traefik.http.services.keycloak.loadbalancer.server.port=8080 \
         --limit-memory 1g \
         --reserve-memory 512m \
         --restart-condition any \
@@ -973,7 +979,7 @@ fix_services_and_proxy() {
             fi
         else
             log_warn "⚠️ Keycloak não está estável - adiando reativação do Kryonix_web"
-            log_warn "🔧 Execute manualmente após verificar Keycloak: docker service scale Kryonix_web=1"
+            log_warn "�� Execute manualmente após verificar Keycloak: docker service scale Kryonix_web=1"
         fi
     fi
 
