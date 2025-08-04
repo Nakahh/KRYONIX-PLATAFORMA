@@ -307,7 +307,7 @@ check_external_connectivity() {
 }
 
 # ============================================================================
-# FUNÇÕES DE SERVIÇOS BASE
+# FUNÇ��ES DE SERVIÇOS BASE
 # ============================================================================
 
 # Verificar serviços base necessários
@@ -539,7 +539,7 @@ configure_keycloak_realm() {
         log_info "Criando Realm KRYONIX..."
         
         # Criar realm com configuração completa
-        keycloak_request "POST" "https://keycloak.$DOMAIN_BASE/admin/realms" '{
+        keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms" '{
             "realm": "KRYONIX",
             "enabled": true,
             "displayName": "KRYONIX - Plataforma SaaS",
