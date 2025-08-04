@@ -533,7 +533,7 @@ configure_keycloak_realm() {
     
     # Verificar se realm KRYONIX já existe
     if curl -s -H "Authorization: Bearer $ADMIN_TOKEN" \
-       "https://keycloak.$DOMAIN_BASE/admin/realms/KRYONIX" > /dev/null 2>&1; then
+       "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX" > /dev/null 2>&1; then
         log_info "$CHECK Realm KRYONIX já existe"
     else
         log_info "Criando Realm KRYONIX..."
