@@ -417,6 +417,8 @@ services:
       - "traefik.http.routers.keycloak.middlewares=secure-headers"
     networks:
       - Kryonix-NET
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     deploy:
       replicas: 1
       restart_policy:
@@ -815,7 +817,7 @@ curl -s --max-time 30 -X POST "https://keycloak.kryonix.com.br/admin/realms/$REA
     }" > /dev/null
 
 # Configurar subdomínio no Traefik
-echo "🌐 Configurando subdomínio..."
+echo "��� Configurando subdomínio..."
 cat > "/etc/traefik/dynamic/${CLIENTE_ID}.yml" << TRAEFIK_EOF
 http:
   routers:
