@@ -670,6 +670,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Contact Form */}
+      <ContactForm />
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-6">
         <div className="container-custom">
@@ -689,7 +692,7 @@ export default function HomePage() {
                 </span>
               </div>
               <p className="text-gray-400 text-sm">
-                Plataforma SaaS 100% Autônoma por IA
+                Plataforma SaaS 100% Aut��noma por IA
               </p>
             </div>
 
