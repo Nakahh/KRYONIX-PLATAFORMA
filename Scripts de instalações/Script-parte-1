@@ -1253,12 +1253,12 @@ run_final_tests() {
     }
     
     # Testes individuais
-    test_service "Keycloak" "curl -f -s https://keycloak.$DOMAIN_BASE/health/ready"
-    test_service "Realm KRYONIX" "curl -s https://keycloak.$DOMAIN_BASE/realms/KRYONIX/.well-known/openid_configuration | grep -q KRYONIX"
+    test_service "Keycloak" "curl -f -s $KEYCLOAK_BASE_URL/health/ready"
+    test_service "Realm KRYONIX" "curl -s $KEYCLOAK_BASE_URL/realms/KRYONIX/.well-known/openid_configuration | grep -q KRYONIX"
     test_service "PostgreSQL" "docker exec $POSTGRES_CONTAINER pg_isready -U kryonix"
-    
+
     # Teste login admin
-    if test_service "Login Admin" "curl -s -d 'client_id=admin-cli' -d 'username=$KEYCLOAK_ADMIN_USER' -d 'password=$KEYCLOAK_ADMIN_PASSWORD' -d 'grant_type=password' 'https://keycloak.$DOMAIN_BASE/realms/master/protocol/openid_connect/token' | grep -q access_token"; then
+    if test_service "Login Admin" "curl -s -d 'client_id=admin-cli' -d 'username=$KEYCLOAK_ADMIN_USER' -d 'password=$KEYCLOAK_ADMIN_PASSWORD' -d 'grant_type=password' '$KEYCLOAK_BASE_URL/realms/master/protocol/openid_connect/token' | grep -q access_token"; then
         log_info "$CHECK Autenticação admin funcionando"
     else
         log_warn "$WARNING Autenticação admin pode ter problemas"
