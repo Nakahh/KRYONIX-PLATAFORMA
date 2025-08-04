@@ -431,33 +431,45 @@ EOF
     log_info "$CHECK Configuração do Keycloak criada"
 }
 
-# Deploy do Keycloak
-deploy_keycloak() {
-    log_step "Fazendo deploy do Keycloak"
-    
-    # Verificar se já está rodando
-    if docker ps | grep -q "keycloak-kryonix"; then
-        log_info "$CHECK Keycloak já está rodando"
-        return 0
-    fi
-    
-    # Deploy do stack
-    docker stack deploy -c "$CONFIG_DIR/keycloak.yml" kryonix-auth
-    
-    # Aguardar inicialização
-    log_info "Aguardando Keycloak inicializar..."
-    local max_attempts=30
-    for i in $(seq 1 $max_attempts); do
-        if curl -f -s --max-time 10 "https://keycloak.$DOMAIN_BASE/health/ready" > /dev/null 2>&1; then
-            log_info "$CHECK Keycloak está pronto após $i tentativas"
-            return 0
+# Verificar e configurar Keycloak existente
+check_existing_keycloak() {
+    log_step "Verificando Keycloak existente"
+
+    # Verificar se Keycloak está acessível
+    local keycloak_urls=(
+        "https://keycloak.$DOMAIN_BASE"
+        "https://keycloak.$DOMAIN_BASE/health/ready"
+        "http://localhost:8080"
+        "http://127.0.0.1:8080"
+    )
+
+    local keycloak_found=false
+    local keycloak_url=""
+
+    for url in "${keycloak_urls[@]}"; do
+        if curl -f -s --max-time 10 "$url" > /dev/null 2>&1; then
+            keycloak_found=true
+            keycloak_url="$url"
+            log_info "$CHECK Keycloak encontrado em: $url"
+            break
         fi
-        log_info "Aguardando... ($i/$max_attempts)"
-        sleep 10
     done
-    
-    log_error "Keycloak não ficou pronto no tempo esperado"
-    exit 1
+
+    if [ "$keycloak_found" = false ]; then
+        log_error "❌ Keycloak não encontrado em nenhuma URL"
+        log_error "URLs testadas: ${keycloak_urls[*]}"
+        log_error "Certifique-se que o Keycloak esteja rodando e acessível"
+        exit 1
+    fi
+
+    # Definir URL base do Keycloak (remover /health/ready se presente)
+    export KEYCLOAK_BASE_URL="${keycloak_url%/health/ready}"
+    if [[ "$KEYCLOAK_BASE_URL" == *"localhost"* ]] || [[ "$KEYCLOAK_BASE_URL" == *"127.0.0.1"* ]]; then
+        export KEYCLOAK_BASE_URL="https://keycloak.$DOMAIN_BASE"
+    fi
+
+    log_info "$CHECK Keycloak configurado para: $KEYCLOAK_BASE_URL"
+    return 0
 }
 
 # Função para fazer requisições ao Keycloak com retry
