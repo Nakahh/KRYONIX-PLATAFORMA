@@ -9,7 +9,7 @@
 # Data: Agosto 2025
 # 
 # VERSÃO CORRIGIDA: Resolve todos os problemas de autenticação PostgreSQL
-# - ✅ Corrigido: Usu��rio -U kryonix -> -U postgres
+# - ✅ Corrigido: Usuário -U kryonix -> -U postgres
 # - ✅ Corrigido: Suporte completo ao Supabase PostgreSQL
 # - ✅ Corrigido: String de conexão Keycloak
 # - ✅ Corrigido: Deploy Docker Swarm com configurações corretas
@@ -706,30 +706,50 @@ check_port_conflicts() {
         [ "$occupied" = "true" ]
     }
 
-    # Encontrar primeira porta disponível - LÓGICA ROBUSTA
+    # Encontrar primeira porta disponível - LÓGICA ROBUSTA E INTELIGENTE
     export KEYCLOAK_PORT=""
     export KEYCLOAK_BASE_PORT=""
 
-    local port_candidates="8080 8081 8082 8083 8084 8085 8086"
+    # Se forçado a usar porta alternativa, começar com 8081
+    local port_candidates=""
+    if [ "${KEYCLOAK_FORCE_ALT_PORT}" = "true" ]; then
+        port_candidates="8081 8082 8083 8084 8085 8086 9080 9081 9082"
+        log_warn "🔄 Forçando uso de porta alternativa devido ao conflito"
+    else
+        port_candidates="8080 8081 8082 8083 8084 8085 8086"
+    fi
+
+    log_info "🔍 Testando portas candidatas: $port_candidates"
 
     for port in $port_candidates; do
-        log_info "Verificando porta $port..."
+        log_info "   → Verificando porta $port..."
 
         if ! is_port_occupied "$port"; then
             export KEYCLOAK_PORT=$port
             export KEYCLOAK_BASE_PORT=$port
-            log_info "$CHECK Porta $port está livre - será usada para Keycloak"
-            break
+            log_info "$CHECK Porta $port está livre e será usada para Keycloak"
+
+            # Teste adicional para garantir que a porta está realmente livre
+            sleep 2
+            if ! is_port_occupied "$port"; then
+                log_info "$CHECK Porta $port confirmada como livre após dupla verificação"
+                break
+            else
+                log_warn "⚠️ Porta $port foi ocupada durante a verificação, continuando..."
+                export KEYCLOAK_PORT=""
+                export KEYCLOAK_BASE_PORT=""
+            fi
         else
-            log_warn "⚠️ Porta $port ocupada"
+            log_info "   ✗ Porta $port ocupada"
         fi
     done
 
     # Fallback para range alto se nenhuma porta padrão estiver disponível
     if [ -z "$KEYCLOAK_PORT" ]; then
-        log_warn "Nenhuma porta padrão disponível, usando range alto..."
+        log_warn "🔄 Nenhuma porta padrão disponível, testando range alto..."
 
-        for port in 9080 9081 9082; do
+        for port in 9080 9081 9082 9083 9084 9085; do
+            log_info "   → Testando porta backup $port..."
             if ! is_port_occupied "$port"; then
                 export KEYCLOAK_PORT=$port
                 export KEYCLOAK_BASE_PORT=$port
@@ -739,11 +759,13 @@ check_port_conflicts() {
         done
     fi
 
-    # Fallback final - forçar porta específica
+    # Fallback final - usar porta dinâmica alta
     if [ -z "$KEYCLOAK_PORT" ]; then
-        export KEYCLOAK_PORT=8888
-        export KEYCLOAK_BASE_PORT=8888
-        log_warn "⚠️ Usando porta forçada como último recurso: $KEYCLOAK_PORT"
+        # Gerar porta aleatória no range 8800-8999
+        local random_port=$((8800 + RANDOM % 200))
+        export KEYCLOAK_PORT=$random_port
+        export KEYCLOAK_BASE_PORT=$random_port
+        log_warn "⚠️ Usando porta dinâmica como último recurso: $KEYCLOAK_PORT"
     fi
 
     # Restaurar configuração de exit on error se estava ativa
@@ -753,8 +775,11 @@ check_port_conflicts() {
 
     log_info "$CHECK Keycloak será configurado na porta: $KEYCLOAK_PORT"
 
+    # Salvar porta escolhida para referência futura
+    echo "$KEYCLOAK_PORT" > "$CONFIG_DIR/.keycloak-port"
+
     # Aguardar um pouco para garantir que a porta está realmente livre
-    sleep 5
+    sleep 3
 
     return 0
 }
@@ -1438,7 +1463,7 @@ curl -s --max-time 30 -X POST "https://keycloak.kryonix.com.br/admin/realms" \
     }" > /dev/null
 
 # Criar client
-echo "🔧 Configurando client..."
+echo "���� Configurando client..."
 curl -s --max-time 30 -X POST "https://keycloak.kryonix.com.br/admin/realms/$REALM_NAME/clients" \
     -H "Authorization: Bearer $ADMIN_TOKEN" \
     -H "Content-Type: application/json" \
