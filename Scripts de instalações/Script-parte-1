@@ -2183,8 +2183,9 @@ main() {
     test_services_connectivity
     run_final_tests
     
-    # Marcar progresso
+    # Marcar progresso e atualizar página
     echo "1" > "$CONFIG_DIR/.current-part"
+    update_progress_page 1 "completed"
     
     # Relatório final
     log_step "Finalizando configuração"
@@ -2273,7 +2274,7 @@ EOF
     
     # Verificar Keycloak
     if docker service ls --format "{{.Name}}" | grep -q "keycloak"; then
-        log_info "✅ Keycloak: Serviço Docker Swarm criado"
+        log_info "�� Keycloak: Serviço Docker Swarm criado"
     else
         log_warn "⚠️ Keycloak: Serviço Docker Swarm NÃO encontrado"
     fi
