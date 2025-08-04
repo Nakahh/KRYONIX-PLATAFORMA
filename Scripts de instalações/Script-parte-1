@@ -390,14 +390,14 @@ services:
     container_name: keycloak-kryonix
     command: start
     environment:
-      KEYCLOAK_ADMIN: $KEYCLOAK_ADMIN_USER
-      KEYCLOAK_ADMIN_PASSWORD: $KEYCLOAK_ADMIN_PASSWORD
-      KC_DB: postgres
+      KEYCLOAK_ADMIN: "$KEYCLOAK_ADMIN_USER"
+      KEYCLOAK_ADMIN_PASSWORD: "$KEYCLOAK_ADMIN_PASSWORD"
+      KC_DB: "postgres"
       KC_DB_URL: "jdbc:postgresql://172.17.0.1:5432/keycloak"
-      KC_DB_USERNAME: keycloak_user
-      KC_DB_PASSWORD: $POSTGRES_PASSWORD
-      KC_HOSTNAME: keycloak.$DOMAIN_BASE
-      KC_PROXY: edge
+      KC_DB_USERNAME: "keycloak_user"
+      KC_DB_PASSWORD: "$POSTGRES_PASSWORD"
+      KC_HOSTNAME: "keycloak.$DOMAIN_BASE"
+      KC_PROXY: "edge"
       KC_HTTP_ENABLED: "true"
       KC_HEALTH_ENABLED: "true"
       KC_METRICS_ENABLED: "true"
@@ -930,7 +930,7 @@ send_alert() {
             \"text\": \"🚨 ALERTA KRYONIX\\n\\n$message\\n\\n⏰ $(date '+%d/%m/%Y %H:%M:%S')\"
         }" > /dev/null 2>&1; then
         echo "$(date +%s)" > "$ALERT_COOLDOWN_FILE"
-        log_monitor "���� Alerta enviado: $message"
+        log_monitor "📱 Alerta enviado: $message"
     fi
 }
 
@@ -1270,7 +1270,7 @@ main() {
     # Banner inicial
     echo -e "${BLUE}${BOLD}"
     echo "============================================================================"
-    echo "�� KRYONIX - SCRIPT UNIFICADO PARTE 01 SERVIDOR"
+    echo "🚀 KRYONIX - SCRIPT UNIFICADO PARTE 01 SERVIDOR"
     echo "CONFIGURAÇÃO COMPLETA DE AUTENTICAÇÃO KEYCLOAK MULTI-TENANT"
     echo "============================================================================"
     echo -e "${NC}"
