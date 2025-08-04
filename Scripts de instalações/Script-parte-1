@@ -595,8 +595,8 @@ deploy_keycloak_service() {
         check_docker_swarm
     fi
 
-    # Configurar porta diretamente
-    setup_keycloak_port
+    # Verificar conflitos de porta
+    check_port_conflicts
     
     # Limpar locks antes do deploy
     clean_liquibase_locks
@@ -618,15 +618,13 @@ deploy_keycloak_service() {
     log_info "Fazendo deploy com configuração DEFINITIVA na porta $KEYCLOAK_PORT..."
     log_info "Mapeamento: Host porta $KEYCLOAK_PORT -> Container porta 8080"
 
-    # Deploy Keycloak diretamente na porta 8082 com labels Traefik corretas
-    log_info "🚀 Deploy Keycloak na porta 8082 com Traefik configurado..."
-
+    # Criar serviço Docker Swarm com labels corretas do Traefik
     docker service create \
         --name kryonix-auth_keycloak \
         --network Kryonix-NET \
         --replicas 1 \
         --constraint 'node.role==manager' \
-        --publish "8082:8080" \
+        --publish "mode=host,target=8080,published=${KEYCLOAK_PORT}" \
         --env KEYCLOAK_ADMIN="$KEYCLOAK_ADMIN_USER" \
         --env KEYCLOAK_ADMIN_PASSWORD="$KEYCLOAK_ADMIN_PASSWORD" \
         --env KC_DB=postgres \
@@ -653,14 +651,9 @@ deploy_keycloak_service() {
         --label traefik.http.routers.keycloak.rule="Host(\`keycloak.$DOMAIN_BASE\`)" \
         --label traefik.http.routers.keycloak.entrypoints=web,websecure \
         --label traefik.http.routers.keycloak.service=keycloak \
-        --label traefik.http.routers.keycloak.priority=8000 \
+        --label traefik.http.routers.keycloak.priority=1000 \
         --label traefik.http.routers.keycloak.tls=true \
         --label traefik.http.routers.keycloak.tls.certresolver=letsencrypt \
-        --label traefik.http.routers.keycloak-http.rule="Host(\`keycloak.$DOMAIN_BASE\`)" \
-        --label traefik.http.routers.keycloak-http.entrypoints=web \
-        --label traefik.http.routers.keycloak-http.middlewares=https-redirect \
-        --label traefik.http.middlewares.https-redirect.redirectscheme.scheme=https \
-        --label traefik.http.middlewares.https-redirect.redirectscheme.permanent=true \
         --limit-memory 1g \
         --reserve-memory 512m \
         --restart-condition any \
@@ -1026,7 +1019,7 @@ fix_services_and_proxy() {
     log_info ""
     log_info "🌐 URLs de acesso validadas:"
     log_info "   • Kryonix Web: http://localhost:8080 ou https://$DOMAIN_BASE"
-    log_info "   • Keycloak Local: http://localhost:8082"
+    log_info "   • Keycloak Local: http://localhost:$KEYCLOAK_PORT"
     log_info "   • Keycloak HTTPS: https://keycloak.$DOMAIN_BASE"
     log_info "   • Admin Keycloak: https://keycloak.$DOMAIN_BASE/admin"
 
@@ -1036,7 +1029,7 @@ fix_services_and_proxy() {
     log_info "   • Logs Kryonix: docker service logs Kryonix_web"
     log_info "   • Logs Keycloak: docker service logs kryonix-auth_keycloak"
     log_info "   • Teste Kryonix: curl http://localhost:8080/health"
-    log_info "   • Teste Keycloak: curl http://localhost:8082/health/ready"
+    log_info "   • Teste Keycloak: curl http://localhost:$KEYCLOAK_PORT/health/ready"
     log_info "   • Teste HTTPS: curl -I https://keycloak.$DOMAIN_BASE"
 
     log_info ""
@@ -1045,7 +1038,7 @@ fix_services_and_proxy() {
     log_info "   1. Verificar Traefik: docker service logs traefik (se houver)"
     log_info "   2. Recarregar labels: docker service update --force kryonix-auth_keycloak"
     log_info "   3. Aguardar 2-3 minutos para SSL/Traefik se estabilizar"
-    log_info "   4. Keycloak está na porta 8082 externamente (8080 do container)"
+    log_info "   4. Keycloak está na porta $KEYCLOAK_PORT internamente (8080 do container)"
 
     # Salvar informações de estado para referência futura
     cat > "$CONFIG_DIR/.service-status" << STATUS_EOF
@@ -1078,14 +1071,14 @@ check_existing_keycloak() {
     log_info "Aguardando Keycloak estar totalmente pronto..."
     sleep 45
 
-    # Verificar se Keycloak está acessível na porta 8082
-    local keycloak_port="8082"
+    # Verificar se Keycloak está acessível usando a porta configurada
+    local keycloak_port="${KEYCLOAK_PORT:-8080}"
     local keycloak_urls=(
-        "http://localhost:8082"
-        "http://127.0.0.1:8082"
+        "http://localhost:$keycloak_port"
+        "http://127.0.0.1:$keycloak_port"
         "https://keycloak.$DOMAIN_BASE"
-        "http://localhost:8082/health/ready"
-        "http://127.0.0.1:8082/health/ready"
+        "http://localhost:$keycloak_port/health/ready"
+        "http://127.0.0.1:$keycloak_port/health/ready"
         "https://keycloak.$DOMAIN_BASE/health/ready"
     )
 
