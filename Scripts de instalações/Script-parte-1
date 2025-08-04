@@ -393,7 +393,7 @@ services:
       KEYCLOAK_ADMIN: $KEYCLOAK_ADMIN_USER
       KEYCLOAK_ADMIN_PASSWORD: $KEYCLOAK_ADMIN_PASSWORD
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://127.0.0.1:5432/keycloak
+      KC_DB_URL: "jdbc:postgresql://host.docker.internal:5432/keycloak"
       KC_DB_USERNAME: keycloak_user
       KC_DB_PASSWORD: $POSTGRES_PASSWORD
       KC_HOSTNAME: keycloak.$DOMAIN_BASE
@@ -1008,7 +1008,7 @@ SERVICE_EOF
 
         systemctl daemon-reload
         systemctl enable kryonix-monitor
-        log_info "$CHECK Servi��o de monitoramento criado"
+        log_info "$CHECK Serviço de monitoramento criado"
     fi
     
     # Iniciar serviço
@@ -1208,7 +1208,7 @@ test_services_connectivity() {
             log_info "$CHECK $service está acessível"
         else
             failed_services+=("$service")
-            log_warn "$WARNING $service não está acessível"
+            log_warn "$WARNING $service não est�� acessível"
         fi
     done
     
@@ -1271,7 +1271,7 @@ main() {
     echo -e "${BLUE}${BOLD}"
     echo "============================================================================"
     echo "🚀 KRYONIX - SCRIPT UNIFICADO PARTE 01 SERVIDOR"
-    echo "CONFIGURAÇ��O COMPLETA DE AUTENTICAÇÃO KEYCLOAK MULTI-TENANT"
+    echo "CONFIGURAÇÃO COMPLETA DE AUTENTICAÇÃO KEYCLOAK MULTI-TENANT"
     echo "============================================================================"
     echo -e "${NC}"
 
