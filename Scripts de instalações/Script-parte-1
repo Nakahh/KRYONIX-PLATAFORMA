@@ -351,20 +351,35 @@ create_keycloak_config() {
     
     # Criar database para Keycloak
     log_info "Configurando database do Keycloak..."
-    docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U kryonix -d postgres -c "
-        SELECT 1 FROM pg_database WHERE datname = 'keycloak';
-    " | grep -q "1" || {
-        docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U kryonix -d postgres -c "
-            CREATE DATABASE keycloak WITH
-                ENCODING 'UTF8'
-                LC_COLLATE = 'C'
-                LC_CTYPE = 'C'
-                TEMPLATE template0;
-            CREATE USER keycloak_user WITH PASSWORD '$POSTGRES_PASSWORD';
-            GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;
-        "
-        log_info "$CHECK Database do Keycloak criado"
-    }
+
+    # Verificar se o database já existe
+    if ! docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U kryonix -d postgres -lqt | cut -d \| -f 1 | grep -qw keycloak; then
+        log_info "Criando database keycloak..."
+
+        # CREATE DATABASE deve ser executado separadamente (fora de transação)
+        docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U kryonix -d postgres -c "CREATE DATABASE keycloak WITH ENCODING 'UTF8' LC_COLLATE = 'C' LC_CTYPE = 'C' TEMPLATE template0;"
+
+        log_info "$CHECK Database keycloak criado"
+    else
+        log_info "$CHECK Database keycloak já existe"
+    fi
+
+    # Verificar se o usuário já existe
+    if ! docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U kryonix -d postgres -t -c "SELECT 1 FROM pg_roles WHERE rolname='keycloak_user'" | grep -q 1; then
+        log_info "Criando usuário keycloak_user..."
+
+        # CREATE USER e GRANT podem ser executados separadamente
+        docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U kryonix -d postgres -c "CREATE USER keycloak_user WITH PASSWORD '$POSTGRES_PASSWORD';"
+
+        log_info "$CHECK Usuário keycloak_user criado"
+    else
+        log_info "$CHECK Usuário keycloak_user já existe"
+    fi
+
+    # Garantir privilégios no database
+    log_info "Concedendo privilégios..."
+    docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U kryonix -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;"
+    log_info "$CHECK Privilégios concedidos"
     
     # Criar configuração do Docker Compose
     cat > "$CONFIG_DIR/keycloak.yml" << EOF
