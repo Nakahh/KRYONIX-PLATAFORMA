@@ -41,7 +41,7 @@ export default function InteractiveDemo() {
         'Métricas em tempo real',
         'Previsões de vendas',
         'Análise de comportamento',
-        'Relatórios automáticos'
+        'Relat��rios automáticos'
       ]
     },
     {
@@ -183,7 +183,10 @@ export default function InteractiveDemo() {
               {/* Content */}
               <div className="h-96 p-6 flex flex-col justify-center items-center">
                 <div className={`w-20 h-20 rounded-2xl ${demos[activeDemo].color} flex items-center justify-center text-white mb-6`}>
-                  <demos[activeDemo].icon className="w-10 h-10" />
+                  {(() => {
+                    const IconComponent = demos[activeDemo].icon
+                    return <IconComponent className="w-10 h-10" />
+                  })()}
                 </div>
                 
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-center">
