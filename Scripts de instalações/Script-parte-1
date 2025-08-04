@@ -2053,6 +2053,27 @@ send_whatsapp_notification() {
 }
 
 # ============================================================================
+# ATUALIZAÇÃO DE PROGRESSO
+# ============================================================================
+
+# Atualizar progresso na página
+update_progress_page() {
+    local part_number="$1"
+    local status="${2:-completed}"
+    local current_date=$(date +%Y-%m-%d)
+
+    log_info "📊 Atualizando progresso da Parte $part_number para status: $status"
+
+    # Salvar progresso local
+    echo "PART_${part_number}:${status}:${current_date}" > "$CONFIG_DIR/.progress-part-${part_number}"
+
+    # Enviar notificação de progresso
+    send_whatsapp_notification "✅ PARTE ${part_number} CONCLUÍDA! Status atualizado para: ${status}. Data: ${current_date}. Visualizar: https://kryonix.com.br/progresso"
+
+    log_info "$CHECK Progresso da Parte $part_number atualizado"
+}
+
+# ============================================================================
 # VALIDAÇÕES FINAIS
 # ============================================================================
 
@@ -2274,7 +2295,7 @@ EOF
     
     # Verificar Keycloak
     if docker service ls --format "{{.Name}}" | grep -q "keycloak"; then
-        log_info "�� Keycloak: Serviço Docker Swarm criado"
+        log_info "✅ Keycloak: Serviço Docker Swarm criado"
     else
         log_warn "⚠️ Keycloak: Serviço Docker Swarm NÃO encontrado"
     fi
