@@ -414,7 +414,7 @@ check_and_fix_keycloak_database() {
             }
         fi
         
-        # Conceder privilégios
+        # Conceder privil��gios
         PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U postgres -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;" 2>/dev/null || {
             log_warn "Falha com postgres, tentando com kryonix..."
             PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U kryonix -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;" 2>/dev/null || true
@@ -595,8 +595,8 @@ deploy_keycloak_service() {
         check_docker_swarm
     fi
 
-    # Verificar conflitos de porta
-    check_port_conflicts
+    # Configurar porta diretamente
+    setup_keycloak_port
     
     # Limpar locks antes do deploy
     clean_liquibase_locks
