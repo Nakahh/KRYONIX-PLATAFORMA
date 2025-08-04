@@ -595,8 +595,8 @@ deploy_keycloak_service() {
         check_docker_swarm
     fi
 
-    # Verificar conflitos de porta
-    check_port_conflicts
+    # Configurar porta diretamente
+    setup_keycloak_port
     
     # Limpar locks antes do deploy
     clean_liquibase_locks
