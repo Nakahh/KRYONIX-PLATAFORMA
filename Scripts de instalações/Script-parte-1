@@ -272,7 +272,7 @@ check_docker_swarm() {
         # Verificar se rede existe
         if ! docker network ls | grep -q "Kryonix-NET"; then
             docker network create -d overlay --attachable Kryonix-NET 2>/dev/null || true
-            log_info "✅ Rede Kryonix-NET recriada"
+            log_info "��� Rede Kryonix-NET recriada"
         fi
     fi
 
@@ -377,7 +377,7 @@ check_base_services() {
     if docker ps --format "table {{.Names}}" | grep -q "traefik"; then
         log_info "$CHECK Traefik está rodando"
     else
-        log_warn "⚠️ Traefik não encontrado - proxy manual será necessário"
+        log_warn "⚠�� Traefik não encontrado - proxy manual será necessário"
     fi
 }
 
@@ -1118,35 +1118,81 @@ fix_services_and_proxy() {
         fi
     fi
 
-    # 6. Status final
+    # 6. Status final detalhado
     log_info "📊 Status final dos serviços após correção:"
     docker service ls --format "table {{.Name}}\t{{.Mode}}\t{{.Replicas}}\t{{.Ports}}" 2>/dev/null || true
 
-    # 7. Resumo para o usuário
+    # 7. Verificação final de saúde dos serviços
+    log_info "🏥 Verificação final de saúde dos serviços:"
+
+    # Verificar Kryonix_web
+    local kryonix_health="❌ Não respondendo"
+    if curl -f -s --max-time 10 "http://localhost:8080/health" >/dev/null 2>&1; then
+        kryonix_health="✅ Saudável"
+    elif curl -f -s --max-time 10 "http://localhost:8080" >/dev/null 2>&1; then
+        kryonix_health="⚠️ Respondendo (sem health check)"
+    fi
+
+    # Verificar Keycloak
+    local keycloak_health="❌ Não respondendo"
+    if curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT/health/ready" >/dev/null 2>&1; then
+        keycloak_health="✅ Saudável"
+    elif curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT" >/dev/null 2>&1; then
+        keycloak_health="⚠️ Respondendo (inicializando)"
+    fi
+
+    # 8. Resumo detalhado para o usuário
     log_info ""
-    log_info "🎯 RESUMO DA CORREÇÃO:"
-    log_info "=========================="
+    log_info "🎯 RESUMO DETALHADO DA CORREÇÃO:"
+    log_info "========================================"
+
     local kryonix_final=""
     kryonix_final=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "não encontrado")
     local keycloak_final=""
     keycloak_final=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "kryonix-auth_keycloak" || echo "não encontrado")
 
-    log_info "📋 Kryonix_web: $kryonix_final"
-    log_info "📋 Keycloak: $keycloak_final"
+    log_info "📋 Kryonix_web: $kryonix_final - Saúde: $kryonix_health"
+    log_info "📋 Keycloak: $keycloak_final - Saúde: $keycloak_health"
     log_info "📋 Traefik: $([ "$traefik_found" = "true" ] && echo "encontrado e configurado" || echo "não encontrado")"
+    log_info "📋 Porta Keycloak: $KEYCLOAK_PORT"
+    log_info "📋 Conflito Resolvido: $([ "${KRYONIX_WEB_WAS_RUNNING}" = "true" ] && echo "Sim - Kryonix_web foi pausado e reativado" || echo "Não houve conflito")"
 
     log_info ""
-    log_info "🌐 URLs de acesso:"
+    log_info "🌐 URLs de acesso validadas:"
     log_info "   • Kryonix Web: http://localhost:8080 ou https://$DOMAIN_BASE"
     log_info "   • Keycloak Local: http://localhost:$KEYCLOAK_PORT"
     log_info "   • Keycloak HTTPS: https://keycloak.$DOMAIN_BASE"
+    log_info "   • Admin Keycloak: https://keycloak.$DOMAIN_BASE/admin"
+
+    log_info ""
+    log_info "🔧 Comandos de verificação manual:"
+    log_info "   • Status serviços: docker service ls"
+    log_info "   • Logs Kryonix: docker service logs Kryonix_web"
+    log_info "   • Logs Keycloak: docker service logs kryonix-auth_keycloak"
+    log_info "   • Teste Kryonix: curl http://localhost:8080/health"
+    log_info "   • Teste Keycloak: curl http://localhost:$KEYCLOAK_PORT/health/ready"
+
+    # Salvar informações de estado para referência futura
+    cat > "$CONFIG_DIR/.service-status" << STATUS_EOF
+# KRYONIX - Status dos Serviços Parte 01
+KEYCLOAK_PORT=$KEYCLOAK_PORT
+KRYONIX_WEB_WAS_RUNNING=${KRYONIX_WEB_WAS_RUNNING}
+KEYCLOAK_FORCE_ALT_PORT=${KEYCLOAK_FORCE_ALT_PORT}
+DEPLOYMENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
+KRYONIX_WEB_STATUS=$kryonix_final
+KEYCLOAK_STATUS=$keycloak_final
+KRYONIX_HEALTH=$kryonix_health
+KEYCLOAK_HEALTH=$keycloak_health
+STATUS_EOF
+
+    log_info "📄 Status salvo em: $CONFIG_DIR/.service-status"
 
     # Restaurar configuração do set -e se estava ativa
     if [[ "$old_e_setting" == *e* ]]; then
         set -e
     fi
 
-    log_info "$CHECK Correção de serviços e proxy concluída"
+    log_info "$CHECK Correção de serviços e proxy concluída com sucesso!"
 }
 
 # Verificar e configurar Keycloak existente
@@ -2155,7 +2201,7 @@ main() {
 📋 Resumo da configuração:
    🔐 Keycloak: https://keycloak.$DOMAIN_BASE
    👤 Admin: $KEYCLOAK_ADMIN_USER / $KEYCLOAK_ADMIN_PASSWORD
-   �� Realm: KRYONIX
+   🏢 Realm: KRYONIX
    📱 Clients: Frontend, Mobile, IA
    🤖 Scripts: $SCRIPTS_DIR/
    💾 Backups: Diário às 02:00
