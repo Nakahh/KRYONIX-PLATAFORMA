@@ -323,7 +323,7 @@ export default function HomePage() {
       ],
       applications: [
         'Revenda de solu��ões tecnológicas',
-        'Criação de produto pr��prio',
+        'Criaç��o de produto pr��prio',
         'Fortalecimento da marca pessoal',
         'Diferenciação no mercado',
         'Monetização de conhecimento'
@@ -427,6 +427,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Demo */}
+      <InteractiveDemo />
 
       {/* Features */}
       <section className="py-16 bg-white dark:bg-gray-900">
