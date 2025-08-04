@@ -313,29 +313,29 @@ check_external_connectivity() {
 # Verificar serviços base necessários
 check_base_services() {
     log_step "Verificando serviços base necessários"
-    
-    local required_services=("postgresql-kryonix" "traefik")
-    
-    for service in "${required_services[@]}"; do
-        local max_attempts=3
-        local found=false
-        
-        for i in $(seq 1 $max_attempts); do
-            if docker ps --format "table {{.Names}}" | grep -q "$service"; then
-                log_info "$CHECK $service está rodando"
-                found=true
-                break
-            fi
-            log_warn "Tentativa $i/$max_attempts: $service não encontrado"
-            sleep 2
-        done
-        
-        if [ "$found" = false ]; then
-            log_error "$service não está rodando após $max_attempts tentativas!"
-            log_error "Certifique-se que as stacks base estão instaladas"
-            exit 1
-        fi
-    done
+
+    # Verificar PostgreSQL - pode ser postgresql-kryonix ou Supabase
+    log_info "Verificando PostgreSQL..."
+    if docker ps --format "table {{.Names}}" | grep -q "postgresql-kryonix"; then
+        log_info "$CHECK postgresql-kryonix está rodando"
+        export POSTGRES_CONTAINER="postgresql-kryonix"
+    elif docker ps --format "table {{.Names}}" | grep -q "supabase_db"; then
+        POSTGRES_CONTAINER=$(docker ps --filter "name=supabase_db" --format "{{.Names}}" | head -1)
+        log_info "$CHECK Supabase PostgreSQL está rodando: $POSTGRES_CONTAINER"
+        export POSTGRES_CONTAINER="$POSTGRES_CONTAINER"
+    else
+        log_error "Nenhum PostgreSQL encontrado (postgresql-kryonix ou supabase_db)!"
+        log_error "Certifique-se que PostgreSQL ou Supabase está rodando"
+        exit 1
+    fi
+
+    # Verificar Traefik (opcional)
+    log_info "Verificando Traefik..."
+    if docker ps --format "table {{.Names}}" | grep -q "traefik"; then
+        log_info "$CHECK Traefik está rodando"
+    else
+        log_warn "⚠️ Traefik não encontrado - proxy manual será necessário"
+    fi
 }
 
 # ============================================================================
