@@ -1026,7 +1026,7 @@ fix_services_and_proxy() {
     log_info ""
     log_info "🌐 URLs de acesso validadas:"
     log_info "   • Kryonix Web: http://localhost:8080 ou https://$DOMAIN_BASE"
-    log_info "   • Keycloak Local: http://localhost:$KEYCLOAK_PORT"
+    log_info "   • Keycloak Local: http://localhost:8082"
     log_info "   • Keycloak HTTPS: https://keycloak.$DOMAIN_BASE"
     log_info "   • Admin Keycloak: https://keycloak.$DOMAIN_BASE/admin"
 
@@ -1805,7 +1805,7 @@ fi
 
 # Calcular tamanho do backup
 BACKUP_SIZE=$(du -sh "$BACKUP_DIR" 2>/dev/null | cut -f1 || echo "N/A")
-log_backup "✅ Backup KRYONIX concluído: $BACKUP_DIR ($BACKUP_SIZE)"
+log_backup "��� Backup KRYONIX concluído: $BACKUP_DIR ($BACKUP_SIZE)"
 
 # Limpar backups antigos (manter últimos 30 dias)
 find /opt/kryonix/backups -type d -name "202*" -mtime +30 -exec rm -rf {} \; 2>/dev/null || true
