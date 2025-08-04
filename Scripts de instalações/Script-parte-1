@@ -1168,6 +1168,15 @@ fix_services_and_proxy() {
     log_info "   • Logs Keycloak: docker service logs kryonix-auth_keycloak"
     log_info "   • Teste Kryonix: curl http://localhost:8080/health"
     log_info "   • Teste Keycloak: curl http://localhost:$KEYCLOAK_PORT/health/ready"
+    log_info "   • Teste HTTPS: curl -I https://keycloak.$DOMAIN_BASE"
+
+    log_info ""
+    log_info "🚨 CORREÇÃO PARA BAD GATEWAY:"
+    log_info "   Se ainda houver Bad Gateway em https://keycloak.$DOMAIN_BASE:"
+    log_info "   1. Verificar Traefik: docker service logs traefik (se houver)"
+    log_info "   2. Recarregar labels: docker service update --force kryonix-auth_keycloak"
+    log_info "   3. Aguardar 2-3 minutos para SSL/Traefik se estabilizar"
+    log_info "   4. Keycloak está na porta $KEYCLOAK_PORT internamente (8080 do container)"
 
     # Salvar informações de estado para referência futura
     cat > "$CONFIG_DIR/.service-status" << STATUS_EOF
