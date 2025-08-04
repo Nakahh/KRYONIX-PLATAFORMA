@@ -24,6 +24,20 @@ export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
 export LANG=C.UTF-8 2>/dev/null || export LANG=C
 
 # ============================================================================
+# CRIAÇÃO IMEDIATA DOS DIRETÓRIOS NECESSÁRIOS
+# ============================================================================
+# IMPORTANTE: Criar diretórios ANTES de qualquer função de log
+readonly LOG_DIR="/opt/kryonix/logs"
+readonly CONFIG_DIR="/opt/kryonix/config"
+readonly SCRIPTS_DIR="/opt/kryonix/scripts"
+readonly BACKUP_DIR="/opt/kryonix/backups"
+readonly CLIENTS_DIR="/opt/kryonix/clients"
+
+# Criar todos os diretórios necessários IMEDIATAMENTE
+mkdir -p "$LOG_DIR" "$CONFIG_DIR" "$SCRIPTS_DIR" "$BACKUP_DIR" "$CLIENTS_DIR"
+mkdir -p /etc/traefik/dynamic
+
+# ============================================================================
 # CONFIGURAÇÕES GLOBAIS - CREDENCIAIS REAIS DO PROJETO
 # ============================================================================
 
@@ -82,12 +96,7 @@ readonly LOCK="🔐"
 
 # Diretórios e arquivos
 readonly LOCK_FILE="/tmp/kryonix-parte01-$(date +%Y%m%d).lock"
-readonly LOG_DIR="/opt/kryonix/logs"
 readonly LOG_FILE="$LOG_DIR/parte01-$(date +%Y%m%d_%H%M%S).log"
-readonly CONFIG_DIR="/opt/kryonix/config"
-readonly SCRIPTS_DIR="/opt/kryonix/scripts"
-readonly BACKUP_DIR="/opt/kryonix/backups"
-readonly CLIENTS_DIR="/opt/kryonix/clients"
 
 # Contador de progresso
 CURRENT_STEP=0
