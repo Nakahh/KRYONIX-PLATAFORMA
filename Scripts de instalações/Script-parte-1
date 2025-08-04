@@ -979,7 +979,7 @@ fix_services_and_proxy() {
             fi
         else
             log_warn "⚠️ Keycloak não está estável - adiando reativação do Kryonix_web"
-            log_warn "�� Execute manualmente após verificar Keycloak: docker service scale Kryonix_web=1"
+            log_warn "🔧 Execute manualmente após verificar Keycloak: docker service scale Kryonix_web=1"
         fi
     fi
 
@@ -1026,19 +1026,37 @@ fix_services_and_proxy() {
 
     # 4. Atualizar labels do Traefik para usar a porta correta do Keycloak
     if [ "$traefik_found" = "true" ]; then
-        log_info "🔧 Atualizando labels do Traefik para Keycloak (porta $KEYCLOAK_PORT)..."
+        log_info "🔧 Corrigindo labels do Traefik para Keycloak (porta $KEYCLOAK_PORT)..."
 
-        # Atualizar o label do loadbalancer para usar a porta correta
+        # Atualizar TODOS os labels corretos do Traefik baseados no instalador
         docker service update \
-            --label-rm traefik.http.services.keycloak.loadbalancer.server.port \
-            --label-add traefik.http.services.keycloak.loadbalancer.server.port=$KEYCLOAK_PORT \
+            --label-add traefik.enable=true \
+            --label-add traefik.docker.network=Kryonix-NET \
+            --label-add traefik.http.services.keycloak.loadbalancer.server.port=8080 \
+            --label-add traefik.http.services.keycloak.loadbalancer.healthcheck.path=/health/ready \
+            --label-add traefik.http.services.keycloak.loadbalancer.healthcheck.interval=15s \
+            --label-add traefik.http.routers.keycloak.rule="Host(\`keycloak.$DOMAIN_BASE\`)" \
+            --label-add traefik.http.routers.keycloak.entrypoints=web,websecure \
+            --label-add traefik.http.routers.keycloak.service=keycloak \
+            --label-add traefik.http.routers.keycloak.priority=1000 \
+            --label-add traefik.http.routers.keycloak.tls=true \
+            --label-add traefik.http.routers.keycloak.tls.certresolver=letsencrypt \
             kryonix-auth_keycloak >/dev/null 2>&1
 
         local update_result=$?
         if [ $update_result -eq 0 ]; then
-            log_info "✅ Labels do Traefik atualizados para porta $KEYCLOAK_PORT"
-            log_info "Aguardando Traefik recarregar configuração..."
-            sleep 15
+            log_info "✅ Labels do Traefik corrigidos com configuração completa"
+            log_info "⏳ Aguardando Traefik recarregar configuração..."
+            sleep 20
+
+            # Força reload do Traefik se possível
+            local traefik_container=""
+            traefik_container=$(docker ps --format "{{.Names}}" | grep -i traefik | head -1)
+            if [ -n "$traefik_container" ]; then
+                log_info "🔄 Forçando reload do Traefik..."
+                docker kill -s HUP "$traefik_container" 2>/dev/null || true
+                sleep 10
+            fi
         else
             log_warn "⚠️ Falha ao atualizar labels do Traefik"
         fi
