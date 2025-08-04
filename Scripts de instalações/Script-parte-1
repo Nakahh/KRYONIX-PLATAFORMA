@@ -543,15 +543,11 @@ setup_keycloak_port() {
 
     log_info "✅ Porta 8082 configurada para Keycloak"
     log_info "✅ Kryonix_web será mantido ativo na porta 8080"
-}
-
-    # Já configurado na função setup_keycloak_port - apenas confirmar
-    log_info "$CHECK Keycloak configurado na porta: $KEYCLOAK_PORT (8082)"
 
     # Salvar porta para referência
     echo "$KEYCLOAK_PORT" > "$CONFIG_DIR/.keycloak-port"
 
-    return 0
+    log_info "$CHECK Keycloak configurado na porta: $KEYCLOAK_PORT (8082)"
 }
 
 # Fazer deploy definitivo do Keycloak
