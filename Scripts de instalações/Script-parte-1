@@ -348,14 +348,14 @@ create_keycloak_config() {
     
     # Criar database para Keycloak
     log_info "Configurando database do Keycloak..."
-    docker exec postgresql-kryonix psql -U postgres -c "
+    docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U kryonix -d postgres -c "
         SELECT 1 FROM pg_database WHERE datname = 'keycloak';
     " | grep -q "1" || {
-        docker exec postgresql-kryonix psql -U postgres -c "
-            CREATE DATABASE keycloak WITH 
-                ENCODING 'UTF8' 
-                LC_COLLATE = 'pt_BR.UTF-8' 
-                LC_CTYPE = 'pt_BR.UTF-8'
+        docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U kryonix -d postgres -c "
+            CREATE DATABASE keycloak WITH
+                ENCODING 'UTF8'
+                LC_COLLATE = 'C'
+                LC_CTYPE = 'C'
                 TEMPLATE template0;
             CREATE USER keycloak_user WITH PASSWORD '$POSTGRES_PASSWORD';
             GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;
