@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false, // Disable para build mais rápido
   swcMinify: true,
   output: 'standalone',
   experimental: {
     outputFileTracingRoot: process.cwd(),
+    optimizeCss: false, // Disable para build mais rápido
+    esmExternals: false, // Reduz tempo de análise
   },
   compress: true,
   poweredByHeader: false,
@@ -20,12 +22,39 @@ const nextConfig = {
   // Configuração para produção
   distDir: '.next',
   cleanDistDir: true,
-  // Acelerar build desabilitando lint e type check
+  // Acelerar build desabilitando verificações
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+  // Otimizações específicas para build rápido
+  productionBrowserSourceMaps: false,
+  optimizeFonts: false,
+  images: {
+    unoptimized: true, // Disable otimização de imagens para build mais rápido
+  },
+  // Webpack optimizations
+  webpack: (config, { isServer }) => {
+    // Reduzir bundle analysis time
+    config.optimization.splitChunks = {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
+    };
+
+    // Disable source maps em produção para build mais rápido
+    if (!isServer) {
+      config.devtool = false;
+    }
+
+    return config;
   },
 }
 

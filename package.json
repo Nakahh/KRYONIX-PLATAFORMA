@@ -7,7 +7,9 @@
     "dev": "node server.js",
     "build": "next build",
     "build-fast": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=production next build",
-    "build-docker": "node build-fast.js",
+    "build-ultra-fast": "node build-ultra-fast.js",
+    "build-docker": "node build-ultra-fast.js",
+    "build-emergency": "echo 'Emergency build mode' && npm run build-fast",
     "fix-typescript": "node fix-typescript-build.js",
     "start": "node server.js",
     "production": "NODE_ENV=production node server.js",
@@ -20,7 +22,9 @@
     "validate-install-inline": "node -e \"const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8')); const deps = Object.keys(pkg.dependencies); console.log('���� Validando ' + deps.length + ' dependências...'); let installed = 0; deps.forEach(dep => { try { require.resolve(dep); installed++; } catch(e) { console.error('❌ Falta: ' + dep); } }); console.log('✅ Instaladas: ' + installed + '/' + deps.length); if (installed !== deps.length) process.exit(1);\"",
     "preinstall": "node -e \"console.log('🚀 KRYONIX - Preparando instalação...'); console.log('Node.js:', process.version); console.log('npm:', process.env.npm_version || 'unknown'); console.log('Platform:', process.platform); console.log('✅ Ambiente validado');\"",
     "postinstall": "node -e \"try { require('./check-dependencies.js'); } catch(e) { console.log('⚠️ check-dependencies.js não encontrado, pulando verificação durante build'); }\"",
-    "prestart": "npm run check-deps"
+    "prestart": "npm run check-deps",
+    "optimize": "node optimize-deps.js",
+    "fast-setup": "npm run optimize && npm run build-ultra-fast"
   },
   "dependencies": {
     "@tailwindcss/forms": "0.5.10",
