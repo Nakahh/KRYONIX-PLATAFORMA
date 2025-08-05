@@ -20,7 +20,6 @@ import {
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
 import ThemeToggle from './components/ThemeToggle'
-import InteractiveDemo from './components/InteractiveDemo'
 import ContactForm from './components/ContactForm'
 
 export default function HomePage() {
@@ -429,8 +428,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Interactive Demo */}
-      <InteractiveDemo />
 
       {/* Features */}
       <section className="py-16 bg-white dark:bg-gray-900">
