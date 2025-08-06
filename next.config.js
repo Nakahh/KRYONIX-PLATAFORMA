@@ -5,7 +5,7 @@
 const nextConfig = {
   reactStrictMode: false, // Disable para build mais rápido
   swcMinify: true,
-  output: 'standalone',
+  // Remove standalone output for Vercel compatibility
   experimental: {
     outputFileTracingRoot: process.cwd(),
     optimizeCss: false, // Disable para build mais rápido
@@ -14,14 +14,6 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
-  httpAgentOptions: {
-    keepAlive: false,
-  },
-  // Otimizações para startup rápido
-  onDemandEntries: {
-    maxInactiveAge: 25 * 1000,
-    pagesBufferLength: 2,
-  },
   // Configuração para produção
   distDir: '.next',
   cleanDistDir: true,
@@ -38,19 +30,17 @@ const nextConfig = {
   images: {
     unoptimized: true, // Disable otimização de imagens para build mais rápido
   },
-  // Webpack optimizations
+  // Webpack optimizations - simplified for Vercel
   webpack: (config, { isServer }) => {
-    // Reduzir bundle analysis time
-    config.optimization.splitChunks = {
-      chunks: 'all',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-        },
-      },
-    };
+    // Fix for client-side only packages
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      }
+    }
 
     // Disable source maps em produção para build mais rápido
     if (!isServer) {
@@ -59,6 +49,8 @@ const nextConfig = {
 
     return config;
   },
+  // Add transpilation for problematic packages
+  transpilePackages: ['lucide-react'],
 }
 
 // Export directly without next-intl wrapper temporarily
