@@ -15,32 +15,38 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('system')
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     // Carregar tema salvo ou usar sistema
-    const savedTheme = localStorage.getItem('kryonix-theme') as Theme
-    if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
-      setTheme(savedTheme)
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('kryonix-theme') as Theme
+      if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
+        setTheme(savedTheme)
+      }
     }
   }, [])
 
   useEffect(() => {
+    if (!mounted || typeof window === 'undefined') return
+
     const updateResolvedTheme = () => {
       let newResolvedTheme: 'light' | 'dark'
-      
+
       if (theme === 'system') {
         newResolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
       } else {
         newResolvedTheme = theme
       }
-      
+
       setResolvedTheme(newResolvedTheme)
-      
+
       // Aplicar ao documento
       const root = window.document.documentElement
       root.classList.remove('light', 'dark')
       root.classList.add(newResolvedTheme)
-      
+
       // Salvar preferência
       localStorage.setItem('kryonix-theme', theme)
     }
@@ -57,7 +63,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [theme])
+  }, [theme, mounted])
 
   const handleSetTheme = (newTheme: Theme) => {
     setTheme(newTheme)
