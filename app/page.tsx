@@ -563,23 +563,23 @@ export default function HomePage() {
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              8 Módulos SaaS Disponíveis
+              9 Módulos SaaS Disponíveis
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
               Escolha os módulos ideais para seu negócio
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {modules.map((module, index) => (
               <div
                 key={index}
-                className="card hover:shadow-xl transition-all duration-300 text-center group cursor-pointer transform hover:scale-105 hover:border-primary-300 relative overflow-hidden"
+                className="card-compact hover:shadow-lg transition-all duration-300 text-center group cursor-pointer transform hover:scale-102 hover:border-primary-300 relative overflow-hidden"
                 onClick={() => setSelectedModule(index)}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-50 to-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative z-10">
-                  <div className="text-2xl font-bold text-primary-600 mb-2">
+                  <div className="text-xl font-bold text-primary-600 mb-2">
                     {module.price}
                   </div>
                   <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-gray-900 mb-3 text-sm">
