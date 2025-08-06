@@ -1,5 +1,4 @@
-// Temporarily disable next-intl to fix module issues
-// const withNextIntl = require('next-intl/plugin')('./lib/i18n.ts');
+const withNextIntl = require('next-intl/plugin')('./lib/i18n.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -7,10 +6,10 @@ const nextConfig = {
   swcMinify: true,
   output: 'standalone',
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   images: {
     unoptimized: true,
@@ -27,6 +26,4 @@ const nextConfig = {
   },
 }
 
-// Export directly without next-intl wrapper temporarily
-module.exports = nextConfig
-// module.exports = withNextIntl(nextConfig)
+module.exports = withNextIntl(nextConfig)
