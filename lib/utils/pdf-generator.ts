@@ -817,12 +817,12 @@ export class PDFGenerator {
 }
 
 // Funções de conveniência para uso direto
-export const generateCommercialProposalPDF = (language: string = 'pt') => {
+export const generateCommercialProposalPDF = async (language: string = 'pt') => {
   const generator = new PDFGenerator()
-  generator.generateCommercialProposal(language)
+  await generator.generateCommercialProposal(language)
 }
 
-export const generateTechnicalDocumentationPDF = (language: string = 'pt') => {
+export const generateTechnicalDocumentationPDF = async (language: string = 'pt') => {
   const generator = new PDFGenerator()
-  generator.generateTechnicalDocumentation(language)
+  await generator.generateTechnicalDocumentation(language)
 }
