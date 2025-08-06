@@ -39,29 +39,33 @@ const partnershipTypes = [
   {
     icon: Handshake,
     title: 'Parceria Estratégica',
-    description: 'Empresas que querem integrar seus serviços com nossa plataforma ou criar soluções conjuntas.',
+    description: 'Empresas que querem integrar seus serviços com nossa plataforma de 75+ stacks tecnológicos ou criar soluções conjuntas e inovadoras para o mercado.',
     investment: 'Investimento variável',
     roi: 'ROI customizado',
     benefits: [
-      'Integração tecnológica',
-      'Acesso ao nosso mercado',
-      'Desenvolvimento conjunto',
-      'Expansão de portfólio',
-      'Suporte mútuo comercial'
+      'Integração tecnológica completa com APIs',
+      'Acesso direto ao nosso mercado de 8K+ clientes',
+      'Desenvolvimento conjunto de soluções',
+      'Expansão de portfólio com nossa tecnologia',
+      'Suporte mútuo comercial e técnico',
+      'Treinamento especializado da equipe',
+      'Dashboard personalizado para parceiros'
     ]
   },
   {
     icon: Globe,
     title: 'Parceria de Expansão',
-    description: 'Empresas interessadas em levar KRYONIX para outros países ou regiões específicas.',
+    description: 'Empresas interessadas em levar KRYONIX para outros países ou regiões específicas, expandindo nossa presença global e oferecendo soluções personalizadas para mercados locais.',
     investment: 'Modelo franchise',
     roi: 'Participação nos lucros',
     benefits: [
-      'Direitos territoriais',
-      'Marca white-label',
-      'Treinamento completo',
-      'Suporte técnico',
-      'Marketing localizado'
+      'Direitos territoriais exclusivos por região',
+      'Marca white-label personalizada',
+      'Treinamento completo de 40 horas',
+      'Suporte técnico 24/7 em português',
+      'Marketing localizado e materiais traduzidos',
+      'Acompanhamento contínuo por 12 meses',
+      'Participação nos lucros de 15-25%'
     ]
   }
 ]
