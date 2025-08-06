@@ -17,7 +17,12 @@ import {
   Instagram,
   Mail,
   Handshake,
-  TrendingUp
+  TrendingUp,
+  Plus,
+  Package,
+  Star,
+  ShoppingCart,
+  X
 } from 'lucide-react'
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
