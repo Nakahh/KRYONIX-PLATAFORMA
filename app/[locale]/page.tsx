@@ -534,7 +534,7 @@ export default function HomePage() {
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              8 Módulos SaaS Disponíveis
+              9 Módulos SaaS Disponíveis
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
               Escolha os módulos ideais para seu negócio
