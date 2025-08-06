@@ -934,9 +934,9 @@ export default function HomePage() {
                     <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Analytics Básico</li>
                   </ul>
                 </div>
-                <button className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm">
+                <Link href="/fila-de-espera" className="block w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm text-center">
                   Entrar para Fila de Espera
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -962,9 +962,9 @@ export default function HomePage() {
                     <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Setup gratuito (R$ 497)</li>
                   </ul>
                 </div>
-                <button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2 rounded-lg font-medium hover:from-yellow-600 hover:to-orange-600 transition-colors text-sm">
+                <Link href="/fila-de-espera" className="block w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2 rounded-lg font-medium hover:from-yellow-600 hover:to-orange-600 transition-colors text-sm text-center">
                   Entrar para Fila de Espera
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -987,9 +987,9 @@ export default function HomePage() {
                     <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Migração gratuita (R$ 1.497)</li>
                   </ul>
                 </div>
-                <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-colors text-sm">
+                <Link href="/fila-de-espera" className="block w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-colors text-sm text-center">
                   Entrar para Fila de Espera
-                </button>
+                </Link>
               </div>
             </div>
           </div>
