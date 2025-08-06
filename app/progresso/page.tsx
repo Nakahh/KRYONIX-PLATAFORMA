@@ -67,39 +67,13 @@ export default function ProgressoPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700">
       <MobileMenu />
       
-      {/* Header */}
-      <header className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link 
-              href="/" 
-              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Voltar</span>
-            </Link>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <Image 
-              src="/logo-kryonix.png" 
-              alt="KRYONIX" 
-              width={32} 
-              height={32} 
-              className="rounded-lg"
-            />
-            <span className="text-xl font-bold gradient-text">KRYONIX</span>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-sm">
-              <div className="status-online"></div>
-              <span className="text-gray-600 dark:text-gray-300">Online</span>
-            </div>
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
+      <PageHeader
+        title="Progresso do Projeto KRYONIX"
+        subtitle="Acompanhe o desenvolvimento das 50 partes"
+        showBackButton={true}
+        backHref="/"
+        className="sticky top-0 z-40"
+      />
 
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
