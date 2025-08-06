@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Logo from '@/app/components/Logo'
+import ViewCounter from '@/app/components/ViewCounter'
 import { FileText, Download, Globe, ArrowRight, Lock, Eye, Users, TrendingUp, Server, Shield } from 'lucide-react'
 
 const languages = [
@@ -46,14 +47,12 @@ const documents = [
 
 export default function PartnershipProposal() {
   const [selectedLanguage, setSelectedLanguage] = useState('pt')
-  const [viewCount, setViewCount] = useState(0) // Real view counter
 
   const selectedLang = languages.find(lang => lang.code === selectedLanguage)
 
   const handleDownload = (file: string) => {
     // Simulate download - in real implementation, this would download from the server
     console.log(`Downloading: ${file}`)
-    setViewCount(prev => prev + 1)
   }
 
   return (
@@ -72,10 +71,12 @@ export default function PartnershipProposal() {
             Parceria de Infraestrutura para Servidores
           </p>
           <div className="flex items-center justify-center gap-4 text-sm text-gray-500 dark:text-slate-400">
-            <div className="flex items-center gap-1">
-              <Eye className="w-4 h-4" />
-              <span>{viewCount} visualizações</span>
-            </div>
+            <ViewCounter
+              pageId="partnership-proposal-confidential"
+              className=""
+              showIcon={true}
+              animated={true}
+            />
             <div className="flex items-center gap-1">
               <Users className="w-4 h-4" />
               <span>Proposta Comercial Estratégica</span>
@@ -200,7 +201,7 @@ export default function PartnershipProposal() {
               <div className="absolute -top-3 left-4 bg-yellow-400 dark:bg-yellow-500 text-yellow-900 dark:text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">
                 RECOMENDADO
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-2">��� Patrocinador Fundador</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-2">🏆 Patrocinador Fundador</h3>
               <div className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-4">R$ 2.004.000</div>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-slate-300">
                 <li>✅ Naming rights exclusivos</li>
