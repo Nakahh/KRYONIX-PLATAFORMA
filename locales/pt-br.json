@@ -39,5 +39,122 @@
     "stacks": "75+ Stacks Tecnológicos",
     "clients": "8.000+ Clientes Potenciais",
     "revenue": "R$ 45M+ Receita Projetada"
+  },
+  "modules": {
+    "analytics": {
+      "name": "Análise Avançada e BI",
+      "description": "Transforme dados em decisões inteligentes com nosso módulo de Business Intelligence."
+    },
+    "scheduling": {
+      "name": "Agendamento Inteligente + Cobrança",
+      "description": "Sistema completo de agendamento automatizado que elimina conflitos e otimiza sua agenda."
+    },
+    "omnichannel": {
+      "name": "Atendimento Omnichannel IA",
+      "description": "Unifique todos os canais de atendimento em uma única plataforma inteligente."
+    },
+    "crm": {
+      "name": "CRM Inteligente & Funil de Vendas",
+      "description": "Gerencie seus clientes e vendas com inteligência artificial que nunca perde uma oportunidade."
+    },
+    "email": {
+      "name": "Email Marketing Avançado",
+      "description": "Campanhas inteligentes que chegam na hora certa, no canal certo, para a pessoa certa."
+    },
+    "social": {
+      "name": "Gestão Redes Sociais + IA",
+      "description": "Automatize sua presença digital com IA que cria, publica e engaja por você."
+    },
+    "portal": {
+      "name": "Portal Cliente + Treinamento IA",
+      "description": "Área exclusiva onde seus clientes acessam tudo que precisam de forma autônoma."
+    },
+    "whatsapp": {
+      "name": "WhatsApp Business Automation",
+      "description": "Transforme nossa plataforma na sua própria solução com sua marca e identidade visual."
+    },
+    "sms": {
+      "name": "SMS + Push Notifications",
+      "description": "Comunicação múltipla com seus clientes via SMS, Push e notificações inteligentes."
+    }
+  },
+  "packages": {
+    "starter": {
+      "name": "Starter Pack",
+      "description": "Ideal para começar"
+    },
+    "professional": {
+      "name": "Professional Pack",
+      "description": "Melhor custo-benefício"
+    },
+    "enterprise": {
+      "name": "Enterprise Pack",
+      "description": "Todos os recursos"
+    }
+  },
+  "forms": {
+    "name": "Nome Completo",
+    "email": "Endereço de Email",
+    "phone": "Telefone",
+    "company": "Empresa",
+    "position": "Cargo",
+    "segment": "Segmento de Negócio",
+    "message": "Mensagem",
+    "required": "Este campo é obrigatório",
+    "submit": "Enviar Proposta",
+    "sending": "Enviando...",
+    "success": "Enviado com sucesso!",
+    "error": "Erro ao enviar. Tente novamente."
+  },
+  "footer": {
+    "copyright": "© 2025 KRYONIX. Desenvolvido por Vitor Jayme Fernandes Ferreira.",
+    "aiAssisted": "🤖 Assistido por 15 Agentes Especializados em IA",
+    "contact": "Contato",
+    "systemStatus": "Status do Sistema",
+    "onlineSystem": "Sistema Online",
+    "activeMonitoring": "Monitoramento Ativo",
+    "autoBackup": "Backup Automático"
+  },
+  "errors": {
+    "invalidEmail": "Por favor, insira um endereço de email válido",
+    "networkError": "Erro de rede. Tente novamente.",
+    "validationError": "Erro de validação",
+    "serverError": "Erro do servidor"
+  },
+  "dashboard": {
+    "title": "Dashboard Administrativo",
+    "waitlist": "Lista de Espera",
+    "analytics": "Analytics",
+    "modules": "Módulos",
+    "users": "Usuários",
+    "health": "Saúde do Sistema",
+    "translations": "Traduções",
+    "settings": "Configurações",
+    "logout": "Sair"
+  },
+  "waitlist": {
+    "title": "Entre na Fila de Espera VIP",
+    "subtitle": "Seja um dos primeiros 1.000 clientes a revolucionar seu negócio com IA",
+    "form": {
+      "personalInfo": "Informações Pessoais",
+      "companyInfo": "Informações da Empresa",
+      "interests": "Módulos de Interesse",
+      "additionalInfo": "Informações Adicionais"
+    },
+    "success": {
+      "title": "Bem-vindo à Fila VIP!",
+      "position": "Posição",
+      "message": "Parabéns! Nossa equipe entrará em contato em breve."
+    }
+  },
+  "system": {
+    "online": "Sistema Online",
+    "offline": "Sistema Offline",
+    "maintenance": "Manutenção"
+  },
+  "nav": {
+    "partnerships": "Parcerias",
+    "home": "Início",
+    "progress": "Progresso"
   }
 }
