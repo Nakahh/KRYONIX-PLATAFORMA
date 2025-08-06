@@ -447,8 +447,15 @@ export default function HomePage() {
                   href="/progresso"
                   className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-2"
                 >
-                  <BarChart3 className="w-5 h-5" />
+                  <TrendingUp className="w-5 h-5" />
                   Ver Desenvolvimento
+                </Link>
+                <Link
+                  href="/parcerias-empresariais-contato"
+                  className="border-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 px-6 py-3 rounded-full font-medium text-base transition-all duration-300 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 flex items-center gap-2"
+                >
+                  <Handshake className="w-4 h-4" />
+                  Seja Parceiro
                 </Link>
               </div>
 
@@ -473,7 +480,7 @@ export default function HomePage() {
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center card-transition">
                 <div className="text-2xl font-bold text-success-600">9</div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">Módulos Completos</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">M��dulos Completos</div>
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center card-transition">
                 <div className="text-2xl font-bold text-purple-600">15</div>
