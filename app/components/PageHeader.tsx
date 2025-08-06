@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Logo from './Logo'
 import ThemeToggle from './ThemeToggle'
-import LanguageSwitcher from './LanguageSwitcher'
+import SimpleLanguageSwitcher from './SimpleLanguageSwitcher'
 import { ArrowLeft, Home } from 'lucide-react'
 
 interface PageHeaderProps {
@@ -74,7 +74,7 @@ export default function PageHeader({
             </div>
             
             {/* Language switcher */}
-            <LanguageSwitcher className="" variant="dropdown" />
+            <SimpleLanguageSwitcher className="" variant="dropdown" />
             
             {/* Theme toggle */}
             <ThemeToggle />
