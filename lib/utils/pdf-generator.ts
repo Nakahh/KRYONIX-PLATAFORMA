@@ -1,7 +1,8 @@
 'use client'
 
-import { jsPDF } from 'jspdf'
-import 'jspdf-autotable'
+// Dynamic imports to prevent SSR issues
+let jsPDF: any = null
+let autoTableLoaded = false
 
 // Tipos para o autoTable
 declare module 'jspdf' {
@@ -11,6 +12,25 @@ declare module 'jspdf' {
       finalY: number
     }
   }
+}
+
+// Load jsPDF dynamically only on client side
+const loadJsPDF = async () => {
+  if (typeof window === 'undefined') {
+    throw new Error('PDF generation is only available on the client side')
+  }
+
+  if (!jsPDF) {
+    const jsPDFModule = await import('jspdf')
+    jsPDF = jsPDFModule.jsPDF
+  }
+
+  if (!autoTableLoaded) {
+    await import('jspdf-autotable')
+    autoTableLoaded = true
+  }
+
+  return jsPDF
 }
 
 export interface DocumentSection {
@@ -779,7 +799,7 @@ export class PDFGenerator {
               items: [
                 'RTO (Recovery Time Objective): 4 horas',
                 'RPO (Recovery Point Objective): 15 minutos',
-                'Failover automático multi-região',
+                'Failover autom��tico multi-região',
                 'Runbook documentado e testado',
                 'Communication plan para stakeholders',
                 'Business continuity procedures'
