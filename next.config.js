@@ -52,6 +52,5 @@ const nextConfig = {
   transpilePackages: ['lucide-react'],
 }
 
-// Export directly without next-intl wrapper temporarily
-module.exports = nextConfig
-// module.exports = withNextIntl(nextConfig)
+// Export with next-intl wrapper
+module.exports = withNextIntl(nextConfig)
