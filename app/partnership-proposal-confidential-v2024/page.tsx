@@ -57,9 +57,9 @@ export default function PartnershipProposal() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700">
       {/* Security Header */}
-      <div className="bg-red-600 text-white py-2 px-4 text-center text-sm font-medium">
+      <div className="bg-red-600 dark:bg-red-700 text-white py-2 px-4 text-center text-sm font-medium">
         🔒 DOCUMENTO CONFIDENCIAL - ACESSO RESTRITO - NÃO COMPARTILHAR
       </div>
 
@@ -69,13 +69,13 @@ export default function PartnershipProposal() {
           <div className="flex justify-center mb-6">
             <Logo />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-50 mb-4">
             🤝 PROPOSTA COMERCIAL ESTRATÉGICA
           </h1>
-          <p className="text-xl text-gray-600 mb-2">
+          <p className="text-xl text-gray-600 dark:text-slate-300 mb-2">
             Parceria de Infraestrutura para Servidores
           </p>
-          <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
+          <div className="flex items-center justify-center gap-4 text-sm text-gray-500 dark:text-slate-400">
             <div className="flex items-center gap-1">
               <Eye className="w-4 h-4" />
               <span>{viewCount} visualizações</span>
@@ -93,21 +93,21 @@ export default function PartnershipProposal() {
 
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
-            <div className="text-3xl font-bold text-green-600 mb-2">$7.5M+</div>
-            <div className="text-gray-600">Receita Conjunta (3 anos)</div>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-slate-600">
+            <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">R$ 45M+</div>
+            <div className="text-gray-600 dark:text-slate-300">Receita Conjunta (3 anos)</div>
           </div>
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
-            <div className="text-3xl font-bold text-blue-600 mb-2">850%</div>
-            <div className="text-gray-600">ROI Projetado</div>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-slate-600">
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">452%</div>
+            <div className="text-gray-600 dark:text-slate-300">ROI Projetado</div>
           </div>
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
-            <div className="text-3xl font-bold text-purple-600 mb-2">8K+</div>
-            <div className="text-gray-600">Clientes Finais</div>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-slate-600">
+            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">8K+</div>
+            <div className="text-gray-600 dark:text-slate-300">Clientes Finais</div>
           </div>
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
-            <div className="text-3xl font-bold text-orange-600 mb-2">$334K</div>
-            <div className="text-gray-600">Investimento Mínimo</div>
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-slate-600">
+            <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2">R$ 2M</div>
+            <div className="text-gray-600 dark:text-slate-300">Investimento Mínimo</div>
           </div>
         </div>
 
