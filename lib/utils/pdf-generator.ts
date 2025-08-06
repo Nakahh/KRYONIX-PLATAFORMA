@@ -69,7 +69,7 @@ export class PDFGenerator {
   private checkPageBreak(neededSpace: number = 30) {
     if (this.currentY + neededSpace > this.pageHeight - 30) {
       this.doc.addPage()
-      this.addWatermark() // Marca d'água em nova p��gina
+      this.addWatermark() // Marca d'água em nova página
       this.currentY = 30
       return true
     }
@@ -302,10 +302,13 @@ export class PDFGenerator {
     this.doc.save(`proposta-comercial-kryonix-${language}.pdf`)
   }
 
-  public generateTechnicalDocumentation(language: string = 'pt') {
+  public async generateTechnicalDocumentation(language: string = 'pt') {
+    await this.initializePDF()
+    if (!this.doc) throw new Error('PDF not initialized')
+
     const title = this.getTitle('technical', language)
     const subtitle = this.getSubtitle('technical', language)
-    
+
     this.addHeader(title, subtitle)
 
     const sections = this.getTechnicalDocumentationSections(language)
