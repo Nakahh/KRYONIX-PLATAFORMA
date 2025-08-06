@@ -147,7 +147,11 @@ export class BiometricAuth {
 
       this.log('Criando credencial', publicKeyCredentialCreationOptions)
 
-      const credential = await navigator.credentials.create({
+      if (typeof window === 'undefined' || !window.navigator.credentials) {
+        throw new Error('WebAuthn not supported')
+      }
+
+      const credential = await window.navigator.credentials.create({
         publicKey: publicKeyCredentialCreationOptions
       }) as PublicKeyCredential
 
@@ -224,7 +228,11 @@ export class BiometricAuth {
 
       this.log('Solicitando autenticação', publicKeyCredentialRequestOptions)
 
-      const credential = await navigator.credentials.get({
+      if (typeof window === 'undefined' || !window.navigator.credentials) {
+        throw new Error('WebAuthn not supported')
+      }
+
+      const credential = await window.navigator.credentials.get({
         publicKey: publicKeyCredentialRequestOptions
       }) as PublicKeyCredential
 
@@ -273,6 +281,8 @@ export class BiometricAuth {
       this.log('Removendo credencial biométrica', { username, credentialId })
       
       // Remover do armazenamento local
+      if (typeof window === 'undefined') return false
+
       const storageKey = `kryonix_biometric_${username}`
       const stored = localStorage.getItem(storageKey)
       
@@ -303,6 +313,8 @@ export class BiometricAuth {
   async getUserCredentials(username: string): Promise<any[]> {
     try {
       // Buscar do armazenamento local (temporário)
+      if (typeof window === 'undefined') return []
+
       const storageKey = `kryonix_biometric_${username}`
       const stored = localStorage.getItem(storageKey)
       
@@ -329,8 +341,11 @@ export class BiometricAuth {
   // Métodos privados
 
   private generateChallenge(): ArrayBuffer {
+    if (typeof window === 'undefined' || !window.crypto) {
+      throw new Error('Crypto API not available')
+    }
     const challenge = new Uint8Array(32)
-    crypto.getRandomValues(challenge)
+    window.crypto.getRandomValues(challenge)
     return challenge.buffer
   }
 
@@ -373,6 +388,8 @@ export class BiometricAuth {
 
   private async saveCredential(username: string, credentialData: any): Promise<void> {
     // Salvar localmente (temporário para desenvolvimento)
+    if (typeof window === 'undefined') return
+
     const storageKey = `kryonix_biometric_${username}`
     const existing = localStorage.getItem(storageKey)
     const credentials = existing ? JSON.parse(existing) : []
