@@ -51,6 +51,7 @@ export class PDFGenerator {
   private checkPageBreak(neededSpace: number = 30) {
     if (this.currentY + neededSpace > this.pageHeight - 30) {
       this.doc.addPage()
+      this.addWatermark() // Marca d'água em nova página
       this.currentY = 30
       return true
     }
@@ -95,6 +96,64 @@ export class PDFGenerator {
     this.doc.line(this.margin, 30, this.doc.internal.pageSize.width - this.margin, 30)
 
     this.currentY = 40
+
+    // Adicionar marca d'água
+    this.addWatermark()
+  }
+
+  private addWatermark() {
+    // Salva estado gráfico
+    this.doc.saveGraphicsState()
+
+    try {
+      // Define opacidade para marca d'água (10% transparente)
+      this.doc.setGState(new (this.doc as any).GState({ opacity: 0.1 }))
+
+      // Posição central da página
+      const pageWidth = this.doc.internal.pageSize.width
+      const pageHeight = this.doc.internal.pageSize.height
+      const watermarkSize = 60
+      const x = (pageWidth - watermarkSize) / 2
+      const y = (pageHeight - watermarkSize) / 2
+
+      // Adiciona marca d'água central
+      this.doc.addImage(this.watermarkBase64, 'PNG', x, y, watermarkSize, watermarkSize)
+
+      // Marca d'água discreta no canto
+      this.doc.setGState(new (this.doc as any).GState({ opacity: 0.15 }))
+      const cornerSize = 12
+      this.doc.addImage(
+        this.watermarkBase64,
+        'PNG',
+        pageWidth - this.margin - cornerSize,
+        pageHeight - this.margin - cornerSize,
+        cornerSize,
+        cornerSize
+      )
+
+    } catch (error) {
+      // Fallback: marca d'água de texto
+      this.doc.setGState(new (this.doc as any).GState({ opacity: 0.1 }))
+      this.doc.setTextColor(200, 200, 200)
+      this.doc.setFontSize(24)
+      this.doc.setFont('helvetica', 'bold')
+
+      const pageWidth = this.doc.internal.pageSize.width
+      const pageHeight = this.doc.internal.pageSize.height
+
+      // Texto diagonal no centro
+      this.doc.text('KRYONIX', pageWidth / 2, pageHeight / 2, {
+        align: 'center',
+        angle: 45
+      })
+
+      // Texto pequeno no canto
+      this.doc.setFontSize(8)
+      this.doc.text('KRYONIX', pageWidth - 30, pageHeight - 15)
+    }
+
+    // Restaura estado gráfico
+    this.doc.restoreGraphicsState()
   }
 
   private addSection(section: DocumentSection) {
