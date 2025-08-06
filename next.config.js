@@ -1,4 +1,5 @@
-const withNextIntl = require('next-intl/plugin')('./lib/i18n.ts');
+// Temporarily disable next-intl to fix module issues
+// const withNextIntl = require('next-intl/plugin')('./lib/i18n.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
