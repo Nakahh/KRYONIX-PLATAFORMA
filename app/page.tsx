@@ -47,6 +47,9 @@ export default function HomePage() {
   }, [])
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
     if (selectedModule !== null) {
       document.body.classList.add('modal-open')
     } else {
@@ -54,7 +57,9 @@ export default function HomePage() {
     }
 
     return () => {
-      document.body.classList.remove('modal-open')
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('modal-open')
+      }
     }
   }, [selectedModule])
 
@@ -305,7 +310,7 @@ export default function HomePage() {
       applications: [
         'Self-service para clientes',
         'Redução de chamados de suporte',
-        'Transparência total nos serviços',
+        'Transparência total nos servi��os',
         'Facilitar renovações e upgrades',
         'Melhorar experiência do cliente'
       ],
