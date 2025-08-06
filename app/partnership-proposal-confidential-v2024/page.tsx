@@ -6,7 +6,6 @@ import Logo from '@/app/components/Logo'
 import ViewCounter from '@/app/components/ViewCounter'
 import PageHeader from '@/app/components/PageHeader'
 import { FileText, Download, Globe, ArrowRight, Lock, Eye, Users, TrendingUp, Server, Shield } from 'lucide-react'
-import { generateCommercialProposalPDF, generateTechnicalDocumentationPDF } from '@/lib/utils/pdf-generator'
 
 const languages = [
   { code: 'pt', name: 'Português', flag: '🇧🇷', file: '05-PROPOSTA-COMERCIAL-PARCERIAS-SERVIDORES.md' },
