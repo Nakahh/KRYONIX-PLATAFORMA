@@ -137,7 +137,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Agendamento Inteligente',
+      name: 'Agendamento Inteligente + Cobrança',
       price: 'R$ 119/mês',
       status: 'unavailable',
       description: 'Sistema completo de agendamento automatizado que elimina conflitos e otimiza sua agenda.',
@@ -167,7 +167,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Atendimento Omnichannel',
+      name: 'Atendimento Omnichannel IA',
       price: 'R$ 159/mês',
       status: 'unavailable',
       description: 'Unifique todos os canais de atendimento em uma única plataforma inteligente.',
@@ -196,7 +196,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'CRM & Funil de Vendas',
+      name: 'CRM Inteligente & Funil de Vendas',
       price: 'R$ 179/mês',
       status: 'unavailable',
       description: 'Gerencie seus clientes e vendas com inteligência artificial que nunca perde uma oportunidade.',
@@ -225,8 +225,8 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Email Marketing Multicanal',
-      price: 'R$ 219/mês',
+      name: 'Email Marketing Avançado',
+      price: 'R$ 239/mês',
       status: 'unavailable',
       description: 'Campanhas inteligentes que chegam na hora certa, no canal certo, para a pessoa certa.',
       features: [
@@ -254,7 +254,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Gestão Redes Sociais',
+      name: 'Gestão Redes Sociais + IA',
       price: 'R$ 239/mês',
       status: 'unavailable',
       description: 'Automatize sua presença digital com IA que cria, publica e engaja por você.',
@@ -283,7 +283,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Portal do Cliente',
+      name: 'Portal Cliente + Treinamento IA',
       price: 'R$ 269/mês',
       status: 'unavailable',
       description: 'Área exclusiva onde seus clientes acessam tudo que precisam de forma autônoma.',
@@ -312,8 +312,8 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Whitelabel Customizável',
-      price: 'R$ 299/mês',
+      name: 'WhatsApp Business Automation',
+      price: 'R$ 179/mês',
       status: 'unavailable',
       description: 'Transforme nossa plataforma na sua própria solução com sua marca e identidade visual.',
       features: [
@@ -326,7 +326,7 @@ export default function HomePage() {
       ],
       applications: [
         'Revenda de solu��ões tecnológicas',
-        'Criação de produto pr��prio',
+        'Criação de produto pr���prio',
         'Fortalecimento da marca pessoal',
         'Diferenciação no mercado',
         'Monetização de conhecimento'
