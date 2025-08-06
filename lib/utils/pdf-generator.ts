@@ -29,17 +29,33 @@ export interface DocumentSection {
 }
 
 export class PDFGenerator {
-  private doc: jsPDF
+  private doc: jsPDFType | null = null
   private currentY: number = 30
-  private pageHeight: number
+  private pageHeight: number = 0
   private margin = 20
   private logoBase64: string = ''
   private watermarkBase64: string = ''
+  private initialized: boolean = false
 
-  constructor() {
-    this.doc = new jsPDF()
-    this.pageHeight = this.doc.internal.pageSize.height
-    this.setupBranding()
+  private async initializePDF() {
+    if (this.initialized) return
+
+    if (typeof window === 'undefined') {
+      throw new Error('PDF generation is only available in browser environment')
+    }
+
+    try {
+      const { jsPDF } = await import('jspdf')
+      await import('jspdf-autotable')
+
+      this.doc = new jsPDF()
+      this.pageHeight = this.doc.internal.pageSize.height
+      this.setupBranding()
+      this.initialized = true
+    } catch (error) {
+      console.error('Failed to initialize PDF library:', error)
+      throw new Error('PDF library failed to load')
+    }
   }
 
   private setupBranding() {
