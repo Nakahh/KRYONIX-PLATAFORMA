@@ -1,3 +1,5 @@
+'use client'
+
 import { BiometricData, BiometricType } from '../types/auth'
 import { AuthUtils } from '../utils/auth-utils'
 
