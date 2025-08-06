@@ -6,6 +6,7 @@ import Logo from '@/app/components/Logo'
 import ViewCounter from '@/app/components/ViewCounter'
 import PageHeader from '@/app/components/PageHeader'
 import { FileText, Download, Globe, ArrowRight, Lock, Eye, Users, TrendingUp, Server, Shield } from 'lucide-react'
+import { generateCommercialProposalPDF, generateTechnicalDocumentationPDF } from '@/lib/utils/pdf-generator'
 
 const languages = [
   { code: 'pt', name: 'Português', flag: '🇧🇷', file: '05-PROPOSTA-COMERCIAL-PARCERIAS-SERVIDORES.md' },
@@ -53,35 +54,22 @@ export default function PartnershipProposal() {
 
   const handleDownload = (file: string) => {
     try {
-      // Criar um link temporário para download
-      const link = document.createElement('a')
+      // Determinar o idioma do arquivo
+      let language = 'pt'
+      if (file.includes('-EN.')) language = 'en'
+      else if (file.includes('-ES.')) language = 'es'
+      else if (file.includes('-DE.')) language = 'de'
+      else if (file.includes('-RU.')) language = 'fr' // Usar francês no lugar do russo por enquanto
 
-      // Para arquivos .md, criar um blob com conteúdo simulado
-      let content = ''
-
-      if (file.includes('PROPOSTA-COMERCIAL')) {
-        content = `# PROPOSTA COMERCIAL ESTRATÉGICA KRYONIX\n\n## Parceria de Infraestrutura para Servidores\n\nData: ${new Date().toLocaleDateString('pt-BR')}\n\n### Resumo Executivo\n\nA KRYONIX é uma plataforma SaaS 100% autônoma powered by IA, desenvolvida para revolucionar a automação empresarial. Nossa solução integra mais de 75 stacks tecnológicos em um ecossistema unificado.\n\n### Métricas Principais\n\n- **Receita Conjunta Projetada**: R$ 45M+ (3 anos)\n- **ROI Projetado**: 452%\n- **Clientes Potenciais**: 8.000+\n- **Stacks Tecnológicos**: 75+\n\n### Tipos de Parceria\n\n#### 1. Patrocinador Fundador - R$ 2.004.000\n- Naming rights exclusivos\n- 15% revenue share\n- Exclusividade categoria (3 anos)\n- Co-marketing agreement\n- Dashboard dedicado\n\n#### 2. Parceiro Estratégico - R$ 798.000\n- Status provider preferido\n- 8% revenue share\n- Co-marketing opportunities\n- Technical showcase rights\n- Priority support access\n\n#### 3. Parceiro Comercial - R$ 300.000\n- Listed partner status\n- 3% revenue share\n- Referral program access\n- Technical documentation\n- Support collaboration\n\n### Prazo para Proposta\n**10 de Agosto à 15 de Outubro de 2025**\n\n### Contato Estratégico\n\n**CEO & Founder**: Vitor Fernandes\n- Email: vitor@kryonix.com.br\n- WhatsApp: +55 17 98180-5327\n\n**Business Development**\n- Email: partnerships@kryonix.com.br\n- Website: www.kryonix.com.br\n\n---\n\n*Este documento contém informações confidenciais e estratégicas da KRYONIX*\n*Distribuição restrita apenas para tomadores de decisão autorizados*\n`
-      } else if (file.includes('ANALISE-COMPLETA-SERVIDORES')) {
-        content = `# ANÁLISE COMPLETA DE SERVIDORES - KRYONIX\n\n## Requisitos Técnicos Detalhados\n\n### Infraestrutura Base\n\n- **CPU**: 16+ cores, 2.4GHz+\n- **RAM**: 64GB DDR4\n- **Storage**: 2TB NVMe SSD\n- **Network**: 10Gbps\n\n### Stacks Tecnológicos (75+)\n\n1. **Backend**: Node.js, Python, Go\n2. **Database**: PostgreSQL, Redis, MongoDB\n3. **Container**: Docker, Kubernetes\n4. **Monitoring**: Grafana, Prometheus\n5. **Security**: Keycloak, MinIO\n\n### Estimativa de Recursos\n\n- **Desenvolvimento**: 38 semanas\n- **Infraestrutura**: R$ 2.5M/ano\n- **Manutenção**: R$ 500K/ano\n\n### ROI Projetado\n\n**Ano 1**: 125%\n**Ano 2**: 285%\n**Ano 3**: 452%\n\n---\n\n*Análise técnica completa para parceiros qualificados*\n`
+      // Gerar PDF baseado no tipo de documento
+      if (file.includes('PROPOSTA-COMERCIAL') || file.includes('COMMERCIAL-PROPOSAL') || file.includes('PROPUESTA-COMERCIAL') || file.includes('HANDELSVORSCHLAG') || file.includes('КОММЕРЧЕСКОЕ-ПРЕДЛОЖЕНИЕ')) {
+        generateCommercialProposalPDF(language)
       } else {
-        content = `# ${file.replace('.md', '').replace(/-/g, ' ').toUpperCase()}\n\n## Documento KRYONIX\n\nData de geração: ${new Date().toLocaleDateString('pt-BR')}\n\nEste é um documento da plataforma KRYONIX com informações detalhadas sobre o projeto.\n\n### Informações Principais\n\n- Plataforma SaaS 100% autônoma\n- Powered by IA avançada\n- 75+ stacks tecnológicos integrados\n- ROI projetado de 452%\n\n### Contato\n\npartnerships@kryonix.com.br\n+55 17 98180-5327\n\n---\n\n*KRYONIX - Automatização Empresarial Inteligente*\n`
+        // Para outros arquivos, gerar documentação técnica
+        generateTechnicalDocumentationPDF(language)
       }
 
-      const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' })
-      const url = URL.createObjectURL(blob)
-
-      link.href = url
-      link.download = file
-      link.style.display = 'none'
-
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-
-      // Limpar URL do blob
-      setTimeout(() => URL.revokeObjectURL(url), 100)
-
-      console.log(`Download iniciado: ${file}`)
+      console.log(`Download PDF iniciado: ${file} (${language})`)
     } catch (error) {
       console.error('Erro no download:', error)
       alert('Erro ao baixar o arquivo. Tente novamente.')
