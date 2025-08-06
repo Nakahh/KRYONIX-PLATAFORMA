@@ -9,13 +9,21 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true)
-    
-    // Check initial theme
-    const isDark = localStorage.getItem('theme') === 'dark' || 
-                   (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    
+
+    if (typeof window === 'undefined') return
+
+    // Check initial theme using same key as theme context
+    const savedTheme = localStorage.getItem('kryonix-theme')
+    let isDark = false
+
+    if (savedTheme === 'dark') {
+      isDark = true
+    } else if (savedTheme === 'system' || !savedTheme) {
+      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+
     setDarkMode(isDark)
-    
+
     if (isDark) {
       document.documentElement.classList.add('dark')
     } else {
@@ -24,15 +32,17 @@ export default function ThemeToggle() {
   }, [])
 
   const toggleTheme = () => {
+    if (typeof window === 'undefined') return
+
     const newDarkMode = !darkMode
     setDarkMode(newDarkMode)
-    
+
     if (newDarkMode) {
       document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
+      localStorage.setItem('kryonix-theme', 'dark')
     } else {
       document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
+      localStorage.setItem('kryonix-theme', 'light')
     }
   }
 
