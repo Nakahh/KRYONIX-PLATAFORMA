@@ -741,94 +741,94 @@ export default function HomePage() {
       </section>
 
       {/* Pacotes Combinados com Desconto */}
-      <section className="py-16 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20">
+      <section className="py-12 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20">
         <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">
               🔥 Pacotes Combinados - Economize até 37%
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
               Máximo valor, mínimo investimento. Escolha o pacote ideal para seu negócio.
             </p>
-            <div className="inline-flex items-center px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full text-sm font-medium">
+            <div className="inline-flex items-center px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full text-xs font-medium">
               ⏰ Oferta especial: Primeiros 1.000 clientes - Preços sobem em breve!
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
             {/* Starter Pack */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 relative">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 relative">
               <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Starter Pack</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">Ideal para começar</p>
-                <div className="mb-6">
-                  <div className="text-sm text-gray-500 line-through">R$ 397/mês individual</div>
-                  <div className="text-4xl font-bold text-green-600 dark:text-green-400">R$ 199/mês</div>
-                  <div className="text-sm text-green-600 dark:text-green-400 font-medium">Economia de 50%</div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Starter Pack</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm">Ideal para começar</p>
+                <div className="mb-4">
+                  <div className="text-xs text-gray-500 line-through">R$ 397/mês individual</div>
+                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">R$ 199/mês</div>
+                  <div className="text-xs text-orange-600 dark:text-orange-400 font-medium">Economia de 50%</div>
                 </div>
-                <div className="text-left mb-6">
-                  <h4 className="font-semibold mb-3">Inclui:</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />CRM Inteligente</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />WhatsApp Business</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Analytics Básico</li>
+                <div className="text-left mb-4">
+                  <h4 className="font-semibold mb-2 text-sm">Inclui:</h4>
+                  <ul className="space-y-1 text-xs">
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />CRM Inteligente</li>
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />WhatsApp Business</li>
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Analytics Básico</li>
                   </ul>
                 </div>
-                <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                  🎆 Começar Agora
+                <button className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm">
+                  Entrar para Fila de Espera
                 </button>
               </div>
             </div>
 
             {/* Professional Pack - MAIS POPULAR */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border-2 border-yellow-400 dark:border-yellow-500 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-400 dark:bg-yellow-500 text-yellow-900 dark:text-yellow-900 px-4 py-1 rounded-full text-xs font-bold">
-                ⭐ MAIS POPULAR - 70% escolhem
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-2 border-yellow-400 dark:border-yellow-500 relative">
+              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-yellow-400 dark:bg-yellow-500 text-yellow-900 dark:text-yellow-900 px-2 py-0.5 rounded-full text-xs font-bold">
+                ⭐ MAIS POPULAR
               </div>
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Professional Pack</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">Melhor custo-benefício</p>
-                <div className="mb-6">
-                  <div className="text-sm text-gray-500 line-through">R$ 636/mês individual</div>
-                  <div className="text-4xl font-bold text-green-600 dark:text-green-400">R$ 429/mês</div>
-                  <div className="text-sm text-green-600 dark:text-green-400 font-medium">Economia de 33%</div>
+              <div className="text-center mt-2">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Professional Pack</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm">Melhor custo-benefício</p>
+                <div className="mb-4">
+                  <div className="text-xs text-gray-500 line-through">R$ 636/mês individual</div>
+                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">R$ 429/mês</div>
+                  <div className="text-xs text-orange-600 dark:text-orange-400 font-medium">Economia de 33%</div>
                 </div>
-                <div className="text-left mb-6">
-                  <h4 className="font-semibold mb-3">Inclui tudo do Starter +:</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Omnichannel IA</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Agendamento + Cobrança</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Email Marketing</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Setup gratuito (R$ 497)</li>
+                <div className="text-left mb-4">
+                  <h4 className="font-semibold mb-2 text-sm">Inclui tudo do Starter +:</h4>
+                  <ul className="space-y-1 text-xs">
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Omnichannel IA</li>
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Agendamento + Cobrança</li>
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Email Marketing</li>
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Setup gratuito (R$ 497)</li>
                   </ul>
                 </div>
-                <button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-3 rounded-lg font-medium hover:from-yellow-600 hover:to-orange-600 transition-colors">
-                  🚀 Escolher Professional
+                <button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2 rounded-lg font-medium hover:from-yellow-600 hover:to-orange-600 transition-colors text-sm">
+                  Entrar para Fila de Espera
                 </button>
               </div>
             </div>
 
             {/* Enterprise Pack */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 relative">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 relative">
               <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Enterprise Pack</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">Todos os recursos</p>
-                <div className="mb-6">
-                  <div className="text-sm text-gray-500 line-through">R$ 1.268/mês individual</div>
-                  <div className="text-4xl font-bold text-green-600 dark:text-green-400">R$ 799/mês</div>
-                  <div className="text-sm text-green-600 dark:text-green-400 font-medium">Economia de 37%</div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Enterprise Pack</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm">Todos os recursos</p>
+                <div className="mb-4">
+                  <div className="text-xs text-gray-500 line-through">R$ 1.268/mês individual</div>
+                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">R$ 799/mês</div>
+                  <div className="text-xs text-orange-600 dark:text-orange-400 font-medium">Economia de 37%</div>
                 </div>
-                <div className="text-left mb-6">
-                  <h4 className="font-semibold mb-3">Todos os 9 módulos +:</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Suporte prioritário 24/7</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Customizações ilimitadas</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Account manager dedicado</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Migração gratuita (R$ 1.497)</li>
+                <div className="text-left mb-4">
+                  <h4 className="font-semibold mb-2 text-sm">Todos os 9 módulos +:</h4>
+                  <ul className="space-y-1 text-xs">
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Suporte prioritário 24/7</li>
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Customizações ilimitadas</li>
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Account manager dedicado</li>
+                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Migração gratuita (R$ 1.497)</li>
                   </ul>
                 </div>
-                <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-colors">
-                  🏆 Escolher Enterprise
+                <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-colors text-sm">
+                  Entrar para Fila de Espera
                 </button>
               </div>
             </div>
