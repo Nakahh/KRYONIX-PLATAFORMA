@@ -17,29 +17,13 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
-  // Optimized webpack config
+  // Simplified webpack config to prevent self issues
   webpack: (config, { isServer }) => {
     // Externalize problematic browser-only libraries on server
     if (isServer) {
       config.externals = config.externals || [];
       config.externals.push('jspdf', 'jspdf-autotable');
     }
-
-    // Optimize build performance
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            priority: 10,
-            reuseExistingChunk: true,
-          },
-        },
-      },
-    };
 
     return config;
   },
