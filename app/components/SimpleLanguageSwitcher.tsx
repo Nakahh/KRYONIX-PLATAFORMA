@@ -72,9 +72,12 @@ export default function SimpleLanguageSwitcher({
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        className="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        aria-label="Alterar idioma"
       >
-        {locales.find(l => l.code === currentLocale)?.flag} {locales.find(l => l.code === currentLocale)?.name}
+        <span className="text-lg">
+          {locales.find(l => l.code === currentLocale)?.flag || '🌍'}
+        </span>
       </button>
       
       {isOpen && (
@@ -86,7 +89,7 @@ export default function SimpleLanguageSwitcher({
           />
           
           {/* Dropdown */}
-          <div className="absolute right-0 top-full z-20 mt-1 w-48 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg py-1">
+          <div className="absolute right-0 top-12 z-20 w-44 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg py-1">
             {locales.map((locale) => (
               <button
                 key={locale.code}
