@@ -67,6 +67,7 @@ export class PDFGenerator {
   }
 
   private checkPageBreak(neededSpace: number = 30) {
+    if (!this.doc) return false
     if (this.currentY + neededSpace > this.pageHeight - 30) {
       this.doc.addPage()
       this.addWatermark() // Marca d'água em nova página
@@ -77,6 +78,7 @@ export class PDFGenerator {
   }
 
   private addHeader(title: string, subtitle?: string) {
+    if (!this.doc) return
     // Logo KRYONIX real
     try {
       this.doc.addImage(this.logoBase64, 'PNG', this.margin, 12, 35, 12)
@@ -120,6 +122,7 @@ export class PDFGenerator {
   }
 
   private addWatermark() {
+    if (!this.doc) return
     // Salva estado gráfico
     this.doc.saveGraphicsState()
 
@@ -175,6 +178,7 @@ export class PDFGenerator {
   }
 
   private addSection(section: DocumentSection) {
+    if (!this.doc) return
     this.checkPageBreak(20)
 
     // Título da seção
@@ -261,6 +265,7 @@ export class PDFGenerator {
   }
 
   private addFooter() {
+    if (!this.doc) return
     const pageCount = this.doc.internal.getNumberOfPages()
     
     for (let i = 1; i <= pageCount; i++) {
@@ -632,7 +637,7 @@ export class PDFGenerator {
                 'Traefik Proxy Reverso: SSL automático, roteamento inteligente, load balancing',
                 'PostgreSQL Database: Multi-tenant, otimizado para mobile, backup automático',
                 'Redis Cache: Cache distribuído, sessões, pub/sub para tempo real',
-                'MinIO Object Storage: Compatível S3, armazenamento distribuído',
+                'MinIO Object Storage: Compat��vel S3, armazenamento distribuído',
                 'Docker Containerization: Isolamento, portabilidade, eficiência',
                 'RabbitMQ Message Queue: Comunicação assíncrona, reliability',
                 'Nginx Load Balancer: Distribuição de carga, SSL termination',
