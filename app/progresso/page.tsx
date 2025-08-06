@@ -17,6 +17,7 @@ import MobileMenu from '../components/MobileMenu'
 import LoadingScreen from '../components/LoadingScreen'
 import ProgressBar from '../components/ProgressBar'
 import ThemeToggle from '../components/ThemeToggle'
+import PageHeader from '../components/PageHeader'
 import { partsData } from '../../lib/data/parts-data'
 
 export default function ProgressoPage() {
