@@ -79,12 +79,13 @@ export class BiometricAuth {
    */
   async getSupportedTypes(): Promise<BiometricType[]> {
     const types: BiometricType[] = []
-    
+
     if (!await this.isAvailable()) return types
 
     // No navegador, não conseguimos detectar especificamente o tipo
     // Mas podemos assumir que dispositivos móveis modernos suportam:
-    const userAgent = navigator.userAgent.toLowerCase()
+    if (typeof window === 'undefined') return types
+    const userAgent = window.navigator.userAgent.toLowerCase()
     
     if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
       // iOS: Touch ID e Face ID
@@ -420,7 +421,7 @@ export class BiometricAuth {
     try {
       // Em produção, a verificação seria feita no servidor
       // Por enquanto, simula verificação bem-sucedida
-      this.log('Verificando assinatura biométrica', { credentialId: credential.id })
+      this.log('Verificando assinatura biom��trica', { credentialId: credential.id })
       return true
     } catch (error) {
       this.log('Erro na verificação de assinatura', error)
