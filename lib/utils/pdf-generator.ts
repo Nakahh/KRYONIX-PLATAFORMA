@@ -47,17 +47,26 @@ export interface DocumentSection {
 }
 
 export class PDFGenerator {
-  private doc: jsPDF
+  private doc: any = null
   private currentY: number = 30
-  private pageHeight: number
+  private pageHeight: number = 0
   private margin = 20
   private logoBase64: string = ''
   private watermarkBase64: string = ''
+  private initialized: boolean = false
 
   constructor() {
-    this.doc = new jsPDF()
-    this.pageHeight = this.doc.internal.pageSize.height
+    // Don't initialize jsPDF in constructor - do it lazily
     this.setupBranding()
+  }
+
+  private async ensureInitialized() {
+    if (this.initialized) return
+
+    const jsPDFClass = await loadJsPDF()
+    this.doc = new jsPDFClass()
+    this.pageHeight = this.doc.internal.pageSize.height
+    this.initialized = true
   }
 
   private setupBranding() {
@@ -543,7 +552,7 @@ export class PDFGenerator {
                 'Backup automático diário dos dados',
                 'Conformidade LGPD desde o primeiro dia',
                 'Suporte técnico 24/7 via WhatsApp',
-                'Atualizações de segurança automáticas',
+                'Atualiza��ões de segurança automáticas',
                 'Monitoramento proativo de performance'
               ]
             }
@@ -799,7 +808,7 @@ export class PDFGenerator {
               items: [
                 'RTO (Recovery Time Objective): 4 horas',
                 'RPO (Recovery Point Objective): 15 minutos',
-                'Failover autom��tico multi-região',
+                'Failover automático multi-região',
                 'Runbook documentado e testado',
                 'Communication plan para stakeholders',
                 'Business continuity procedures'
