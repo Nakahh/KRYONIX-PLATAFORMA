@@ -79,11 +79,9 @@ const nextConfig = {
       chunks: 'all',
       cacheGroups: {
         vendor: {
-          test: /[\\/]node_modules[\\/]/,
+          test: /[\\/]node_modules[\\/](?!(jspdf|jspdf-autotable)[\\/])/,
           name: 'vendors',
           chunks: 'all',
-          // Exclude problematic browser-only modules
-          exclude: /[\\/]node_modules[\\/](jspdf|jspdf-autotable)[\\/]/,
         },
       },
     };
