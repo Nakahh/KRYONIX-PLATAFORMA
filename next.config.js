@@ -8,7 +8,7 @@ const nextConfig = {
   experimental: {
     outputFileTracingRoot: process.cwd(),
     optimizeCss: false, // Disable para build mais rápido
-    esmExternals: false, // Reduz tempo de análise
+    esmExternals: 'loose', // Fix module resolution issues
   },
   compress: true,
   poweredByHeader: false,
