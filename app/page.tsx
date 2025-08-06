@@ -460,20 +460,20 @@ export default function HomePage() {
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center card-transition">
-                <div className="text-2xl font-bold text-primary-600">32+</div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">Stacks Tecnológicas</div>
+                <div className="text-2xl font-bold text-primary-600">75+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">Tecnologias Integradas</div>
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center card-transition">
-                <div className="text-2xl font-bold text-success-600">8</div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">Módulos SaaS</div>
+                <div className="text-2xl font-bold text-success-600">9</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">Módulos Completos</div>
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center card-transition">
                 <div className="text-2xl font-bold text-purple-600">15</div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">Agentes IA</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">Assistentes IA</div>
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center card-transition">
-                <div className="text-2xl font-bold text-orange-600">100%</div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">Automação</div>
+                <div className="text-2xl font-bold text-orange-600">24/7</div>
+                <div className="text-sm text-gray-600 dark:text-gray-300">Funcionamento</div>
               </div>
             </div>
           </div>
