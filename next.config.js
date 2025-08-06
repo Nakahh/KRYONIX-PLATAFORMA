@@ -39,15 +39,40 @@ const nextConfig = {
     unoptimized: true, // Disable otimização de imagens para build mais rápido
   },
   // Webpack optimizations
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     // Exclude browser-only libraries from server-side bundle
     if (isServer) {
       config.externals = config.externals || [];
-      config.externals.push({
-        'jspdf': 'jspdf',
-        'jspdf-autotable': 'jspdf-autotable'
-      });
+
+      // Properly externalize browser-only libraries
+      config.externals.push(
+        'jspdf',
+        'jspdf-autotable'
+      );
+
+      // Add fallback for browser-only APIs
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    } else {
+      // Client-side specific configurations
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
     }
+
+    // Add plugin to handle browser globals
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'typeof window': JSON.stringify('object'),
+      })
+    );
 
     // Reduzir bundle analysis time
     config.optimization.splitChunks = {
@@ -57,6 +82,8 @@ const nextConfig = {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
           chunks: 'all',
+          // Exclude problematic browser-only modules
+          exclude: /[\\/]node_modules[\\/](jspdf|jspdf-autotable)[\\/]/,
         },
       },
     };
