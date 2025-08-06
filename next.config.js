@@ -40,6 +40,15 @@ const nextConfig = {
   },
   // Webpack optimizations
   webpack: (config, { isServer }) => {
+    // Exclude browser-only libraries from server-side bundle
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push({
+        'jspdf': 'jspdf',
+        'jspdf-autotable': 'jspdf-autotable'
+      });
+    }
+
     // Reduzir bundle analysis time
     config.optimization.splitChunks = {
       chunks: 'all',
