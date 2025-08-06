@@ -378,6 +378,12 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <Link
+                href="/parcerias-empresariais-contato"
+                className="hidden md:inline-flex text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              >
+                Parcerias
+              </Link>
               <div className="flex items-center space-x-2">
                 <div className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
                 <span className="text-sm text-gray-600 dark:text-gray-300">Sistema Online</span>
