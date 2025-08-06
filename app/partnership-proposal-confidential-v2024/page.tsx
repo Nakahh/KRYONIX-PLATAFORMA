@@ -51,8 +51,14 @@ export default function PartnershipProposal() {
 
   const selectedLang = languages.find(lang => lang.code === selectedLanguage)
 
-  const handleDownload = (file: string) => {
+  const handleDownload = async (file: string) => {
     try {
+      // Only run on client side
+      if (typeof window === 'undefined') {
+        console.warn('PDF generation only available on client side')
+        return
+      }
+
       // Determinar o idioma do arquivo
       let language = 'pt'
       if (file.includes('-EN.')) language = 'en'
@@ -60,12 +66,15 @@ export default function PartnershipProposal() {
       else if (file.includes('-DE.')) language = 'de'
       else if (file.includes('-RU.')) language = 'fr' // Usar francês no lugar do russo por enquanto
 
+      // Dynamic import to avoid SSR issues
+      const { generateCommercialProposalPDF, generateTechnicalDocumentationPDF } = await import('@/lib/utils/pdf-generator')
+
       // Gerar PDF baseado no tipo de documento
       if (file.includes('PROPOSTA-COMERCIAL') || file.includes('COMMERCIAL-PROPOSAL') || file.includes('PROPUESTA-COMERCIAL') || file.includes('HANDELSVORSCHLAG') || file.includes('КОММЕРЧЕСКОЕ-ПРЕДЛОЖЕНИЕ')) {
-        generateCommercialProposalPDF(language)
+        await generateCommercialProposalPDF(language)
       } else {
         // Para outros arquivos, gerar documentação técnica
-        generateTechnicalDocumentationPDF(language)
+        await generateTechnicalDocumentationPDF(language)
       }
 
       console.log(`Download PDF iniciado: ${file} (${language})`)
