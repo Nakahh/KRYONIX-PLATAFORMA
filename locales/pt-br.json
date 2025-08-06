@@ -1,0 +1,43 @@
+{
+  "common": {
+    "home": "Início",
+    "about": "Sobre",
+    "contact": "Contato",
+    "services": "Serviços",
+    "loading": "Carregando...",
+    "partnerships": "Parcerias",
+    "solutions": "Soluções",
+    "language": "Idioma",
+    "changeLanguage": "Alterar idioma"
+  },
+  "home": {
+    "title": "KRYONIX - Plataforma SaaS 100% Autônoma por IA",
+    "subtitle": "Automatize Seus Processos com IA Avançada",
+    "description": "Transforme sua empresa com nossa plataforma completa de automação empresarial, integrada a mais de 75 stacks tecnológicos.",
+    "cta": "Conhecer Soluções",
+    "partnerCta": "Seja Parceiro",
+    "viewCounter": "visualizações"
+  },
+  "partnerships": {
+    "title": "Parcerias Empresariais",
+    "subtitle": "Oportunidades estratégicas de negócio",
+    "description": "Junte-se à revolução da automação empresarial",
+    "infrastructure": "Parceria de Infraestrutura",
+    "strategic": "Parceria Estratégica", 
+    "expansion": "Parceria de Expansão",
+    "investment": "Investimento",
+    "roi": "ROI Projetado",
+    "benefits": "Benefícios Inclusos",
+    "contact": "Entre em Contato",
+    "whatsapp": "WhatsApp Direto",
+    "email": "Email Corporativo",
+    "meeting": "Reunião Agendada"
+  },
+  "project": {
+    "name": "KRYONIX",
+    "tagline": "Automação Empresarial Inteligente",
+    "stacks": "75+ Stacks Tecnológicos",
+    "clients": "8.000+ Clientes Potenciais",
+    "revenue": "R$ 45M+ Receita Projetada"
+  }
+}
