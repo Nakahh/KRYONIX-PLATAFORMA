@@ -1,7 +1,6 @@
 'use client'
 
-import { jsPDF } from 'jspdf'
-import 'jspdf-autotable'
+import dynamic from 'next/dynamic'
 
 // Tipos para o autoTable
 declare module 'jspdf' {
@@ -12,6 +11,9 @@ declare module 'jspdf' {
     }
   }
 }
+
+// Tipo para jsPDF
+type jsPDFType = any
 
 export interface DocumentSection {
   title: string
