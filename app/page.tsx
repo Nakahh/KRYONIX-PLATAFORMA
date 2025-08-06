@@ -339,6 +339,35 @@ export default function HomePage() {
         'Revendedores de tecnologia',
         'Empresas que querem solução própria'
       ]
+    },
+    {
+      name: 'SMS + Push Notifications',
+      price: 'R$ 119/mês',
+      status: 'unavailable',
+      description: 'Comunicação multípla com seus clientes via SMS, Push e notificações inteligentes.',
+      features: [
+        'SMS integrado com múltiplos provedores (Zenvia, AWS)',
+        'Push notifications web e mobile',
+        'Notificações personalizadas por segmento',
+        'Agenda inteligente de envios',
+        'Tracking de entrega em tempo real',
+        'Compliance automático (LGPD, GDPR)'
+      ],
+      applications: [
+        'Lembretes de consultas e compromissos',
+        'Campanhas promocionais por SMS',
+        'Alertas de segurança e confirmações',
+        'Notificações de status de pedidos',
+        'Recuperação de carrinho abandonado'
+      ],
+      targetBusinesses: [
+        'E-commerces e marketplaces',
+        'Bancos e fintechs',
+        'Aplicativos mobile',
+        'Serviços de delivery',
+        'Clínicas e consultórios',
+        'Empresas de segurança'
+      ]
     }
   ]
 
