@@ -29,7 +29,10 @@ export default function ThemeToggle() {
   const toggleTheme = () => {
     const newDarkMode = !darkMode
     setDarkMode(newDarkMode)
-    
+
+    // Only run on client side
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
     if (newDarkMode) {
       document.documentElement.classList.add('dark')
       localStorage.setItem('theme', 'dark')
