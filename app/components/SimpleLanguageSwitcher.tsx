@@ -40,9 +40,11 @@ export default function SimpleLanguageSwitcher({
     // Aplicar traduções na página
     translatePage(newLocale);
 
-    // Notificar mudança
-    const message = getTranslation('language.changed', newLocale);
-    alert(message);
+    // Notificar mudança (only on client side)
+    if (typeof window !== 'undefined') {
+      const message = getTranslation('language.changed', newLocale);
+      alert(message);
+    }
   };
 
   if (variant === 'buttons') {
