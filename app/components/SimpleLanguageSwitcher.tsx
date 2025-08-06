@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Globe } from 'lucide-react';
+import { translatePage, getTranslation, getCurrentLocale, setCurrentLocale } from '@/lib/utils/translation-system';
 
 const locales = [
   { code: 'pt-br', name: 'Português (BR)', flag: '🇧🇷' },
@@ -16,54 +17,32 @@ interface SimpleLanguageSwitcherProps {
   variant?: 'dropdown' | 'buttons';
 }
 
-export default function SimpleLanguageSwitcher({ 
-  className = '', 
-  variant = 'dropdown' 
+export default function SimpleLanguageSwitcher({
+  className = '',
+  variant = 'dropdown'
 }: SimpleLanguageSwitcherProps) {
-  const [currentLocale, setCurrentLocale] = useState('pt-br');
+  const [currentLocale, setCurrentLocaleState] = useState('pt-br');
   const [isOpen, setIsOpen] = useState(false);
 
+  // Carregar idioma salvo ao inicializar
+  useEffect(() => {
+    const savedLocale = getCurrentLocale();
+    setCurrentLocaleState(savedLocale);
+  }, []);
+
   const handleLocaleChange = (newLocale: string) => {
-    setCurrentLocale(newLocale);
+    setCurrentLocaleState(newLocale);
     setIsOpen(false);
 
-    // Salvar preferência no localStorage
-    localStorage.setItem('preferred-locale', newLocale);
+    // Salvar preferência
+    setCurrentLocale(newLocale);
 
-    // Simular mudança de idioma na interface
-    const elementsToTranslate = document.querySelectorAll('[data-translate]');
-    elementsToTranslate.forEach(element => {
-      const key = element.getAttribute('data-translate');
-      if (key) {
-        // Aqui você pode implementar um sistema de tradução mais robusto
-        element.textContent = getTranslation(key, newLocale);
-      }
-    });
+    // Aplicar traduções na página
+    translatePage(newLocale);
 
     // Notificar mudança
-    alert(`Idioma alterado para: ${locales.find(l => l.code === newLocale)?.name}\n\nEm breve teremos tradução completa do site!`);
-  };
-
-  // Função auxiliar para traduções básicas
-  const getTranslation = (key: string, locale: string) => {
-    const translations: Record<string, Record<string, string>> = {
-      'home.title': {
-        'pt-br': 'KRYONIX - Plataforma SaaS 100% Autônoma por IA',
-        'en': 'KRYONIX - 100% AI-Autonomous SaaS Platform',
-        'es': 'KRYONIX - Plataforma SaaS 100% Autónoma por IA',
-        'de': 'KRYONIX - 100% KI-autonome SaaS-Plattform',
-        'fr': 'KRYONIX - Plateforme SaaS 100% Autonome par IA'
-      },
-      'partnerships': {
-        'pt-br': 'Parcerias',
-        'en': 'Partnerships',
-        'es': 'Alianzas',
-        'de': 'Partnerschaften',
-        'fr': 'Partenariats'
-      }
-    };
-
-    return translations[key]?.[locale] || key;
+    const message = getTranslation('language.changed', newLocale);
+    alert(message);
   };
 
   if (variant === 'buttons') {
