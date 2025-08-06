@@ -390,17 +390,69 @@ export default function HomePage() {
       <section className="py-12">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
+            {/* Launch Badge */}
+            <div className="mb-6 inline-flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium animate-pulse">
+              <Clock className="w-4 h-4" />
+              Lançamento: 10 de Fevereiro de 2026
+            </div>
+
             <div className="mb-8">
               <h1 className="text-4xl sm:text-6xl font-bold mb-6 text-balance">
-                <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Plataforma SaaS</span>
+                <span className="text-gray-900 dark:text-gray-100">Sua Empresa</span>
                 <br />
-                <span className="text-gray-900 dark:text-gray-100">100% Autônoma por IA</span>
+                <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Funcionando Sozinha</span>
+                <br />
+                <span className="text-3xl sm:text-4xl text-gray-700 dark:text-gray-300">24 Horas por Dia</span>
               </h1>
 
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 text-balance max-w-2xl mx-auto">
-                Transforme seu negócio com nossa plataforma inteligente: WhatsApp Business,
-                CRM avançado, automação completa e muito mais.
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 text-balance max-w-3xl mx-auto">
+                <strong className="text-green-600">WhatsApp, vendas, atendimento e cobrança</strong> - tudo no automático enquanto você dorme.
+                A primeira plataforma brasileira que <strong>sua avó consegue usar!</strong>
               </p>
+
+              {/* Value Props */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+                  <div className="font-bold text-green-700 dark:text-green-400">⏱️ 2-5 minutos</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">Para começar a usar</div>
+                </div>
+                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+                  <div className="font-bold text-blue-700 dark:text-blue-400">💰 300% mais vendas</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">Sem esforço extra</div>
+                </div>
+                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4">
+                  <div className="font-bold text-purple-700 dark:text-purple-400">🕐 8+ horas livres</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">Por semana</div>
+                </div>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+                <a
+                  href="https://wa.me/5517981805327?text=Quero%20automatizar%20meu%20negócio%20com%20KRYONIX%20-%20me%20explica%20como%20funciona%3F"
+                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2 group"
+                >
+                  <MessageCircle className="w-5 h-5 group-hover:animate-bounce" />
+                  QUERO AUTOMATIZAR MEU NEGÓCIO
+                </a>
+                <Link
+                  href="/progresso"
+                  className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-2"
+                >
+                  <BarChart3 className="w-5 h-5" />
+                  Ver Desenvolvimento
+                </Link>
+              </div>
+
+              {/* Social Proof */}
+              <div className="text-gray-600 dark:text-gray-400 text-sm">
+                <p className="mb-3">✅ Já despertou interesse de empresários, médicos, advogados, imobiliárias e salões de beleza</p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-full border text-xs">🏢 +500 empresários interessados</span>
+                  <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-full border text-xs">🚀 75+ tecnologias integradas</span>
+                  <span className="bg-white dark:bg-gray-800 px-3 py-1 rounded-full border text-xs">🤖 15 assistentes IA trabalhando</span>
+                </div>
+              </div>
             </div>
 
 
