@@ -19,28 +19,28 @@ const languages = [
 const documents = [
   {
     title: 'Análise Completa de Servidores',
-    description: '📊 Documentação técnica PDF com 2.000+ linhas - Arquitetura, 75+ stacks, segurança e performance',
+    description: '📊 Documentação técnica PDF - Arquitetura, 75+ stacks, segurança e performance',
     file: '01-ANALISE-COMPLETA-SERVIDORES-KRYONIX.pdf',
     icon: Server,
     size: '8.5 MB PDF'
   },
   {
     title: 'Tutorial Builder.io + MCP',
-    description: '🛠️ Documentação técnica PDF com 2.000+ linhas - Guia completo de integração e desenvolvimento',
+    description: '🛠️ Documentação técnica PDF - Guia completo de integração e desenvolvimento',
     file: '02-TUTORIAL-BUILDERIO-MCP-KRYONIX.pdf',
     icon: FileText,
     size: '6.2 MB PDF'
   },
   {
     title: 'Plano de Execução Completo',
-    description: '📅 Documentação técnica PDF com 2.000+ linhas - Cronograma detalhado de 38 semanas com marcos',
+    description: '📅 Documentação técnica PDF - Cronograma detalhado de 38 semanas com marcos',
     file: '03-PLANO-EXECUCAO-COMPLETO-KRYONIX.pdf',
     icon: TrendingUp,
     size: '7.8 MB PDF'
   },
   {
     title: 'Plano de Negócio Completo',
-    description: '📊 Documentação técnica PDF com 2.000+ linhas - Análise financeira, ROI e projeções detalhadas',
+    description: '📊 Documentação técnica PDF - Análise financeira, ROI e projeções detalhadas',
     file: '04-PLANO-NEGOCIO-COMPLETO-KRYONIX.pdf',
     icon: TrendingUp,
     size: '9.1 MB PDF'
@@ -162,7 +162,7 @@ export default function PartnershipProposal() {
                     {selectedLang.flag} Proposta em {selectedLang.name}
                   </h3>
                   <p className="text-gray-600 dark:text-slate-300 mb-4">
-                    📝 Documento PDF profissional com 2.000+ linhas, análise completa de mercado, especificações técnicas e projeções financeiras detalhadas
+                    📝 Documento PDF profissional com análise completa de mercado, especificações técnicas e projeções financeiras detalhadas
                   </p>
                   <div className="text-sm text-gray-500 dark:text-slate-400">
                     Arquivo: {selectedLang.file} • Última atualização: {new Date().toLocaleDateString('pt-BR')}
