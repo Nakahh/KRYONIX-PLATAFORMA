@@ -297,10 +297,12 @@ export class PDFGenerator {
     }
   }
 
-  public generateCommercialProposal(language: string = 'pt') {
+  public async generateCommercialProposal(language: string = 'pt') {
+    await this.ensureInitialized()
+
     const title = this.getTitle('commercial', language)
     const subtitle = this.getSubtitle('commercial', language)
-    
+
     this.addHeader(title, subtitle)
 
     const sections = this.getCommercialProposalSections(language)
@@ -310,10 +312,12 @@ export class PDFGenerator {
     this.doc.save(`proposta-comercial-kryonix-${language}.pdf`)
   }
 
-  public generateTechnicalDocumentation(language: string = 'pt') {
+  public async generateTechnicalDocumentation(language: string = 'pt') {
+    await this.ensureInitialized()
+
     const title = this.getTitle('technical', language)
     const subtitle = this.getSubtitle('technical', language)
-    
+
     this.addHeader(title, subtitle)
 
     const sections = this.getTechnicalDocumentationSections(language)
@@ -552,7 +556,7 @@ export class PDFGenerator {
                 'Backup automático diário dos dados',
                 'Conformidade LGPD desde o primeiro dia',
                 'Suporte técnico 24/7 via WhatsApp',
-                'Atualiza��ões de segurança automáticas',
+                'Atualizações de segurança automáticas',
                 'Monitoramento proativo de performance'
               ]
             }
