@@ -23,7 +23,7 @@ import LoadingScreen from '../components/LoadingScreen'
 import ProgressBar from '../components/ProgressBar'
 import ThemeToggle from '../components/ThemeToggle'
 import ContactForm from '../components/ContactForm'
-import LanguageSwitcher from '../components/LanguageSwitcher'
+import SimpleLanguageSwitcher from '../components/SimpleLanguageSwitcher'
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
@@ -389,7 +389,7 @@ export default function HomePage() {
                 <div className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
                 <span className="text-sm text-gray-600 dark:text-gray-300">Sistema Online</span>
               </div>
-              <LanguageSwitcher className="mr-2" variant="dropdown" />
+              <SimpleLanguageSwitcher className="mr-2" variant="dropdown" />
               <ThemeToggle />
             </div>
           </div>
