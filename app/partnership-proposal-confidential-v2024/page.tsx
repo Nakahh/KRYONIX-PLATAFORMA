@@ -46,7 +46,7 @@ const documents = [
 
 export default function PartnershipProposal() {
   const [selectedLanguage, setSelectedLanguage] = useState('pt')
-  const [viewCount, setViewCount] = useState(47) // Simulate view counter
+  const [viewCount, setViewCount] = useState(0) // Real view counter
 
   const selectedLang = languages.find(lang => lang.code === selectedLanguage)
 
@@ -58,10 +58,6 @@ export default function PartnershipProposal() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700">
-      {/* Security Header */}
-      <div className="bg-red-600 dark:bg-red-700 text-white py-2 px-4 text-center text-sm font-medium">
-        🔒 DOCUMENTO CONFIDENCIAL - ACESSO RESTRITO - NÃO COMPARTILHAR
-      </div>
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
@@ -81,12 +77,8 @@ export default function PartnershipProposal() {
               <span>{viewCount} visualizações</span>
             </div>
             <div className="flex items-center gap-1">
-              <Lock className="w-4 h-4" />
-              <span>Acesso Confidencial</span>
-            </div>
-            <div className="flex items-center gap-1">
               <Users className="w-4 h-4" />
-              <span>Somente Tomadores de Decisão</span>
+              <span>Proposta Comercial Estratégica</span>
             </div>
           </div>
         </div>
@@ -208,7 +200,7 @@ export default function PartnershipProposal() {
               <div className="absolute -top-3 left-4 bg-yellow-400 dark:bg-yellow-500 text-yellow-900 dark:text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">
                 RECOMENDADO
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-2">🏆 Patrocinador Fundador</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-2">��� Patrocinador Fundador</h3>
               <div className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-4">R$ 2.004.000</div>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-slate-300">
                 <li>✅ Naming rights exclusivos</li>
@@ -272,7 +264,7 @@ export default function PartnershipProposal() {
           </div>
           <div className="mt-6 pt-6 border-t border-blue-400 dark:border-blue-500">
             <p className="text-blue-100 dark:text-blue-200 text-sm">
-              📅 Prazo para Resposta: 15 de Janeiro de 2025 • 🎯 ROI Esperado: 452% em 36 meses
+              📅 Prazo para Proposta: 10 de Agosto à 15 de Outubro de 2025 • 🎯 ROI Esperado: 452% em 36 meses
             </p>
           </div>
         </div>
