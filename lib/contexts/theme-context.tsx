@@ -17,10 +17,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
 
   useEffect(() => {
-    // Carregar tema salvo ou usar sistema
-    const savedTheme = localStorage.getItem('kryonix-theme') as Theme
-    if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
-      setTheme(savedTheme)
+    // Carregar tema salvo ou usar sistema (apenas no cliente)
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('kryonix-theme') as Theme
+      if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
+        setTheme(savedTheme)
+      }
     }
   }, [])
 
