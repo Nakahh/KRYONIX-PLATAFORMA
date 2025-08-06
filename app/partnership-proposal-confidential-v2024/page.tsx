@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Logo from '@/app/components/Logo'
 import ViewCounter from '@/app/components/ViewCounter'
+import PageHeader from '@/app/components/PageHeader'
 import { FileText, Download, Globe, ArrowRight, Lock, Eye, Users, TrendingUp, Server, Shield } from 'lucide-react'
 
 const languages = [
@@ -11,7 +12,7 @@ const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸', file: '05-COMMERCIAL-PROPOSAL-SERVER-PARTNERSHIPS-EN.md' },
   { code: 'es', name: 'Español', flag: '🇪🇸', file: '05-PROPUESTA-COMERCIAL-ALIANZAS-SERVIDORES-ES.md' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪', file: '05-HANDELSVORSCHLAG-SERVER-PARTNERSCHAFTEN-DE.md' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺', file: '05-КОММЕРЧЕСКОЕ-ПРЕДЛОЖЕНИЕ-СЕРВЕРЫ-ПАРТНЕРСТВО-RU.md' }
+  { code: 'ru', name: 'Русский', flag: '🇷🇺', file: '05-КОММЕРЧЕ��КОЕ-ПРЕДЛОЖЕНИЕ-СЕРВЕРЫ-ПАРТНЕРСТВО-RU.md' }
 ]
 
 const documents = [
@@ -89,6 +90,11 @@ export default function PartnershipProposal() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700">
+      <PageHeader
+        title="Proposta Comercial Estratégica"
+        subtitle="Parceria de Infraestrutura"
+        showHomeButton={true}
+      />
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
