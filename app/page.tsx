@@ -39,6 +39,8 @@ export default function HomePage() {
     instagram: false
   })
   const [selectedModule, setSelectedModule] = useState<number | null>(null)
+  const [showExtrasDropdown, setShowExtrasDropdown] = useState<number | null>(null)
+  const [selectedExtras, setSelectedExtras] = useState<{[key: number]: string[]}>({})
 
   useEffect(() => {
     setMounted(true)
