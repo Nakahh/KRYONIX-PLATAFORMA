@@ -47,6 +47,9 @@ export default function HomePage() {
   }, [])
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
     if (selectedModule !== null) {
       document.body.classList.add('modal-open')
     } else {
@@ -54,11 +57,16 @@ export default function HomePage() {
     }
 
     return () => {
-      document.body.classList.remove('modal-open')
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('modal-open')
+      }
     }
   }, [selectedModule])
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && selectedModule !== null) {
         setSelectedModule(null)
@@ -66,7 +74,11 @@ export default function HomePage() {
     }
 
     document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('keydown', handleEscape)
+      }
+    }
   }, [selectedModule])
 
   const handleLoadingComplete = () => {
@@ -336,7 +348,7 @@ export default function HomePage() {
         'Criação de produto pr���prio',
         'Fortalecimento da marca pessoal',
         'Diferenciação no mercado',
-        'Monetização de conhecimento'
+        'Monetizaç��o de conhecimento'
       ],
       targetBusinesses: [
         'Agências de marketing digital',
@@ -634,7 +646,7 @@ export default function HomePage() {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-50 to-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative z-10">
-                  {/* Header com preço e botão extras */}
+                  {/* Header com preço e bot��o extras */}
                   <div className="flex items-start justify-between mb-2">
                     <div className="text-xl font-bold text-primary-600">
                       {module.price}

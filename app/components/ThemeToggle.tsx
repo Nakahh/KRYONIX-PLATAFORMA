@@ -9,13 +9,16 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true)
-    
+
+    // Only run on client side
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
     // Check initial theme
-    const isDark = localStorage.getItem('theme') === 'dark' || 
-                   (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    
+    const isDark = localStorage.getItem('theme') === 'dark' ||
+                   (!localStorage.getItem('theme') && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
     setDarkMode(isDark)
-    
+
     if (isDark) {
       document.documentElement.classList.add('dark')
     } else {
@@ -26,7 +29,10 @@ export default function ThemeToggle() {
   const toggleTheme = () => {
     const newDarkMode = !darkMode
     setDarkMode(newDarkMode)
-    
+
+    // Only run on client side
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
     if (newDarkMode) {
       document.documentElement.classList.add('dark')
       localStorage.setItem('theme', 'dark')

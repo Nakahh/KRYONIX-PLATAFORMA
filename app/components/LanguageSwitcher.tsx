@@ -28,8 +28,10 @@ export default function LanguageSwitcher({
       // Navegar para o novo locale
       router.push(`/${newLocale}${pathWithoutLocale}`);
       
-      // Salvar preferência no cookie
-      document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${365 * 24 * 60 * 60}`;
+      // Salvar preferência no cookie (apenas no cliente)
+      if (typeof document !== 'undefined') {
+        document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${365 * 24 * 60 * 60}`;
+      }
     });
   };
 
