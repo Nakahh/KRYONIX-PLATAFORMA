@@ -734,6 +734,23 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Business Partnership Teaser - Before Contact Form */}
+      <section className="py-8 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="container-custom text-center text-white">
+          <h3 className="text-2xl font-bold mb-4">Empresários e Investidores</h3>
+          <p className="text-lg mb-6 opacity-90">
+            Oportunidades de parceria com ROI de até 452% em 3 anos
+          </p>
+          <Link
+            href="/parcerias-empresariais-contato"
+            className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+          >
+            <Handshake className="w-5 h-5" />
+            Conhecer Oportunidades
+          </Link>
+        </div>
+      </section>
+
       {/* Contact Form */}
       <ContactForm />
 
