@@ -248,7 +248,7 @@ export default function PartnershipProposal() {
         </div>
 
         {/* Contact Information */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white text-center">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-xl p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-4">Contato Estratégico</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
             <div>
@@ -270,15 +270,15 @@ export default function PartnershipProposal() {
               <p>Documentação Técnica</p>
             </div>
           </div>
-          <div className="mt-6 pt-6 border-t border-blue-400">
-            <p className="text-blue-100 text-sm">
+          <div className="mt-6 pt-6 border-t border-blue-400 dark:border-blue-500">
+            <p className="text-blue-100 dark:text-blue-200 text-sm">
               📅 Prazo para Resposta: 15 de Janeiro de 2025 • 🎯 ROI Esperado: 452% em 36 meses
             </p>
           </div>
         </div>
 
         {/* Security Footer */}
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm text-gray-500 dark:text-slate-400">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Lock className="w-4 h-4" />
             <span>Este documento contém informações confidenciais e estratégicas da KRYONIX</span>
