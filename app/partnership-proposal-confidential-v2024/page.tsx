@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Logo } from '@/app/components/Logo'
+import Logo from '@/app/components/Logo'
 import { FileText, Download, Globe, ArrowRight, Lock, Eye, Users, TrendingUp, Server, Shield } from 'lucide-react'
 
 const languages = [
