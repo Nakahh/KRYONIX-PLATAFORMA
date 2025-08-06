@@ -630,25 +630,129 @@ export default function HomePage() {
             {modules.map((module, index) => (
               <div
                 key={index}
-                className="card-compact hover:shadow-lg transition-all duration-300 text-center group cursor-pointer transform hover:scale-102 hover:border-primary-300 relative overflow-hidden"
-                onClick={() => setSelectedModule(index)}
+                className="card-compact hover:shadow-lg transition-all duration-300 text-center group transform hover:scale-102 hover:border-primary-300 relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-50 to-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative z-10">
-                  <div className="text-xl font-bold text-primary-600 mb-2">
-                    {module.price}
+                  {/* Header com preço e botão extras */}
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="text-xl font-bold text-primary-600">
+                      {module.price}
+                    </div>
+                    <div className="relative">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setShowExtrasDropdown(showExtrasDropdown === index ? null : index)
+                        }}
+                        className="flex items-center space-x-1 px-2 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-md hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors text-xs"
+                      >
+                        <Plus className="w-3 h-3" />
+                        <span>Extras</span>
+                      </button>
+
+                      {/* Dropdown de Extras */}
+                      {showExtrasDropdown === index && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-10"
+                            onClick={() => setShowExtrasDropdown(null)}
+                          />
+                          <div className="absolute right-0 top-8 z-20 w-72 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                Extras Disponíveis
+                              </h4>
+                              <Package className="w-4 h-4 text-gray-400" />
+                            </div>
+
+                            <div className="space-y-2 max-h-48 overflow-y-auto">
+                              {moduleExtras[index]?.map((extra) => (
+                                <div
+                                  key={extra.id}
+                                  className="flex items-start space-x-2 p-2 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedExtras[index]?.includes(extra.id) || false}
+                                    onChange={(e) => {
+                                      const currentExtras = selectedExtras[index] || []
+                                      if (e.target.checked) {
+                                        setSelectedExtras({
+                                          ...selectedExtras,
+                                          [index]: [...currentExtras, extra.id]
+                                        })
+                                      } else {
+                                        setSelectedExtras({
+                                          ...selectedExtras,
+                                          [index]: currentExtras.filter(id => id !== extra.id)
+                                        })
+                                      }
+                                    }}
+                                    className="w-3 h-3 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 mt-0.5"
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between">
+                                      <h5 className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate">
+                                        {extra.name}
+                                      </h5>
+                                      <span className="text-xs font-bold text-primary-600 ml-1">
+                                        {extra.price}
+                                      </span>
+                                    </div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+                                      {extra.description}
+                                    </p>
+                                    <div className="mt-1">
+                                      <span className={`inline-flex px-1.5 py-0.5 text-xs font-medium rounded ${extra.category === 'addon' ? 'bg-blue-100 text-blue-800' : extra.category === 'integration' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'}`}>
+                                        {extra.category === 'addon' ? 'Add-on' : extra.category === 'integration' ? 'Integração' : 'Suporte'}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {(selectedExtras[index]?.length || 0) > 0 && (
+                              <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-600">
+                                <button className="w-full bg-primary-600 text-white px-3 py-1.5 rounded-md hover:bg-primary-700 transition-colors flex items-center justify-center space-x-1 text-xs">
+                                  <ShoppingCart className="w-3 h-3" />
+                                  <span>Adicionar {selectedExtras[index]?.length} Extra(s)</span>
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-gray-900 mb-3 text-sm">
-                    {module.name}
-                  </h3>
-                  <span className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full font-medium mb-3 inline-block">Indisponível</span>
-                  <div className="text-xs text-gray-500 mt-2">
-                    <span className="inline-flex items-center">
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      Clique para ver detalhes
-                    </span>
+
+                  <div onClick={() => setSelectedModule(index)} className="cursor-pointer">
+                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-gray-900 mb-2 text-sm">
+                      {module.name}
+                    </h3>
+                    <span className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full font-medium mb-2 inline-block">Indisponível</span>
+
+                    {/* Indicator de extras selecionados */}
+                    {(selectedExtras[index]?.length || 0) > 0 && (
+                      <div className="mb-2">
+                        <div className="flex items-center justify-center space-x-1">
+                          <Star className="w-3 h-3 text-yellow-500" />
+                          <span className="text-xs text-gray-600 dark:text-gray-400">
+                            {selectedExtras[index]?.length} extra(s) selecionado(s)
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="text-xs text-gray-500 mt-2">
+                      <span className="inline-flex items-center">
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Clique para ver detalhes
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
