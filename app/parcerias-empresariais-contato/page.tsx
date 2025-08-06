@@ -432,7 +432,9 @@ Esta mensagem foi enviada através do formulário de parcerias empresariais do s
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">WhatsApp Direto</h3>
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">Para conversas rápidas</p>
             <a
-              href="https://wa.me/5517981805327?text=Tenho%20interesse%20em%20uma%20parceria%20comercial%20com%20KRYONIX"
+              href="https://wa.me/5517981805327?text=🤝%20Olá!%20Tenho%20interesse%20em%20estabelecer%20uma%20parceria%20comercial%20com%20a%20KRYONIX.%20Gostaria%20de%20conversar%20sobre%20oportunidades%20de%20negócio."
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-green-600 hover:text-green-700 font-medium"
             >
               +55 17 98180-5327
@@ -446,7 +448,9 @@ Esta mensagem foi enviada através do formulário de parcerias empresariais do s
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Email Corporativo</h3>
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">Para propostas formais</p>
             <a
-              href="mailto:partnerships@kryonix.com.br"
+              href="mailto:partnerships@kryonix.com.br?subject=Proposta%20de%20Parceria%20Comercial%20-%20KRYONIX&body=Olá,%0A%0ATenho%20interesse%20em%20estabelecer%20uma%20parceria%20comercial%20com%20a%20KRYONIX.%0A%0AAtenciosamente"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-700 font-medium"
             >
               partnerships@kryonix.com.br
@@ -459,9 +463,14 @@ Esta mensagem foi enviada através do formulário de parcerias empresariais do s
             </div>
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Reunião Agendada</h3>
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">Para apresentações executivas</p>
-            <span className="text-purple-600 font-medium">
+            <a
+              href="https://wa.me/5517981805327?text=📅%20Olá!%20Gostaria%20de%20agendar%20uma%20reunião%20para%20conhecer%20melhor%20as%20soluções%20KRYONIX.%20Quando%20seria%20um%20bom%20horário%20para%20conversarmos?"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-purple-600 hover:text-purple-700 font-medium transition-colors"
+            >
               Agendar via WhatsApp
-            </span>
+            </a>
           </div>
         </div>
 
