@@ -371,6 +371,55 @@ export default function HomePage() {
     }
   ]
 
+  // Extras disponíveis para cada módulo (3 por módulo)
+  const moduleExtras = {
+    0: [ // Análise Avançada e BI
+      { id: 'forecast-ai', name: 'Smart Forecasting AI', description: 'Previsão de vendas com 95% precisão usando IA', price: 'R$ 49/mês', category: 'addon' },
+      { id: 'executive-dash', name: 'Executive Dashboards', description: 'Dashboards C-level com KPIs estratégicos', price: 'R$ 69/mês', category: 'addon' },
+      { id: 'competitor-intel', name: 'Competitor Intelligence', description: 'Monitoramento automático da concorrência', price: 'R$ 89/mês', category: 'integration' }
+    ],
+    1: [ // Agendamento Inteligente + Cobrança
+      { id: 'video-call', name: 'Video Call Integration', description: 'Jitsi/Zoom integrado na agenda', price: 'R$ 59/mês', category: 'integration' },
+      { id: 'multi-prof', name: 'Multi-Professional Sync', description: 'Sincronização de múltiplas agendas', price: 'R$ 79/mês', category: 'addon' },
+      { id: 'payment-booking', name: 'Payment at Booking', description: 'PIX/cartão direto na confirmação', price: 'R$ 39/mês', category: 'addon' }
+    ],
+    2: [ // Atendimento Omnichannel IA
+      { id: 'voice-ai', name: 'Voice AI Assistant', description: 'Atendimento por voz via WhatsApp', price: 'R$ 99/mês', category: 'addon' },
+      { id: 'doc-ocr', name: 'Document OCR Scanner', description: 'Extração automática de dados de documentos', price: 'R$ 59/mês', category: 'integration' },
+      { id: 'sentiment-pro', name: 'Sentiment Analysis Pro', description: 'Análise emocional em tempo real', price: 'R$ 69/mês', category: 'addon' }
+    ],
+    3: [ // CRM & Funil Vendas
+      { id: 'lead-scoring', name: 'Lead Scoring AI', description: 'Pontuação automática de leads', price: 'R$ 79/mês', category: 'addon' },
+      { id: 'digital-contracts', name: 'Digital Contracts', description: 'Assinatura digital com validade jurídica', price: 'R$ 89/mês', category: 'integration' },
+      { id: 'payment-recovery', name: 'Payment Recovery AI', description: 'Cobrança automática inteligente', price: 'R$ 69/mês', category: 'addon' }
+    ],
+    4: [ // Email Marketing
+      { id: 'content-gen', name: 'Content Generation AI', description: 'Criação automática de conteúdo personalizado', price: 'R$ 99/mês', category: 'addon' },
+      { id: 'advanced-seg', name: 'Advanced Segmentation', description: 'Segmentação comportamental automática', price: 'R$ 59/mês', category: 'addon' },
+      { id: 'sms-integration', name: 'SMS Integration', description: 'Campanhas multicanal sincronizadas', price: 'R$ 49/mês', category: 'integration' }
+    ],
+    5: [ // Gestão Redes Sociais
+      { id: 'ai-content', name: 'AI Content Creator', description: 'Geração automática de posts e stories', price: 'R$ 89/mês', category: 'addon' },
+      { id: 'influencer-disc', name: 'Influencer Discovery', description: 'Identificação automática de micro-influencers', price: 'R$ 79/mês', category: 'integration' },
+      { id: 'social-listening', name: 'Social Listening Pro', description: 'Monitoramento de marca e concorrentes', price: 'R$ 69/mês', category: 'addon' }
+    ],
+    6: [ // Portal Cliente + Treinamento
+      { id: 'video-course', name: 'Video Course Builder', description: 'Criação automática de cursos', price: 'R$ 99/mês', category: 'addon' },
+      { id: 'doc-automation', name: 'Document Automation', description: 'Geração automática de contratos/propostas', price: 'R$ 79/mês', category: 'integration' },
+      { id: 'custom-app', name: 'Custom Mobile App', description: 'App próprio com marca do cliente', price: 'R$ 59/mês', category: 'addon' }
+    ],
+    7: [ // WhatsApp Business
+      { id: 'instagram-int', name: 'Instagram Integration', description: 'Unificação WhatsApp + Instagram Direct', price: 'R$ 69/mês', category: 'integration' },
+      { id: 'advanced-ai', name: 'Advanced AI Responses', description: 'Respostas contextuais avançadas', price: 'R$ 89/mês', category: 'addon' },
+      { id: 'catalog-pro', name: 'WhatsApp Catalog Pro', description: 'Catálogo inteligente com recomendações', price: 'R$ 49/mês', category: 'addon' }
+    ],
+    8: [ // SMS + Push Notifications
+      { id: 'voice-messages', name: 'Voice Messages', description: 'Mensagens de voz automatizadas', price: 'R$ 59/mês', category: 'addon' },
+      { id: 'international-sms', name: 'International SMS', description: 'Envio global com routing inteligente', price: 'R$ 79/mês', category: 'integration' },
+      { id: 'rich-media', name: 'Rich Media Messaging', description: 'MMS com imagens/vídeos/GIFs', price: 'R$ 69/mês', category: 'addon' }
+    ]
+  }
+
   const stacks = [
     'Keycloak', 'PostgreSQL', 'MinIO', 'Redis', 'Traefik', 'Docker',
     'Grafana', 'Prometheus', 'Evolution API', 'Chatwoot', 'Typebot',
