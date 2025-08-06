@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Logo from '@/app/components/Logo'
-import ViewCounter from '@/app/components/ViewCounter'
+import Logo from '../../components/Logo'
+import ViewCounter from '../../components/ViewCounter'
 import { FileText, Download, Globe, ArrowRight, Lock, Eye, Users, TrendingUp, Server, Shield } from 'lucide-react'
 
 const languages = [
