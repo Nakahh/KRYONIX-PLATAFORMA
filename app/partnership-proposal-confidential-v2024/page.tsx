@@ -112,12 +112,12 @@ export default function PartnershipProposal() {
         </div>
 
         {/* Language Selection */}
-        <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <Globe className="w-6 h-6 text-blue-600" />
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-slate-600 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-50 mb-6 flex items-center gap-2">
+            <Globe className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             Proposta Comercial Multilíngue
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
             {languages.map((lang) => (
               <button
@@ -125,33 +125,33 @@ export default function PartnershipProposal() {
                 onClick={() => setSelectedLanguage(lang.code)}
                 className={`p-4 rounded-lg border-2 transition-all duration-200 ${
                   selectedLanguage === lang.code
-                    ? 'border-blue-500 bg-blue-50 shadow-md'
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 dark:border-blue-400 shadow-md'
+                    : 'border-gray-200 dark:border-slate-600 hover:border-gray-300 dark:hover:border-slate-500 hover:bg-gray-50 dark:hover:bg-slate-700'
                 }`}
               >
                 <div className="text-2xl mb-2">{lang.flag}</div>
-                <div className="font-medium text-gray-900">{lang.name}</div>
+                <div className="font-medium text-gray-900 dark:text-slate-100">{lang.name}</div>
               </button>
             ))}
           </div>
 
           {selectedLang && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700 rounded-lg p-6 border border-blue-200 dark:border-slate-600">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-2">
                     {selectedLang.flag} Proposta em {selectedLang.name}
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-600 dark:text-slate-300 mb-4">
                     Documento completo com 75+ stacks tecnológicos e análise financeira detalhada
                   </p>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 dark:text-slate-400">
                     Arquivo: {selectedLang.file} • Última atualização: {new Date().toLocaleDateString('pt-BR')}
                   </div>
                 </div>
                 <button
                   onClick={() => handleDownload(selectedLang.file)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+                  className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
                 >
                   <Download className="w-5 h-5" />
                   Download
@@ -162,27 +162,27 @@ export default function PartnershipProposal() {
         </div>
 
         {/* Supporting Documents */}
-        <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <FileText className="w-6 h-6 text-green-600" />
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-slate-600 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-50 mb-6 flex items-center gap-2">
+            <FileText className="w-6 h-6 text-green-600 dark:text-green-400" />
             Documentação Técnica Completa
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {documents.map((doc, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 transition-colors duration-200">
+              <div key={index} className="border border-gray-200 dark:border-slate-600 rounded-lg p-6 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors duration-200">
                 <div className="flex items-start gap-4">
-                  <div className="bg-blue-100 p-3 rounded-lg">
-                    <doc.icon className="w-6 h-6 text-blue-600" />
+                  <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg">
+                    <doc.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 mb-2">{doc.title}</h3>
-                    <p className="text-gray-600 text-sm mb-3">{doc.description}</p>
+                    <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">{doc.title}</h3>
+                    <p className="text-gray-600 dark:text-slate-300 text-sm mb-3">{doc.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">{doc.size}</span>
+                      <span className="text-xs text-gray-500 dark:text-slate-400">{doc.size}</span>
                       <button
                         onClick={() => handleDownload(doc.file)}
-                        className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm flex items-center gap-1"
                       >
                         Download
                         <ArrowRight className="w-4 h-4" />
@@ -196,21 +196,21 @@ export default function PartnershipProposal() {
         </div>
 
         {/* Partnership Tiers */}
-        <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <Shield className="w-6 h-6 text-purple-600" />
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-slate-600 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-50 mb-6 flex items-center gap-2">
+            <Shield className="w-6 h-6 text-purple-600 dark:text-purple-400" />
             Níveis de Parceria Disponíveis
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Tier 1 */}
-            <div className="border-2 border-yellow-400 rounded-lg p-6 bg-gradient-to-br from-yellow-50 to-orange-50 relative">
-              <div className="absolute -top-3 left-4 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">
+            <div className="border-2 border-yellow-400 dark:border-yellow-500 rounded-lg p-6 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 relative">
+              <div className="absolute -top-3 left-4 bg-yellow-400 dark:bg-yellow-500 text-yellow-900 dark:text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">
                 RECOMENDADO
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">🏆 Patrocinador Fundador</h3>
-              <div className="text-3xl font-bold text-gray-900 mb-4">$334,000</div>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-2">🏆 Patrocinador Fundador</h3>
+              <div className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-4">R$ 2.004.000</div>
+              <ul className="space-y-2 text-sm text-gray-600 dark:text-slate-300">
                 <li>✅ Naming rights exclusivos</li>
                 <li>✅ 15% revenue share</li>
                 <li>✅ Exclusividade categoria (3 anos)</li>
@@ -220,10 +220,10 @@ export default function PartnershipProposal() {
             </div>
 
             {/* Tier 2 */}
-            <div className="border border-gray-200 rounded-lg p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">🤝 Parceiro Estratégico</h3>
-              <div className="text-3xl font-bold text-gray-900 mb-4">$133,000</div>
-              <ul className="space-y-2 text-sm text-gray-600">
+            <div className="border border-gray-200 dark:border-slate-600 rounded-lg p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-2">🤝 Parceiro Estratégico</h3>
+              <div className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-4">R$ 798.000</div>
+              <ul className="space-y-2 text-sm text-gray-600 dark:text-slate-300">
                 <li>✅ Status provider preferido</li>
                 <li>✅ 8% revenue share</li>
                 <li>✅ Co-marketing opportunities</li>
@@ -233,10 +233,10 @@ export default function PartnershipProposal() {
             </div>
 
             {/* Tier 3 */}
-            <div className="border border-gray-200 rounded-lg p-6 bg-gradient-to-br from-gray-50 to-slate-50">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">💼 Parceiro Comercial</h3>
-              <div className="text-3xl font-bold text-gray-900 mb-4">$50,000</div>
-              <ul className="space-y-2 text-sm text-gray-600">
+            <div className="border border-gray-200 dark:border-slate-600 rounded-lg p-6 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-slate-700 dark:to-slate-600">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-2">💼 Parceiro Comercial</h3>
+              <div className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-4">R$ 300.000</div>
+              <ul className="space-y-2 text-sm text-gray-600 dark:text-slate-300">
                 <li>✅ Listed partner status</li>
                 <li>✅ 3% revenue share</li>
                 <li>✅ Referral program access</li>
