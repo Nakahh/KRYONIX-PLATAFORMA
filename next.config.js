@@ -26,6 +26,4 @@ const nextConfig = {
   },
 }
 
-// Export directly without next-intl wrapper temporarily
-module.exports = nextConfig
-// module.exports = withNextIntl(nextConfig)
+module.exports = withNextIntl(nextConfig)
