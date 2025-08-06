@@ -151,21 +151,21 @@ Esta mensagem foi enviada através do formulário de parcerias empresariais do s
           
           {/* Key Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-blue-600">$7.5M+</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Receita Projetada</div>
+            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-slate-600">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">R$ 45M+</div>
+              <div className="text-sm text-gray-600 dark:text-slate-400">Receita Projetada</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-green-600">8K+</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Clientes Finais</div>
+            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-slate-600">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">8K+</div>
+              <div className="text-sm text-gray-600 dark:text-slate-400">Clientes Finais</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-purple-600">75+</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Stacks Integrados</div>
+            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-slate-600">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">75+</div>
+              <div className="text-sm text-gray-600 dark:text-slate-400">Stacks Integrados</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-orange-600">452%</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">ROI Máximo</div>
+            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-slate-600">
+              <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">452%</div>
+              <div className="text-sm text-gray-600 dark:text-slate-400">ROI Máximo</div>
             </div>
           </div>
         </div>
