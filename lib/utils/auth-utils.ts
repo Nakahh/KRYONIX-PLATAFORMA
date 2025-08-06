@@ -43,9 +43,9 @@ export class AuthUtils {
    */
   static hasWhatsAppSupport(): boolean {
     if (typeof window === 'undefined') return false
-    
+
     // Verificar se está em mobile e tem capacidade de abrir WhatsApp
-    return this.isMobileDevice() && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+    return this.isMobileDevice() && /Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent)
   }
 
   /**
