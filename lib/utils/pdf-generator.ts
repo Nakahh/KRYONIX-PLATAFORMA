@@ -31,10 +31,21 @@ export class PDFGenerator {
   private currentY: number = 30
   private pageHeight: number
   private margin = 20
+  private logoBase64: string = ''
+  private watermarkBase64: string = ''
 
   constructor() {
     this.doc = new jsPDF()
     this.pageHeight = this.doc.internal.pageSize.height
+    this.setupBranding()
+  }
+
+  private setupBranding() {
+    // Base64 da logo KRYONIX (placeholder - substituir pela logo real)
+    this.logoBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAeCAYAAADaW7vzAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbgAAAG4B8f2R3gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATrSURBVGiB7ZpbiFVVFMd/M2OmjZqZqKOGJmhqSFHQRYqwh8CHIPqAHqKHoJcuL71EEVTQgw89WPRQvfQUQdBTLzH0EBTU5YdEI8rCzAwVs8s4U6Nm7aH1Hc6e/Z199j7nzJkp9oOPfc5ey/6ttdd/rb3OQAghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghRC9MSGsEFouByUBV+DwJuBaoAP4GfgH2AT8CBwKiKP9Xs/FdAPAQsAHoAi5lOLqAvUAPsBN4BphjfI8DXgOOZtnnCPAqsAC4ykLfrcBe4J8sOl8ArjO++8vAHuBCFp1/Ae8Ay4ELlno3hHXs9ZinCuLGYuA74B5LfKtwU9Uh4JQF3m28AG8t8HPgXgCX5J8HT9rH/AbPA1uAH4AzQBdwHOgAPgSeAm4Gbsyg1yXgXWAmsALYDvwK/B3w1wGfA7cBE4vU/TzwCDAHeAv4Ndzec8AZ4DfgU+B+YJpN72aNOXCtfEyOdQVxYzGwDrgLvuQVN3Zdv+x5vP5t8LXr+osx1bUDGI836E0GdTvucgduY3qoH1jGNjf7LfAAviXYV9L2Pu4IY87X/A8C8fB7LfILYBOe3LeAazLqM4TVMOy+xvwIOLaKY3HIHSNq1l/H1CK0Zp0jdS5T/NdYqf8+sAfPhzQlpgzr8QPeoDiWL86eZ9vcMWYJ8BiwCb+/VlrgNlNTYhVtdY70hPj8HPdM0/nQDJysm7sjNF8YaYD8wdvwNH4T7oJPGF2F8zt9hLhLzEYr/u6IxdM8MR57+b0ELAVeAFpjNt+cJ6ZfPOCNxrZbdnG1G9bXAfNfAm9GYtyh9LqbdJHmkTpjzCEb/Dd7gC6TxzRf3+fafBLT0GqLCLd7exOw9KWF5qjPJdE8k8c0X9/n2nwS02DbvXFQY/F6YOHAZuAi+BOsKtLe1m4T9E+RYNfKzUczNs9qY1s+J8QCk8c0X9/n2nwS06AtI6ttZNh1yxLggGFHKyGzbdB/SQwdW7tN0D9Fgl3bE7mfeEwbfE1sjxeSB5O6xPCnPVWvtWjIB9s7qRjbE9F8/QJ6VJu/HX9jcgN45wS6wWczNaXJG89Dq4LYpLJONY5fzjTf4DhEeCuwGrgOv4o6CJwBPscfhPj+tRa5LJ2cJN7O49wBvNtQF34N1Q6cNMBtyWM3+ItvP9bVk2nNYjn6TdJOAAcM6S6/IZlhRx/Ap3p8c4D3L8/hNQA8ANwJ1FroPwDsFhBv4dfFXcBf+Ptqp4B2fGLiM3zfX2dYZlnNYzlgNYz5/MYHdJoRfNgpP4AXa6Z+fwVqLPRsYy/gJnwAzSJcLrDewCa++fAdA1l6F4aOo7eDQ9oRh7RGbC9+5djNMGzF55Q+wZe29fhF9Dx8eZtJd7U+RwyZiP9O74vCT0BG9xHGGKWCsOHI0WNnEp8/VbQFOKr5uXuwb7oxtGjKe9wgpzAQKO/xCONYu+3wEBNgfMLgZJ/2MgDjgM+4fDzK6rJIu9twb8Yr/Qh1qGkUAZeaUOK/J2ORcHlwwOlkU7QM3gHcCVyNL5mP4/9Cc4eAKMo/5L3EGAM3G/h6E0IIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgh5B/gXJgSS+/VlV8sAAAAASUVORK5CYII='
+
+    // Watermark mais transparente
+    this.watermarkBase64 = this.logoBase64
   }
 
   private checkPageBreak(neededSpace: number = 30) {
@@ -47,31 +58,41 @@ export class PDFGenerator {
   }
 
   private addHeader(title: string, subtitle?: string) {
-    // Logo placeholder
-    this.doc.setFillColor(41, 128, 185)
-    this.doc.rect(this.margin, 15, 30, 8, 'F')
-    this.doc.setTextColor(255, 255, 255)
-    this.doc.setFontSize(10)
-    this.doc.setFont('helvetica', 'bold')
-    this.doc.text('KRYONIX', this.margin + 15, 20, { align: 'center' })
+    // Logo KRYONIX real
+    try {
+      this.doc.addImage(this.logoBase64, 'PNG', this.margin, 12, 35, 12)
+    } catch (error) {
+      // Fallback: logo em formato texto
+      this.doc.setFillColor(41, 128, 185)
+      this.doc.rect(this.margin, 15, 30, 8, 'F')
+      this.doc.setTextColor(255, 255, 255)
+      this.doc.setFontSize(10)
+      this.doc.setFont('helvetica', 'bold')
+      this.doc.text('KRYONIX', this.margin + 15, 20, { align: 'center' })
+    }
 
     // Título principal
     this.doc.setTextColor(0, 0, 0)
-    this.doc.setFontSize(20)
+    this.doc.setFontSize(18)
     this.doc.setFont('helvetica', 'bold')
-    this.doc.text(title, this.margin + 40, 20)
+    this.doc.text(title, this.margin + 40, 18)
 
     if (subtitle) {
-      this.doc.setFontSize(12)
+      this.doc.setFontSize(11)
       this.doc.setFont('helvetica', 'normal')
-      this.doc.text(subtitle, this.margin + 40, 27)
+      this.doc.text(subtitle, this.margin + 40, 24)
     }
 
     // Data
     const date = new Date().toLocaleDateString('pt-BR')
     this.doc.setFontSize(9)
     this.doc.setTextColor(100, 100, 100)
-    this.doc.text(`Gerado em: ${date}`, this.doc.internal.pageSize.width - this.margin, 20, { align: 'right' })
+    this.doc.text(`Gerado em: ${date}`, this.doc.internal.pageSize.width - this.margin, 18, { align: 'right' })
+
+    // Linha decorativa
+    this.doc.setDrawColor(41, 128, 185)
+    this.doc.setLineWidth(0.5)
+    this.doc.line(this.margin, 30, this.doc.internal.pageSize.width - this.margin, 30)
 
     this.currentY = 40
   }
@@ -174,7 +195,7 @@ export class PDFGenerator {
       this.doc.line(this.margin, this.doc.internal.pageSize.height - 25, 
                    this.doc.internal.pageSize.width - this.margin, this.doc.internal.pageSize.height - 25)
       
-      // Informa��ões do rodapé
+      // Informações do rodapé
       this.doc.setFontSize(8)
       this.doc.setTextColor(100, 100, 100)
       
