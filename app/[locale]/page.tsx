@@ -19,10 +19,11 @@ import {
   Handshake,
   TrendingUp
 } from 'lucide-react'
-import LoadingScreen from './components/LoadingScreen'
-import ProgressBar from './components/ProgressBar'
-import ThemeToggle from './components/ThemeToggle'
-import ContactForm from './components/ContactForm'
+import LoadingScreen from '../components/LoadingScreen'
+import ProgressBar from '../components/ProgressBar'
+import ThemeToggle from '../components/ThemeToggle'
+import ContactForm from '../components/ContactForm'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
