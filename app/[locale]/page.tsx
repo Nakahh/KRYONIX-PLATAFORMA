@@ -40,26 +40,34 @@ export default function HomePage() {
   }, [])
 
   useEffect(() => {
-    if (selectedModule !== null) {
-      document.body.classList.add('modal-open')
-    } else {
-      document.body.classList.remove('modal-open')
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      if (selectedModule !== null) {
+        document.body.classList.add('modal-open')
+      } else {
+        document.body.classList.remove('modal-open')
+      }
     }
 
     return () => {
-      document.body.classList.remove('modal-open')
+      if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+        document.body.classList.remove('modal-open')
+      }
     }
   }, [selectedModule])
 
   useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && selectedModule !== null) {
-        setSelectedModule(null)
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      const handleEscape = (event: KeyboardEvent) => {
+        if (event.key === 'Escape' && selectedModule !== null) {
+          setSelectedModule(null)
+        }
+      }
+
+      document.addEventListener('keydown', handleEscape)
+      return () => {
+        document.removeEventListener('keydown', handleEscape)
       }
     }
-
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
   }, [selectedModule])
 
   const handleLoadingComplete = () => {
