@@ -424,7 +424,7 @@ export class PDFGenerator {
               rows: [
                 ['Profissionais Liberais', '2,5M', 'Ferramentas complexas, custos altos', 'Simples, acessível, mobile'],
                 ['PMEs (5-50 funcionários)', '650K', 'Múltiplas ferramentas, sem integração', 'Plataforma unificada, automação IA'],
-                ['Agências/Consultores', '150K', 'Necessidade white-label', 'Solução white-label completa'],
+                ['Ag��ncias/Consultores', '150K', 'Necessidade white-label', 'Solução white-label completa'],
                 ['E-commerce', '1,2M', 'Integração WhatsApp', 'WhatsApp nativo com Evolution API']
               ]
             }
@@ -826,12 +826,20 @@ export class PDFGenerator {
 }
 
 // Funções de conveniência para uso direto
-export const generateCommercialProposalPDF = (language: string = 'pt') => {
+export const generateCommercialProposalPDF = async (language: string = 'pt') => {
+  if (typeof window === 'undefined') {
+    throw new Error('PDF generation is only available on the client side')
+  }
+
   const generator = new PDFGenerator()
-  generator.generateCommercialProposal(language)
+  await generator.generateCommercialProposal(language)
 }
 
-export const generateTechnicalDocumentationPDF = (language: string = 'pt') => {
+export const generateTechnicalDocumentationPDF = async (language: string = 'pt') => {
+  if (typeof window === 'undefined') {
+    throw new Error('PDF generation is only available on the client side')
+  }
+
   const generator = new PDFGenerator()
-  generator.generateTechnicalDocumentation(language)
+  await generator.generateTechnicalDocumentation(language)
 }
