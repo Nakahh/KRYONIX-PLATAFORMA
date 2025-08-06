@@ -289,7 +289,7 @@ export default function HomePage() {
       description: 'Área exclusiva onde seus clientes acessam tudo que precisam de forma autônoma.',
       features: [
         'Login seguro com autenticação biométrica',
-        'Histórico completo de pedidos/serviços',
+        'Hist��rico completo de pedidos/serviços',
         'Download de documentos e relatórios',
         'Chat direto com suporte',
         'Pagamentos e renovações online',
@@ -440,21 +440,21 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
                 <a
                   href="https://wa.me/5517981805327?text=Quero%20automatizar%20meu%20negócio%20com%20KRYONIX%20-%20me%20explica%20como%20funciona%3F"
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2 group"
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2 group"
                 >
                   <MessageCircle className="w-5 h-5 group-hover:animate-bounce" />
                   QUERO AUTOMATIZAR MEU NEGÓCIO
                 </a>
                 <Link
                   href="/progresso"
-                  className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-2"
+                  className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-2"
                 >
                   <TrendingUp className="w-5 h-5" />
                   Ver Desenvolvimento
                 </Link>
                 <Link
                   href="/parcerias-empresariais-contato"
-                  className="border-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 px-6 py-3 rounded-full font-medium text-base transition-all duration-300 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 flex items-center gap-2"
+                  className="border-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 flex items-center gap-2"
                 >
                   <Handshake className="w-4 h-4" />
                   Seja Parceiro
