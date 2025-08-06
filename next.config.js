@@ -1,3 +1,6 @@
+// Temporarily disable next-intl to fix module issues
+// const withNextIntl = require('next-intl/plugin')('./lib/i18n.ts');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false, // Disable para build mais rápido
@@ -6,7 +9,7 @@ const nextConfig = {
   experimental: {
     outputFileTracingRoot: process.cwd(),
     optimizeCss: false, // Disable para build mais rápido
-    esmExternals: false, // Reduz tempo de análise
+    esmExternals: 'loose', // Fix module resolution issues
   },
   compress: true,
   poweredByHeader: false,
@@ -58,4 +61,6 @@ const nextConfig = {
   },
 }
 
+// Export directly without next-intl wrapper temporarily
 module.exports = nextConfig
+// module.exports = withNextIntl(nextConfig)

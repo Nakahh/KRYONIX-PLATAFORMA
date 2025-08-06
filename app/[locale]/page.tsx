@@ -17,18 +17,13 @@ import {
   Instagram,
   Mail,
   Handshake,
-  TrendingUp,
-  Plus,
-  Package,
-  Star,
-  ShoppingCart,
-  X
+  TrendingUp
 } from 'lucide-react'
-import LoadingScreen from './components/LoadingScreen'
-import ProgressBar from './components/ProgressBar'
-import ThemeToggle from './components/ThemeToggle'
-import ContactForm from './components/ContactForm'
-import SimpleLanguageSwitcher from './components/SimpleLanguageSwitcher'
+import LoadingScreen from '../components/LoadingScreen'
+import ProgressBar from '../components/ProgressBar'
+import ThemeToggle from '../components/ThemeToggle'
+import ContactForm from '../components/ContactForm'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
@@ -39,8 +34,6 @@ export default function HomePage() {
     instagram: false
   })
   const [selectedModule, setSelectedModule] = useState<number | null>(null)
-  const [showExtrasDropdown, setShowExtrasDropdown] = useState<number | null>(null)
-  const [selectedExtras, setSelectedExtras] = useState<{[key: number]: string[]}>({})
 
   useEffect(() => {
     setMounted(true)
@@ -144,7 +137,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Agendamento Inteligente + Cobrança',
+      name: 'Agendamento Inteligente',
       price: 'R$ 119/mês',
       status: 'unavailable',
       description: 'Sistema completo de agendamento automatizado que elimina conflitos e otimiza sua agenda.',
@@ -174,7 +167,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Atendimento Omnichannel IA',
+      name: 'Atendimento Omnichannel',
       price: 'R$ 159/mês',
       status: 'unavailable',
       description: 'Unifique todos os canais de atendimento em uma única plataforma inteligente.',
@@ -183,7 +176,7 @@ export default function HomePage() {
         'Chatbots com IA para respostas automáticas',
         'Histórico unificado do cliente',
         'Transferência entre agentes',
-        'M��tricas de satisfação',
+        'Métricas de satisfação',
         'Atendimento 24/7 automatizado'
       ],
       applications: [
@@ -203,7 +196,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'CRM Inteligente & Funil de Vendas',
+      name: 'CRM & Funil de Vendas',
       price: 'R$ 179/mês',
       status: 'unavailable',
       description: 'Gerencie seus clientes e vendas com inteligência artificial que nunca perde uma oportunidade.',
@@ -219,7 +212,7 @@ export default function HomePage() {
         'Gestão de pipeline de vendas',
         'Nurturing de leads automático',
         'Controle de relacionamento com clientes',
-        'Automaç��o de follow-up',
+        'Automação de follow-up',
         'Análise de conversão por etapa'
       ],
       targetBusinesses: [
@@ -232,8 +225,8 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Email Marketing Avançado',
-      price: 'R$ 239/mês',
+      name: 'Email Marketing Multicanal',
+      price: 'R$ 219/mês',
       status: 'unavailable',
       description: 'Campanhas inteligentes que chegam na hora certa, no canal certo, para a pessoa certa.',
       features: [
@@ -246,7 +239,7 @@ export default function HomePage() {
       ],
       applications: [
         'Campanhas promocionais sazonais',
-        'Nutriç��o de leads educativos',
+        'Nutrição de leads educativos',
         'Recuperação de carrinho abandonado',
         'Comunicação pós-compra',
         'Pesquisas de satisfação automatizadas'
@@ -261,7 +254,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Gestão Redes Sociais + IA',
+      name: 'Gestão Redes Sociais',
       price: 'R$ 239/mês',
       status: 'unavailable',
       description: 'Automatize sua presença digital com IA que cria, publica e engaja por você.',
@@ -290,7 +283,7 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'Portal Cliente + Treinamento IA',
+      name: 'Portal do Cliente',
       price: 'R$ 269/mês',
       status: 'unavailable',
       description: 'Área exclusiva onde seus clientes acessam tudo que precisam de forma autônoma.',
@@ -319,8 +312,8 @@ export default function HomePage() {
       ]
     },
     {
-      name: 'WhatsApp Business Automation',
-      price: 'R$ 179/mês',
+      name: 'Whitelabel Customizável',
+      price: 'R$ 299/mês',
       status: 'unavailable',
       description: 'Transforme nossa plataforma na sua própria solução com sua marca e identidade visual.',
       features: [
@@ -333,7 +326,7 @@ export default function HomePage() {
       ],
       applications: [
         'Revenda de solu��ões tecnológicas',
-        'Criação de produto pr���prio',
+        'Criação de produto pr��prio',
         'Fortalecimento da marca pessoal',
         'Diferenciação no mercado',
         'Monetização de conhecimento'
@@ -346,86 +339,8 @@ export default function HomePage() {
         'Revendedores de tecnologia',
         'Empresas que querem solução própria'
       ]
-    },
-    {
-      name: 'SMS + Push Notifications',
-      price: 'R$ 119/mês',
-      status: 'unavailable',
-      description: 'Comunicação multípla com seus clientes via SMS, Push e notificações inteligentes.',
-      features: [
-        'SMS integrado com múltiplos provedores (Zenvia, AWS)',
-        'Push notifications web e mobile',
-        'Notificações personalizadas por segmento',
-        'Agenda inteligente de envios',
-        'Tracking de entrega em tempo real',
-        'Compliance automático (LGPD, GDPR)'
-      ],
-      applications: [
-        'Lembretes de consultas e compromissos',
-        'Campanhas promocionais por SMS',
-        'Alertas de segurança e confirmações',
-        'Notificações de status de pedidos',
-        'Recuperação de carrinho abandonado'
-      ],
-      targetBusinesses: [
-        'E-commerces e marketplaces',
-        'Bancos e fintechs',
-        'Aplicativos mobile',
-        'Serviços de delivery',
-        'Clínicas e consultórios',
-        'Empresas de segurança'
-      ]
     }
   ]
-
-  // Extras disponíveis para cada módulo (3 por módulo)
-  const moduleExtras = {
-    0: [ // Análise Avançada e BI
-      { id: 'forecast-ai', name: 'Smart Forecasting AI', description: 'Previsão de vendas com 95% precisão usando IA', price: 'R$ 49/mês', category: 'addon' },
-      { id: 'executive-dash', name: 'Executive Dashboards', description: 'Dashboards C-level com KPIs estratégicos', price: 'R$ 69/mês', category: 'addon' },
-      { id: 'competitor-intel', name: 'Competitor Intelligence', description: 'Monitoramento automático da concorrência', price: 'R$ 89/mês', category: 'integration' }
-    ],
-    1: [ // Agendamento Inteligente + Cobrança
-      { id: 'video-call', name: 'Video Call Integration', description: 'Jitsi/Zoom integrado na agenda', price: 'R$ 59/mês', category: 'integration' },
-      { id: 'multi-prof', name: 'Multi-Professional Sync', description: 'Sincronização de múltiplas agendas', price: 'R$ 79/mês', category: 'addon' },
-      { id: 'payment-booking', name: 'Payment at Booking', description: 'PIX/cartão direto na confirmação', price: 'R$ 39/mês', category: 'addon' }
-    ],
-    2: [ // Atendimento Omnichannel IA
-      { id: 'voice-ai', name: 'Voice AI Assistant', description: 'Atendimento por voz via WhatsApp', price: 'R$ 99/mês', category: 'addon' },
-      { id: 'doc-ocr', name: 'Document OCR Scanner', description: 'Extração automática de dados de documentos', price: 'R$ 59/mês', category: 'integration' },
-      { id: 'sentiment-pro', name: 'Sentiment Analysis Pro', description: 'Análise emocional em tempo real', price: 'R$ 69/mês', category: 'addon' }
-    ],
-    3: [ // CRM & Funil Vendas
-      { id: 'lead-scoring', name: 'Lead Scoring AI', description: 'Pontuação automática de leads', price: 'R$ 79/mês', category: 'addon' },
-      { id: 'digital-contracts', name: 'Digital Contracts', description: 'Assinatura digital com validade jurídica', price: 'R$ 89/mês', category: 'integration' },
-      { id: 'payment-recovery', name: 'Payment Recovery AI', description: 'Cobrança automática inteligente', price: 'R$ 69/mês', category: 'addon' }
-    ],
-    4: [ // Email Marketing
-      { id: 'content-gen', name: 'Content Generation AI', description: 'Criação automática de conteúdo personalizado', price: 'R$ 99/mês', category: 'addon' },
-      { id: 'advanced-seg', name: 'Advanced Segmentation', description: 'Segmentação comportamental automática', price: 'R$ 59/mês', category: 'addon' },
-      { id: 'sms-integration', name: 'SMS Integration', description: 'Campanhas multicanal sincronizadas', price: 'R$ 49/mês', category: 'integration' }
-    ],
-    5: [ // Gestão Redes Sociais
-      { id: 'ai-content', name: 'AI Content Creator', description: 'Geração automática de posts e stories', price: 'R$ 89/mês', category: 'addon' },
-      { id: 'influencer-disc', name: 'Influencer Discovery', description: 'Identificação automática de micro-influencers', price: 'R$ 79/mês', category: 'integration' },
-      { id: 'social-listening', name: 'Social Listening Pro', description: 'Monitoramento de marca e concorrentes', price: 'R$ 69/mês', category: 'addon' }
-    ],
-    6: [ // Portal Cliente + Treinamento
-      { id: 'video-course', name: 'Video Course Builder', description: 'Criação automática de cursos', price: 'R$ 99/mês', category: 'addon' },
-      { id: 'doc-automation', name: 'Document Automation', description: 'Geração automática de contratos/propostas', price: 'R$ 79/mês', category: 'integration' },
-      { id: 'custom-app', name: 'Custom Mobile App', description: 'App próprio com marca do cliente', price: 'R$ 59/mês', category: 'addon' }
-    ],
-    7: [ // WhatsApp Business
-      { id: 'instagram-int', name: 'Instagram Integration', description: 'Unificação WhatsApp + Instagram Direct', price: 'R$ 69/mês', category: 'integration' },
-      { id: 'advanced-ai', name: 'Advanced AI Responses', description: 'Respostas contextuais avançadas', price: 'R$ 89/mês', category: 'addon' },
-      { id: 'catalog-pro', name: 'WhatsApp Catalog Pro', description: 'Catálogo inteligente com recomendações', price: 'R$ 49/mês', category: 'addon' }
-    ],
-    8: [ // SMS + Push Notifications
-      { id: 'voice-messages', name: 'Voice Messages', description: 'Mensagens de voz automatizadas', price: 'R$ 59/mês', category: 'addon' },
-      { id: 'international-sms', name: 'International SMS', description: 'Envio global com routing inteligente', price: 'R$ 79/mês', category: 'integration' },
-      { id: 'rich-media', name: 'Rich Media Messaging', description: 'MMS com imagens/vídeos/GIFs', price: 'R$ 69/mês', category: 'addon' }
-    ]
-  }
 
   const stacks = [
     'Keycloak', 'PostgreSQL', 'MinIO', 'Redis', 'Traefik', 'Docker',
@@ -468,13 +383,13 @@ export default function HomePage() {
                 href="/parcerias-empresariais-contato"
                 className="hidden md:inline-flex text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
-                <span data-translate="nav.partnerships">Parcerias</span>
+                Parcerias
               </Link>
               <div className="flex items-center space-x-2">
                 <div className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
-                <span className="text-sm text-gray-600 dark:text-gray-300" data-translate="system.online">Sistema Online</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Sistema Online</span>
               </div>
-              <SimpleLanguageSwitcher className="mr-2" variant="dropdown" />
+              <LanguageSwitcher className="mr-2" variant="dropdown" />
               <ThemeToggle />
             </div>
           </div>
@@ -626,133 +541,29 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {modules.map((module, index) => (
               <div
                 key={index}
-                className="card-compact hover:shadow-lg transition-all duration-300 text-center group transform hover:scale-102 hover:border-primary-300 relative overflow-hidden"
+                className="card hover:shadow-xl transition-all duration-300 text-center group cursor-pointer transform hover:scale-105 hover:border-primary-300 relative overflow-hidden"
+                onClick={() => setSelectedModule(index)}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-50 to-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative z-10">
-                  {/* Header com preço e botão extras */}
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="text-xl font-bold text-primary-600">
-                      {module.price}
-                    </div>
-                    <div className="relative">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setShowExtrasDropdown(showExtrasDropdown === index ? null : index)
-                        }}
-                        className="flex items-center space-x-1 px-2 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-md hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors text-xs"
-                      >
-                        <Plus className="w-3 h-3" />
-                        <span>Extras</span>
-                      </button>
-
-                      {/* Dropdown de Extras */}
-                      {showExtrasDropdown === index && (
-                        <>
-                          <div
-                            className="fixed inset-0 z-10"
-                            onClick={() => setShowExtrasDropdown(null)}
-                          />
-                          <div className="absolute right-0 top-8 z-20 w-72 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
-                            <div className="flex items-center justify-between mb-2">
-                              <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                                Extras Disponíveis
-                              </h4>
-                              <Package className="w-4 h-4 text-gray-400" />
-                            </div>
-
-                            <div className="space-y-2 max-h-48 overflow-y-auto">
-                              {moduleExtras[index]?.map((extra) => (
-                                <div
-                                  key={extra.id}
-                                  className="flex items-start space-x-2 p-2 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={selectedExtras[index]?.includes(extra.id) || false}
-                                    onChange={(e) => {
-                                      const currentExtras = selectedExtras[index] || []
-                                      if (e.target.checked) {
-                                        setSelectedExtras({
-                                          ...selectedExtras,
-                                          [index]: [...currentExtras, extra.id]
-                                        })
-                                      } else {
-                                        setSelectedExtras({
-                                          ...selectedExtras,
-                                          [index]: currentExtras.filter(id => id !== extra.id)
-                                        })
-                                      }
-                                    }}
-                                    className="w-3 h-3 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 mt-0.5"
-                                  />
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center justify-between">
-                                      <h5 className="text-xs font-medium text-gray-900 dark:text-gray-100 truncate">
-                                        {extra.name}
-                                      </h5>
-                                      <span className="text-xs font-bold text-primary-600 ml-1">
-                                        {extra.price}
-                                      </span>
-                                    </div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
-                                      {extra.description}
-                                    </p>
-                                    <div className="mt-1">
-                                      <span className={`inline-flex px-1.5 py-0.5 text-xs font-medium rounded ${extra.category === 'addon' ? 'bg-blue-100 text-blue-800' : extra.category === 'integration' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'}`}>
-                                        {extra.category === 'addon' ? 'Add-on' : extra.category === 'integration' ? 'Integração' : 'Suporte'}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-
-                            {(selectedExtras[index]?.length || 0) > 0 && (
-                              <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-600">
-                                <button className="w-full bg-primary-600 text-white px-3 py-1.5 rounded-md hover:bg-primary-700 transition-colors flex items-center justify-center space-x-1 text-xs">
-                                  <ShoppingCart className="w-3 h-3" />
-                                  <span>Adicionar {selectedExtras[index]?.length} Extra(s)</span>
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
+                  <div className="text-2xl font-bold text-primary-600 mb-2">
+                    {module.price}
                   </div>
-
-                  <div onClick={() => setSelectedModule(index)} className="cursor-pointer">
-                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-gray-900 mb-2 text-sm">
-                      {module.name}
-                    </h3>
-                    <span className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full font-medium mb-2 inline-block">Indisponível</span>
-
-                    {/* Indicator de extras selecionados */}
-                    {(selectedExtras[index]?.length || 0) > 0 && (
-                      <div className="mb-2">
-                        <div className="flex items-center justify-center space-x-1">
-                          <Star className="w-3 h-3 text-yellow-500" />
-                          <span className="text-xs text-gray-600 dark:text-gray-400">
-                            {selectedExtras[index]?.length} extra(s) selecionado(s)
-                          </span>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="text-xs text-gray-500 mt-2">
-                      <span className="inline-flex items-center">
-                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Clique para ver detalhes
-                      </span>
-                    </div>
+                  <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-gray-900 mb-3 text-sm">
+                    {module.name}
+                  </h3>
+                  <span className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full font-medium mb-3 inline-block">Indisponível</span>
+                  <div className="text-xs text-gray-500 mt-2">
+                    <span className="inline-flex items-center">
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Clique para ver detalhes
+                    </span>
                   </div>
                 </div>
               </div>
@@ -896,131 +707,6 @@ export default function HomePage() {
                 {tech}
               </span>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pacotes Combinados com Desconto */}
-      <section className="py-12 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20">
-        <div className="container-custom">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-              🔥 Pacotes Combinados - Economize até 37%
-            </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-              Máximo valor, mínimo investimento. Escolha o pacote ideal para seu negócio.
-            </p>
-            <div className="inline-flex items-center px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full text-xs font-medium">
-              ⏰ Oferta especial: Primeiros 1.000 clientes - Preços sobem em breve!
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            {/* Starter Pack */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 relative">
-              <div className="text-center">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Starter Pack</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm">Ideal para começar</p>
-                <div className="mb-4">
-                  <div className="text-xs text-gray-500 line-through">R$ 397/mês individual</div>
-                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">R$ 199/mês</div>
-                  <div className="text-xs text-orange-600 dark:text-orange-400 font-medium">Economia de 50%</div>
-                </div>
-                <div className="text-left mb-4">
-                  <h4 className="font-semibold mb-2 text-sm">Inclui:</h4>
-                  <ul className="space-y-1 text-xs">
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />CRM Inteligente</li>
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />WhatsApp Business</li>
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Analytics Básico</li>
-                  </ul>
-                </div>
-                <Link href="/fila-de-espera" className="block w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm text-center">
-                  Entrar para Fila de Espera
-                </Link>
-              </div>
-            </div>
-
-            {/* Professional Pack - MAIS POPULAR */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border-2 border-yellow-400 dark:border-yellow-500 relative">
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-yellow-400 dark:bg-yellow-500 text-yellow-900 dark:text-yellow-900 px-2 py-0.5 rounded-full text-xs font-bold">
-                ⭐ MAIS POPULAR
-              </div>
-              <div className="text-center mt-2">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Professional Pack</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm">Melhor custo-benefício</p>
-                <div className="mb-4">
-                  <div className="text-xs text-gray-500 line-through">R$ 636/mês individual</div>
-                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">R$ 429/mês</div>
-                  <div className="text-xs text-orange-600 dark:text-orange-400 font-medium">Economia de 33%</div>
-                </div>
-                <div className="text-left mb-4">
-                  <h4 className="font-semibold mb-2 text-sm">Inclui tudo do Starter +:</h4>
-                  <ul className="space-y-1 text-xs">
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Omnichannel IA</li>
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Agendamento + Cobrança</li>
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Email Marketing</li>
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Setup gratuito (R$ 497)</li>
-                  </ul>
-                </div>
-                <Link href="/fila-de-espera" className="block w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2 rounded-lg font-medium hover:from-yellow-600 hover:to-orange-600 transition-colors text-sm text-center">
-                  Entrar para Fila de Espera
-                </Link>
-              </div>
-            </div>
-
-            {/* Enterprise Pack */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 relative">
-              <div className="text-center">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Enterprise Pack</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm">Todos os recursos</p>
-                <div className="mb-4">
-                  <div className="text-xs text-gray-500 line-through">R$ 1.268/mês individual</div>
-                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">R$ 799/mês</div>
-                  <div className="text-xs text-orange-600 dark:text-orange-400 font-medium">Economia de 37%</div>
-                </div>
-                <div className="text-left mb-4">
-                  <h4 className="font-semibold mb-2 text-sm">Todos os 9 módulos +:</h4>
-                  <ul className="space-y-1 text-xs">
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Suporte prioritário 24/7</li>
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Customizações ilimitadas</li>
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Account manager dedicado</li>
-                    <li className="flex items-center"><CheckCircle className="w-3 h-3 text-green-500 mr-2" />Migração gratuita (R$ 1.497)</li>
-                  </ul>
-                </div>
-                <Link href="/fila-de-espera" className="block w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-colors text-sm text-center">
-                  Entrar para Fila de Espera
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* ROI Calculator */}
-          <div className="bg-gradient-to-r from-green-100 to-blue-100 dark:from-green-900/30 dark:to-blue-900/30 rounded-2xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              📈 Calculadora de ROI Instantânea
-            </h3>
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              <strong>Investe R$ 429/mês</strong> → <strong className="text-green-600">Economiza R$ 12.400/mês</strong> → <strong className="text-green-600">ROI: 2.789%</strong>
-            </p>
-            <div className="grid md:grid-cols-3 gap-6 text-sm">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-                <div className="text-2xl font-bold text-red-600 dark:text-red-400">- R$ 8.500</div>
-                <div className="text-gray-600 dark:text-gray-400">Custos operacionais eliminados</div>
-              </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">+ R$ 15.600</div>
-                <div className="text-gray-600 dark:text-gray-400">Aumento vendas com IA</div>
-              </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">= R$ 24.100</div>
-                <div className="text-gray-600 dark:text-gray-400">Resultado líquido mensal</div>
-              </div>
-            </div>
-            <div className="mt-6">
-              <div className="inline-flex items-center px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-sm font-medium">
-                ✅ Payback em apenas 13 dias • ROI positivo garantido em 30 dias
-              </div>
-            </div>
           </div>
         </div>
       </section>
