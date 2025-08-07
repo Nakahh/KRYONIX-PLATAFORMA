@@ -4,7 +4,6 @@ const withNextIntl = require('next-intl/plugin')('./lib/i18n.ts');
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
   },
