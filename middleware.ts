@@ -22,6 +22,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Handle root path redirect to default locale
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/pt-br', request.url));
+  }
+
   // Handle admin authentication for dashboard routes only
   if (pathname.startsWith('/dashboard')) {
     const token = request.cookies.get('admin_session')?.value;
@@ -37,6 +42,19 @@ export function middleware(request: NextRequest) {
     if (token) {
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
+  }
+
+  // Handle legacy Portuguese routes - redirect to localized versions
+  if (pathname === '/fila-de-espera') {
+    return NextResponse.redirect(new URL('/pt-br/waitlist', request.url));
+  }
+
+  if (pathname === '/progresso') {
+    return NextResponse.redirect(new URL('/pt-br/progress', request.url));
+  }
+
+  if (pathname === '/parcerias-empresariais-contato') {
+    return NextResponse.redirect(new URL('/pt-br/partnerships-contact', request.url));
   }
 
   // For non-dashboard routes, apply internationalization
