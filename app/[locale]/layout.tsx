@@ -109,7 +109,7 @@ export default async function LocaleLayout({
         <link rel="alternate" hrefLang="fr" href="/fr" />
         <link rel="alternate" hrefLang="x-default" href="/pt-br" />
       </head>
-      <body className={`${inter.className} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`} suppressHydrationWarning>
+      <body className="antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors font-sans" suppressHydrationWarning>
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <div id="root">
