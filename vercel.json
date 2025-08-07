@@ -1,7 +1,55 @@
 {
+  "version": 2,
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "installCommand": "npm ci",
+  "outputDirectory": ".next",
+  "installCommand": "npm ci --prefer-offline --no-audit",
+  "nodeVersion": "18.x",
+  "regions": ["gru1", "iad1"],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@kryonix_api_url",
+    "NEXT_PUBLIC_SITE_URL": "@kryonix_site_url",
+    "NEXT_PUBLIC_ENV": "@kryonix_env",
+    "NEXTAUTH_SECRET": "@nextauth_secret",
+    "NEXTAUTH_URL": "@nextauth_url",
+    "DATABASE_URL": "@database_url",
+    "REDIS_URL": "@redis_url",
+    "JWT_SECRET": "@jwt_secret",
+    "ADMIN_TOKEN": "@admin_token",
+    "WEBHOOK_SECRET": "@webhook_secret",
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_API_URL": "@kryonix_api_url",
+      "NEXT_PUBLIC_SITE_URL": "@kryonix_site_url",
+      "NEXT_PUBLIC_ENV": "production",
+      "NEXT_TELEMETRY_DISABLED": "1",
+      "NODE_ENV": "production",
+      "NODE_OPTIONS": "--max-old-space-size=4096"
+    }
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 30
+    },
+    "app/api/waitlist/route.ts": {
+      "runtime": "nodejs18.x", 
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/backend/(.*)",
+      "destination": "https://kryonix-backend.onrender.com/api/$1"
+    },
+    {
+      "source": "/webhook/(.*)",
+      "destination": "https://kryonix-backend.onrender.com/webhook/$1"
+    }
+  ],
   "redirects": [
     {
       "source": "/",
@@ -15,22 +63,37 @@
     },
     {
       "source": "/en/home",
-      "destination": "/en",
+      "destination": "/en", 
       "permanent": true
     },
     {
-      "source": "/es/home", 
+      "source": "/es/home",
       "destination": "/es",
       "permanent": true
     },
     {
       "source": "/de/home",
-      "destination": "/de", 
+      "destination": "/de",
       "permanent": true
     },
     {
       "source": "/fr/home",
       "destination": "/fr",
+      "permanent": true
+    },
+    {
+      "source": "/fila-de-espera",
+      "destination": "/pt-br/waitlist",
+      "permanent": true
+    },
+    {
+      "source": "/progresso",
+      "destination": "/pt-br/progress", 
+      "permanent": true
+    },
+    {
+      "source": "/parcerias-empresariais-contato",
+      "destination": "/pt-br/partnerships-contact",
       "permanent": true
     }
   ],
@@ -39,14 +102,86 @@
       "source": "/(.*)",
       "headers": [
         {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
           "key": "X-Frame-Options",
           "value": "SAMEORIGIN"
         },
         {
-          "key": "X-Content-Type-Options", 
-          "value": "nosniff"
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
         }
       ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization, X-Requested-With"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.(?:ico|png|svg|jpg|jpeg|gif|webp|woff|woff2))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "trailingSlash": false,
+  "cleanUrls": true,
+  "crons": [
+    {
+      "path": "/api/cron/cleanup",
+      "schedule": "0 2 * * *"
     }
   ]
 }
