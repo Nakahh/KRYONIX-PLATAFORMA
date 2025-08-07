@@ -70,6 +70,13 @@ services:
         - tsconfig.json
         - Dockerfile
 
+  # Redis Cache Service
+  - type: redis
+    name: kryonix-redis
+    region: oregon
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
+
   # Webhook Listener Service
   - type: worker
     name: kryonix-webhook
@@ -134,14 +141,6 @@ databases:
     region: oregon
     plan: starter
     postgresMajorVersion: 15
-
-services:
-  # Redis Cache Service
-  - type: redis
-    name: kryonix-redis
-    region: oregon
-    plan: starter
-    maxmemoryPolicy: allkeys-lru
 
 # Cron Jobs for Automation
 cronJobs:
