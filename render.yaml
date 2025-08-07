@@ -1,0 +1,166 @@
+services:
+  # Main Web Service (Express + Next.js Integration)
+  - type: web
+    name: kryonix-backend
+    runtime: node
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm ci && npm run build-fast
+    startCommand: npm run production
+    repo: https://github.com/Nakahh/KRYONIX-PLATAFORMA.git
+    branch: main
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8080
+      - key: HOSTNAME
+        value: 0.0.0.0
+      - key: NEXT_TELEMETRY_DISABLED
+        value: 1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kryonix-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: kryonix-redis
+          property: connectionString
+      - key: WEBHOOK_SECRET
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: "https://kryonix-frontend.vercel.app,https://kryonix.com.br,https://www.kryonix.com.br"
+      - key: AUTO_MIGRATE
+        value: true
+      - key: AUTO_BACKUP
+        value: true
+      - key: HEALTH_CHECK_ENABLED
+        value: true
+      - key: MONITORING_ENABLED
+        value: true
+      - key: GITHUB_WEBHOOK_ENABLED
+        value: true
+    healthCheckPath: /health
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+    disk:
+      name: kryonix-data
+      mountPath: /app/data
+      sizeGB: 5
+    buildFilter:
+      paths:
+        - server.js
+        - webhook-listener.js
+        - kryonix-monitor.js
+        - lib/**
+        - app/api/**
+        - package.json
+        - package-lock.json
+        - next.config.js
+        - tsconfig.json
+        - Dockerfile
+
+  # Webhook Listener Service
+  - type: worker
+    name: kryonix-webhook
+    runtime: node
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm ci
+    startCommand: node webhook-listener.js
+    repo: https://github.com/Nakahh/KRYONIX-PLATAFORMA.git
+    branch: main
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8082
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kryonix-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: kryonix-redis
+          property: connectionString
+      - key: WEBHOOK_SECRET
+        sync: false
+
+  # System Monitor Service
+  - type: worker
+    name: kryonix-monitor
+    runtime: node
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm ci
+    startCommand: node kryonix-monitor.js
+    repo: https://github.com/Nakahh/KRYONIX-PLATAFORMA.git
+    branch: main
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8084
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kryonix-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: kryonix-redis
+          property: connectionString
+
+databases:
+  # PostgreSQL Database
+  - name: kryonix-postgres
+    databaseName: kryonix_platform
+    user: kryonix
+    region: oregon
+    plan: starter
+    postgresMajorVersion: 15
+
+services:
+  # Redis Cache Service
+  - type: redis
+    name: kryonix-redis
+    region: oregon
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
+
+# Cron Jobs for Automation
+cronJobs:
+  # Database Backup
+  - name: database-backup
+    schedule: "0 2 * * *"  # Daily at 2 AM
+    command: node lib/backup/auto-backup.js
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kryonix-postgres
+          property: connectionString
+      
+  # Health Check
+  - name: health-check
+    schedule: "*/5 * * * *"  # Every 5 minutes
+    command: curl -f https://kryonix-backend.onrender.com/health
+    
+  # Dependency Update Check
+  - name: dependency-update
+    schedule: "0 1 * * 0"  # Weekly on Sunday
+    command: npm run check-deps
