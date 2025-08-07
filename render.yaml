@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: kryonix-backend
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: cd backend && npm ci && npm run build-fast 2>/dev/null || npm ci
+    startCommand: cd backend && npm run production
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8080
+      - key: HOSTNAME
+        value: 0.0.0.0
+      - key: JWT_SECRET
+        generateValue: true
+      - key: WEBHOOK_SECRET
+        value: Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
+      - key: FRONTEND_URL
+        value: https://kryonix-platform.vercel.app
+      - key: ALLOWED_ORIGINS
+        value: https://kryonix-platform.vercel.app,https://*.vercel.app
+    healthCheckPath: /health
+    autoDeploy: true
+    
+databases:
+  - name: kryonix-postgres
+    databaseName: kryonix_platform
+    plan: starter
+    region: oregon
+    
+services:
+  - type: redis
+    name: kryonix-redis
+    plan: starter
+    region: oregon
