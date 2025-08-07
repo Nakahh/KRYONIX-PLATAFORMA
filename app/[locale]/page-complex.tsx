@@ -24,6 +24,8 @@ import ProgressBar from '../components/ProgressBar'
 import ThemeToggle from '../components/ThemeToggle'
 import ContactForm from '../components/ContactForm'
 import SimpleLanguageSwitcher from '../components/SimpleLanguageSwitcher'
+import { modules, moduleExtras } from '../data/modules'
+import { features, stacks } from '../data/features'
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
