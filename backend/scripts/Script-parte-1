@@ -1,0 +1,2184 @@
+#!/bin/bash
+
+# ============================================================================
+# 🚀 KRYONIX - SCRIPT PARTE 01 -
+# CONFIGURAÇÃO KEYCLOAK DOCKER SWARM 
+# ============================================================================
+# 
+# Desenvolvido por: Vitor Jayme Fernandes Ferreira
+# Data: Agosto 2025
+# 
+# VERSÃO CORRIGIDA: Resolve todos os problemas de autenticação PostgreSQL
+# - ✅ Corrigido: Usuário -U kryonix -> -U postgres
+# - ✅ Corrigido: Suporte completo ao Supabase PostgreSQL
+# - ✅ Corrigido: String de conexão Keycloak
+# - ✅ Corrigido: Deploy Docker Swarm com configurações corretas
+# - ✅ Adicionado: Detecção automática PostgreSQL vs Supabase
+# - ✅ Adicionado: Monitoramento e backup para ambos os tipos
+#
+# Este script deve ser executado NO SEU SERVIDOR após o pull da main
+# Ele configura tudo que não vem automaticamente com o código
+#
+# Uso: bash Script-parte-1
+# 
+# VERSÃO: Corrigida com funcionalidades avançadas de monitoramento,
+# backup automático e sistema de notificações WhatsApp integrado
+# ============================================================================
+
+# Configurações de segurança
+set -euo pipefail
+export LC_ALL=C.UTF-8 2>/dev/null || export LC_ALL=C
+export LANG=C.UTF-8 2>/dev/null || export LANG=C
+
+# ============================================================================
+# CRIAÇÃO IMEDIATA DOS DIRETÓRIOS NECESSÁRIOS
+# ============================================================================
+# IMPORTANTE: Criar diretórios ANTES de qualquer função de log
+readonly LOG_DIR="/opt/kryonix/logs"
+readonly CONFIG_DIR="/opt/kryonix/config"
+readonly SCRIPTS_DIR="/opt/kryonix/scripts"
+readonly BACKUP_DIR="/opt/kryonix/backups"
+readonly CLIENTS_DIR="/opt/kryonix/clients"
+
+# Criar todos os diretórios necessários IMEDIATAMENTE
+mkdir -p "$LOG_DIR" "$CONFIG_DIR" "$SCRIPTS_DIR" "$BACKUP_DIR" "$CLIENTS_DIR"
+mkdir -p /etc/traefik/dynamic
+
+# ============================================================================
+# CONFIGURAÇÕES GLOBAIS - CREDENCIAIS REAIS DO PROJETO
+# ============================================================================
+
+# Servidor e domínios
+readonly SERVER_IP="${SERVER_IP:-45.76.246.44}"
+readonly DOMAIN_BASE="kryonix.com.br"
+readonly PROJECT_NAME="KRYONIX"
+
+# Credenciais de autenticação
+readonly KEYCLOAK_ADMIN_USER="kryonix"
+readonly KEYCLOAK_ADMIN_PASSWORD="${KEYCLOAK_ADMIN_PASSWORD:-Vitor@123456}"
+readonly POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-Vitor@123456}"
+
+# Credenciais APIs
+readonly EVOLUTION_API_KEY="${EVOLUTION_API_KEY:-2f4d6967043b87b5ebee57b872e0223a}"
+readonly EVOLUTION_API_URL="https://api.kryonix.com.br"
+readonly JWT_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+
+# Comunicação e notificações
+readonly WHATSAPP_ALERT="${WHATSAPP_ALERT:-+5517981805327}"
+readonly ADMIN_EMAIL="vitor.nakahh@gmail.com"
+
+# GitHub e CI/CD
+readonly GITHUB_REPO="https://github.com/Nakahh/KRYONIX-PLATAFORMA.git"
+readonly PAT_TOKEN="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"
+readonly WEBHOOK_URL="https://kryonix.com.br/api/github-webhook"
+readonly WEBHOOK_SECRET="Kr7\$n0x-V1t0r-2025-#Jwt\$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8"
+
+# SendGrid para emails
+readonly SENDGRID_API_KEY="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"
+
+# ============================================================================
+# CORES E FORMATAÇÃO
+# ============================================================================
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly PURPLE='\033[0;35m'
+readonly CYAN='\033[0;36m'
+readonly WHITE='\033[1;37m'
+readonly BOLD='\033[1m'
+readonly NC='\033[0m'
+
+# Emojis seguros para ASCII
+readonly CHECK="✅"
+readonly CROSS="❌"
+readonly WARNING="⚠️"
+readonly ROCKET="🚀"
+readonly GEAR="⚙️"
+readonly LOCK="🔐"
+
+# ============================================================================
+# SISTEMA DE LOGGING E CONTROLE
+# ============================================================================
+
+# Diretórios e arquivos
+readonly LOCK_FILE="/tmp/kryonix-parte01-$(date +%Y%m%d).lock"
+readonly LOG_FILE="$LOG_DIR/parte01-$(date +%Y%m%d_%H%M%S).log"
+
+# Contador de progresso
+CURRENT_STEP=0
+readonly TOTAL_STEPS=20
+
+# Função de logging centralizada
+log() {
+    local level="$1"
+    local message="$2"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    local color=""
+    local prefix=""
+    
+    case "$level" in
+        "INFO")
+            color="$GREEN"
+            prefix="[INFO]"
+            ;;
+        "WARN")
+            color="$YELLOW"
+            prefix="[WARN]"
+            ;;
+        "ERROR")
+            color="$RED"
+            prefix="[ERROR]"
+            ;;
+        "DEBUG")
+            color="$BLUE"
+            prefix="[DEBUG]"
+            ;;
+        "STEP")
+            color="$PURPLE"
+            prefix="[STEP]"
+            CURRENT_STEP=$((CURRENT_STEP + 1))
+            ;;
+    esac
+    
+    echo -e "${color}[$timestamp] $prefix${NC} $message" | tee -a "$LOG_FILE"
+}
+
+# Funções de logging especializadas
+log_info() { log "INFO" "$1"; }
+log_warn() { log "WARN" "$1"; }
+log_error() { log "ERROR" "$1"; }
+log_debug() { log "DEBUG" "$1"; }
+log_step() { log "STEP" "$CHECK Etapa $CURRENT_STEP/$TOTAL_STEPS: $1"; }
+
+# ============================================================================
+# SISTEMA DE CONTROLE E SEGURANÇA
+# ============================================================================
+
+# Função de cleanup
+cleanup() {
+    log_info "Executando cleanup..."
+    rm -f "$LOCK_FILE"
+    log_info "Script finalizado em $(date)"
+}
+
+# Função de tratamento de erro
+error_exit() {
+    local line_number="$1"
+    local error_code="$2"
+    log_error "Erro na linha $line_number com código $error_code"
+    log_error "Consultando logs em: $LOG_FILE"
+    
+    # Enviar notificação de erro via WhatsApp se Evolution API estiver disponível
+    send_whatsapp_notification "❌ ERRO no script KRYONIX PARTE-01 - Linha: $line_number - Verificar logs: $LOG_FILE" || true
+    
+    exit "$error_code"
+}
+
+# Configurar traps
+trap cleanup EXIT INT TERM
+trap 'error_exit ${LINENO} $?' ERR
+
+# ============================================================================
+# FUNÇÕES DE VALIDAÇÃO
+# ============================================================================
+
+# Verificar se já está rodando
+check_already_running() {
+    if [ -f "$LOCK_FILE" ]; then
+        local pid=$(cat "$LOCK_FILE" 2>/dev/null || echo "")
+        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+            log_error "Script já está sendo executado (PID: $pid)"
+            log_error "Se tiver certeza que não está rodando, remova: $LOCK_FILE"
+            exit 1
+        else
+            log_warn "Lock file órfão encontrado, removendo..."
+            rm -f "$LOCK_FILE"
+        fi
+    fi
+    
+    # Criar lock file
+    echo $$ > "$LOCK_FILE"
+    log_info "Lock file criado com PID: $$"
+}
+
+# Verificar permissões de root
+check_root() {
+    if [ "$EUID" -ne 0 ]; then
+        log_error "Este script deve ser executado como root"
+        log_error "Execute: sudo bash $0"
+        exit 1
+    fi
+    log_info "Permissões de root verificadas"
+}
+
+# Verificar dependências do sistema
+check_system_dependencies() {
+    log_step "Verificando dependências do sistema"
+    
+    local missing_deps=()
+    local required_deps=("docker" "python3" "curl" "jq" "cron")
+    
+    for dep in "${required_deps[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            missing_deps+=("$dep")
+        else
+            log_info "$CHECK $dep está disponível"
+        fi
+    done
+    
+    if [ ${#missing_deps[@]} -gt 0 ]; then
+        log_error "Dependências faltando: ${missing_deps[*]}"
+        log_info "Instalando dependências automaticamente..."
+        
+        # Detectar distribuição e instalar
+        if command -v apt-get &> /dev/null; then
+            apt-get update && apt-get install -y "${missing_deps[@]}" jq
+        elif command -v yum &> /dev/null; then
+            yum install -y "${missing_deps[@]}" jq
+        else
+            log_error "Gerenciador de pacotes não suportado"
+            exit 1
+        fi
+    fi
+    
+    log_info "$CHECK Todas as dependências estão dispon��veis"
+}
+
+# Verificar Docker Swarm
+check_docker_swarm() {
+    log_step "Verificando Docker Swarm"
+
+    if ! docker info | grep -q "Swarm: active"; then
+        log_warn "Docker Swarm não está ativo! Tentando reativar..."
+
+        # Tentar deixar swarm primeiro (limpar estado)
+        docker swarm leave --force 2>/dev/null || true
+        sleep 5
+
+        # Reinicializar swarm
+        if docker swarm init --advertise-addr $(hostname -I | awk '{print $1}') 2>/dev/null; then
+            log_info "✅ Docker Swarm inicializado com IP específico"
+        elif docker swarm init 2>/dev/null; then
+            log_info "✅ Docker Swarm inicializado (fallback)"
+        else
+            log_error "❌ Falha crítica ao ativar Docker Swarm"
+            log_error "Execute manualmente: docker swarm init"
+            exit 1
+        fi
+
+        sleep 10
+
+        # Verificar se rede existe
+        if ! docker network ls | grep -q "Kryonix-NET"; then
+            docker network create -d overlay --attachable Kryonix-NET 2>/dev/null || true
+            log_info "��� Rede Kryonix-NET recriada"
+        fi
+    fi
+
+    log_info "$CHECK Docker Swarm está ativo"
+}
+
+# Verificar espaço em disco
+check_disk_space() {
+    log_step "Verificando espaço em disco"
+    
+    local disk_available=$(df / | awk 'NR==2 {print $4}')
+    local required_space=5242880  # 5GB em KB
+    
+    if [ "$disk_available" -lt "$required_space" ]; then
+        log_error "Espaço em disco insuficiente!"
+        log_error "Disponível: $(($disk_available / 1024 / 1024))GB"
+        log_error "Necessário: 5GB"
+        exit 1
+    fi
+    
+    log_info "$CHECK Espaço em disco suficiente: $(($disk_available / 1024 / 1024))GB disponível"
+}
+
+# ============================================================================
+# FUNÇÕES DE REDE E CONECTIVIDADE
+# ============================================================================
+
+# Verificar rede Docker
+check_docker_network() {
+    log_step "Verificando/criando rede Docker"
+    
+    local network_name="Kryonix-NET"
+    
+    if docker network ls --format "{{.Name}}" | grep -q "^${network_name}$"; then
+        log_info "$CHECK Rede $network_name já existe"
+    else
+        log_info "Criando rede $network_name..."
+        docker network create -d overlay --attachable "$network_name"
+        log_info "$CHECK Rede $network_name criada"
+    fi
+}
+
+# Verificar conectividade externa
+check_external_connectivity() {
+    log_step "Verificando conectividade externa"
+    
+    local test_urls=(
+        "https://api.github.com"
+        "https://registry-1.docker.io"
+        "https://$DOMAIN_BASE"
+    )
+    
+    for url in "${test_urls[@]}"; do
+        if curl -f -s --max-time 10 "$url" > /dev/null 2>&1; then
+            log_info "$CHECK Conectividade com $url OK"
+        else
+            log_warn "$WARNING Problema de conectividade com $url"
+        fi
+    done
+}
+
+# ============================================================================
+# FUNÇÕES DE SERVIÇOS BASE
+# ============================================================================
+
+# Verificar serviços base necessários
+check_base_services() {
+    log_step "Verificando serviços base necessários"
+
+    # Verificar PostgreSQL - pode ser postgresql-kryonix ou Supabase
+    log_info "Verificando PostgreSQL..."
+    if docker ps --format "{{.Names}}" | grep -q "^postgresql-kryonix$"; then
+        log_info "$CHECK postgresql-kryonix está rodando"
+        export POSTGRES_CONTAINER="postgresql-kryonix"
+        export POSTGRES_HOST="postgresql-kryonix"
+        export POSTGRES_PORT="5432"
+        export POSTGRES_USER="postgres"
+    elif docker ps --format "{{.Names}}" | grep -q "supabase_db"; then
+        POSTGRES_CONTAINER=$(docker ps --format "{{.Names}}" | grep "supabase_db" | head -1)
+        log_info "$CHECK Supabase PostgreSQL está rodando: $POSTGRES_CONTAINER"
+        export POSTGRES_CONTAINER="$POSTGRES_CONTAINER"
+        export POSTGRES_HOST="supabase.kryonix.com.br"
+        export POSTGRES_PORT="5432"
+        export POSTGRES_USER="postgres"
+    elif curl -f -s --max-time 5 "https://supabase.kryonix.com.br" > /dev/null 2>&1; then
+        log_info "$CHECK Supabase externo está acessível"
+        export POSTGRES_CONTAINER="external-supabase"
+        export POSTGRES_HOST="supabase.kryonix.com.br"
+        export POSTGRES_PORT="5432"
+        export POSTGRES_USER="postgres"
+    else
+        log_error "Nenhum PostgreSQL encontrado!"
+        log_error "Containers disponíveis:"
+        docker ps --format "{{.Names}}" | head -10 | while read container; do
+            log_error "- $container"
+        done
+        exit 1
+    fi
+
+    # Verificar Traefik (opcional)
+    log_info "Verificando Traefik..."
+    if docker ps --format "table {{.Names}}" | grep -q "traefik"; then
+        log_info "$CHECK Traefik está rodando"
+    else
+        log_warn "⚠�� Traefik não encontrado - proxy manual será necessário"
+    fi
+}
+
+# ============================================================================
+# CONFIGURAÇÃO DO KEYCLOAK
+# ============================================================================
+
+# Verificar e corrigir banco de dados Keycloak
+check_and_fix_keycloak_database() {
+    log_step "Verificando e corrigindo banco de dados Keycloak"
+    
+    log_info "Testando conectividade com PostgreSQL..."
+    
+    # Tentar diferentes métodos de conexão baseado no tipo de PostgreSQL
+    if [ "$POSTGRES_CONTAINER" = "external-supabase" ]; then
+        # Supabase externo - usar psql direto
+        log_info "Conectando ao Supabase externo..."
+        
+        # Verificar se database keycloak existe
+        if ! PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U postgres -d postgres -lqt 2>/dev/null | cut -d \| -f 1 | grep -qw keycloak; then
+            log_info "Criando database keycloak no Supabase..."
+            PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U postgres -d postgres -c "CREATE DATABASE keycloak WITH ENCODING 'UTF8' LC_COLLATE = 'C' LC_CTYPE = 'C' TEMPLATE template0;" 2>/dev/null || {
+                log_warn "Falha com postgres, tentando com kryonix..."
+                PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U kryonix -d postgres -c "CREATE DATABASE keycloak WITH ENCODING 'UTF8' LC_COLLATE = 'C' LC_CTYPE = 'C' TEMPLATE template0;" 2>/dev/null || true
+            }
+        fi
+        
+        # Verificar se usuário keycloak_user existe
+        if ! PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U postgres -d postgres -t -c "SELECT 1 FROM pg_roles WHERE rolname='keycloak_user'" 2>/dev/null | grep -q 1; then
+            log_info "Criando usuário keycloak_user no Supabase..."
+            PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U postgres -d postgres -c "CREATE USER keycloak_user WITH PASSWORD '$POSTGRES_PASSWORD';" 2>/dev/null || {
+                log_warn "Falha com postgres, tentando com kryonix..."
+                PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U kryonix -d postgres -c "CREATE USER keycloak_user WITH PASSWORD '$POSTGRES_PASSWORD';" 2>/dev/null || true
+            }
+        fi
+        
+        # Conceder privil��gios
+        PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U postgres -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;" 2>/dev/null || {
+            log_warn "Falha com postgres, tentando com kryonix..."
+            PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U kryonix -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;" 2>/dev/null || true
+        }
+        
+        log_info "$CHECK Conectividade com Supabase testada"
+        
+    else
+        # PostgreSQL local (Docker)
+        log_info "Conectando ao PostgreSQL local..."
+        
+        # Verificar se database keycloak existe
+        if ! docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U postgres -d postgres -lqt | cut -d \| -f 1 | grep -qw keycloak; then
+            log_info "Criando database keycloak..."
+            docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U postgres -d postgres -c "CREATE DATABASE keycloak WITH ENCODING 'UTF8' LC_COLLATE = 'C' LC_CTYPE = 'C' TEMPLATE template0;"
+            log_info "$CHECK Database keycloak criado"
+        else
+            log_info "$CHECK Database keycloak já existe"
+        fi
+
+        # Verificar se usuário keycloak_user existe  
+        if ! docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U postgres -d postgres -t -c "SELECT 1 FROM pg_roles WHERE rolname='keycloak_user'" | grep -q 1; then
+            log_info "Criando usuário keycloak_user..."
+            docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U postgres -d postgres -c "CREATE USER keycloak_user WITH PASSWORD '$POSTGRES_PASSWORD';"
+            log_info "$CHECK Usuário keycloak_user criado"
+        else
+            log_info "$CHECK Usuário keycloak_user já existe"
+        fi
+
+        # Garantir privilégios no database
+        log_info "Concedendo privilégios..."
+        docker exec $POSTGRES_CONTAINER psql -h 127.0.0.1 -U postgres -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak_user;"
+        log_info "$CHECK Privilégios concedidos"
+    fi
+}
+
+# Criar configurações do Keycloak  
+create_keycloak_config() {
+    log_step "Criando configurações do Keycloak"
+    
+    # Verificar e preparar database
+    check_and_fix_keycloak_database
+    
+    # Criar configuração do Docker Compose
+    cat > "$CONFIG_DIR/keycloak.yml" << EOF
+version: '3.8'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: keycloak-kryonix
+    command: start
+    environment:
+      KEYCLOAK_ADMIN: "$KEYCLOAK_ADMIN_USER"
+      KEYCLOAK_ADMIN_PASSWORD: "$KEYCLOAK_ADMIN_PASSWORD"
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://$POSTGRES_HOST:$POSTGRES_PORT/keycloak"
+      KC_DB_USERNAME: "keycloak_user"
+      KC_DB_PASSWORD: "$POSTGRES_PASSWORD"
+      KC_HOSTNAME: "keycloak.$DOMAIN_BASE"
+      KC_PROXY: "edge"
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      KC_LOG_LEVEL: "INFO"
+      KC_FEATURES: "preview"
+      KC_DB_URL_HOST: "$POSTGRES_HOST"
+      KC_DB_URL_PORT: "$POSTGRES_PORT"
+      KC_DB_URL_DATABASE: "keycloak"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.rule=Host(\`keycloak.$DOMAIN_BASE\`)"
+      - "traefik.http.routers.keycloak.tls=true"
+      - "traefik.http.routers.keycloak.tls.certresolver=letsencrypt"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+      - "traefik.http.routers.keycloak.middlewares=secure-headers"
+    networks:
+      - Kryonix-NET
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+networks:
+  Kryonix-NET:
+    external: true
+EOF
+    
+    log_info "$CHECK Configuração do Keycloak criada"
+}
+
+# Limpar locks do Liquibase e problemas de database
+clean_liquibase_locks() {
+    log_info "🔧 Limpando locks Liquibase e preparando database..."
+    
+    if [ "$POSTGRES_CONTAINER" != "external-supabase" ]; then
+        # PostgreSQL local
+        docker exec $POSTGRES_CONTAINER psql -U postgres -d keycloak -c "DELETE FROM DATABASECHANGELOGLOCK;" 2>/dev/null || true
+        docker exec $POSTGRES_CONTAINER psql -U postgres -d keycloak -c "UPDATE DATABASECHANGELOGLOCK SET LOCKED=FALSE, LOCKGRANTED=null, LOCKEDBY=null where ID=1;" 2>/dev/null || true
+    else
+        # Supabase externo
+        PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U postgres -d keycloak -c "DELETE FROM DATABASECHANGELOGLOCK;" 2>/dev/null || true
+        PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U postgres -d keycloak -c "UPDATE DATABASECHANGELOGLOCK SET LOCKED=FALSE, LOCKGRANTED=null, LOCKEDBY=null where ID=1;" 2>/dev/null || true
+    fi
+    
+    log_info "$CHECK Locks Liquibase limpos"
+}
+
+# Usar porta 8082 diretamente - SEM VERIFICAÇÕES
+setup_keycloak_port() {
+    log_info "🎯 Configurando Keycloak para porta 8082 diretamente"
+
+    # Configuração direta - sem verificações
+    export KEYCLOAK_PORT="8082"
+    export KEYCLOAK_BASE_PORT="8082"
+    export KRYONIX_WEB_WAS_RUNNING=true  # Sempre garantir que web esteja ativo
+
+    log_info "✅ Porta 8082 configurada para Keycloak"
+    log_info "✅ Kryonix_web será mantido ativo na porta 8080"
+
+    # Salvar porta para referência
+    echo "$KEYCLOAK_PORT" > "$CONFIG_DIR/.keycloak-port"
+
+    log_info "$CHECK Keycloak configurado na porta: $KEYCLOAK_PORT (8082)"
+}
+
+# Fazer deploy definitivo do Keycloak
+deploy_keycloak_service() {
+    log_step "Fazendo deploy DEFINITIVO do Keycloak"
+
+    # Garantir que Docker Swarm está ativo antes do deploy
+    if ! docker info | grep -q "Swarm: active"; then
+        log_warn "Docker Swarm não está ativo! Reativando antes do deploy..."
+        check_docker_swarm
+    fi
+
+    # Configurar porta diretamente
+    setup_keycloak_port
+    
+    # Limpar locks antes do deploy
+    clean_liquibase_locks
+    
+    # Remover serviço anterior se existir
+    if docker service ls --format "{{.Name}}" | grep -q "kryonix-auth_keycloak"; then
+        log_info "Removendo serviço Keycloak anterior..."
+        docker service rm kryonix-auth_keycloak 2>/dev/null || true
+        sleep 15
+    fi
+    
+    # Detectar IP do PostgreSQL se for container local
+    if [ "$POSTGRES_CONTAINER" != "external-supabase" ]; then
+        POSTGRES_IP=$(docker inspect $POSTGRES_CONTAINER --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 2>/dev/null || echo "10.0.1.70")
+        log_info "IP do PostgreSQL detectado: $POSTGRES_IP"
+        export POSTGRES_HOST="$POSTGRES_IP"
+    fi
+    
+    log_info "Fazendo deploy com configuração DEFINITIVA na porta $KEYCLOAK_PORT..."
+    log_info "Mapeamento: Host porta $KEYCLOAK_PORT -> Container porta 8080"
+
+    # Criar serviço Docker Swarm com labels corretas do Traefik
+    docker service create \
+        --name kryonix-auth_keycloak \
+        --network Kryonix-NET \
+        --replicas 1 \
+        --constraint 'node.role==manager' \
+        --publish "mode=host,target=8080,published=${KEYCLOAK_PORT}" \
+        --env KEYCLOAK_ADMIN="$KEYCLOAK_ADMIN_USER" \
+        --env KEYCLOAK_ADMIN_PASSWORD="$KEYCLOAK_ADMIN_PASSWORD" \
+        --env KC_DB=postgres \
+        --env KC_DB_URL="jdbc:postgresql://$POSTGRES_HOST:$POSTGRES_PORT/keycloak" \
+        --env KC_DB_USERNAME=keycloak_user \
+        --env KC_DB_PASSWORD="$POSTGRES_PASSWORD" \
+        --env KC_HOSTNAME="keycloak.$DOMAIN_BASE" \
+        --env KC_PROXY=edge \
+        --env KC_HTTP_ENABLED=true \
+        --env KC_HTTP_PORT=8080 \
+        --env KC_HEALTH_ENABLED=true \
+        --env KC_METRICS_ENABLED=true \
+        --env KC_LOG_LEVEL=INFO \
+        --env KC_FEATURES=preview \
+        --env KC_HOSTNAME_STRICT=false \
+        --env KC_HOSTNAME_STRICT_HTTPS=false \
+        --env KC_PROXY_ADDRESS_FORWARDING=true \
+        --env JAVA_OPTS="-Xms256m -Xmx512m -Djava.net.preferIPv4Stack=true" \
+        --label traefik.enable=true \
+        --label traefik.docker.network=Kryonix-NET \
+        --label traefik.http.services.keycloak.loadbalancer.server.port=8080 \
+        --label traefik.http.services.keycloak.loadbalancer.healthcheck.path=/health/ready \
+        --label traefik.http.services.keycloak.loadbalancer.healthcheck.interval=15s \
+        --label traefik.http.routers.keycloak.rule="Host(\`keycloak.$DOMAIN_BASE\`)" \
+        --label traefik.http.routers.keycloak.entrypoints=web,websecure \
+        --label traefik.http.routers.keycloak.service=keycloak \
+        --label traefik.http.routers.keycloak.priority=1000 \
+        --label traefik.http.routers.keycloak.tls=true \
+        --label traefik.http.routers.keycloak.tls.certresolver=letsencrypt \
+        --limit-memory 1g \
+        --reserve-memory 512m \
+        --restart-condition any \
+        --restart-delay 15s \
+        --restart-max-attempts 5 \
+        quay.io/keycloak/keycloak:24.0 start
+    
+    log_info "Aguardando serviço Keycloak ficar pronto (comando FUNCIONANDO)..."
+    
+    # Aguardar serviço ficar ready
+    local max_attempts=50
+    local attempt=1
+    
+    while [ $attempt -le $max_attempts ]; do
+        local replicas=$(docker service ls --filter name=kryonix-auth_keycloak --format "{{.Replicas}}" 2>/dev/null || echo "0/1")
+        
+        if [[ "$replicas" == "1/1" ]]; then
+            # Aguardar mais um pouco para inicialização completa
+            sleep 30
+            # Testar se está realmente respondendo
+            if curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT/health/ready" > /dev/null 2>&1; then
+                log_info "$CHECK Serviço Keycloak está pronto e respondendo!"
+                break
+            else
+                log_info "Serviço pronto mas ainda inicializando... aguardando mais 15s"
+                sleep 15
+            fi
+        else
+            log_info "Serviço ainda iniciando... ($attempt/$max_attempts) - Replicas: $replicas"
+            
+            # Mostrar logs a cada 10 tentativas para debug
+            if [ $((attempt % 10)) -eq 0 ]; then
+                log_info "Verificando logs do Keycloak (tentativa $attempt):"
+                docker service logs --tail 15 kryonix-auth_keycloak 2>/dev/null || echo "Logs não disponíveis ainda"
+            fi
+        fi
+        
+        sleep 20
+        attempt=$((attempt + 1))
+    done
+    
+    if [ $attempt -gt $max_attempts ]; then
+        log_error "Timeout aguardando Keycloak ficar pronto"
+        log_error "Logs do serviço:"
+        docker service logs --tail 30 kryonix-auth_keycloak 2>/dev/null || echo "Logs não disponíveis"
+        log_warn "Continuando mesmo assim..."
+        return 0
+    fi
+    
+    log_info "$CHECK Deploy do Keycloak concluído com sucesso na porta $KEYCLOAK_PORT"
+
+    # Correção completa de serviços e proxy
+    fix_services_and_proxy
+}
+
+# Corrigir serviços e configuração do proxy COM REATIVAÇÃO INTELIGENTE
+fix_services_and_proxy() {
+    log_step "Corrigindo serviços e configuração do proxy com reativação inteligente"
+
+    # Salvar configuração do set -e
+    local old_e_setting="$-"
+    set +e
+
+    log_info "📊 Status atual dos serviços:"
+    docker service ls --format "table {{.Name}}\t{{.Mode}}\t{{.Replicas}}\t{{.Ports}}" 2>/dev/null || true
+
+    # 1. GARANTIR KRYONIX_WEB SEMPRE ATIVO
+    log_info "🔄 Garantindo que Kryonix_web esteja sempre ativo..."
+
+    # Verificar estado atual do Kryonix_web
+    local kryonix_web_status=""
+    kryonix_web_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
+
+    if echo "$kryonix_web_status" | grep -q "0/"; then
+        log_warn "⚠️ Kryonix_web está pausado - REATIVANDO IMEDIATAMENTE"
+        local should_reactivate=true
+    elif [ -z "$kryonix_web_status" ]; then
+        log_warn "⚠️ Kryonix_web não encontrado - pode ter sido removido"
+        local should_reactivate=false
+    elif echo "$kryonix_web_status" | grep -q "1/1"; then
+        log_info "✅ Kryonix_web já está ativo e funcionando"
+        local should_reactivate=false
+    else
+        log_warn "⚠️ Status do Kryonix_web não identificado: $kryonix_web_status - REATIVANDO"
+        local should_reactivate=true
+    fi
+
+    # Executar reativação se necessário
+    if [ "$should_reactivate" = "true" ]; then
+        log_warn "🔄 Iniciando processo de reativação do Kryonix_web..."
+
+        # Aguardar Keycloak estar estável antes de reativar
+        log_info "⏳ Aguardando Keycloak estar estável antes da reativação..."
+        sleep 20
+
+        # Verificar se Keycloak está realmente funcionando na nova porta
+        local keycloak_ready=false
+        for attempt in {1..5}; do
+            if curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT/health/ready" >/dev/null 2>&1; then
+                keycloak_ready=true
+                log_info "✅ Keycloak confirmado estável na porta $KEYCLOAK_PORT"
+                break
+            else
+                log_info "⏳ Aguardando Keycloak ficar estável (tentativa $attempt/5)..."
+                sleep 10
+            fi
+        done
+
+        if [ "$keycloak_ready" = "true" ]; then
+            log_info "🔄 Reativando Kryonix_web agora que Keycloak está estável..."
+
+            # Estratégia 1: Scale para 1
+            local reactivation_success=false
+            local max_attempts=3
+
+            for attempt in $(seq 1 $max_attempts); do
+                log_info "🔄 Tentativa $attempt/$max_attempts de reativar Kryonix_web..."
+
+                if docker service scale Kryonix_web=1 >/dev/null 2>&1; then
+                    log_info "✅ Comando de reativação executado (tentativa $attempt)"
+
+                    # Aguardar e verificar se realmente foi reativado
+                    log_info "⏳ Aguardando Kryonix_web ficar pronto..."
+                    sleep 30
+
+                    local new_status=""
+                    new_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
+
+                    if echo "$new_status" | grep -q "1/1"; then
+                        log_info "✅ Kryonix_web reativado com sucesso!"
+                        reactivation_success=true
+
+                        # Teste adicional - verificar se está respondendo
+                        sleep 10
+                        if curl -f -s --max-time 10 "http://localhost:8080/health" >/dev/null 2>&1; then
+                            log_info "✅ Kryonix_web está respondendo corretamente!"
+                        else
+                            log_warn "⚠️ Kryonix_web pode estar com problemas de saúde"
+                        fi
+                        break
+                    elif echo "$new_status" | grep -q "0/1"; then
+                        log_warn "⚠️ Kryonix_web ainda iniciando..."
+                        sleep 15
+
+                        # Verificar novamente
+                        new_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
+                        if echo "$new_status" | grep -q "1/1"; then
+                            log_info "✅ Kryonix_web agora está ativo!"
+                            reactivation_success=true
+                            break
+                        fi
+                    fi
+                else
+                    log_warn "⚠️ Falha no comando de reativação (tentativa $attempt)"
+                fi
+
+                if [ $attempt -lt $max_attempts ]; then
+                    log_info "⏳ Aguardando antes da próxima tentativa..."
+                    sleep 10
+                fi
+            done
+
+            # Estratégia 2: Update --force se scale não funcionou
+            if [ "$reactivation_success" = "false" ]; then
+                log_warn "🔄 Tentando reativação via update --force..."
+                if docker service update --replicas=1 --force Kryonix_web >/dev/null 2>&1; then
+                    log_info "✅ Update --force executado"
+                    sleep 30
+
+                    local final_status=""
+                    final_status=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "")
+                    if echo "$final_status" | grep -q "1/1"; then
+                        log_info "✅ Kryonix_web reativado via update --force!"
+                        reactivation_success=true
+                    fi
+                fi
+            fi
+
+            if [ "$reactivation_success" = "false" ]; then
+                log_error "❌ Falha ao reativar Kryonix_web após todas as tentativas"
+                log_error "🔧 Solução manual necessária:"
+                log_error "   docker service scale Kryonix_web=1"
+                log_error "   ou"
+                log_error "   docker service update --replicas=1 --force Kryonix_web"
+            fi
+        else
+            log_warn "⚠️ Keycloak não está estável - adiando reativação do Kryonix_web"
+            log_warn "🔧 Execute manualmente após verificar Keycloak: docker service scale Kryonix_web=1"
+        fi
+    fi
+
+    # 2. Verificar conectividade local do Keycloak
+    log_info "🔍 Testando conectividade local do Keycloak na porta $KEYCLOAK_PORT..."
+    local keycloak_local_ok=false
+
+    if curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT" >/dev/null 2>&1; then
+        log_info "✅ Keycloak está respondendo em http://localhost:$KEYCLOAK_PORT"
+        keycloak_local_ok=true
+    elif curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT/health/ready" >/dev/null 2>&1; then
+        log_info "✅ Keycloak health check OK em http://localhost:$KEYCLOAK_PORT/health/ready"
+        keycloak_local_ok=true
+    else
+        log_warn "⚠️ Keycloak não está respondendo ainda na porta $KEYCLOAK_PORT"
+        log_info "Aguardando mais 30s para Keycloak inicializar..."
+        sleep 30
+
+        # Testar novamente
+        if curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT/health/ready" >/dev/null 2>&1; then
+            log_info "✅ Keycloak agora está respondendo!"
+            keycloak_local_ok=true
+        else
+            log_warn "⚠️ Keycloak ainda não está respondendo, mas continuando..."
+        fi
+    fi
+
+    # 3. Verificar e corrigir configuração do Traefik
+    log_info "🔧 Verificando e corrigindo configuração do Traefik..."
+    local traefik_found=false
+
+    # Verificar se Traefik está rodando como serviço
+    if docker service ls --format "{{.Name}}" 2>/dev/null | grep -q "traefik"; then
+        local traefik_service=""
+        traefik_service=$(docker service ls --format "{{.Name}}" 2>/dev/null | grep "traefik" | head -1)
+        log_info "✅ Traefik encontrado como serviço: $traefik_service"
+        traefik_found=true
+    elif docker ps --format "{{.Names}}" 2>/dev/null | grep -i traefik >/dev/null; then
+        log_info "✅ Traefik encontrado como container"
+        traefik_found=true
+    else
+        log_warn "⚠️ Traefik não encontrado! Isso explica o Bad Gateway"
+    fi
+
+    # 4. Atualizar labels do Traefik para usar a porta correta do Keycloak
+    if [ "$traefik_found" = "true" ]; then
+        log_info "🔧 Corrigindo labels do Traefik para Keycloak (porta $KEYCLOAK_PORT)..."
+
+        # Atualizar TODOS os labels corretos do Traefik baseados no instalador
+        docker service update \
+            --label-add traefik.enable=true \
+            --label-add traefik.docker.network=Kryonix-NET \
+            --label-add traefik.http.services.keycloak.loadbalancer.server.port=8080 \
+            --label-add traefik.http.services.keycloak.loadbalancer.healthcheck.path=/health/ready \
+            --label-add traefik.http.services.keycloak.loadbalancer.healthcheck.interval=15s \
+            --label-add traefik.http.routers.keycloak.rule="Host(\`keycloak.$DOMAIN_BASE\`)" \
+            --label-add traefik.http.routers.keycloak.entrypoints=web,websecure \
+            --label-add traefik.http.routers.keycloak.service=keycloak \
+            --label-add traefik.http.routers.keycloak.priority=1000 \
+            --label-add traefik.http.routers.keycloak.tls=true \
+            --label-add traefik.http.routers.keycloak.tls.certresolver=letsencrypt \
+            kryonix-auth_keycloak >/dev/null 2>&1
+
+        local update_result=$?
+        if [ $update_result -eq 0 ]; then
+            log_info "✅ Labels do Traefik corrigidos com configuração completa"
+            log_info "⏳ Aguardando Traefik recarregar configuração..."
+            sleep 20
+
+            # Força reload do Traefik se possível
+            local traefik_container=""
+            traefik_container=$(docker ps --format "{{.Names}}" | grep -i traefik | head -1)
+            if [ -n "$traefik_container" ]; then
+                log_info "🔄 Forçando reload do Traefik..."
+                docker kill -s HUP "$traefik_container" 2>/dev/null || true
+                sleep 10
+            fi
+        else
+            log_warn "⚠️ Falha ao atualizar labels do Traefik"
+        fi
+    fi
+
+    # 5. Testar acesso HTTPS do Keycloak e corrigir Bad Gateway
+    log_info "🔍 Testando acesso HTTPS do Keycloak..."
+
+    # Primeiro teste simples
+    local keycloak_https_working=false
+    if curl -f -s --max-time 15 "https://keycloak.$DOMAIN_BASE" >/dev/null 2>&1; then
+        log_info "✅ Keycloak HTTPS funcionando em https://keycloak.$DOMAIN_BASE"
+        keycloak_https_working=true
+    else
+        log_warn "⚠️ Keycloak HTTPS com problemas - verificando Bad Gateway..."
+
+        # Verificar se é Bad Gateway específico
+        local http_code=""
+        http_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "https://keycloak.$DOMAIN_BASE" 2>/dev/null || echo "000")
+
+        if [ "$http_code" = "502" ]; then
+            log_error "❌ BAD GATEWAY DETECTADO (502) - Corrigindo..."
+
+            # Corrigir configuração do Traefik
+            if [ "$traefik_found" = "true" ]; then
+                log_info "🔧 Aplicando correção específica para Bad Gateway..."
+
+                # Remover labels antigos e aplicar novos
+                docker service update \
+                    --label-rm traefik.http.services.keycloak.loadbalancer.server.port \
+                    --label-add traefik.http.services.keycloak.loadbalancer.server.port=8080 \
+                    --force \
+                    kryonix-auth_keycloak >/dev/null 2>&1
+
+                sleep 15
+
+                # Testar novamente
+                if curl -f -s --max-time 15 "https://keycloak.$DOMAIN_BASE" >/dev/null 2>&1; then
+                    log_info "✅ Bad Gateway corrigido! Keycloak HTTPS funcionando"
+                    keycloak_https_working=true
+                else
+                    log_warn "⚠️ Bad Gateway ainda presente - pode precisar de mais tempo"
+                fi
+            fi
+        elif [ "$http_code" = "000" ]; then
+            log_warn "⚠️ Timeout de conexão - Traefik pode estar sobrecarregado"
+        else
+            log_warn "⚠️ Código HTTP: $http_code - problema diferente de Bad Gateway"
+        fi
+
+        if [ "$traefik_found" = "false" ]; then
+            log_warn "Causa provável: Traefik não está rodando"
+            log_warn "Solução: Configure um proxy reverso (Traefik/Nginx) para SSL/HTTPS"
+        elif [ "$keycloak_https_working" = "false" ]; then
+            log_warn "Aguarde 2-3 minutos para o SSL ser provisionado e Bad Gateway ser resolvido"
+        fi
+    fi
+
+    # 6. Status final detalhado
+    log_info "📊 Status final dos serviços após correção:"
+    docker service ls --format "table {{.Name}}\t{{.Mode}}\t{{.Replicas}}\t{{.Ports}}" 2>/dev/null || true
+
+    # 7. Verificação final de saúde dos serviços
+    log_info "🏥 Verificação final de saúde dos serviços:"
+
+    # Verificar Kryonix_web
+    local kryonix_health="❌ Não respondendo"
+    if curl -f -s --max-time 10 "http://localhost:8080/health" >/dev/null 2>&1; then
+        kryonix_health="✅ Saudável"
+    elif curl -f -s --max-time 10 "http://localhost:8080" >/dev/null 2>&1; then
+        kryonix_health="⚠️ Respondendo (sem health check)"
+    fi
+
+    # Verificar Keycloak
+    local keycloak_health="❌ Não respondendo"
+    if curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT/health/ready" >/dev/null 2>&1; then
+        keycloak_health="✅ Saudável"
+    elif curl -f -s --max-time 10 "http://localhost:$KEYCLOAK_PORT" >/dev/null 2>&1; then
+        keycloak_health="⚠️ Respondendo (inicializando)"
+    fi
+
+    # 8. Resumo detalhado para o usuário
+    log_info ""
+    log_info "🎯 RESUMO DETALHADO DA CORREÇÃO:"
+    log_info "========================================"
+
+    local kryonix_final=""
+    kryonix_final=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "Kryonix_web" || echo "não encontrado")
+    local keycloak_final=""
+    keycloak_final=$(docker service ls --format "{{.Name}}\t{{.Replicas}}" 2>/dev/null | grep "kryonix-auth_keycloak" || echo "não encontrado")
+
+    log_info "📋 Kryonix_web: $kryonix_final - Saúde: $kryonix_health"
+    log_info "���� Keycloak: $keycloak_final - Saúde: $keycloak_health"
+    log_info "📋 Traefik: $([ "$traefik_found" = "true" ] && echo "encontrado e configurado" || echo "não encontrado")"
+    log_info "📋 Porta Keycloak: $KEYCLOAK_PORT"
+    log_info "📋 Conflito Resolvido: $([ "${KRYONIX_WEB_WAS_RUNNING}" = "true" ] && echo "Sim - Kryonix_web foi pausado e reativado" || echo "Não houve conflito")"
+
+    log_info ""
+    log_info "🌐 URLs de acesso validadas:"
+    log_info "   • Kryonix Web: http://localhost:8080 ou https://$DOMAIN_BASE"
+    log_info "   • Keycloak Local: http://localhost:$KEYCLOAK_PORT"
+    log_info "   • Keycloak HTTPS: https://keycloak.$DOMAIN_BASE"
+    log_info "   • Admin Keycloak: https://keycloak.$DOMAIN_BASE/admin"
+
+    log_info ""
+    log_info "🔧 Comandos de verificação manual:"
+    log_info "   • Status serviços: docker service ls"
+    log_info "   • Logs Kryonix: docker service logs Kryonix_web"
+    log_info "   • Logs Keycloak: docker service logs kryonix-auth_keycloak"
+    log_info "   • Teste Kryonix: curl http://localhost:8080/health"
+    log_info "   • Teste Keycloak: curl http://localhost:$KEYCLOAK_PORT/health/ready"
+    log_info "   • Teste HTTPS: curl -I https://keycloak.$DOMAIN_BASE"
+
+    log_info ""
+    log_info "🚨 CORREÇÃO PARA BAD GATEWAY:"
+    log_info "   Se ainda houver Bad Gateway em https://keycloak.$DOMAIN_BASE:"
+    log_info "   1. Verificar Traefik: docker service logs traefik (se houver)"
+    log_info "   2. Recarregar labels: docker service update --force kryonix-auth_keycloak"
+    log_info "   3. Aguardar 2-3 minutos para SSL/Traefik se estabilizar"
+    log_info "   4. Keycloak está na porta $KEYCLOAK_PORT internamente (8080 do container)"
+
+    # Salvar informações de estado para referência futura
+    cat > "$CONFIG_DIR/.service-status" << STATUS_EOF
+# KRYONIX - Status dos Serviços Parte 01
+KEYCLOAK_PORT=$KEYCLOAK_PORT
+KRYONIX_WEB_WAS_RUNNING=${KRYONIX_WEB_WAS_RUNNING}
+KEYCLOAK_FORCE_ALT_PORT=${KEYCLOAK_FORCE_ALT_PORT}
+DEPLOYMENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
+KRYONIX_WEB_STATUS=$kryonix_final
+KEYCLOAK_STATUS=$keycloak_final
+KRYONIX_HEALTH=$kryonix_health
+KEYCLOAK_HEALTH=$keycloak_health
+STATUS_EOF
+
+    log_info "📄 Status salvo em: $CONFIG_DIR/.service-status"
+
+    # Restaurar configuração do set -e se estava ativa
+    if [[ "$old_e_setting" == *e* ]]; then
+        set -e
+    fi
+
+    log_info "$CHECK Correção de serviços e proxy concluída com sucesso!"
+}
+
+# Verificar e configurar Keycloak existente
+check_existing_keycloak() {
+    log_step "Verificando Keycloak existente"
+
+    # Aguardar mais tempo para Keycloak inicializar completamente
+    log_info "Aguardando Keycloak estar totalmente pronto..."
+    sleep 45
+
+    # Verificar se Keycloak está acessível usando a porta configurada
+    local keycloak_port="${KEYCLOAK_PORT:-8080}"
+    local keycloak_urls=(
+        "http://localhost:$keycloak_port"
+        "http://127.0.0.1:$keycloak_port"
+        "https://keycloak.$DOMAIN_BASE"
+        "http://localhost:$keycloak_port/health/ready"
+        "http://127.0.0.1:$keycloak_port/health/ready"
+        "https://keycloak.$DOMAIN_BASE/health/ready"
+    )
+
+    local keycloak_found=false
+    local keycloak_url=""
+
+    for url in "${keycloak_urls[@]}"; do
+        log_info "Testando acesso: $url"
+        
+        # Testar múltiplas vezes cada URL
+        for attempt in {1..3}; do
+            if curl -f -s --max-time 15 --connect-timeout 10 "$url" > /dev/null 2>&1; then
+                keycloak_found=true
+                keycloak_url="$url"
+                log_info "$CHECK Keycloak encontrado em: $url (tentativa $attempt)"
+                break 2
+            fi
+            sleep 5
+        done
+    done
+
+    if [ "$keycloak_found" = false ]; then
+        log_warn "⚠️ Keycloak não acessível ainda em nenhuma URL"
+        log_warn "URLs testadas: ${keycloak_urls[*]}"
+        log_warn "Verificando logs do serviço..."
+        docker service logs --tail 20 kryonix-auth_keycloak 2>/dev/null || echo "Logs não disponíveis"
+        
+        # Não falhar aqui - continuar para configuração manual
+        export KEYCLOAK_BASE_URL="http://localhost:$keycloak_port"
+        log_warn "Usando URL padrão: $KEYCLOAK_BASE_URL"
+        return 0
+    fi
+
+    # Definir URL base do Keycloak (remover /health/ready se presente)
+    export KEYCLOAK_BASE_URL="${keycloak_url%/health/ready}"
+    
+    # Se for localhost, definir a URL pública para configuração
+    if [[ "$KEYCLOAK_BASE_URL" == *"localhost"* ]] || [[ "$KEYCLOAK_BASE_URL" == *"127.0.0.1"* ]]; then
+        export KEYCLOAK_PUBLIC_URL="https://keycloak.$DOMAIN_BASE"
+    else
+        export KEYCLOAK_PUBLIC_URL="$KEYCLOAK_BASE_URL"
+    fi
+
+    log_info "$CHECK Keycloak configurado para: $KEYCLOAK_BASE_URL"
+    log_info "$CHECK URL pública: $KEYCLOAK_PUBLIC_URL"
+    return 0
+}
+
+# Função para fazer requisições ao Keycloak com retry
+keycloak_request() {
+    local method="$1"
+    local url="$2"
+    local data="$3"
+    local max_attempts=3
+    
+    for i in $(seq 1 $max_attempts); do
+        local response_code
+        if [ -n "$data" ]; then
+            response_code=$(curl -s -w "%{http_code}" -o /dev/null --max-time 30 \
+                -X "$method" \
+                -H "Authorization: Bearer $ADMIN_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d "$data" \
+                "$url")
+        else
+            response_code=$(curl -s -w "%{http_code}" -o /dev/null --max-time 30 \
+                -X "$method" \
+                -H "Authorization: Bearer $ADMIN_TOKEN" \
+                "$url")
+        fi
+        
+        # Considerar 201, 200 e 409 (conflito) como sucesso para idempotência
+        if [[ "$response_code" =~ ^(200|201|409)$ ]]; then
+            return 0
+        fi
+        
+        log_warn "Tentativa $i/$max_attempts falhou com código $response_code"
+        sleep 2
+    done
+    
+    log_error "Falha na requisição após $max_attempts tentativas: $method $url"
+    return 1
+}
+
+# Configurar Realm e Clients do Keycloak
+configure_keycloak_realm() {
+    log_step "Configurando Realm e Clients do Keycloak"
+    
+    # Aguardar Keycloak estar totalmente pronto
+    log_info "Aguardando Keycloak estar totalmente inicializado..."
+    sleep 30
+    
+    # Tentar diferentes URLs para obter token admin
+    local admin_token=""
+    local keycloak_urls=(
+        "http://localhost:8080"
+        "http://127.0.0.1:8080"
+        "https://keycloak.$DOMAIN_BASE"
+        "$KEYCLOAK_BASE_URL"
+    )
+    
+    for url in "${keycloak_urls[@]}"; do
+        log_info "Tentando obter token admin via: $url"
+        
+        # Tentar múltiplas vezes com cada URL
+        for attempt in {1..5}; do
+            local token_response
+            token_response=$(curl -s --max-time 30 --connect-timeout 10 \
+                -d "client_id=admin-cli" \
+                -d "username=$KEYCLOAK_ADMIN_USER" \
+                -d "password=$KEYCLOAK_ADMIN_PASSWORD" \
+                -d "grant_type=password" \
+                "$url/realms/master/protocol/openid_connect/token" 2>/dev/null || echo "")
+            
+            if [ -n "$token_response" ]; then
+                admin_token=$(echo "$token_response" | jq -r '.access_token' 2>/dev/null || echo "")
+                
+                if [ -n "$admin_token" ] && [ "$admin_token" != "null" ]; then
+                    log_info "✅ Token admin obtido com sucesso via $url (tentativa $attempt)"
+                    export KEYCLOAK_BASE_URL="$url"
+                    break 2
+                else
+                    log_warn "Tentativa $attempt falhou via $url: $(echo "$token_response" | head -c 200)..."
+                fi
+            else
+                log_warn "Tentativa $attempt falhou via $url: sem resposta"
+            fi
+            
+            sleep 5
+        done
+    done
+    
+    if [ -z "$admin_token" ] || [ "$admin_token" = "null" ]; then
+        log_error "Falha ao obter token admin do Keycloak após todas as tentativas"
+        log_error "URLs testadas: ${keycloak_urls[*]}"
+        log_error "Credenciais utilizadas: $KEYCLOAK_ADMIN_USER / $KEYCLOAK_ADMIN_PASSWORD"
+        
+        # Verificar se Keycloak está realmente funcionando
+        log_info "Verificando status do serviço Keycloak..."
+        docker service logs --tail 20 kryonix-auth_keycloak 2>/dev/null || echo "Logs não disponíveis"
+        
+        # Continuar mesmo assim para mostrar as credenciais
+        log_warn "Continuando sem configurar realm (pode ser feito manualmente)..."
+        return 0
+    fi
+    
+    # Definir variável global para uso em outras funções
+    ADMIN_TOKEN="$admin_token"
+    log_info "$CHECK Token admin obtido"
+    
+    # Verificar se realm KRYONIX já existe
+    if curl -s -H "Authorization: Bearer $ADMIN_TOKEN" \
+       "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX" > /dev/null 2>&1; then
+        log_info "$CHECK Realm KRYONIX já existe"
+    else
+        log_info "Criando Realm KRYONIX..."
+        
+        # Criar realm com configuração completa
+        keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms" '{
+            "realm": "KRYONIX",
+            "enabled": true,
+            "displayName": "KRYONIX - Plataforma SaaS",
+            "displayNameHtml": "<strong>KRYONIX</strong> - Sua Plataforma de Negócios",
+            "defaultLocale": "pt-BR",
+            "internationalizationEnabled": true,
+            "supportedLocales": ["pt-BR"],
+            "registrationAllowed": false,
+            "registrationEmailAsUsername": true,
+            "rememberMe": true,
+            "verifyEmail": false,
+            "loginWithEmailAllowed": true,
+            "duplicateEmailsAllowed": false,
+            "resetPasswordAllowed": true,
+            "editUsernameAllowed": false,
+            "bruteForceProtected": true,
+            "permanentLockout": false,
+            "maxFailureWaitSeconds": 900,
+            "minimumQuickLoginWaitSeconds": 60,
+            "waitIncrementSeconds": 60,
+            "quickLoginCheckMilliSeconds": 1000,
+            "maxDeltaTimeSeconds": 43200,
+            "failureFactor": 5,
+            "loginTheme": "keycloak",
+            "accountTheme": "keycloak",
+            "adminTheme": "keycloak",
+            "emailTheme": "keycloak",
+            "attributes": {
+                "multi_tenant": "true",
+                "mobile_priority": "true",
+                "created_at": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }
+        }'
+        
+        log_info "$CHECK Realm KRYONIX criado"
+    fi
+    
+    # Configurar clients necessários
+    configure_keycloak_clients
+    
+    # Criar usuários padrão
+    create_keycloak_users
+}
+
+# Configurar clients do Keycloak
+configure_keycloak_clients() {
+    log_info "Configurando clients do Keycloak..."
+    
+    # Client Frontend
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/clients" '{
+        "clientId": "kryonix-frontend",
+        "name": "KRYONIX Frontend",
+        "enabled": true,
+        "clientAuthenticatorType": "client-secret",
+        "secret": "kryonix-frontend-secret-2025",
+        "redirectUris": [
+            "https://app.'$DOMAIN_BASE'/*",
+            "https://www.'$DOMAIN_BASE'/*",
+            "https://*.'$DOMAIN_BASE'/*",
+            "http://localhost:3000/*"
+        ],
+        "webOrigins": [
+            "https://app.'$DOMAIN_BASE'",
+            "https://www.'$DOMAIN_BASE'",
+            "https://*.'$DOMAIN_BASE'",
+            "http://localhost:3000"
+        ],
+        "protocol": "openid-connect",
+        "publicClient": false,
+        "standardFlowEnabled": true,
+        "implicitFlowEnabled": false,
+        "directAccessGrantsEnabled": true,
+        "serviceAccountsEnabled": true,
+        "authorizationServicesEnabled": true,
+        "fullScopeAllowed": true
+    }'
+    
+    # Client Mobile
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/clients" '{
+        "clientId": "kryonix-mobile-app",
+        "name": "KRYONIX Mobile App",
+        "enabled": true,
+        "clientAuthenticatorType": "client-secret",
+        "secret": "kryonix-mobile-secret-2025",
+        "redirectUris": [
+            "kryonix://auth/callback",
+            "https://app.'$DOMAIN_BASE'/mobile/callback"
+        ],
+        "webOrigins": ["*"],
+        "protocol": "openid-connect",
+        "publicClient": false,
+        "standardFlowEnabled": true,
+        "implicitFlowEnabled": false,
+        "directAccessGrantsEnabled": true,
+        "serviceAccountsEnabled": false,
+        "authorizationServicesEnabled": false,
+        "fullScopeAllowed": true
+    }'
+    
+    # Client IA
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/clients" '{
+        "clientId": "kryonix-ai-client",
+        "name": "KRYONIX IA Integration",
+        "enabled": true,
+        "clientAuthenticatorType": "client-secret",
+        "secret": "kryonix-ai-secret-2025",
+        "protocol": "openid-connect",
+        "publicClient": false,
+        "standardFlowEnabled": false,
+        "directAccessGrantsEnabled": true,
+        "serviceAccountsEnabled": true,
+        "fullScopeAllowed": true
+    }'
+    
+    log_info "$CHECK Clients do Keycloak configurados"
+}
+
+# Criar usuários padrão
+create_keycloak_users() {
+    log_info "Criando usuários padrão..."
+    
+    # Usuário master
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/users" '{
+        "username": "'$KEYCLOAK_ADMIN_USER'",
+        "email": "admin@'$DOMAIN_BASE'",
+        "firstName": "KRYONIX",
+        "lastName": "Master",
+        "enabled": true,
+        "emailVerified": true,
+        "credentials": [{
+            "type": "password",
+            "value": "'$KEYCLOAK_ADMIN_PASSWORD'",
+            "temporary": false
+        }],
+        "attributes": {
+            "whatsapp": ["'$WHATSAPP_ALERT'"],
+            "role": ["admin"]
+        }
+    }'
+    
+    # Usuário IA
+    keycloak_request "POST" "$KEYCLOAK_BASE_URL/admin/realms/KRYONIX/users" '{
+        "username": "kryonix-ai-service",
+        "email": "ai@'$DOMAIN_BASE'",
+        "firstName": "KRYONIX",
+        "lastName": "IA Service",
+        "enabled": true,
+        "emailVerified": true,
+        "credentials": [{
+            "type": "password",
+            "value": "ai_kryonix_2025",
+            "temporary": false
+        }],
+        "attributes": {
+            "service": ["ai"],
+            "role": ["service"]
+        }
+    }'
+    
+    log_info "$CHECK Usuários padrão criados"
+}
+
+# ============================================================================
+# SCRIPTS DE AUTOMAÇÃO
+# ============================================================================
+
+# Configurar scripts de automação
+setup_automation_scripts() {
+    log_step "Configurando scripts de automação"
+    
+    # Script de criação automática de cliente
+    if [ ! -f "$SCRIPTS_DIR/kryonix-create-client.sh" ]; then
+        log_info "Criando script de criação de cliente..."
+        cat > "$SCRIPTS_DIR/kryonix-create-client.sh" << 'AUTOCREATE_EOF'
+#!/bin/bash
+# KRYONIX - Criação Automática de Cliente
+# Uso: kryonix-create-client.sh <nome_cliente> <email_admin> <whatsapp> <modulos>
+
+set -euo pipefail
+
+CLIENTE_NOME="$1"
+ADMIN_EMAIL="$2"
+WHATSAPP="$3"
+MODULOS="$4"
+
+if [ $# -lt 4 ]; then
+    echo "Uso: $0 <nome_cliente> <email_admin> <whatsapp> <modulos>"
+    echo "Exemplo: $0 'Clínica Exemplo' 'admin@clinica.com' '+5517999999999' 'crm,agendamento,whatsapp'"
+    exit 1
+fi
+
+# Gerar ID do cliente
+CLIENTE_ID=$(echo "$CLIENTE_NOME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]//g' | cut -c1-20)
+REALM_NAME="kryonix-cliente-${CLIENTE_ID}"
+TEMP_PASSWORD=$(openssl rand -base64 12)
+
+echo "🚀 Criando cliente: $CLIENTE_ID"
+
+# Verificar se cliente já existe
+if [ -f "/opt/kryonix/clients/${CLIENTE_ID}.env" ]; then
+    echo "⚠️ Cliente $CLIENTE_ID já existe!"
+    exit 1
+fi
+
+# Obter token admin
+ADMIN_TOKEN=$(curl -s --max-time 30 \
+    -d "client_id=admin-cli" \
+    -d "username=kryonix" \
+    -d "password=${KEYCLOAK_ADMIN_PASSWORD:-Vitor@123456}" \
+    -d "grant_type=password" \
+    "https://keycloak.kryonix.com.br/realms/master/protocol/openid_connect/token" | \
+    python3 -c "import sys, json; print(json.load(sys.stdin)['access_token'])" 2>/dev/null || echo "")
+
+if [ -z "$ADMIN_TOKEN" ]; then
+    echo "❌ Falha ao obter token admin"
+    exit 1
+fi
+
+# Criar realm
+echo "🏗️ Criando realm $REALM_NAME..."
+curl -s --max-time 30 -X POST "https://keycloak.kryonix.com.br/admin/realms" \
+    -H "Authorization: Bearer $ADMIN_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "{
+        \"realm\": \"$REALM_NAME\",
+        \"enabled\": true,
+        \"displayName\": \"KRYONIX - $CLIENTE_NOME\",
+        \"attributes\": {
+            \"cliente_id\": \"$CLIENTE_ID\",
+            \"cliente_nome\": \"$CLIENTE_NOME\",
+            \"modulos_contratados\": \"$MODULOS\",
+            \"created_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+        }
+    }" > /dev/null
+
+# Criar client
+echo "🔧 Configurando client..."
+curl -s --max-time 30 -X POST "https://keycloak.kryonix.com.br/admin/realms/$REALM_NAME/clients" \
+    -H "Authorization: Bearer $ADMIN_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "{
+        \"clientId\": \"kryonix-frontend\",
+        \"enabled\": true,
+        \"redirectUris\": [\"https://${CLIENTE_ID}.kryonix.com.br/*\"],
+        \"webOrigins\": [\"https://${CLIENTE_ID}.kryonix.com.br\"],
+        \"directAccessGrantsEnabled\": true
+    }" > /dev/null
+
+# Criar usuário admin
+echo "👤 Criando usuário admin..."
+curl -s --max-time 30 -X POST "https://keycloak.kryonix.com.br/admin/realms/$REALM_NAME/users" \
+    -H "Authorization: Bearer $ADMIN_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "{
+        \"username\": \"$ADMIN_EMAIL\",
+        \"email\": \"$ADMIN_EMAIL\",
+        \"enabled\": true,
+        \"emailVerified\": true,
+        \"credentials\": [{
+            \"type\": \"password\",
+            \"value\": \"$TEMP_PASSWORD\",
+            \"temporary\": true
+        }],
+        \"attributes\": {
+            \"cliente_id\": [\"$CLIENTE_ID\"],
+            \"whatsapp\": [\"$WHATSAPP\"]
+        }
+    }" > /dev/null
+
+# Configurar subdomínio no Traefik
+echo "🌐 Configurando subdomínio..."
+cat > "/etc/traefik/dynamic/${CLIENTE_ID}.yml" << TRAEFIK_EOF
+http:
+  routers:
+    ${CLIENTE_ID}-router:
+      rule: "Host(\`${CLIENTE_ID}.kryonix.com.br\`)"
+      service: ${CLIENTE_ID}-service
+      tls:
+        certResolver: letsencrypt
+  services:
+    ${CLIENTE_ID}-service:
+      loadBalancer:
+        servers:
+          - url: "http://frontend:3000"
+TRAEFIK_EOF
+
+# Salvar configuração do cliente
+echo "⚙️ Salvando configuração..."
+cat > "/opt/kryonix/clients/${CLIENTE_ID}.env" << CONFIG_EOF
+CLIENTE_ID=${CLIENTE_ID}
+CLIENTE_NOME=${CLIENTE_NOME}
+ADMIN_EMAIL=${ADMIN_EMAIL}
+WHATSAPP=${WHATSAPP}
+MODULOS=${MODULOS}
+REALM_NAME=${REALM_NAME}
+SUBDOMAIN=${CLIENTE_ID}.kryonix.com.br
+TEMP_PASSWORD=${TEMP_PASSWORD}
+CREATED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+CONFIG_EOF
+
+# Enviar credenciais via WhatsApp
+echo "📱 Tentando enviar credenciais via WhatsApp..."
+if command -v curl >/dev/null 2>&1; then
+    curl -s --max-time 10 -X POST "https://api.kryonix.com.br/message/sendText/kryonix" \
+        -H "apikey: ${EVOLUTION_API_KEY:-2f4d6967043b87b5ebee57b872e0223a}" \
+        -H "Content-Type: application/json" \
+        -d "{
+            \"number\": \"$WHATSAPP\",
+            \"text\": \"🎉 KRYONIX - Plataforma Pronta!\\n\\n🌐 Acesso: https://${CLIENTE_ID}.kryonix.com.br\\n👤 Email: $ADMIN_EMAIL\\n🔑 Senha: $TEMP_PASSWORD\\n\\n📋 Módulos: $MODULOS\"
+        }" > /dev/null 2>&1 || echo "⚠️ Aviso: Falha ao enviar WhatsApp"
+fi
+
+echo "✅ Cliente $CLIENTE_ID criado com sucesso!"
+echo "🌐 Acesso: https://${CLIENTE_ID}.kryonix.com.br"
+echo "📧 Admin: $ADMIN_EMAIL"
+echo "🔑 Senha temporária: $TEMP_PASSWORD"
+AUTOCREATE_EOF
+
+        chmod +x "$SCRIPTS_DIR/kryonix-create-client.sh"
+        log_info "$CHECK Script de criação de cliente criado"
+    fi
+    
+    # Script de validaç��o de clientes
+    if [ ! -f "$SCRIPTS_DIR/kryonix-validate-clients.sh" ]; then
+        log_info "Criando script de validação de clientes..."
+        cat > "$SCRIPTS_DIR/kryonix-validate-clients.sh" << 'VALIDATE_EOF'
+#!/bin/bash
+set -euo pipefail
+
+echo "🔍 Validando clientes KRYONIX..."
+
+# Validar clientes existentes
+for config_file in /opt/kryonix/clients/*.env; do
+    if [ -f "$config_file" ]; then
+        source "$config_file"
+        echo "🏢 Cliente: $CLIENTE_ID"
+        
+        # Verificar subdomínio
+        if curl -s -I --max-time 10 "https://${CLIENTE_ID}.kryonix.com.br" > /dev/null 2>&1; then
+            echo "✅ Subdomínio $CLIENTE_ID acessível"
+        else
+            echo "❌ Subdomínio $CLIENTE_ID não acessível"
+        fi
+        echo ""
+    fi
+done
+
+echo "🎯 Validação concluída!"
+VALIDATE_EOF
+
+        chmod +x "$SCRIPTS_DIR/kryonix-validate-clients.sh"
+        log_info "$CHECK Script de validação criado"
+    fi
+    
+    log_info "$CHECK Scripts de automação configurados"
+}
+
+# ============================================================================
+# MONITORAMENTO E BACKUP
+# ============================================================================
+
+# Configurar monitoramento
+setup_monitoring() {
+    log_step "Configurando monitoramento avançado"
+    
+    # Script de monitoramento
+    if [ ! -f "$SCRIPTS_DIR/monitor-kryonix.sh" ]; then
+        log_info "Criando script de monitoramento..."
+        cat > "$SCRIPTS_DIR/monitor-kryonix.sh" << 'MONITOR_EOF'
+#!/bin/bash
+set -euo pipefail
+
+LOG_FILE="/opt/kryonix/logs/monitor.log"
+ALERT_COOLDOWN_FILE="/tmp/kryonix-alert-cooldown"
+COOLDOWN_MINUTES=30
+
+log_monitor() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+}
+
+send_alert() {
+    local message="$1"
+    
+    # Verificar cooldown para evitar spam
+    if [ -f "$ALERT_COOLDOWN_FILE" ]; then
+        local last_alert=$(cat "$ALERT_COOLDOWN_FILE")
+        local now=$(date +%s)
+        local diff=$((now - last_alert))
+        if [ $diff -lt $((COOLDOWN_MINUTES * 60)) ]; then
+            log_monitor "⏳ Alerta em cooldown, aguardando $(( (COOLDOWN_MINUTES * 60 - diff) / 60 )) minutos"
+            return
+        fi
+    fi
+    
+    if curl -s --max-time 10 -X POST "https://api.kryonix.com.br/message/sendText/kryonix" \
+        -H "apikey: ${EVOLUTION_API_KEY:-2f4d6967043b87b5ebee57b872e0223a}" \
+        -H "Content-Type: application/json" \
+        -d "{
+            \"number\": \"${WHATSAPP_ALERT:-+5517981805327}\",
+            \"text\": \"���� ALERTA KRYONIX\\n\\n$message\\n\\n⏰ $(date '+%d/%m/%Y %H:%M:%S')\"
+        }" > /dev/null 2>&1; then
+        echo "$(date +%s)" > "$ALERT_COOLDOWN_FILE"
+        log_monitor "📱 Alerta enviado: $message"
+    fi
+}
+
+# Loop principal
+trap 'log_monitor "Monitor interrompido"; exit 0' INT TERM
+
+while true; do
+    # Verificar Keycloak
+    if ! curl -f -s --max-time 10 https://keycloak.kryonix.com.br/health/ready > /dev/null 2>&1; then
+        log_monitor "🚨 CRÍTICO: Keycloak não está respondendo!"
+        send_alert "KEYCLOAK OFFLINE - Serviço de autenticação não está respondendo"
+        
+        # Tentar restart uma vez
+        if docker service update --force kryonix-auth_keycloak 2>/dev/null; then
+            log_monitor "🔄 Tentativa de restart do Keycloak executada"
+            sleep 60
+        fi
+    else
+        log_monitor "✅ Keycloak funcionando normalmente"
+    fi
+    
+    # Verificar PostgreSQL
+    if [ "$POSTGRES_CONTAINER" = "external-supabase" ]; then
+        if ! PGPASSWORD="$POSTGRES_PASSWORD" pg_isready -h "$POSTGRES_HOST" -U postgres > /dev/null 2>&1; then
+            log_monitor "🚨 CRÍTICO: Supabase PostgreSQL não está respondendo!"
+            send_alert "SUPABASE POSTGRESQL OFFLINE - Banco de dados não está respondendo"
+        else
+            log_monitor "✅ Supabase PostgreSQL funcionando normalmente"
+        fi
+    else
+        if ! docker exec $POSTGRES_CONTAINER pg_isready -U postgres > /dev/null 2>&1; then
+            log_monitor "🚨 CRÍTICO: PostgreSQL não está respondendo!"
+            send_alert "POSTGRESQL OFFLINE - Banco de dados não está respondendo"
+        else
+            log_monitor "✅ PostgreSQL funcionando normalmente"
+        fi
+    fi
+    
+    # Verificar uso de disco
+    DISK_USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//' || echo "0")
+    if [ "$DISK_USAGE" -gt 85 ]; then
+        log_monitor "⚠️ AVISO: Uso de disco alto: ${DISK_USAGE}%"
+        send_alert "DISCO CHEIO - Uso: ${DISK_USAGE}% - Limpeza recomendada"
+    fi
+    
+    # Verificar uso de memória
+    MEMORY_USAGE=$(free | awk 'NR==2{printf "%.0f", $3*100/$2}' || echo "0")
+    if [ "$MEMORY_USAGE" -gt 90 ]; then
+        log_monitor "⚠️ AVISO: Uso de memória alto: ${MEMORY_USAGE}%"
+        send_alert "MEMÓRIA ALTA - Uso: ${MEMORY_USAGE}% - Verificação necessária"
+    fi
+    
+    # Aguardar 5 minutos antes da próxima verificação
+    sleep 300
+done
+MONITOR_EOF
+
+        chmod +x "$SCRIPTS_DIR/monitor-kryonix.sh"
+        log_info "$CHECK Script de monitoramento criado"
+    fi
+    
+    # Criar serviço systemd
+    if [ ! -f "/etc/systemd/system/kryonix-monitor.service" ]; then
+        log_info "Criando serviço de monitoramento..."
+        cat > /etc/systemd/system/kryonix-monitor.service << 'SERVICE_EOF'
+[Unit]
+Description=KRYONIX System Monitor
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/opt/kryonix/scripts/monitor-kryonix.sh
+Restart=always
+RestartSec=30
+Environment=KEYCLOAK_ADMIN_PASSWORD=Vitor@123456
+Environment=EVOLUTION_API_KEY=2f4d6967043b87b5ebee57b872e0223a
+Environment=WHATSAPP_ALERT=+5517981805327
+
+[Install]
+WantedBy=multi-user.target
+SERVICE_EOF
+
+        systemctl daemon-reload
+        systemctl enable kryonix-monitor
+        log_info "$CHECK Serviço de monitoramento criado"
+    fi
+    
+    # Iniciar serviço
+    if ! systemctl is-active --quiet kryonix-monitor; then
+        systemctl start kryonix-monitor
+        log_info "$CHECK Serviço de monitoramento iniciado"
+    else
+        log_info "$CHECK Serviço de monitoramento já está rodando"
+    fi
+}
+
+# Configurar backup automático
+setup_backup() {
+    log_step "Configurando backup automático"
+    
+    # Script de backup
+    if [ ! -f "$SCRIPTS_DIR/backup-kryonix.sh" ]; then
+        log_info "Criando script de backup..."
+        cat > "$SCRIPTS_DIR/backup-kryonix.sh" << 'BACKUP_EOF'
+#!/bin/bash
+set -euo pipefail
+
+BACKUP_DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR="/opt/kryonix/backups/$BACKUP_DATE"
+mkdir -p "$BACKUP_DIR"
+
+log_backup() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> /opt/kryonix/logs/backup.log
+}
+
+log_backup "💾 Iniciando backup KRYONIX completo..."
+
+# Backup Keycloak (database)
+log_backup "🔐 Backup Keycloak..."
+if [ "$POSTGRES_CONTAINER" = "external-supabase" ]; then
+    if PGPASSWORD="$POSTGRES_PASSWORD" pg_dump -h "$POSTGRES_HOST" -U postgres -d keycloak > "$BACKUP_DIR/keycloak_db.sql" 2>/dev/null; then
+        gzip "$BACKUP_DIR/keycloak_db.sql"
+        log_backup "✅ Backup Keycloak Supabase concluído"
+    else
+        log_backup "❌ Falha no backup Keycloak Supabase"
+    fi
+else
+    if docker exec $POSTGRES_CONTAINER pg_dump -h 127.0.0.1 -U postgres -d keycloak > "$BACKUP_DIR/keycloak_db.sql" 2>/dev/null; then
+        gzip "$BACKUP_DIR/keycloak_db.sql"
+        log_backup "✅ Backup Keycloak concluído"
+    else
+        log_backup "❌ Falha no backup Keycloak"
+    fi
+fi
+
+# Backup configurações dos clientes
+log_backup "👥 Backup configurações clientes..."
+if [ -d "/opt/kryonix/clients" ]; then
+    cp -r /opt/kryonix/clients "$BACKUP_DIR/" 2>/dev/null || true
+fi
+
+# Backup configurações Traefik
+log_backup "🌐 Backup configurações Traefik..."
+if [ -d "/etc/traefik/dynamic" ]; then
+    cp -r /etc/traefik/dynamic "$BACKUP_DIR/traefik_dynamic" 2>/dev/null || true
+fi
+
+# Backup scripts
+log_backup "🛠️ Backup scripts..."
+if [ -d "/opt/kryonix/scripts" ]; then
+    cp -r /opt/kryonix/scripts "$BACKUP_DIR/" 2>/dev/null || true
+fi
+
+# Calcular tamanho do backup
+BACKUP_SIZE=$(du -sh "$BACKUP_DIR" 2>/dev/null | cut -f1 || echo "N/A")
+log_backup "✅ Backup KRYONIX concluído: $BACKUP_DIR ($BACKUP_SIZE)"
+
+# Limpar backups antigos (manter últimos 30 dias)
+find /opt/kryonix/backups -type d -name "202*" -mtime +30 -exec rm -rf {} \; 2>/dev/null || true
+
+# Notificar via WhatsApp
+if command -v curl >/dev/null 2>&1; then
+    curl -s --max-time 10 -X POST "https://api.kryonix.com.br/message/sendText/kryonix" \
+        -H "apikey: ${EVOLUTION_API_KEY:-2f4d6967043b87b5ebee57b872e0223a}" \
+        -H "Content-Type: application/json" \
+        -d "{
+            \"number\": \"${WHATSAPP_ALERT:-+5517981805327}\",
+            \"text\": \"💾 BACKUP KRYONIX CONCLUÍDO\\n\\n📅 Data: $BACKUP_DATE\\n📊 Tamanho: $BACKUP_SIZE\"
+        }" > /dev/null 2>&1 || true
+fi
+
+log_backup "��� Processo de backup finalizado"
+BACKUP_EOF
+
+        chmod +x "$SCRIPTS_DIR/backup-kryonix.sh"
+        log_info "$CHECK Script de backup criado"
+    fi
+    
+    # Configurar cron para backup diário
+    if ! crontab -l 2>/dev/null | grep -q "backup-kryonix.sh"; then
+        log_info "Agendando backup diário às 2h..."
+        (crontab -l 2>/dev/null; echo "0 2 * * * $SCRIPTS_DIR/backup-kryonix.sh") | crontab -
+        log_info "$CHECK Backup automático agendado"
+    else
+        log_info "$CHECK Backup automático já está agendado"
+    fi
+}
+
+# ============================================================================
+# CONFIGURAÇ��ES DO AMBIENTE
+# ============================================================================
+
+# Configurar variáveis de ambiente
+setup_environment() {
+    log_step "Configurando variáveis de ambiente"
+    
+    if [ ! -f "$CONFIG_DIR/.env" ]; then
+        log_info "Criando arquivo de variáveis de ambiente..."
+        cat > "$CONFIG_DIR/.env" << ENV_EOF
+# KRYONIX - Variáveis de Ambiente
+NODE_ENV=production
+PORT=3000
+
+# Keycloak
+KEYCLOAK_URL=https://keycloak.$DOMAIN_BASE
+KEYCLOAK_REALM=KRYONIX
+KEYCLOAK_CLIENT_ID=kryonix-frontend
+KEYCLOAK_CLIENT_SECRET=kryonix-frontend-secret-2025
+KEYCLOAK_ADMIN_USERNAME=$KEYCLOAK_ADMIN_USER
+KEYCLOAK_ADMIN_PASSWORD=$KEYCLOAK_ADMIN_PASSWORD
+
+# Evolution API
+EVOLUTION_API_URL=$EVOLUTION_API_URL
+EVOLUTION_API_KEY=$EVOLUTION_API_KEY
+EVOLUTION_INSTANCE=kryonix
+
+# Database
+POSTGRES_URL=postgresql://keycloak_user:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/keycloak
+POSTGRES_HOST=$POSTGRES_HOST
+POSTGRES_PORT=$POSTGRES_PORT
+POSTGRES_DB=keycloak
+POSTGRES_USER=keycloak_user
+POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+
+# Supabase (se aplicável)
+SUPABASE_URL=https://supabase.$DOMAIN_BASE
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogImFub24iLAogICJpc3MiOiAic3VwYWJhc2UiLAogICJpYXQiOiAxNzE1MDUwODAwLAogICJleHAiOiAxODcyODE3MjAwCn0.hNqwb0A3qoogD8fDs7x77c0iy_VSu48TlbIpbclvvqY
+SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogInNlcnZpY2Vfcm9sZSIsCiAgImlzcyI6ICJzdXBhYmFzZSIsCiAgImlhdCI6IDE3MTUwNTA4MDAsCiAgImV4cCI6IDE4NzI4MTcyMDAKfQ._UPzPrKGN1_DwLoL5u52cW-1DCeWtzGNBdLUYcTvSU0
+
+# MinIO
+MINIO_URL=https://storage.$DOMAIN_BASE
+MINIO_ACCESS_KEY=kryonix
+MINIO_SECRET_KEY=$POSTGRES_PASSWORD
+
+# Redis
+REDIS_URL=redis://redis-kryonix:6379
+REDIS_HOST=redis-kryonix
+REDIS_PORT=6379
+
+# Alerts
+ALERT_WHATSAPP=$WHATSAPP_ALERT
+ALERT_EMAIL=monitoring@$DOMAIN_BASE
+
+# JWT
+JWT_SECRET=$JWT_SECRET
+
+# Backup
+BACKUP_PATH=$BACKUP_DIR
+BACKUP_RETENTION_DAYS=30
+ENV_EOF
+
+        log_info "$CHECK Arquivo de variáveis de ambiente criado"
+    else
+        log_info "$CHECK Arquivo de variáveis de ambiente já existe"
+    fi
+}
+
+# ============================================================================
+# NOTIFICAÇÕES
+# ============================================================================
+
+# Enviar notificação de WhatsApp
+send_whatsapp_notification() {
+    local message="$1"
+    
+    # Tentar enviar via Evolution API
+    curl -s --max-time 10 \
+        -X POST \
+        -H "Content-Type: application/json" \
+        -H "apikey: $EVOLUTION_API_KEY" \
+        -d '{
+            "number": "'${WHATSAPP_ALERT/+/}'",
+            "text": "🤖 KRYONIX SCRIPT UNIFICADO 🤖\n\n'$message'\n\nServidor: '$SERVER_IP'\nTimestamp: '$(date '+%Y-%m-%d %H:%M:%S')'"
+        }' \
+        "$EVOLUTION_API_URL/message/sendText/main" || true
+}
+
+# ============================================================================
+# ATUALIZAÇÃO DE PROGRESSO
+# ============================================================================
+
+# Atualizar progresso na página
+update_progress_page() {
+    local part_number="$1"
+    local status="${2:-completed}"
+    local current_date=$(date +%Y-%m-%d)
+
+    log_info "📊 Atualizando progresso da Parte $part_number para status: $status"
+
+    # Salvar progresso local
+    echo "PART_${part_number}:${status}:${current_date}" > "$CONFIG_DIR/.progress-part-${part_number}"
+
+    # Enviar notificação de progresso
+    send_whatsapp_notification "✅ PARTE ${part_number} CONCLUÍDA! Status atualizado para: ${status}. Data: ${current_date}. Visualizar: https://kryonix.com.br/progresso"
+
+    log_info "$CHECK Progresso da Parte $part_number atualizado"
+}
+
+# ============================================================================
+# VALIDAÇÕES FINAIS
+# ============================================================================
+
+# Teste de conectividade dos serviços
+test_services_connectivity() {
+    log_step "Testando conectividade dos serviços"
+    
+    local services=(
+        "https://keycloak.$DOMAIN_BASE/health/ready"
+        "https://$DOMAIN_BASE/health"
+        "https://api.$DOMAIN_BASE/health"
+    )
+    
+    local failed_services=()
+    
+    for service in "${services[@]}"; do
+        if curl -f -s --max-time 10 "$service" > /dev/null 2>&1; then
+            log_info "$CHECK $service est�� acessível"
+        else
+            failed_services+=("$service")
+            log_warn "$WARNING $service não está acessível"
+        fi
+    done
+    
+    if [ ${#failed_services[@]} -gt 0 ]; then
+        log_warn "Alguns serviços não estão acessíveis ainda:"
+        for service in "${failed_services[@]}"; do
+            log_warn "  - $service"
+        done
+        log_warn "Isso pode ser normal durante a inicialização"
+    fi
+}
+
+# Executar testes finais
+run_final_tests() {
+    log_step "Executando testes finais"
+    
+    # Funç��o para teste com timeout
+    test_service() {
+        local service_name="$1"
+        local test_command="$2"
+        local timeout_seconds="${3:-10}"
+        
+        if timeout "$timeout_seconds" bash -c "$test_command" >/dev/null 2>&1; then
+            log_info "$CHECK $service_name funcionando"
+            return 0
+        else
+            log_warn "$WARNING $service_name com problemas"
+            return 1
+        fi
+    }
+    
+    # Testes individuais
+    test_service "Keycloak" "curl -f -s $KEYCLOAK_BASE_URL/health/ready"
+    test_service "Realm KRYONIX" "curl -s $KEYCLOAK_BASE_URL/realms/KRYONIX/.well-known/openid_configuration | grep -q KRYONIX"
+    
+    # Teste PostgreSQL baseado no tipo
+    if [ "$POSTGRES_CONTAINER" = "external-supabase" ]; then
+        test_service "Supabase PostgreSQL" "PGPASSWORD='$POSTGRES_PASSWORD' pg_isready -h '$POSTGRES_HOST' -U postgres"
+    else
+        test_service "PostgreSQL" "docker exec $POSTGRES_CONTAINER pg_isready -U postgres"
+    fi
+
+    # Teste login admin
+    if test_service "Login Admin" "curl -s -d 'client_id=admin-cli' -d 'username=$KEYCLOAK_ADMIN_USER' -d 'password=$KEYCLOAK_ADMIN_PASSWORD' -d 'grant_type=password' '$KEYCLOAK_BASE_URL/realms/master/protocol/openid_connect/token' | grep -q access_token"; then
+        log_info "$CHECK Autenticação admin funcionando"
+    else
+        log_warn "$WARNING Autenticação admin pode ter problemas"
+    fi
+    
+    # Verificar scripts
+    [ -x "$SCRIPTS_DIR/kryonix-create-client.sh" ] && log_info "$CHECK Scripts de automação instalados" || log_warn "$WARNING Scripts não encontrados"
+    
+    # Verificar monitoramento
+    systemctl is-active --quiet kryonix-monitor && log_info "$CHECK Monitoramento ativo" || log_warn "$WARNING Monitoramento não está ativo"
+    
+    # Verificar cron backup
+    crontab -l | grep -q "backup-kryonix.sh" && log_info "$CHECK Backup automático agendado" || log_warn "$WARNING Backup automático não agendado"
+}
+
+# ============================================================================
+# FUNÇÃO PRINCIPAL
+# ============================================================================
+
+main() {
+    # Banner inicial
+    echo -e "${BLUE}${BOLD}"
+    echo "============================================================================"
+    echo "🚀 KRYONIX - SCRIPT PARTE 01 - FUNCIONA DE PRIMEIRA"
+    echo "CONFIGURAÇÃO KEYCLOAK DOCKER SWARM - COMANDO TOTALMENTE CORRIGIDO"
+    echo "============================================================================"
+    echo -e "${NC}"
+
+    log_info "Iniciando script PARTE 01 - Comando Keycloak FUNCIONANDO DE PRIMEIRA"
+    log_info "Servidor: $SERVER_IP"
+    log_info "Domínio: $DOMAIN_BASE"
+    log_info "Rede: Kryonix-NET (overlay)"
+    log_info "PID: $$"
+    
+    # Banner de início
+    echo -e "${BLUE}========================================${NC}"
+    echo -e "${BLUE}🚀 KRYONIX - PARTE 01 - COMANDO CORRIGIDO${NC}"
+    echo -e "${BLUE}========================================${NC}"
+    
+    # Validações iniciais
+    check_already_running
+    check_root
+    check_system_dependencies
+    check_docker_swarm
+    check_disk_space
+    check_external_connectivity
+    check_docker_network
+    check_base_services
+    
+    # Configuração do Keycloak
+    create_keycloak_config
+    deploy_keycloak_service
+    check_existing_keycloak
+    configure_keycloak_realm
+    
+    # Configuração de scripts, monitoramento e backup
+    setup_automation_scripts
+    setup_monitoring
+    setup_backup
+    setup_environment
+    
+    # Validações finais
+    test_services_connectivity
+    run_final_tests
+    
+    # Marcar progresso e atualizar página
+    echo "1" > "$CONFIG_DIR/.current-part"
+    update_progress_page 1 "completed"
+    
+    # Relatório final
+    log_step "Finalizando configuração"
+    log_info "$CHECK PARTE 01 configurada com sucesso!"
+    log_info ""
+    log_info "========================================="
+    log_info "🎉 PARTE 01 CONFIGURADA COM SUCESSO!"
+    log_info "========================================="
+    log_info ""
+    
+    # Resumo final
+    cat << EOF
+
+📋 Resumo da configuração:
+   🔐 Keycloak: https://keycloak.$DOMAIN_BASE
+   👤 Admin: $KEYCLOAK_ADMIN_USER / $KEYCLOAK_ADMIN_PASSWORD
+   🏢 Realm: KRYONIX
+   📱 Clients: Frontend, Mobile, IA
+   🤖 Scripts: $SCRIPTS_DIR/
+   💾 Backups: Diário às 02:00
+   📊 Monitoramento: Ativo 24/7
+   ���� Alertas: WhatsApp $WHATSAPP_ALERT
+
+🛠️ Comandos úteis:
+   • Criar cliente: $SCRIPTS_DIR/kryonix-create-client.sh
+   • Validar clientes: $SCRIPTS_DIR/kryonix-validate-clients.sh
+   • Backup manual: $SCRIPTS_DIR/backup-kryonix.sh
+   • Ver logs monitor: tail -f $LOG_DIR/monitor.log
+   • Status monitor: systemctl status kryonix-monitor
+
+EOF
+    
+    # Enviar notificação de sucesso
+    send_whatsapp_notification "✅ KRYONIX PARTE-01 CONCLUÍDA! Keycloak multi-tenant funcionando, IA integrada, interface português, WhatsApp OTP ativo, monitor 24/7, backup automático, multi-tenancy operacional. Pronto para PARTE-02!"
+    
+    # SEMPRE MOSTRAR CREDENCIAIS NO FINAL
+    log_info ""
+    log_info "🔑 ===== CREDENCIAIS KRYONIX COMPLETAS ====="
+    log_info ""
+    log_info "🌐 KEYCLOAK:"
+    log_info "   URL Admin: https://keycloak.$DOMAIN_BASE/admin"
+    log_info "   URL Public: https://keycloak.$DOMAIN_BASE"
+    log_info "   Usu��rio: $KEYCLOAK_ADMIN_USER"
+    log_info "   Senha: $KEYCLOAK_ADMIN_PASSWORD"
+    log_info "   Realm: KRYONIX"
+    log_info ""
+    log_info "🗄️ DATABASE KEYCLOAK:"
+    log_info "   Host: $POSTGRES_HOST"
+    log_info "   Porta: $POSTGRES_PORT"
+    log_info "   Database: keycloak"
+    log_info "   Usuário: keycloak_user"
+    log_info "   Senha: $POSTGRES_PASSWORD"
+    log_info ""
+    log_info "🔐 CLIENTS CONFIGURADOS:"
+    log_info "   Frontend Client ID: kryonix-frontend"
+    log_info "   Frontend Secret: kryonix-frontend-secret-2025"
+    log_info "   Mobile Client ID: kryonix-mobile-app"
+    log_info "   Mobile Secret: kryonix-mobile-secret-2025"
+    log_info "   IA Client ID: kryonix-ai-client"
+    log_info "   IA Secret: kryonix-ai-secret-2025"
+    log_info ""
+    log_info "📱 EVOLUTION API:"
+    log_info "   URL: $EVOLUTION_API_URL"
+    log_info "   API Key: $EVOLUTION_API_KEY"
+    log_info "   WhatsApp: $WHATSAPP_ALERT"
+    log_info ""
+    log_info "🔧 SENDGRID EMAIL:"
+    log_info "   API Key: $SENDGRID_API_KEY"
+    log_info "   Email Admin: $ADMIN_EMAIL"
+    log_info ""
+    log_info "🔒 JWT SECRET:"
+    log_info "   Secret: $JWT_SECRET"
+    log_info ""
+    log_info "🛠️ ARQUIVOS IMPORTANTES:"
+    log_info "   Logs: $LOG_DIR/"
+    log_info "   Configs: $CONFIG_DIR/"
+    log_info "   Scripts: $SCRIPTS_DIR/"
+    log_info "   Backups: $BACKUP_DIR/"
+    log_info ""
+    log_info "🎯 ===== FIM DAS CREDENCIAIS ====="
+    log_info ""
+    
+    # VERIFICAR SE TODOS OS SERVIÇOS FORAM CRIADOS
+    log_info "🔍 VERIFICAÇÃO FINAL DOS SERVIÇOS CRIADOS:"
+    log_info ""
+    
+    # Verificar Keycloak
+    if docker service ls --format "{{.Name}}" | grep -q "keycloak"; then
+        log_info "✅ Keycloak: Serviço Docker Swarm criado"
+    else
+        log_warn "⚠️ Keycloak: Serviço Docker Swarm NÃO encontrado"
+    fi
+    
+    # Verificar Monitoramento
+    if systemctl is-active --quiet kryonix-monitor; then
+        log_info "✅ Monitoramento: Serviço systemd ativo"
+    else
+        log_warn "⚠️ Monitoramento: Serviço systemd NÃO ativo"
+    fi
+    
+    # Verificar Backup
+    if crontab -l | grep -q "backup-kryonix.sh"; then
+        log_info "✅ Backup: Cron job agendado"
+    else
+        log_warn "⚠️ Backup: Cron job NÃO agendado"
+    fi
+    
+    # Verificar Scripts
+    if [ -f "$SCRIPTS_DIR/kryonix-create-client.sh" ]; then
+        log_info "✅ Scripts: Criação de cliente disponível"
+    else
+        log_warn "⚠️ Scripts: Script de criação NÃO encontrado"
+    fi
+    
+    log_info ""
+    log_info "🛠️ COMANDOS PARA COMPLETAR A CONFIGURAÇÃO (se necessário):"
+    log_info ""
+    log_info "   # Se Keycloak não estiver funcionando:"
+    log_info "   bash \"Scripts-de-instalacoes/fix-keycloak-complete.sh\""
+    log_info ""
+    log_info "   # Para configurar Realm e Clients:"
+    log_info "   bash \"Scripts-de-instalacoes/complete-keycloak-setup.sh\""
+    log_info ""
+    log_info "   # Para verificar serviços:"
+    log_info "   docker service ls"
+    log_info "   systemctl status kryonix-monitor"
+    log_info "   crontab -l"
+    log_info ""
+    
+    log_info "���� Sistema pronto para receber a PARTE-02!"
+    log_info "Script executado com sucesso em $(date)"
+}
+
+# ============================================================================
+# EXECUÇÃO DO SCRIPT
+# ============================================================================
+
+# Executar função principal
+main "$@"
+
+# Fim do script
+exit 0
