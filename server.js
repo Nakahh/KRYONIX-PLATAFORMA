@@ -171,8 +171,30 @@ if (isProduction) {
   expressApp.use('/api/github-webhook', strictLimiter);
 }
 
+// Headers de segurança personalizados
+expressApp.use((req, res, next) => {
+  // Headers de segurança adicionais
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Download-Options', 'noopen');
+  res.setHeader('X-DNS-Prefetch-Control', 'off');
+  res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+
+  if (isProduction) {
+    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  }
+
+  // Headers para desenvolvimento
+  if (isDevelopment) {
+    res.setHeader('X-Environment', 'development');
+  }
+
+  next();
+});
+
 // Logging middleware
-expressApp.use(morgan('combined'));
+expressApp.use(morgan(isProduction ? 'combined' : 'dev'));
 
 // Fast health check endpoint
 expressApp.get('/health', (req, res) => {
