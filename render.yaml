@@ -24,14 +24,13 @@ services:
     healthCheckPath: /health
     autoDeploy: true
     
-databases:
-  - name: kryonix-postgres
-    databaseName: kryonix_platform
+  - type: redis
+    name: kryonix-redis
     plan: starter
     region: oregon
     
-services:
-  - type: redis
-    name: kryonix-redis
+databases:
+  - name: kryonix-postgres
+    databaseName: kryonix_platform
     plan: starter
     region: oregon
