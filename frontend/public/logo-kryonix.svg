@@ -1,0 +1,12 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#1e3a8a"/>
+  <rect x="50" y="50" width="1100" height="530" rx="20" fill="#3b82f6"/>
+  <text x="600" y="250" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="72" font-weight="bold">KRYONIX</text>
+  <text x="600" y="330" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="32">Plataforma SaaS 100% Autônoma por IA</text>
+  <text x="600" y="380" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24">Multi-tenant • 32 Stacks • Automação Completa</text>
+  <circle cx="200" cy="450" r="30" fill="#10b981"/>
+  <circle cx="400" cy="450" r="30" fill="#f59e0b"/>
+  <circle cx="600" cy="450" r="30" fill="#ef4444"/>
+  <circle cx="800" cy="450" r="30" fill="#8b5cf6"/>
+  <circle cx="1000" cy="450" r="30" fill="#06b6d4"/>
+</svg>
