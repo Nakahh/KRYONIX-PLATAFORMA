@@ -113,7 +113,11 @@ export default function ContactForm() {
       
       // Open WhatsApp with the message
       const whatsappUrl = `https://wa.me/5517981805327?text=${whatsappMessage}`
-      window.open(whatsappUrl, '_blank')
+
+      // Only open window on client side
+      if (typeof window !== 'undefined') {
+        window.open(whatsappUrl, '_blank')
+      }
       
       setSubmitStatus('success')
       

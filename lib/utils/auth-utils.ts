@@ -1,3 +1,5 @@
+'use client'
+
 import { DeviceInfo, TokenInfo } from '../types/auth'
 
 export class AuthUtils {

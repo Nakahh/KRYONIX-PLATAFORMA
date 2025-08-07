@@ -1,0 +1,43 @@
+{
+  "common": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "services": "Dienstleistungen",
+    "loading": "Laden...",
+    "partnerships": "Partnerschaften",
+    "solutions": "Lösungen",
+    "language": "Sprache",
+    "changeLanguage": "Sprache ändern"
+  },
+  "home": {
+    "title": "KRYONIX - 100% KI-autonome SaaS-Plattform",
+    "subtitle": "Automatisieren Sie Ihre Prozesse mit fortschrittlicher KI",
+    "description": "Transformieren Sie Ihr Unternehmen mit unserer kompletten Geschäftsautomatisierungsplattform, integriert mit über 75 Technologie-Stacks.",
+    "cta": "Lösungen Erkunden",
+    "partnerCta": "Partner Werden",
+    "viewCounter": "Aufrufe"
+  },
+  "partnerships": {
+    "title": "Geschäftspartnerschaften",
+    "subtitle": "Strategische Geschäftsmöglichkeiten",
+    "description": "Schließen Sie sich der Revolution der Geschäftsautomatisierung an",
+    "infrastructure": "Infrastruktur-Partnerschaft",
+    "strategic": "Strategische Partnerschaft",
+    "expansion": "Expansions-Partnerschaft",
+    "investment": "Investition",
+    "roi": "Projektierter ROI",
+    "benefits": "Enthaltene Vorteile",
+    "contact": "Kontakt Aufnehmen",
+    "whatsapp": "Direkter WhatsApp",
+    "email": "Unternehmens-E-Mail",
+    "meeting": "Geplantes Meeting"
+  },
+  "project": {
+    "name": "KRYONIX",
+    "tagline": "Intelligente Geschäftsautomatisierung",
+    "stacks": "75+ Technologie-Stacks",
+    "clients": "8.000+ Potenzielle Kunden",
+    "revenue": "7,5M$ Projektierter Umsatz"
+  }
+}

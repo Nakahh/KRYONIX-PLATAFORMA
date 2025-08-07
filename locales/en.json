@@ -1,0 +1,160 @@
+{
+  "common": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "services": "Services",
+    "loading": "Loading...",
+    "partnerships": "Partnerships",
+    "solutions": "Solutions",
+    "language": "Language",
+    "changeLanguage": "Change language"
+  },
+  "home": {
+    "title": "KRYONIX - 100% AI-Autonomous SaaS Platform",
+    "subtitle": "Automate Your Processes with Advanced AI",
+    "description": "Transform your business with our complete business automation platform, integrated with over 75 technology stacks.",
+    "cta": "Explore Solutions",
+    "partnerCta": "Become Partner",
+    "viewCounter": "views"
+  },
+  "partnerships": {
+    "title": "Business Partnerships",
+    "subtitle": "Strategic business opportunities",
+    "description": "Join the business automation revolution",
+    "infrastructure": "Infrastructure Partnership",
+    "strategic": "Strategic Partnership",
+    "expansion": "Expansion Partnership",
+    "investment": "Investment",
+    "roi": "Projected ROI",
+    "benefits": "Benefits Included",
+    "contact": "Get in Touch",
+    "whatsapp": "Direct WhatsApp",
+    "email": "Corporate Email",
+    "meeting": "Scheduled Meeting"
+  },
+  "project": {
+    "name": "KRYONIX",
+    "tagline": "Intelligent Business Automation",
+    "stacks": "75+ Technology Stacks",
+    "clients": "8,000+ Potential Clients",
+    "revenue": "$7.5M+ Projected Revenue"
+  },
+  "modules": {
+    "analytics": {
+      "name": "Advanced Analytics & BI",
+      "description": "Transform data into intelligent decisions with our Business Intelligence module."
+    },
+    "scheduling": {
+      "name": "Intelligent Scheduling + Billing",
+      "description": "Complete automated scheduling system that eliminates conflicts and optimizes your agenda."
+    },
+    "omnichannel": {
+      "name": "Omnichannel AI Support",
+      "description": "Unify all support channels into a single intelligent platform."
+    },
+    "crm": {
+      "name": "Intelligent CRM & Sales Funnel",
+      "description": "Manage your customers and sales with AI that never misses an opportunity."
+    },
+    "email": {
+      "name": "Advanced Email Marketing",
+      "description": "Smart campaigns that arrive at the right time, on the right channel, to the right person."
+    },
+    "social": {
+      "name": "Social Media Management + AI",
+      "description": "Automate your digital presence with AI that creates, publishes and engages for you."
+    },
+    "portal": {
+      "name": "Client Portal + AI Training",
+      "description": "Exclusive area where your clients access everything they need autonomously."
+    },
+    "whatsapp": {
+      "name": "WhatsApp Business Automation",
+      "description": "Transform our platform into your own solution with your brand and visual identity."
+    },
+    "sms": {
+      "name": "SMS + Push Notifications",
+      "description": "Multiple communication with your clients via SMS, Push and intelligent notifications."
+    }
+  },
+  "packages": {
+    "starter": {
+      "name": "Starter Pack",
+      "description": "Perfect to get started"
+    },
+    "professional": {
+      "name": "Professional Pack",
+      "description": "Best cost-benefit"
+    },
+    "enterprise": {
+      "name": "Enterprise Pack",
+      "description": "All features"
+    }
+  },
+  "forms": {
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone",
+    "company": "Company",
+    "position": "Position",
+    "segment": "Business Segment",
+    "message": "Message",
+    "required": "This field is required",
+    "submit": "Submit Proposal",
+    "sending": "Sending...",
+    "success": "Sent successfully!",
+    "error": "Error sending. Please try again."
+  },
+  "footer": {
+    "copyright": "© 2025 KRYONIX. Developed by Vitor Jayme Fernandes Ferreira.",
+    "aiAssisted": "🤖 Assisted by 15 Specialized AI Agents",
+    "contact": "Contact",
+    "systemStatus": "System Status",
+    "onlineSystem": "System Online",
+    "activeMonitoring": "Active Monitoring",
+    "autoBackup": "Automatic Backup"
+  },
+  "errors": {
+    "invalidEmail": "Please enter a valid email address",
+    "networkError": "Network error. Please try again.",
+    "validationError": "Validation error",
+    "serverError": "Server error"
+  },
+  "dashboard": {
+    "title": "Administrative Dashboard",
+    "waitlist": "Waitlist",
+    "analytics": "Analytics",
+    "modules": "Modules",
+    "users": "Users",
+    "health": "System Health",
+    "translations": "Translations",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "waitlist": {
+    "title": "Join the VIP Waitlist",
+    "subtitle": "Be one of the first 1,000 customers to revolutionize your business with AI",
+    "form": {
+      "personalInfo": "Personal Information",
+      "companyInfo": "Company Information",
+      "interests": "Modules of Interest",
+      "additionalInfo": "Additional Information"
+    },
+    "success": {
+      "title": "Welcome to VIP List!",
+      "position": "Position",
+      "message": "Congratulations! Our team will contact you soon."
+    }
+  },
+  "system": {
+    "online": "System Online",
+    "offline": "System Offline",
+    "maintenance": "Maintenance"
+  },
+  "nav": {
+    "partnerships": "Partnerships",
+    "home": "Home",
+    "progress": "Progress"
+  }
+}
