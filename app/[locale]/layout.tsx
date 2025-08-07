@@ -3,13 +3,10 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 import { locales } from '@/lib/i18n';
-import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/lib/contexts/theme-context';
 import ThemeScript from '../components/ThemeScript';
 import type { Metadata } from 'next';
 import '../globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
 
 type Props = {
   children: ReactNode;
