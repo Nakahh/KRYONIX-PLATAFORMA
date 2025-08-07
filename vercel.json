@@ -1,7 +1,27 @@
 {
+  "version": 2,
   "framework": "nextjs",
   "buildCommand": "npm run build",
   "installCommand": "npm ci",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://kryonix-backend.onrender.com",
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "NEXT_TELEMETRY_DISABLED": "1"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_API_URL": "https://kryonix-backend.onrender.com",
+      "NODE_OPTIONS": "--max-old-space-size=4096",
+      "NEXT_TELEMETRY_DISABLED": "1"
+    }
+  },
+  "functions": {
+    "app/api/**": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 30
+    }
+  },
   "redirects": [
     {
       "source": "/",
@@ -34,6 +54,12 @@
       "permanent": true
     }
   ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://kryonix-backend.onrender.com/api/$1"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -45,6 +71,10 @@
         {
           "key": "X-Content-Type-Options", 
           "value": "nosniff"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
         }
       ]
     }
