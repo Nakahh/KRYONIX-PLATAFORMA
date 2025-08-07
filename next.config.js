@@ -20,28 +20,18 @@ const nextConfig = {
   output: 'standalone',
   compress: true,
   poweredByHeader: false,
-  // Webpack config otimizado
-  webpack: (config, { isServer }) => {
-    // Externalize problematic browser-only libraries on server
-    if (isServer) {
+  // Webpack config simplificado para evitar travamentos
+  webpack: (config, { isServer, dev }) => {
+    // Apenas em produção, evitar problemas em dev
+    if (isServer && !dev) {
       config.externals = config.externals || [];
       config.externals.push('jspdf', 'jspdf-autotable');
     }
 
-    // Otimizações para planos gratuitos
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            priority: 10,
-            reuseExistingChunk: true,
-          },
-        },
-      },
+    // Resolver conflitos de módulos
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'negotiator': require.resolve('negotiator')
     };
 
     return config;
