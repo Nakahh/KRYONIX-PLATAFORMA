@@ -1,6 +1,6 @@
 'use client'
 
-import { useViewCounter } from '@/lib/hooks/useViewCounter'
+import { useEffect, useState } from 'react'
 import { Eye, TrendingUp } from 'lucide-react'
 
 interface ViewCounterProps {
@@ -10,15 +10,33 @@ interface ViewCounterProps {
   animated?: boolean
 }
 
-export default function ViewCounter({ 
-  pageId, 
-  className = '', 
-  showIcon = true, 
-  animated = true 
+export default function ViewCounter({
+  pageId,
+  className = '',
+  showIcon = true,
+  animated = true
 }: ViewCounterProps) {
-  const { count, hasViewed, isLoading } = useViewCounter(pageId)
+  const [count, setCount] = useState(0)
+  const [hasViewed, setHasViewed] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
 
-  if (isLoading) {
+  useEffect(() => {
+    setIsClient(true)
+    setIsLoading(true)
+
+    // Simulate loading and view counting
+    setTimeout(() => {
+      const savedCount = localStorage.getItem(`view-count-${pageId}`) || '0'
+      const currentCount = parseInt(savedCount) + 1
+      setCount(currentCount)
+      setHasViewed(true)
+      setIsLoading(false)
+      localStorage.setItem(`view-count-${pageId}`, currentCount.toString())
+    }, 500)
+  }, [pageId])
+
+  if (!isClient || isLoading) {
     return (
       <div className={`flex items-center gap-2 ${className}`}>
         {showIcon && <Eye className="w-4 h-4 text-gray-400 animate-pulse" />}
@@ -28,19 +46,19 @@ export default function ViewCounter({
   }
 
   return (
-    <div 
+    <div
       className={`flex items-center gap-2 transition-all duration-300 ${
         hasViewed && animated ? 'animate-pulse' : ''
       } ${className}`}
     >
       {showIcon && (
-        <Eye 
+        <Eye
           className={`w-4 h-4 transition-colors duration-300 ${
             hasViewed ? 'text-green-500' : 'text-gray-500'
-          }`} 
+          }`}
         />
       )}
-      <span 
+      <span
         className={`font-medium transition-colors duration-300 ${
           hasViewed ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'
         }`}
