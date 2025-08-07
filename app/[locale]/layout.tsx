@@ -6,7 +6,17 @@ import { locales } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/contexts/theme-context';
 import ThemeScript from '../components/ThemeScript';
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import '../globals.css';
+
+// Optimized font loading for Vercel
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['system-ui', 'arial'],
+  preload: true,
+  variable: '--font-inter',
+});
 
 type Props = {
   children: ReactNode;
