@@ -1,61 +1,35 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false, // Disable para build mais rápido
+  reactStrictMode: false,
   swcMinify: true,
   output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: process.cwd(),
-    optimizeCss: false, // Disable para build mais rápido
-    esmExternals: false, // Reduz tempo de análise
-  },
-  compress: true,
-  poweredByHeader: false,
-  generateEtags: false,
-  httpAgentOptions: {
-    keepAlive: false,
-  },
-  // Otimizações para startup rápido
-  onDemandEntries: {
-    maxInactiveAge: 25 * 1000,
-    pagesBufferLength: 2,
-  },
-  // Configuração para produção
-  distDir: '.next',
-  cleanDistDir: true,
-  // Acelerar build desabilitando verificações
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Otimizações específicas para build rápido
-  productionBrowserSourceMaps: false,
-  optimizeFonts: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
-    unoptimized: true, // Disable otimização de imagens para build mais rápido
+    unoptimized: true,
   },
-  // Webpack optimizations
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/:path*`
+      }
+    ]
+  },
   webpack: (config, { isServer }) => {
-    // Reduzir bundle analysis time
-    config.optimization.splitChunks = {
-      chunks: 'all',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-        },
-      },
-    };
-
-    // Disable source maps em produção para build mais rápido
-    if (!isServer) {
-      config.devtool = false;
+    config.cache = {
+      type: 'filesystem',
+      allowCollectingMemory: true,
     }
-
-    return config;
-  },
+    return config
+  }
 }
 
 module.exports = nextConfig
