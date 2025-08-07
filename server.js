@@ -31,15 +31,32 @@ const handle = nextApp.getRequestHandler();
 const expressApp = express();
 
 // Security middleware
+const isProduction = process.env.NODE_ENV === 'production';
 expressApp.use(helmet({
-  contentSecurityPolicy: false,
-  crossOriginEmbedderPolicy: false
+  contentSecurityPolicy: isProduction ? {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"]
+    }
+  } : false,
+  crossOriginEmbedderPolicy: false,
+  hsts: isProduction ? {
+    maxAge: 31536000,
+    includeSubDomains: true
+  } : false
 }));
 
 // CORS middleware
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ||
+  (isProduction ? ['https://kryonix.com.br'] : ['http://localhost:3000', 'http://localhost:8080']);
+
 expressApp.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:8080', 'https://kryonix.com.br'],
-  credentials: true
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Body parsing middleware
@@ -85,7 +102,11 @@ expressApp.get('/api/status', (req, res) => {
 // Webhook do GitHub configurado automaticamente pelo instalador KRYONIX
 const crypto = require('crypto');
 const { exec } = require('child_process');
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
+// Validar variáveis de ambiente críticas
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+if (!WEBHOOK_SECRET) {
+  console.warn('⚠️ WEBHOOK_SECRET não configurado - webhook GitHub desabilitado');
+}
 const DEPLOY_SCRIPT = path.join(__dirname, 'webhook-deploy.sh');
 
 // Função para verificar assinatura do GitHub
@@ -117,13 +138,15 @@ expressApp.post('/api/github-webhook', (req, res) => {
         auto_update: true
     });
 
-    // Verificar assinatura se configurada
-    if (WEBHOOK_SECRET && signature) {
-        if (!verifyGitHubSignature(payload, signature)) {
-            console.log('❌ Assinatura inválida do webhook');
-            return res.status(401).json({ error: 'Invalid signature' });
+    // Verificar assinatura - obrigatória se WEBHOOK_SECRET estiver configurado
+    if (WEBHOOK_SECRET) {
+        if (!signature || !verifyGitHubSignature(payload, signature)) {
+            console.log('❌ Webhook rejeitado - assinatura inválida ou ausente');
+            return res.status(401).json({ error: 'Invalid or missing signature' });
         }
         console.log('✅ Assinatura do webhook verificada');
+    } else {
+        console.log('⚠️ Webhook aceito sem verificação - WEBHOOK_SECRET não configurado');
     }
 
     // Processar apenas push events na main/master

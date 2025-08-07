@@ -37,15 +37,27 @@ export default function LoginPage() {
     setIsLoading(true)
     setError('')
 
-    // Simular validação
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      // Chamar API de autenticação
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password })
+      })
 
-    if (username === 'kryonix' && password === 'Vitor@123456') {
-      // Criar sessão
-      document.cookie = `admin_session=true; path=/; max-age=86400` // 24 horas
-      router.push('/dashboard')
-    } else {
-      setError('Credenciais inválidas')
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        // Criar sessão segura
+        document.cookie = `admin_session=${data.token}; path=/; max-age=86400; secure; httpOnly=false; sameSite=strict`
+        router.push('/dashboard')
+      } else {
+        setError(data.message || 'Credenciais inválidas')
+      }
+    } catch (error) {
+      setError('Erro ao conectar com o servidor')
     }
 
     setIsLoading(false)
@@ -169,14 +181,14 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Credenciais de Demo */}
+          {/* Informações de Segurança */}
           <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
             <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              🔐 Credenciais de Acesso:
+              🔐 Acesso Administrativo:
             </h3>
             <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-              <div><strong>Usuário:</strong> kryonix</div>
-              <div><strong>Senha:</strong> Vitor@123456</div>
+              <div>Sistema de autenticação segura ativo</div>
+              <div>Credenciais configuradas via variáveis de ambiente</div>
             </div>
           </div>
         </div>
