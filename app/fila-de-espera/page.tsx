@@ -65,7 +65,8 @@ export default function FilaDeEspera() {
   const [posicaoFila, setPosicaoFila] = useState<number | null>(null)
 
   useEffect(() => {
-    setMounted(true)
+    const timer = setTimeout(() => setMounted(true), 100)
+    return () => clearTimeout(timer)
   }, [])
 
   const segmentosNegocio = [
@@ -285,7 +286,14 @@ export default function FilaDeEspera() {
   }
 
   if (!mounted) {
-    return null
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 flex items-center justify-center">
+        <div className="animate-pulse text-center">
+          <div className="w-12 h-12 bg-blue-600 rounded-lg mx-auto mb-4"></div>
+          <div className="text-lg text-gray-600 dark:text-gray-300">Carregando...</div>
+        </div>
+      </div>
+    )
   }
 
   return (
