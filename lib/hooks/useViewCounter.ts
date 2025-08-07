@@ -42,20 +42,20 @@ export function useViewCounter(pageId: string) {
     try {
       const sessionId = getSessionId()
       const hasViewedKey = `viewed_${pageId}_${sessionId}`
-      
+
       // Verificar se já visualizou nesta sessão
       const hasViewed = localStorage.getItem(hasViewedKey) === 'true'
-      
+
       if (!hasViewed) {
         // Marcar como visualizado
         localStorage.setItem(hasViewedKey, 'true')
-        
+
         // Incrementar contador com base real
         const baseCount = Math.floor(Math.random() * 50) + 150  // Entre 150-200 para ser mais realista
         const currentCount = parseInt(localStorage.getItem(`page_views_${pageId}`) || baseCount.toString())
         const newCount = currentCount + 1
         localStorage.setItem(`page_views_${pageId}`, newCount.toString())
-        
+
         setViewData({
           count: newCount,
           hasViewed: true,
@@ -81,11 +81,11 @@ export function useViewCounter(pageId: string) {
         isLoading: false
       })
     }
-  }, [pageId])
+  }, [])
 
   useEffect(() => {
     recordView()
-  }, [recordView])
+  }, [pageId])
 
   return viewData
 }

@@ -2,102 +2,60 @@
 // PostgreSQL Multi-Tenant Mobile-First Database System
 
 // Core database configuration and connection management
-export * from './postgres-config'
+export { getPool, testConnection, type DatabaseConfig, type DatabaseModule } from './postgres-config'
 
 // Database initialization and health monitoring
-export * from './init'
-
-// API utilities for frontend integration
-export * from './api'
-
-// Multi-tenant client isolation system
-export * from './multi-tenant'
-
-// Automatic database migrations
-export * from './migrations'
-
-// Incremental backup system
-export * from './backup'
-
-// Mobile-first schemas
-export * from './schemas/mobile-users'
-export * from './schemas/mobile-notifications'
-export * from './schemas/ai-monitoring'
-
-// Re-export database types from postgres-config
-export type {
-  DatabaseModule,
-  DatabaseConfig
-} from './postgres-config'
-
-// Re-export API types from api
-export type {
-  ApiResponse
-} from './api'
-
-// Re-export mobile types from schemas
-export type {
-  MobileUser,
-  MobileSession,
-  PushNotification
-} from './schemas/mobile-users'
-
-// Re-export multi-tenant types
-export type {
-  TenantConfig,
-  TenantStats
-} from './multi-tenant'
-
-// Re-export migration types
-export type {
-  Migration
-} from './migrations'
-
-// Re-export backup types
-export type {
-  BackupConfig,
-  BackupJob,
-  BackupMetrics
-} from './backup'
-
-// Main initialization function
 export { 
   initializeAllDatabaseModules,
   checkDatabaseHealth,
   getDatabaseInitializationStatus
 } from './init'
 
-// API functions
+// API utilities for frontend integration
 export {
   apiInitializeAllModules,
   apiGetAllModulesStatus,
   apiGetMobileMetrics,
-  apiGetHealthSummary
+  apiGetHealthSummary,
+  type ApiResponse
 } from './api'
 
-// Multi-tenant functions
+// Multi-tenant client isolation system
 export {
   createTenant,
   getTenantById,
   getTenantByName,
   getAllActiveTenants,
-  getTenantStats
+  getTenantStats,
+  type TenantConfig,
+  type TenantStats
 } from './multi-tenant'
 
-// Migration functions
+// Automatic database migrations
 export {
   applyAllCoreMigrations,
   getMigrationStatus,
-  coreMigrations
+  coreMigrations,
+  type Migration
 } from './migrations'
 
-// Backup functions
+// Incremental backup system
 export {
   executeBackupJob,
   getBackupMetrics,
   cleanupOldBackups,
-  getRecentBackupJobs
+  getRecentBackupJobs,
+  type BackupConfig,
+  type BackupJob,
+  type BackupMetrics
 } from './backup'
+
+// Mobile-first schemas types only (no circular imports)
+export type {
+  MobileUser,
+  MobileSession,
+  PushNotification
+} from './schemas/mobile-users'
 
 /**
  * Quick setup function to initialize the entire KRYONIX database system
@@ -142,10 +100,6 @@ export async function initializeKryonixDatabase(): Promise<{
     await initializeMultiTenantSchema('platform')
     
     console.log('✅ KRYONIX Database System initialized successfully!')
-    console.log(`📊 Summary:`)
-    console.log(`   - Modules initialized: ${modulesInitialized}/9`)
-    console.log(`   - Migrations applied: ${migrationsApplied}`)
-    console.log(`   - Backup configs created: ${backupConfigsCreated}`)
     
     return {
       success: true,
@@ -169,77 +123,3 @@ export async function initializeKryonixDatabase(): Promise<{
     }
   }
 }
-
-/**
- * Development utilities for testing and debugging
- */
-export const devUtils = {
-  /**
-   * Reset entire database system (development only)
-   */
-  async resetDatabase(): Promise<boolean> {
-    if (process.env.NODE_ENV === 'production') {
-      console.error('❌ Database reset is not allowed in production')
-      return false
-    }
-    
-    try {
-      console.log('⚠️ Resetting KRYONIX database system...')
-      
-      // Re-initialize everything
-      const result = await initializeKryonixDatabase()
-      
-      console.log('✅ Database system reset completed')
-      return result.success
-      
-    } catch (error) {
-      console.error('❌ Database reset failed:', error)
-      return false
-    }
-  },
-  
-  /**
-   * Get comprehensive system status
-   */
-  async getSystemStatus() {
-    try {
-      const { apiGetAllModulesStatus, apiGetHealthSummary } = await import('./api')
-      const { getMigrationStatus } = await import('./migrations')
-      const { getBackupMetrics } = await import('./backup')
-      
-      const [modulesStatus, healthSummary, migrationStatus, backupMetrics] = await Promise.all([
-        apiGetAllModulesStatus(),
-        apiGetHealthSummary(),
-        getMigrationStatus('platform'),
-        getBackupMetrics('platform')
-      ])
-      
-      return {
-        modules: modulesStatus,
-        health: healthSummary,
-        migrations: migrationStatus,
-        backups: backupMetrics,
-        generated_at: new Date().toISOString()
-      }
-    } catch (error) {
-      console.error('Error getting system status:', error)
-      return { error: String(error) }
-    }
-  }
-}
-
-// PARTE-02 Implementation Summary
-console.log(`
-🗄️ KRYONIX PARTE-02 - PostgreSQL Mobile-First Database
-✅ Multi-tenant isolation with Row Level Security
-✅ Mobile-optimized schemas and indexes
-✅ AI-driven monitoring and optimization
-✅ Automatic migration system
-✅ Incremental backup with compression
-✅ 9 specialized database modules
-✅ Real-time metrics collection
-✅ Tenant resource management
-✅ Development and production utilities
-
-Ready for PARTE-03: MinIO Storage System
-`)

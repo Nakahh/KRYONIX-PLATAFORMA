@@ -51,7 +51,9 @@ class MockJsPDFClass implements MockJsPDF {
   autoTable() { console.log('Mock: autoTable') }
   save(filename: string) {
     console.log(`Mock: PDF would be saved as ${filename}`)
-    alert(`PDF generation is currently in development. File: ${filename}`)
+    if (typeof window !== 'undefined') {
+      alert(`PDF generation is currently in development. File: ${filename}`)
+    }
   }
   setPage() { console.log('Mock: setPage') }
   saveGraphicsState() { console.log('Mock: saveGraphicsState') }

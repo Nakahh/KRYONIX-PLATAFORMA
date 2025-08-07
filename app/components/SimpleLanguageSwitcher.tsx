@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Globe } from 'lucide-react';
-import { translatePage, getTranslation, getCurrentLocale, setCurrentLocale } from '@/lib/utils/translation-system';
+import { useRouter, usePathname } from 'next/navigation';
 
 const locales = [
   { code: 'pt-br', name: 'Português (BR)', flag: '🇧🇷' },
@@ -21,29 +21,32 @@ export default function SimpleLanguageSwitcher({
   className = '',
   variant = 'dropdown'
 }: SimpleLanguageSwitcherProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [currentLocale, setCurrentLocaleState] = useState('pt-br');
   const [isOpen, setIsOpen] = useState(false);
 
-  // Carregar idioma salvo ao inicializar
+  // Get current locale from pathname
   useEffect(() => {
-    const savedLocale = getCurrentLocale();
-    setCurrentLocaleState(savedLocale);
-  }, []);
+    const pathSegments = pathname.split('/');
+    const localeFromPath = pathSegments[1];
+    if (locales.some(l => l.code === localeFromPath)) {
+      setCurrentLocaleState(localeFromPath);
+    }
+  }, [pathname]);
 
   const handleLocaleChange = (newLocale: string) => {
     setCurrentLocaleState(newLocale);
     setIsOpen(false);
 
-    // Salvar preferência
-    setCurrentLocale(newLocale);
-
-    // Aplicar traduções na página
-    translatePage(newLocale);
-
-    // Notificar mudança
-    const message = getTranslation('language.changed', newLocale);
-    alert(message);
+    // Navigate to new locale path
+    const pathSegments = pathname.split('/');
+    pathSegments[1] = newLocale;
+    const newPath = pathSegments.join('/');
+    router.push(newPath);
   };
+
+  const currentLocaleData = locales.find(l => l.code === currentLocale) || locales[0];
 
   if (variant === 'buttons') {
     return (
@@ -72,39 +75,33 @@ export default function SimpleLanguageSwitcher({
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        aria-label="Alterar idioma"
+        className="flex items-center gap-2 px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
       >
-        <span className="text-lg">
-          {locales.find(l => l.code === currentLocale)?.flag || '🌍'}
+        <Globe className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+        <span className="text-gray-700 dark:text-gray-300">
+          {currentLocaleData.flag} {currentLocaleData.code.toUpperCase()}
         </span>
       </button>
-      
+
       {isOpen && (
         <>
-          {/* Overlay */}
-          <div 
+          <div
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          
-          {/* Dropdown */}
-          <div className="absolute right-0 top-12 z-20 w-44 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg py-1">
+          <div className="absolute right-0 top-full mt-2 z-20 w-48 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg py-1">
             {locales.map((locale) => (
               <button
                 key={locale.code}
                 onClick={() => handleLocaleChange(locale.code)}
-                className={`flex items-center w-full px-3 py-2 text-sm transition-colors ${
+                className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-3 ${
                   currentLocale === locale.code
                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    : 'text-gray-700 dark:text-gray-300'
                 }`}
               >
-                <span className="mr-3">{locale.flag}</span>
-                <span className="flex-1 text-left">{locale.name}</span>
-                {currentLocale === locale.code && (
-                  <div className="w-2 h-2 rounded-full bg-blue-500" />
-                )}
+                <span className="text-lg">{locale.flag}</span>
+                <span>{locale.name}</span>
               </button>
             ))}
           </div>

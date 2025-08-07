@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "build": "next build",
-    "build-fast": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=production next build",
+    "build": "NODE_OPTIONS='--max-old-space-size=8192' next build",
+    "build-fast": "NODE_OPTIONS='--max-old-space-size=4096' NEXT_TELEMETRY_DISABLED=1 NODE_ENV=production next build",
     "build-ultra-fast": "node build-ultra-fast.js",
     "build-docker": "node build-ultra-fast.js",
     "build-emergency": "echo 'Emergency build mode' && npm run build-fast",
