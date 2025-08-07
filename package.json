@@ -24,7 +24,12 @@
     "postinstall": "node -e \"try { require('./check-dependencies.js'); } catch(e) { console.log('⚠️ check-dependencies.js não encontrado, pulando verificação durante build'); }\"",
     "prestart": "npm run check-deps",
     "optimize": "node optimize-deps.js",
-    "fast-setup": "npm run optimize && npm run build-ultra-fast"
+    "fast-setup": "npm run optimize && npm run build-ultra-fast",
+    "hash-password": "node scripts/hash-password.js",
+    "generate-secret": "node -e \"console.log('JWT_SECRET=' + require('crypto').randomBytes(32).toString('hex'));\"",
+    "validate-env": "node -e \"const required = ['JWT_SECRET', 'WEBHOOK_SECRET']; const missing = required.filter(key => !process.env[key]); if (missing.length) { console.error('\u274c Vari\u00e1veis faltando:', missing.join(', ')); process.exit(1); } else { console.log('\u2705 Todas as vari\u00e1veis cr\u00edticas configuradas'); }\"",
+    "security-check": "npm run validate-env && node -e \"console.log('\ud83d\udd12 Verifica\u00e7\u00e3o de seguran\u00e7a: OK');\"",
+    "setup-env": "echo 'Copiando .env.example para .env...' && cp .env.example .env && echo '\u2705 Configure as vari\u00e1veis em .env'"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.6.1",
