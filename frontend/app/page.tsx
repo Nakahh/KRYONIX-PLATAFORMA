@@ -20,7 +20,6 @@ import {
 import LoadingScreen from './components/LoadingScreen'
 import ProgressBar from './components/ProgressBar'
 import ThemeToggle from './components/ThemeToggle'
-import InteractiveDemo from './components/InteractiveDemo'
 import ContactForm from './components/ContactForm'
 
 export default function HomePage() {
@@ -258,7 +257,7 @@ export default function HomePage() {
       description: 'Automatize sua presença digital com IA que cria, publica e engaja por você.',
       features: [
         'Agendamento automático de posts',
-        'Criação de conteúdo com IA',
+        'Cria��ão de conteúdo com IA',
         'Resposta automática a comentários',
         'Análise de engajamento em tempo real',
         'Hashtags otimizadas automaticamente',
@@ -429,8 +428,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Interactive Demo */}
-      <InteractiveDemo />
 
       {/* Features */}
       <section className="py-16 bg-white dark:bg-gray-900">
@@ -672,6 +669,25 @@ export default function HomePage() {
 
       {/* Contact Form */}
       <ContactForm />
+
+      {/* Separator between Contact and Footer */}
+      <div className="bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-400 dark:via-gray-500 to-transparent"></div>
+        </div>
+        <div className="py-8">
+          <div className="text-center">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-300 dark:border-gray-600">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">KRYONIX Platform</span>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+        <div className="container mx-auto px-4">
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-400 dark:via-gray-500 to-transparent"></div>
+        </div>
+      </div>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-6">

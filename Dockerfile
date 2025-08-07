@@ -1,98 +1,62 @@
-# Multi-stage build para otimização
+# Multi-stage build otimizado para velocidade
+FROM node:18-alpine AS deps
+WORKDIR /app
+
+# Instalar apenas dependências essenciais do sistema
+RUN apk add --no-cache libc6-compat curl
+
+# Copiar package files para cache layer
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Build stage
 FROM node:18-alpine AS builder
-
-# Instalar dependências de build
-RUN apk add --no-cache \
-    curl \
-    wget \
-    bash \
-    git \
-    python3 \
-    make \
-    g++ \
-    dumb-init
-
 WORKDIR /app
 
-# Copiar package files primeiro para aproveitar cache do Docker
-COPY package*.json ./
+# Copiar node_modules do stage anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-# Verificar se outros arquivos de config existem antes de copiar
-COPY next.config.js ./
-COPY tailwind.config.js* ./
-COPY postcss.config.js* ./
-COPY tsconfig.json* ./
+# Build otimizado para velocidade
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
 
-# Instalar todas as dependências (incluindo dev)
-RUN npm ci && npm cache clean --force
+# Build mais rápido
+RUN npm run build-fast
 
-# Copiar código fonte
-COPY app/ ./app/
-COPY public/ ./public/
-COPY lib/ ./lib/
-
-# Build da aplicação Next.js
-RUN npm run build
-
-# Stage de produção
-FROM node:18-alpine AS production
-
-# Instalar dependências do sistema
-RUN apk add --no-cache \
-    curl \
-    wget \
-    bash \
-    git \
-    dumb-init
-
-# Criar usuário não-root
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S kryonix -u 1001
-
+# Production stage
+FROM node:18-alpine AS runner
 WORKDIR /app
 
-# Copiar package files
-COPY package*.json ./
-COPY next.config.js ./
+# Instalar apenas dependências essenciais
+RUN apk add --no-cache \
+    curl \
+    dumb-init && \
+    addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 kryonix
 
-# Instalar apenas dependências de produção
-RUN npm ci --only=production && npm cache clean --force || \
-    npm install --only=production && npm cache clean --force
-
-# Copiar arquivos buildados do stage anterior
-COPY --from=builder /app/.next ./.next
+# Copiar arquivos necessários
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
-# Copiar código da aplicação (verificar se existem antes de copiar)
+# Copiar scripts de aplicação
 COPY server.js ./
 COPY webhook-listener.js ./
 COPY kryonix-monitor.js ./
 COPY check-dependencies.js ./
-COPY validate-dependencies.js ./
-COPY fix-dependencies.js ./
-
-# Copiar webhook-deploy.sh apenas se existir
-COPY webhook-deploy.sh* ./
-
-# Copiar código da aplicação
-COPY app/ ./app/
-COPY lib/ ./lib/
-
-# Tornar scripts executáveis se existirem
-RUN [ -f "webhook-deploy.sh" ] && chmod +x webhook-deploy.sh || true
 
 # Configurar permissões
-RUN chown -R kryonix:nodejs /app && chmod -R 755 /app
-
+RUN chown -R kryonix:nodejs /app
 USER kryonix
 
-# Expor portas
-EXPOSE 8080 8082 8084
+# Expor porta
+EXPOSE 8080
 
-# Health check com mais tempo para Next.js inicializar
-HEALTHCHECK --interval=30s --timeout=15s --start-period=120s --retries=5 \
+# Health check otimizado
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
-# Comando de start com dumb-init
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+# Start otimizado
+ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "server.js"]

@@ -1,0 +1,87 @@
+services:
+  - type: web
+    name: kryonix-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8080
+      - key: FRONTEND_URL
+        value: https://kryonix-frontend.vercel.app
+      - key: ALLOWED_ORIGINS
+        value: https://kryonix-frontend.vercel.app,https://localhost:3000
+      - key: WEBHOOK_SECRET
+        generateValue: true
+    healthCheckPath: /health
+    regions:
+      - oregon
+    autoDeploy: true
+    branch: main
+    buildFilter:
+      paths:
+      - backend/**
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetCPUPercent: 70
+    disk:
+      sizeGB: 1
+      mountPath: /tmp
+    preDeployCommand: |
+      echo "Setting up KRYONIX Backend..."
+      mkdir -p logs
+      mkdir -p temp
+      chmod +x scripts/*.sh || true
+    
+  # Database (PostgreSQL)  
+  - type: pserv
+    name: kryonix-postgres
+    plan: free
+    databaseName: kryonix_platform
+    databaseUser: kryonix
+    region: oregon
+    
+  # Redis Cache
+  - type: redis
+    name: kryonix-redis
+    plan: free
+    region: oregon
+    
+databases:
+  - name: kryonix_platform
+    databaseName: kryonix_platform
+    user: kryonix
+    region: oregon
+    
+envVarGroups:
+  - name: kryonix-env
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: kryonix_platform
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: kryonix_platform
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: kryonix_platform
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: kryonix_platform
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: kryonix_platform
+          property: password
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: kryonix-redis
+          property: connectionString

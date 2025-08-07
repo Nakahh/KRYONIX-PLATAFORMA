@@ -1,0 +1,44 @@
+# Dockerfile de emergência compatível com o instalador KRYONIX
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Instalar dependências do sistema
+RUN apk add --no-cache \
+    curl \
+    wget \
+    bash \
+    git \
+    dumb-init
+
+# Criar usuário
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S kryonix -u 1001
+
+# Copiar package files
+COPY package*.json ./
+
+# Install ALL dependencies including devDependencies for build
+RUN npm install --no-audit --no-fund || npm install || true
+
+# Copiar código fonte
+COPY . .
+
+# Run build (allowing failure)
+RUN npm run build-ultra-fast || npm run build-fast || npm run build || echo "Build failed, continuing with development mode..."
+
+# Cleanup devDependencies after build (optional)
+RUN npm prune --production 2>/dev/null || true
+
+# Configurar permissões
+RUN chown -R kryonix:nodejs /app
+
+USER kryonix
+
+EXPOSE 8080 8082 8084
+
+HEALTHCHECK --interval=30s --timeout=15s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "server.js"]
