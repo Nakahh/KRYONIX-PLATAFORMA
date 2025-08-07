@@ -1,0 +1,52 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm ci",
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/pt-br",
+      "permanent": false
+    },
+    {
+      "source": "/home",
+      "destination": "/pt-br",
+      "permanent": true
+    },
+    {
+      "source": "/en/home",
+      "destination": "/en",
+      "permanent": true
+    },
+    {
+      "source": "/es/home", 
+      "destination": "/es",
+      "permanent": true
+    },
+    {
+      "source": "/de/home",
+      "destination": "/de", 
+      "permanent": true
+    },
+    {
+      "source": "/fr/home",
+      "destination": "/fr",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Content-Type-Options", 
+          "value": "nosniff"
+        }
+      ]
+    }
+  ]
+}
