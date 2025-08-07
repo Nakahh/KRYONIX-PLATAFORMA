@@ -29,10 +29,12 @@
     "validate-install": "node validate-dependencies.js",
     "validate-install-inline": "node -e \"const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8')); const deps = Object.keys(pkg.dependencies); console.log('���� Validando ' + deps.length + ' dependências...'); let installed = 0; deps.forEach(dep => { try { require.resolve(dep); installed++; } catch(e) { console.error('❌ Falta: ' + dep); } }); console.log('✅ Instaladas: ' + installed + '/' + deps.length); if (installed !== deps.length) process.exit(1);\"",
     "preinstall": "node -e \"console.log('��� KRYONIX - Preparando instalação...'); console.log('Node.js:', process.version); console.log('npm:', process.env.npm_version || 'unknown'); console.log('Platform:', process.platform); console.log('✅ Ambiente validado');\"",
-    "postinstall": "node -e \"try { require('./check-dependencies.js'); } catch(e) { console.log('⚠️ check-dependencies.js não encontrado, pulando verificação durante build'); }\"",
-    "prestart": "npm run check-deps",
+    "postinstall": "npm run health || echo 'Health check skipped during build'",
+    "prestart": "npm run health",
     "optimize": "node optimize-deps.js",
-    "fast-setup": "npm run optimize && npm run build-ultra-fast"
+    "fast-setup": "npm run optimize && npm run build-ultra-fast",
+    "deploy:vercel": "bash scripts/deploy-vercel.sh",
+    "deploy:render": "bash scripts/deploy-render.sh"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.6.1",
