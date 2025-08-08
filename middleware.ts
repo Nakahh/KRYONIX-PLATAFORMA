@@ -38,14 +38,24 @@ export function middleware(request: NextRequest) {
     pathname.includes('.') ||
     pathname.startsWith('/favicon') ||
     pathname.startsWith('/logo-') ||
-    pathname.startsWith('/site.webmanifest')
+    pathname.startsWith('/site.webmanifest') ||
+    // Allow Builder.io access
+    request.headers.get('host')?.includes('builder.io') ||
+    request.headers.get('referer')?.includes('builder.io')
   ) {
     return NextResponse.next();
   }
 
   // Handle root path redirect to default locale
+  // Allow Builder.io to access root page directly
   if (pathname === '/') {
-    return NextResponse.redirect(new URL('/pt-br', request.url));
+    const isBuilderRequest = request.headers.get('host')?.includes('builder.io') ||
+                           request.headers.get('referer')?.includes('builder.io') ||
+                           request.headers.get('user-agent')?.includes('builder');
+
+    if (!isBuilderRequest) {
+      return NextResponse.redirect(new URL('/pt-br', request.url));
+    }
   }
 
   // Handle admin authentication for dashboard routes only
