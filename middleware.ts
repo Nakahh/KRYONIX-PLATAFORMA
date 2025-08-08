@@ -1,8 +1,19 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Edge runtime declaration
-export const runtime = 'edge';
+// Edge runtime declaration for Next.js 14.2.31
+export const config = {
+  runtime: 'experimental-edge',
+  matcher: [
+    // Match all pathnames except for:
+    // - api routes
+    // - _next/static (static files)
+    // - _next/image (image optimization files)
+    // - favicon.ico, sitemap.xml, robots.txt (metadata files)
+    // - files with extensions
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)',
+  ],
+};
 
 // Consistent locales order with i18n config
 const locales = ['pt-br', 'en', 'es', 'de', 'fr'];
