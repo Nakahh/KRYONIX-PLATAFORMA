@@ -1,261 +1,34 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    background-color: white;
-    color: rgb(17 24 39);
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  html.dark body {
-    background-color: rgb(17 24 39);
-    color: rgb(243 244 246);
-  }
-
-  /* Prevent body scroll when modal is open */
-  body.modal-open {
-    overflow: hidden;
-  }
-
-  /* Modal animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  .animate-fadeIn {
-    animation: fadeIn 0.3s ease-out;
-  }
-
-  .animate-slideUp {
-    animation: slideUp 0.3s ease-out;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #000;
+  color: #fff;
 }
 
-@layer components {
-  .card {
-    @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-200;
-  }
-
-  .card-compact {
-    @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 transition-colors duration-200;
-  }
-
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-blue-500 dark:bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors duration-200;
-  }
-
-  .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-lg bg-white dark:bg-gray-800 px-6 py-3 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200;
-  }
-
-  .status-online {
-    @apply inline-flex h-2 w-2 rounded-full bg-green-400;
-  }
-
-  .badge-success {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300;
-  }
-
-  .badge-warning {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300;
-  }
-
-  .badge-info {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300;
-  }
-
-  .container-custom {
-    @apply container mx-auto px-4;
-  }
-
-  .gradient-text {
-    @apply bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent;
-  }
-
-  /* Transições suaves para modo escuro */
-  .card-transition {
-    @apply transition-all duration-300 ease-in-out;
-  }
-
-  .text-transition {
-    @apply transition-colors duration-300 ease-in-out;
-  }
+.gradient-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@layer utilities {
-  /* Advanced Loading Animations */
-  .animate-spin-slow {
-    animation: spin 4s linear infinite;
-  }
+.center {
+  text-align: center;
+}
 
-  .animate-spin-reverse {
-    animation: spin-reverse 3s linear infinite;
-  }
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
 
-  .animate-spin-elegant {
-    animation: spin-elegant 2s ease-in-out infinite;
-  }
+p {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
 
-  .animate-spin-elegant-reverse {
-    animation: spin-elegant-reverse 2s ease-in-out infinite;
-  }
-
-  .animate-circle-progress {
-    animation: circle-progress 1s ease-out forwards;
-  }
-
-  .animate-dot-rotation {
-    animation: dot-rotation 1s ease-out forwards;
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2s ease-in-out infinite;
-  }
-
-  .bg-gradient-conic {
-    background: conic-gradient(from 0deg, var(--tw-gradient-stops));
-  }
-
-  .bg-gradient-radial {
-    background: radial-gradient(circle, var(--tw-gradient-stops));
-  }
-
-  /* Keyframe Animations */
-  @keyframes spin-reverse {
-    from {
-      transform: rotate(360deg);
-    }
-    to {
-      transform: rotate(0deg);
-    }
-  }
-
-  @keyframes spin-elegant {
-    0% {
-      transform: rotate(0deg);
-      opacity: 0.8;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      transform: rotate(360deg);
-      opacity: 0.8;
-    }
-  }
-
-  @keyframes spin-elegant-reverse {
-    0% {
-      transform: rotate(0deg);
-      opacity: 0.6;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      transform: rotate(-360deg);
-      opacity: 0.6;
-    }
-  }
-
-  @keyframes circle-progress {
-    from {
-      stroke-dashoffset: 283;
-    }
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  @keyframes dot-rotation {
-    from {
-      transform: rotate(-90deg) translateX(96px) rotate(90deg);
-    }
-    to {
-      transform: rotate(270deg) translateX(96px) rotate(-270deg);
-    }
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px) translateX(0px);
-      opacity: 0.2;
-    }
-    25% {
-      transform: translateY(-20px) translateX(10px);
-      opacity: 0.4;
-    }
-    50% {
-      transform: translateY(-40px) translateX(-5px);
-      opacity: 0.6;
-    }
-    75% {
-      transform: translateY(-20px) translateX(-15px);
-      opacity: 0.4;
-    }
-  }
-
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    50% {
-      transform: translateX(0%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 0 30px rgba(59, 130, 246, 0.2);
-      filter: brightness(1);
-    }
-    50% {
-      box-shadow: 0 0 25px rgba(34, 197, 94, 0.6), 0 0 50px rgba(34, 197, 94, 0.3);
-      filter: brightness(1.2);
-    }
-  }
-
-  .animate-pulse-glow {
-    animation: pulse-glow 1.5s ease-in-out infinite;
-  }
-
-  .border-3 {
-    border-width: 3px;
-  }
+.success {
+  color: #00ff00;
+  font-weight: bold;
 }
