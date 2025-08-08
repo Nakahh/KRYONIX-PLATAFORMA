@@ -1,9 +1,10 @@
-// Handle next-intl plugin gracefully for edge runtime compatibility
+// Handle next-intl plugin gracefully for Builder.io compatibility
 let withNextIntl;
 try {
   withNextIntl = require('next-intl/plugin')('./lib/i18n.ts');
+  console.log('✅ next-intl plugin loaded successfully');
 } catch (error) {
-  console.warn('⚠️ next-intl/plugin not found, proceeding without plugin (edge runtime mode)');
+  console.warn('⚠️ next-intl/plugin not found, proceeding without plugin (Builder.io compatibility mode)');
   withNextIntl = (config) => config;
 }
 
@@ -23,25 +24,43 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
-  // Otimizado para planos gratuitos Vercel + Render
-  output: 'standalone',
+  // Builder.io compatibility - keep output flexible
+  output: process.env.NODE_ENV === 'production' ? 'standalone' : undefined,
   compress: true,
   poweredByHeader: false,
-  // Webpack config simplificado para evitar travamentos
+  // Simplified webpack config for Builder.io compatibility
   webpack: (config, { isServer, dev }) => {
-    // Apenas em produção, evitar problemas em dev
+    // Only in production builds
     if (isServer && !dev) {
       config.externals = config.externals || [];
       config.externals.push('jspdf', 'jspdf-autotable');
     }
 
-    // Resolver conflitos de módulos
+    // Resolve module conflicts
     config.resolve.alias = {
       ...config.resolve.alias,
       'negotiator': require.resolve('negotiator')
     };
 
     return config;
+  },
+  // Allow Builder.io iframe embedding
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'ALLOWALL'
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self' *.builder.io *.vercel.app"
+          }
+        ],
+      },
+    ];
   },
 }
 
