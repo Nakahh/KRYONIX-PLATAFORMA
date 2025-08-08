@@ -2,10 +2,11 @@ services:
   - type: web
     name: kryonix-backend
     runtime: node
-    plan: starter
+    plan: free
     region: oregon
-    buildCommand: cd backend && npm ci && npm run build-fast 2>/dev/null || npm ci
-    startCommand: cd backend && npm run production
+    buildCommand: npm ci && npm run build-fast
+    startCommand: npm run production
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
@@ -16,21 +17,16 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: WEBHOOK_SECRET
-        value: Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
+        generateValue: true
       - key: FRONTEND_URL
         value: https://kryonix-platform.vercel.app
-      - key: ALLOWED_ORIGINS
-        value: https://kryonix-platform.vercel.app,https://*.vercel.app
-    healthCheckPath: /health
-    autoDeploy: true
-    
-  - type: redis
-    name: kryonix-redis
-    plan: starter
-    region: oregon
-    
-databases:
-  - name: kryonix-postgres
-    databaseName: kryonix_platform
-    plan: starter
-    region: oregon
+      - key: DATABASE_URL
+        sync: false  # Configure manually with Neon Database URL
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=1024"
+    disk:
+      name: kryonix-data
+      mountPath: /app/data
+      sizeGB: 1
