@@ -4,7 +4,7 @@
   "description": "Plataforma SaaS KRYONIX - 100% Autônoma por IA",
   "main": "server.js",
   "scripts": {
-    "dev": "NODE_ENV=development node server.js",
+    "dev": "next dev -p 3000",
     "build": "NODE_OPTIONS='--max-old-space-size=8192' next build",
     "build-fast": "NODE_OPTIONS='--max-old-space-size=4096' NEXT_TELEMETRY_DISABLED=1 NODE_ENV=production next build",
     "build-ultra-fast": "node build-ultra-fast.js",
