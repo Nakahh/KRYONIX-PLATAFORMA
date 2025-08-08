@@ -1,25 +1,33 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Simplified locales for edge runtime
-const locales = ['pt-br', 'en', 'es', 'fr', 'de'];
+// Edge runtime declaration
+export const runtime = 'edge';
 
-// Create optimized internationalization middleware for edge runtime
+// Consistent locales order with i18n config
+const locales = ['pt-br', 'en', 'es', 'de', 'fr'];
+
+// Edge-optimized internationalization middleware
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale: 'pt-br',
-  localePrefix: 'always'
+  localePrefix: 'always',
+  alternateLinks: false, // Disable for edge performance
+  localeDetection: true
 });
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Skip processing for static files and API routes
+  // Skip processing for static files, API routes, and assets
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/static') ||
-    pathname.includes('.')
+    pathname.includes('.') ||
+    pathname.startsWith('/favicon') ||
+    pathname.startsWith('/logo-') ||
+    pathname.startsWith('/site.webmanifest')
   ) {
     return NextResponse.next();
   }
@@ -47,16 +55,14 @@ export function middleware(request: NextRequest) {
   }
 
   // Handle legacy Portuguese routes - redirect to localized versions
-  if (pathname === '/fila-de-espera') {
-    return NextResponse.redirect(new URL('/pt-br/waitlist', request.url));
-  }
+  const legacyRoutes = {
+    '/fila-de-espera': '/pt-br/waitlist',
+    '/progresso': '/pt-br/progress',
+    '/parcerias-empresariais-contato': '/pt-br/partnerships-contact'
+  };
 
-  if (pathname === '/progresso') {
-    return NextResponse.redirect(new URL('/pt-br/progress', request.url));
-  }
-
-  if (pathname === '/parcerias-empresariais-contato') {
-    return NextResponse.redirect(new URL('/pt-br/partnerships-contact', request.url));
+  if (legacyRoutes[pathname]) {
+    return NextResponse.redirect(new URL(legacyRoutes[pathname], request.url));
   }
 
   // For non-dashboard routes, apply internationalization
@@ -69,6 +75,12 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next|static|api|favicon.ico|logo-kryonix.png|site.webmanifest).*)',
+    // Match all pathnames except for:
+    // - api routes
+    // - _next/static (static files)
+    // - _next/image (image optimization files)
+    // - favicon.ico, sitemap.xml, robots.txt (metadata files)
+    // - files with extensions
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)',
   ],
 };
