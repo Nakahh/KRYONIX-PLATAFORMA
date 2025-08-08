@@ -74,10 +74,10 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <Image
-              src="/logo-kryonix.svg"
+              src="/logo kryonix.png"
               alt="KRYONIX Logo"
-              width={60}
-              height={60}
+              width={80}
+              height={80}
               className="rounded-xl"
             />
           </div>
