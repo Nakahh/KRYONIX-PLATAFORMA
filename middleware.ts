@@ -1,8 +1,10 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { locales } from './lib/i18n';
 
-// Create the internationalization middleware
+// Simplified locales for edge runtime
+const locales = ['pt-br', 'en', 'es', 'fr', 'de'];
+
+// Create optimized internationalization middleware for edge runtime
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale: 'pt-br',
