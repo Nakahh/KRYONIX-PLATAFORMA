@@ -2,31 +2,48 @@ services:
   - type: web
     name: kryonix-backend
     runtime: node
-    plan: free
+    plan: starter
     region: oregon
-    buildCommand: npm ci && npm run build-fast
-    startCommand: npm run production
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 8080
-      - key: HOSTNAME
-        value: 0.0.0.0
+        value: 5000
       - key: JWT_SECRET
         generateValue: true
       - key: WEBHOOK_SECRET
         generateValue: true
-      - key: FRONTEND_URL
-        value: https://kryonix-platform.vercel.app
-      - key: DATABASE_URL
-        sync: false  # Configure manually with Neon Database URL
-      - key: NEXT_TELEMETRY_DISABLED
-        value: "1"
-      - key: NODE_OPTIONS
-        value: "--max-old-space-size=1024"
-    disk:
-      name: kryonix-data
-      mountPath: /app/data
-      sizeGB: 1
+    autoDeploy: true
+    repo: https://github.com/vitorfernandes-kryonix/kryonix-plataforma
+    branch: main
+    rootDir: ./
+    
+  - type: postgres
+    name: kryonix-database
+    plan: starter
+    databaseName: kryonix_production
+    user: kryonix_admin
+    region: oregon
+    
+databases:
+  - name: kryonix-database
+    databaseName: kryonix_production
+    user: kryonix_admin
+
+# Environment Variables Template for Render
+# Set these in your Render dashboard:
+#
+# Required:
+# - DATABASE_URL (automatically set by Render for PostgreSQL)
+# - JWT_SECRET (generate a secure random string)
+# - WEBHOOK_SECRET (generate a secure random string)
+#
+# Optional:
+# - FRONTEND_URL=https://kryonix-plataforma.vercel.app
+# - CORS_ORIGIN=https://kryonix-plataforma.vercel.app,https://www.kryonix.com.br
+# - LOG_LEVEL=info
+# - RATE_LIMIT_WINDOW_MS=900000
+# - RATE_LIMIT_MAX_REQUESTS=100
