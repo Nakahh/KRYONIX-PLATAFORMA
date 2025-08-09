@@ -1,0 +1,51 @@
+{
+  "pages": [
+    {
+      "path": "/pt-br",
+      "title": "Home - KRYONIX",
+      "description": "Plataforma SaaS 100% Autônoma por IA"
+    },
+    {
+      "path": "/pt-br/progresso",
+      "title": "Progresso do Desenvolvimento - KRYONIX",
+      "description": "Acompanhe o desenvolvimento das 53 partes do projeto"
+    },
+    {
+      "path": "/pt-br/parcerias-empresariais-contato",
+      "title": "Parcerias Empresariais - KRYONIX",
+      "description": "Oportunidades de parceria com ROI de até 452%"
+    },
+    {
+      "path": "/en",
+      "title": "Home - KRYONIX English",
+      "description": "100% Autonomous SaaS Platform powered by AI"
+    },
+    {
+      "path": "/en/progresso",
+      "title": "Development Progress - KRYONIX",
+      "description": "Track the development of 53 project parts"
+    },
+    {
+      "path": "/en/parcerias-empresariais-contato",
+      "title": "Business Partnerships - KRYONIX",
+      "description": "Partnership opportunities with ROI up to 452%"
+    },
+    {
+      "path": "/es",
+      "title": "Inicio - KRYONIX Español",
+      "description": "Plataforma SaaS 100% Autónoma por IA"
+    },
+    {
+      "path": "/de",
+      "title": "Startseite - KRYONIX Deutsch",
+      "description": "100% Autonome SaaS-Plattform mit KI"
+    },
+    {
+      "path": "/fr",
+      "title": "Accueil - KRYONIX Français",
+      "description": "Plateforme SaaS 100% Autonome par IA"
+    }
+  ],
+  "version": "1.0.0",
+  "updated": "2025-01-27T10:00:00Z"
+}
