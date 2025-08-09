@@ -1,3 +1,18 @@
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Progresso do Desenvolvimento - KRYONIX',
+  description: 'Acompanhe o progresso detalhado das 53 partes do desenvolvimento da plataforma KRYONIX',
+  keywords: ['progresso', 'desenvolvimento', 'kryonix', 'saas', 'plataforma', 'automação'],
+  openGraph: {
+    title: 'Progresso KRYONIX - 53 Partes em Desenvolvimento',
+    description: 'Veja o status detalhado de cada módulo da plataforma SaaS mais avançada do Brasil',
+    url: 'https://www.kryonix.com.br/pt-br/progresso',
+    type: 'website',
+    images: ['/logo-kryonix.png']
+  }
+}
+
 'use client'
 
 import { useState, useEffect } from 'react'
