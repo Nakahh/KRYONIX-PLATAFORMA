@@ -1,24 +1,23 @@
-import { redirect } from 'next/navigation'
-import { headers } from 'next/headers'
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function RootPage() {
-  // Get the accept-language header to determine user's preferred language
-  const headersList = headers()
-  const acceptLanguage = headersList.get('accept-language') || ''
-  
-  // Simple language detection - defaults to pt-br for Brazilian users
-  let locale = 'pt-br'
-  
-  if (acceptLanguage.includes('en')) {
-    locale = 'en'
-  } else if (acceptLanguage.includes('es')) {
-    locale = 'es'
-  } else if (acceptLanguage.includes('de')) {
-    locale = 'de'
-  } else if (acceptLanguage.includes('fr')) {
-    locale = 'fr'
-  }
-  
-  // Redirect to the appropriate locale
-  redirect(`/${locale}`)
+  const router = useRouter()
+
+  useEffect(() => {
+    // Simple client-side redirect to default locale
+    const locale = 'pt-br' // Default to Portuguese
+    router.replace(`/${locale}`)
+  }, [router])
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-300">Carregando KRYONIX...</p>
+      </div>
+    </div>
+  )
 }
