@@ -1,3 +1,18 @@
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Parcerias Empresariais - KRYONIX',
+  description: 'Oportunidades de parceria com ROI de até 452% em 3 anos. Junte-se aos investidores da KRYONIX',
+  keywords: ['parcerias', 'investimento', 'roi', 'negócios', 'kryonix', 'lucro'],
+  openGraph: {
+    title: 'Parcerias KRYONIX - ROI 452% em 3 anos',
+    description: 'Descubra oportunidades exclusivas de parceria na plataforma SaaS mais inovadora',
+    url: 'https://www.kryonix.com.br/pt-br/parcerias-empresariais-contato',
+    type: 'website',
+    images: ['/logo-kryonix.png']
+  }
+}
+
 'use client'
 
 import { useState, useEffect } from 'react'
