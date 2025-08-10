@@ -47,7 +47,6 @@ const nextConfig = {
   },
   // Optimize for Builder.io
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['lucide-react']
   },
   // Ensure all dynamic routes are statically generated
