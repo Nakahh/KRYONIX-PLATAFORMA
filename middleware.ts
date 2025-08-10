@@ -4,11 +4,12 @@ import { locales } from './i18n/request';
 export default createMiddleware({
   locales,
   defaultLocale: 'pt-br',
-  localePrefix: 'always',
-  // Configuração para Builder.io
-  alternateLinks: false
+  localePrefix: 'always'
 });
 
 export const config = {
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)', '/.well-known/builder-pages.json']
+  matcher: [
+    // Incluir todas as rotas exceto API, static files, etc
+    '/((?!api|_next|_vercel|.*\\..*).*)'
+  ]
 };
