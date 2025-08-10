@@ -1,6 +1,10 @@
 import { Metadata } from 'next'
 import BuilderIOStatus from '../../components/BuilderIOStatus'
 
+// Força geração estática para Builder.io
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export const metadata: Metadata = {
   title: 'Teste Builder.io - KRYONIX',
   description: 'Página de teste para verificar visibilidade no Builder.io',
