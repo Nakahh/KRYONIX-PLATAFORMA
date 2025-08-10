@@ -9,12 +9,14 @@
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_API_URL": "https://kryonix-backend.onrender.com"
+      "NEXT_PUBLIC_API_URL": "https://kryonix-backend.onrender.com",
+      "NODE_ENV": "production"
     }
   },
   "functions": {
     "app/api/**": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs20.x",
+      "maxDuration": 30
     }
   },
   "rewrites": [
@@ -33,11 +35,15 @@
         },
         {
           "key": "X-Frame-Options", 
-          "value": "DENY"
+          "value": "ALLOWALL"
         },
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
+        },
+        {
+          "key": "X-Builder-Discoverable",
+          "value": "true"
         }
       ]
     }
