@@ -1,82 +1,121 @@
 {
   "version": 2,
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "installCommand": "npm ci",
-  "outputDirectory": ".next",
+  "name": "kryonix-plataforma",
+  "alias": ["kryonix-plataforma.vercel.app", "www.kryonix.com.br"],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next@latest",
+      "config": {
+        "outputDirectory": ".next"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://kryonix-backend.onrender.com",
-    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "NODE_ENV": "production",
     "NEXT_TELEMETRY_DISABLED": "1"
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_API_URL": "https://kryonix-backend.onrender.com",
-      "NODE_OPTIONS": "--max-old-space-size=4096",
-      "NEXT_TELEMETRY_DISABLED": "1"
+      "NODE_ENV": "production",
+      "NODE_OPTIONS": "--max-old-space-size=8192"
     }
   },
   "functions": {
-    "app/api/**": {
-      "runtime": "nodejs18.x",
+    "app/api/**/*.ts": {
       "maxDuration": 30
     }
   },
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/pt-br",
-      "permanent": false
-    },
-    {
-      "source": "/home",
-      "destination": "/pt-br",
-      "permanent": true
-    },
-    {
-      "source": "/en/home",
-      "destination": "/en",
-      "permanent": true
-    },
-    {
-      "source": "/es/home", 
-      "destination": "/es",
-      "permanent": true
-    },
-    {
-      "source": "/de/home",
-      "destination": "/de", 
-      "permanent": true
-    },
-    {
-      "source": "/fr/home",
-      "destination": "/fr",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://kryonix-backend.onrender.com/api/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         {
           "key": "X-Frame-Options",
-          "value": "SAMEORIGIN"
+          "value": "ALLOWALL"
         },
         {
-          "key": "X-Content-Type-Options", 
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'self' *.builder.io *.vercel.app builder.io; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app *.builder.io builder.io; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' *.render.com *.vercel.app *.builder.io builder.io vitals.vercel-analytics.com; object-src 'none';"
+        },
+        {
+          "key": "X-Content-Type-Options",
           "value": "nosniff"
         },
         {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
+          "key": "Referrer-Policy",
+          "value": "origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "X-Builder-Discoverable",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/builder-pages.json",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
         }
       ]
     }
-  ]
+  ],
+  "redirects": [
+    {
+      "source": "/home",
+      "destination": "/pt-br",
+      "permanent": true
+    },
+    {
+      "source": "/inicio",
+      "destination": "/pt-br",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/backend/(.*)",
+      "destination": "https://kryonix-backend.onrender.com/api/$1"
+    }
+  ],
+  "github": {
+    "silent": true
+  }
 }

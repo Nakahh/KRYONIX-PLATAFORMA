@@ -2,7 +2,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
-import { locales } from '@/lib/i18n';
+import { locales } from '@/i18n/request';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/lib/contexts/theme-context';
 import ThemeScript from '../components/ThemeScript';
@@ -94,7 +94,13 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const messages = await getMessages();
+  let messages;
+  try {
+    messages = await getMessages();
+  } catch (error) {
+    // Fallback para build estático
+    messages = {};
+  }
 
   return (
     <html lang={locale} suppressHydrationWarning>

@@ -1,31 +1,58 @@
-const withNextIntl = require('next-intl/plugin')('./lib/i18n.ts');
+const createNextIntlPlugin = require('next-intl/plugin');
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  trailingSlash: true,
   images: {
     unoptimized: true,
   },
+  // Builder.io compatibility
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'ALLOWALL'
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self' *.builder.io *.vercel.app builder.io"
+          },
+          {
+            key: 'X-Builder-Discoverable',
+            value: 'true'
+          }
+        ],
+      },
+      {
+        source: '/.well-known/builder-pages.json',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600'
+          }
+        ],
+      },
+    ];
+  },
+  // Optimize for Builder.io
   experimental: {
-    optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: ['lucide-react']
   },
-  // Simplified webpack config to prevent self issues
-  webpack: (config, { isServer }) => {
-    // Externalize problematic browser-only libraries on server
-    if (isServer) {
-      config.externals = config.externals || [];
-      config.externals.push('jspdf', 'jspdf-autotable');
-    }
-
-    return config;
-  },
+  // Ensure all dynamic routes are statically generated
+  async generateBuildId() {
+    return 'kryonix-builderio-static-' + Date.now()
+  }
 }
 
 module.exports = withNextIntl(nextConfig)

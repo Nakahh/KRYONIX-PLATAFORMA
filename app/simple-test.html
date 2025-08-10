@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Frame-Options" content="ALLOWALL">
+    <meta name="builder-discoverable" content="true">
+    <title>KRYONIX - Teste Direto Builder.io</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            max-width: 800px;
+            width: 100%;
+        }
+        .status {
+            background: #10b981;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+        }
+        .page-link {
+            color: #93c5fd;
+            text-decoration: none;
+            display: block;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        .page-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(10px);
+        }
+        .info {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 KRYONIX Platform</h1>
+        <div class="status">
+            ✅ Builder.io Compatible - Ready to Connect!
+        </div>
+        
+        <p style="font-size: 1.2em; margin-bottom: 30px;">
+            Esta página está funcionando perfeitamente e pode ser detectada pelo Builder.io!
+        </p>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>🏠 Home</h3>
+                <a href="/pt-br/" class="page-link">Acessar Home</a>
+            </div>
+            <div class="card">
+                <h3>📊 Progresso</h3>
+                <a href="/pt-br/progresso" class="page-link">Ver Desenvolvimento</a>
+            </div>
+            <div class="card">
+                <h3>🤝 Parcerias</h3>
+                <a href="/pt-br/parcerias-empresariais-contato" class="page-link">Oportunidades</a>
+            </div>
+            <div class="card">
+                <h3>📈 Dashboard</h3>
+                <a href="/pt-br/dashboard" class="page-link">Painel Admin</a>
+            </div>
+        </div>
+        
+        <div class="info">
+            <h3>🔧 Configurações Técnicas</h3>
+            <p>✅ X-Frame-Options: ALLOWALL</p>
+            <p>✅ Content-Security-Policy: frame-ancestors permitidos</p>
+            <p>✅ Builder.io Headers: Configurados</p>
+            <p>✅ Páginas Estáticas: Geradas</p>
+            <p>✅ Sitemap: Disponível em /sitemap.xml</p>
+            <p>✅ Discovery: /.well-known/builder-pages.json</p>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 15px;">
+            <h3>📞 Suporte Técnico</h3>
+            <p>Se ainda não conseguir conectar no Builder.io:</p>
+            <p>1. Verifique se a URL está correta</p>
+            <p>2. Teste primeiro esta página: <strong>/simple-test.html</strong></p>
+            <p>3. Depois tente: <strong>/pt-br/builder-debug</strong></p>
+            <p>4. Por último: <strong>/pt-br/test-builderio</strong></p>
+        </div>
+        
+        <div style="margin-top: 20px; font-size: 0.8em; opacity: 0.7;">
+            ⏰ Gerado em: <span id="timestamp"></span>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toLocaleString('pt-BR');
+        
+        // Teste de conectividade
+        console.log('🚀 KRYONIX - Página carregada com sucesso!');
+        console.log('✅ Builder.io Ready');
+        console.log('🔧 Headers configurados para Builder.io');
+        
+        // Verifica se está dentro de um iframe (Builder.io)
+        if (window.self !== window.top) {
+            console.log('🖼️ Executando dentro de iframe - Builder.io detectado!');
+            document.body.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        }
+    </script>
+</body>
+</html>

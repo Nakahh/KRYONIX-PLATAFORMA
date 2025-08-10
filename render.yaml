@@ -4,33 +4,46 @@ services:
     runtime: node
     plan: starter
     region: oregon
-    buildCommand: cd backend && npm ci && npm run build-fast 2>/dev/null || npm ci
-    startCommand: cd backend && npm run production
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 8080
-      - key: HOSTNAME
-        value: 0.0.0.0
+        value: 5000
       - key: JWT_SECRET
         generateValue: true
       - key: WEBHOOK_SECRET
-        value: Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8
-      - key: FRONTEND_URL
-        value: https://kryonix-platform.vercel.app
-      - key: ALLOWED_ORIGINS
-        value: https://kryonix-platform.vercel.app,https://*.vercel.app
-    healthCheckPath: /health
+        generateValue: true
     autoDeploy: true
+    repo: https://github.com/vitorfernandes-kryonix/kryonix-plataforma
+    branch: main
+    rootDir: ./
     
-  - type: redis
-    name: kryonix-redis
+  - type: postgres
+    name: kryonix-database
     plan: starter
+    databaseName: kryonix_production
+    user: kryonix_admin
     region: oregon
     
 databases:
-  - name: kryonix-postgres
-    databaseName: kryonix_platform
-    plan: starter
-    region: oregon
+  - name: kryonix-database
+    databaseName: kryonix_production
+    user: kryonix_admin
+
+# Environment Variables Template for Render
+# Set these in your Render dashboard:
+#
+# Required:
+# - DATABASE_URL (automatically set by Render for PostgreSQL)
+# - JWT_SECRET (generate a secure random string)
+# - WEBHOOK_SECRET (generate a secure random string)
+#
+# Optional:
+# - FRONTEND_URL=https://kryonix-plataforma.vercel.app
+# - CORS_ORIGIN=https://kryonix-plataforma.vercel.app,https://www.kryonix.com.br
+# - LOG_LEVEL=info
+# - RATE_LIMIT_WINDOW_MS=900000
+# - RATE_LIMIT_MAX_REQUESTS=100

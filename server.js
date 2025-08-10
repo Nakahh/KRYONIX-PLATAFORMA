@@ -30,24 +30,171 @@ const handle = nextApp.getRequestHandler();
 // Initialize Express app
 const expressApp = express();
 
-// Security middleware
+// Security middleware otimizado para produção
+const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = !isProduction;
+
+// Configuração de CSP otimizada
+const cspConfig = {
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: [
+      "'self'",
+      "'unsafe-inline'", // Next.js precisa para hydration
+      "'unsafe-eval'",   // Next.js dev mode
+      ...(isDevelopment ? ["'unsafe-eval'"] : []),
+      "https://vercel.live", // Vercel analytics
+      "https://vitals.vercel-analytics.com"
+    ],
+    styleSrc: [
+      "'self'",
+      "'unsafe-inline'", // Tailwind CSS inline styles
+      "https://fonts.googleapis.com"
+    ],
+    imgSrc: [
+      "'self'",
+      "data:",
+      "https:", // Permitir todas as imagens HTTPS
+      "blob:"   // Para uploads de imagem
+    ],
+    fontSrc: [
+      "'self'",
+      "https://fonts.gstatic.com",
+      "data:"
+    ],
+    connectSrc: [
+      "'self'",
+      "https://vitals.vercel-analytics.com",
+      ...(isDevelopment ? ["ws://localhost:*", "http://localhost:*"] : []),
+      "wss:",  // WebSockets
+      "https:" // APIs externas
+    ],
+    frameSrc: ["'self'"],
+    objectSrc: ["'none'"],
+    upgradeInsecureRequests: isProduction ? [] : null
+  }
+};
+
 expressApp.use(helmet({
-  contentSecurityPolicy: false,
-  crossOriginEmbedderPolicy: false
+  contentSecurityPolicy: isProduction ? cspConfig : false,
+  crossOriginEmbedderPolicy: false, // Next.js incompatibilidade
+  hsts: isProduction ? {
+    maxAge: 63072000, // 2 anos
+    includeSubDomains: true,
+    preload: true
+  } : false,
+  referrerPolicy: {
+    policy: "strict-origin-when-cross-origin"
+  },
+  xssFilter: true,
+  noSniff: true,
+  frameguard: {
+    action: 'deny'
+  },
+  hidePoweredBy: true
 }));
 
-// CORS middleware
+// CORS middleware otimizado
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ||
+  (isProduction
+    ? ['https://kryonix.com.br', 'https://kryonix-platform.vercel.app']
+    : ['http://localhost:3000', 'http://localhost:8080', 'http://localhost:3001']
+  );
+
+// Configuração CORS dinâmica e segura
 expressApp.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:8080', 'https://kryonix.com.br'],
-  credentials: true
+  origin: function (origin, callback) {
+    // Permitir requests sem origin (Postman, mobile apps)
+    if (!origin && !isProduction) return callback(null, true);
+
+    // Verificar se origin está na lista permitida
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`❌ CORS blocked origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'X-CSRF-Token'
+  ],
+  exposedHeaders: ['X-Total-Count', 'X-Rate-Limit-Remaining'],
+  maxAge: isProduction ? 86400 : 0, // Cache preflight 24h em produção
+  optionsSuccessStatus: 200 // Para IE11
 }));
 
-// Body parsing middleware
-expressApp.use(bodyParser.json({ limit: '10mb' }));
-expressApp.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+// Body parsing middleware com segurança
+expressApp.use(bodyParser.json({
+  limit: isProduction ? '5mb' : '10mb', // Menor em produção
+  strict: true,
+  type: 'application/json'
+}));
+expressApp.use(bodyParser.urlencoded({
+  extended: true,
+  limit: isProduction ? '5mb' : '10mb',
+  parameterLimit: 1000 // Prevenir DoS
+}));
+
+// Rate limiting para produção
+if (isProduction) {
+  const rateLimit = require('express-rate-limit');
+
+  const generalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 1000, // máximo 1000 requests por IP
+    message: {
+      error: 'Too many requests from this IP',
+      retryAfter: '15 minutes'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  const strictLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 50, // máximo 50 requests por IP para endpoints sensíveis
+    message: {
+      error: 'Too many requests to sensitive endpoint',
+      retryAfter: '15 minutes'
+    }
+  });
+
+  expressApp.use('/api/', generalLimiter);
+  expressApp.use('/api/auth/', strictLimiter);
+  expressApp.use('/api/github-webhook', strictLimiter);
+}
+
+// Headers de segurança personalizados
+expressApp.use((req, res, next) => {
+  // Headers de segurança adicionais
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Download-Options', 'noopen');
+  res.setHeader('X-DNS-Prefetch-Control', 'off');
+  res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+
+  if (isProduction) {
+    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  }
+
+  // Headers para desenvolvimento
+  if (isDevelopment) {
+    res.setHeader('X-Environment', 'development');
+  }
+
+  next();
+});
 
 // Logging middleware
-expressApp.use(morgan('combined'));
+expressApp.use(morgan(isProduction ? 'combined' : 'dev'));
 
 // Fast health check endpoint
 expressApp.get('/health', (req, res) => {
@@ -85,7 +232,11 @@ expressApp.get('/api/status', (req, res) => {
 // Webhook do GitHub configurado automaticamente pelo instalador KRYONIX
 const crypto = require('crypto');
 const { exec } = require('child_process');
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
+// Validar variáveis de ambiente críticas
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+if (!WEBHOOK_SECRET) {
+  console.warn('⚠️ WEBHOOK_SECRET não configurado - webhook GitHub desabilitado');
+}
 const DEPLOY_SCRIPT = path.join(__dirname, 'webhook-deploy.sh');
 
 // Função para verificar assinatura do GitHub
@@ -117,13 +268,15 @@ expressApp.post('/api/github-webhook', (req, res) => {
         auto_update: true
     });
 
-    // Verificar assinatura se configurada
-    if (WEBHOOK_SECRET && signature) {
-        if (!verifyGitHubSignature(payload, signature)) {
-            console.log('❌ Assinatura inválida do webhook');
-            return res.status(401).json({ error: 'Invalid signature' });
+    // Verificar assinatura - obrigatória se WEBHOOK_SECRET estiver configurado
+    if (WEBHOOK_SECRET) {
+        if (!signature || !verifyGitHubSignature(payload, signature)) {
+            console.log('❌ Webhook rejeitado - assinatura inválida ou ausente');
+            return res.status(401).json({ error: 'Invalid or missing signature' });
         }
         console.log('✅ Assinatura do webhook verificada');
+    } else {
+        console.log('⚠️ Webhook aceito sem verificação - WEBHOOK_SECRET não configurado');
     }
 
     // Processar apenas push events na main/master

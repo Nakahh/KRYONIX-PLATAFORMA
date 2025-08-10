@@ -5,7 +5,11 @@ const app = express();
 const PORT = process.env.PORT || 8082;
 
 // Configurações
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'Kr7$n0x-V1t0r-2025-#Jwt$3cr3t-P0w3rfu1-K3y-A9b2Cd8eF4g6H1j5K9m3N7p2Q5t8';
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+if (!WEBHOOK_SECRET) {
+    console.error('❌ WEBHOOK_SECRET é obrigatório para webhook listener');
+    process.exit(1);
+}
 
 app.use(express.json());
 
@@ -56,14 +60,12 @@ app.post('/webhook', (req, res) => {
         signature: signature ? 'PRESENT' : 'NONE'
     });
 
-    // Verificar assinatura se configurada
-    if (WEBHOOK_SECRET && signature) {
-        if (!verifyGitHubSignature(payload, signature)) {
-            console.log('❌ Assinatura inválida do webhook');
-            return res.status(401).json({ error: 'Invalid signature' });
-        }
-        console.log('✅ Assinatura do webhook verificada');
+    // Verificar assinatura - sempre obrigatória
+    if (!signature || !verifyGitHubSignature(payload, signature)) {
+        console.log('❌ Webhook rejeitado - assinatura inválida ou ausente');
+        return res.status(401).json({ error: 'Invalid or missing signature' });
     }
+    console.log('✅ Assinatura do webhook verificada');
     
     // Processar apenas push events na main/master
     const isValidEvent = !event || event === 'push';
