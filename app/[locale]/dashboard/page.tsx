@@ -4,8 +4,16 @@ import { ArrowLeft, BarChart3, Users, Settings, Calendar } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Dashboard - KRYONIX',
-  description: 'Painel administrativo da plataforma KRYONIX',
-  robots: 'noindex, follow'
+  description: 'Painel administrativo da plataforma KRYONIX - Monitore progresso, usuários e módulos',
+  keywords: ['dashboard', 'admin', 'painel', 'kryonix', 'monitoramento'],
+  robots: 'noindex, follow',
+  openGraph: {
+    title: 'Dashboard KRYONIX - Painel Administrativo',
+    description: 'Gerencie sua plataforma SaaS com dashboard completo e intuitivo',
+    url: 'https://www.kryonix.com.br/pt-br/dashboard',
+    type: 'website',
+    images: ['/logo-kryonix.png']
+  }
 }
 
 export default function DashboardPage() {
