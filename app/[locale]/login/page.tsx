@@ -2,6 +2,10 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Lock, User, Eye, EyeOff } from 'lucide-react'
 
+// Força geração estática para Builder.io
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export const metadata: Metadata = {
   title: 'Login - KRYONIX',
   description: 'Acesse sua conta na plataforma KRYONIX - Sistema de autenticação seguro',
