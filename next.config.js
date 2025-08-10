@@ -44,12 +44,19 @@ const nextConfig = {
       },
     ];
   },
+  // Force static generation for all pages
+  output: 'export',
+  trailingSlash: true,
   // Generate static params for all locale pages
   generateStaticParams: true,
   // Optimize for Builder.io
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['lucide-react']
+  },
+  // Ensure all dynamic routes are statically generated
+  async generateBuildId() {
+    return 'kryonix-builderio-static-' + Date.now()
   }
 }
 
