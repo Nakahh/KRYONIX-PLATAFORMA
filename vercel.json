@@ -2,21 +2,10 @@
   "version": 2,
   "name": "kryonix-plataforma",
   "alias": ["kryonix-plataforma.vercel.app", "www.kryonix.com.br"],
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next@latest",
-      "config": {
-        "outputDirectory": ".next"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
   "env": {
     "NODE_ENV": "production",
     "NEXT_TELEMETRY_DISABLED": "1"
@@ -29,6 +18,7 @@
   },
   "functions": {
     "app/api/**/*.ts": {
+      "runtime": "nodejs20.x",
       "maxDuration": 30
     }
   },
