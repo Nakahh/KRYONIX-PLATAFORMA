@@ -1,5 +1,9 @@
 import { Metadata } from 'next'
 
+// Força geração estática para Builder.io
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export const metadata: Metadata = {
   title: 'Progresso do Desenvolvimento - KRYONIX',
   description: 'Acompanhe o progresso detalhado das 53 partes do desenvolvimento da plataforma KRYONIX',
