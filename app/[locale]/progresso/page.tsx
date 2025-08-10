@@ -1,8 +1,6 @@
-import { Metadata } from 'next'
+'use client'
 
-// Força geração estática para Builder.io
-export const dynamic = 'force-static';
-export const revalidate = false;
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Progresso do Desenvolvimento - KRYONIX',
@@ -16,8 +14,6 @@ export const metadata: Metadata = {
     images: ['/logo-kryonix.png']
   }
 }
-
-'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
