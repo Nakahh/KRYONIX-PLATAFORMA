@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/partnerships-contact',
     '/dashboard',
     '/login',
+    '/fila-de-espera',
     '/test-builderio'
   ]
   
