@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import BuilderIOStatus from '../../components/BuilderIOStatus'
 
-// Força geração estática para Builder.io
 export const dynamic = 'force-static';
 export const revalidate = false;
 
