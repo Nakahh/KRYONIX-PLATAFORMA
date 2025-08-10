@@ -42,7 +42,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "frame-ancestors 'self' *.builder.io *.vercel.app; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app *.builder.io; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' *.render.com *.vercel.app vitals.vercel-analytics.com; object-src 'none';"
+          "value": "frame-ancestors 'self' *.builder.io *.vercel.app builder.io; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app *.builder.io builder.io; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' *.render.com *.vercel.app *.builder.io builder.io vitals.vercel-analytics.com; object-src 'none';"
         },
         {
           "key": "X-Content-Type-Options",
@@ -55,6 +55,27 @@
         {
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "X-Builder-Discoverable",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/builder-pages.json",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
         }
       ]
     },
