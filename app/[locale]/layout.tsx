@@ -94,7 +94,13 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const messages = await getMessages();
+  let messages;
+  try {
+    messages = await getMessages();
+  } catch (error) {
+    // Fallback para build estático
+    messages = {};
+  }
 
   return (
     <html lang={locale} suppressHydrationWarning>
