@@ -67,6 +67,33 @@ export default function TestBuilderIOPage() {
               </ul>
             </div>
             
+            <div className="grid md:grid-cols-2 gap-6 mt-6">
+              <BuilderIOStatus className="col-span-1" />
+
+              <div className="bg-gray-50 dark:bg-gray-900/20 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-300 mb-3">
+                  🔗 Links Diretos
+                </h3>
+                <div className="space-y-2 text-sm">
+                  <a href="/pt-br" className="block text-blue-600 hover:text-blue-800 dark:text-blue-400">
+                    → Home (pt-br)
+                  </a>
+                  <a href="/pt-br/progresso" className="block text-blue-600 hover:text-blue-800 dark:text-blue-400">
+                    → Progresso
+                  </a>
+                  <a href="/pt-br/parcerias-empresariais-contato" className="block text-blue-600 hover:text-blue-800 dark:text-blue-400">
+                    → Parcerias
+                  </a>
+                  <a href="/sitemap.xml" target="_blank" className="block text-green-600 hover:text-green-800 dark:text-green-400">
+                    → Sitemap.xml
+                  </a>
+                  <a href="/.well-known/builder-pages.json" target="_blank" className="block text-purple-600 hover:text-purple-800 dark:text-purple-400">
+                    → Builder Pages JSON
+                  </a>
+                </div>
+              </div>
+            </div>
+
             <div className="text-center pt-6">
               <div className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full font-medium">
                 <span>🚀</span>
