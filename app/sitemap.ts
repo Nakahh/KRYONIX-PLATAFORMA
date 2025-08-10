@@ -10,7 +10,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/progresso',
     '/parcerias-empresariais-contato',
     '/partnerships',
-    '/partnerships-contact'
+    '/partnerships-contact',
+    '/dashboard',
+    '/login',
+    '/test-builderio'
   ]
   
   const sitemap: MetadataRoute.Sitemap = []
