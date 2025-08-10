@@ -1,8 +1,7 @@
-// Força geração estática para Builder.io
+import { Metadata } from 'next'
+
 export const dynamic = 'force-static';
 export const revalidate = false;
-
-import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Builder.io Debug - KRYONIX',
