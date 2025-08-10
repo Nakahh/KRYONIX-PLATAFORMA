@@ -3,49 +3,90 @@
     {
       "path": "/pt-br",
       "title": "Home - KRYONIX",
-      "description": "Plataforma SaaS 100% Autônoma por IA"
+      "description": "Plataforma SaaS 100% Autônoma por IA",
+      "discoverable": true
     },
     {
       "path": "/pt-br/progresso",
       "title": "Progresso do Desenvolvimento - KRYONIX",
-      "description": "Acompanhe o desenvolvimento das 53 partes do projeto"
+      "description": "Acompanhe o desenvolvimento das 53 partes do projeto",
+      "discoverable": true
     },
     {
       "path": "/pt-br/parcerias-empresariais-contato",
       "title": "Parcerias Empresariais - KRYONIX",
-      "description": "Oportunidades de parceria com ROI de até 452%"
+      "description": "Oportunidades de parceria com ROI de até 452%",
+      "discoverable": true
+    },
+    {
+      "path": "/pt-br/dashboard",
+      "title": "Dashboard - KRYONIX",
+      "description": "Painel administrativo da plataforma",
+      "discoverable": true
+    },
+    {
+      "path": "/pt-br/login",
+      "title": "Login - KRYONIX",
+      "description": "Acesse sua conta na plataforma",
+      "discoverable": true
+    },
+    {
+      "path": "/pt-br/test-builderio",
+      "title": "Teste Builder.io - KRYONIX",
+      "description": "Página de teste para verificar visibilidade",
+      "discoverable": true
     },
     {
       "path": "/en",
       "title": "Home - KRYONIX English",
-      "description": "100% Autonomous SaaS Platform powered by AI"
+      "description": "100% Autonomous SaaS Platform powered by AI",
+      "discoverable": true
     },
     {
       "path": "/en/progresso",
       "title": "Development Progress - KRYONIX",
-      "description": "Track the development of 53 project parts"
+      "description": "Track the development of 53 project parts",
+      "discoverable": true
     },
     {
       "path": "/en/parcerias-empresariais-contato",
       "title": "Business Partnerships - KRYONIX",
-      "description": "Partnership opportunities with ROI up to 452%"
+      "description": "Partnership opportunities with ROI up to 452%",
+      "discoverable": true
+    },
+    {
+      "path": "/en/dashboard",
+      "title": "Dashboard - KRYONIX",
+      "description": "Platform administrative panel",
+      "discoverable": true
+    },
+    {
+      "path": "/en/login",
+      "title": "Login - KRYONIX",
+      "description": "Access your platform account",
+      "discoverable": true
     },
     {
       "path": "/es",
       "title": "Inicio - KRYONIX Español",
-      "description": "Plataforma SaaS 100% Autónoma por IA"
+      "description": "Plataforma SaaS 100% Autónoma por IA",
+      "discoverable": true
     },
     {
       "path": "/de",
       "title": "Startseite - KRYONIX Deutsch",
-      "description": "100% Autonome SaaS-Plattform mit KI"
+      "description": "100% Autonome SaaS-Plattform mit KI",
+      "discoverable": true
     },
     {
       "path": "/fr",
       "title": "Accueil - KRYONIX Français",
-      "description": "Plateforme SaaS 100% Autonome par IA"
+      "description": "Plateforme SaaS 100% Autonome par IA",
+      "discoverable": true
     }
   ],
-  "version": "1.0.0",
-  "updated": "2025-01-27T10:00:00Z"
+  "builderIOCompatible": true,
+  "staticGeneration": true,
+  "version": "2.0.0",
+  "updated": "2025-01-27T12:00:00Z"
 }
