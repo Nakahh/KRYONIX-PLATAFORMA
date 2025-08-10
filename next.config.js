@@ -44,8 +44,6 @@ const nextConfig = {
       },
     ];
   },
-  // Generate static params for all locale pages
-  generateStaticParams: true,
   // Optimize for Builder.io
   experimental: {
     optimizeCss: true,
