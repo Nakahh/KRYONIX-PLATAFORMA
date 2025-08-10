@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import BuilderIOStatus from '../../components/BuilderIOStatus'
 
 export const metadata: Metadata = {
   title: 'Teste Builder.io - KRYONIX',
