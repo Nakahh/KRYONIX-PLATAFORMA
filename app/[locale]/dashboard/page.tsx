@@ -2,6 +2,10 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, BarChart3, Users, Settings, Calendar } from 'lucide-react'
 
+// Força geração estática para Builder.io
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export const metadata: Metadata = {
   title: 'Dashboard - KRYONIX',
   description: 'Painel administrativo da plataforma KRYONIX - Monitore progresso, usuários e módulos',
