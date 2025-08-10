@@ -1,3 +1,7 @@
+// Força geração estática para Builder.io
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 'use client'
 
 import { useState, useEffect } from 'react'
