@@ -4,8 +4,16 @@ import { ArrowLeft, Lock, User, Eye, EyeOff } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Login - KRYONIX',
-  description: 'Acesse sua conta na plataforma KRYONIX',
-  robots: 'noindex, follow'
+  description: 'Acesse sua conta na plataforma KRYONIX - Sistema de autenticação seguro',
+  keywords: ['login', 'acesso', 'conta', 'kryonix', 'autenticação'],
+  robots: 'noindex, follow',
+  openGraph: {
+    title: 'Login KRYONIX - Acesse sua Conta',
+    description: 'Entre na plataforma SaaS mais avançada do Brasil',
+    url: 'https://www.kryonix.com.br/pt-br/login',
+    type: 'website',
+    images: ['/logo-kryonix.png']
+  }
 }
 
 export default function LoginPage() {
