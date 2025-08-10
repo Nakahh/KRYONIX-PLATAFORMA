@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Users, Sparkles, CheckCircle, MessageCircle } from 'lucide-react'
 
-// Força geração estática para Builder.io
 export const dynamic = 'force-static';
 export const revalidate = false;
 
