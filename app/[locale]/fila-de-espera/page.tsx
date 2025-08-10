@@ -2,6 +2,10 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Users, Sparkles, CheckCircle, MessageCircle } from 'lucide-react'
 
+// Força geração estática para Builder.io
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export const metadata: Metadata = {
   title: 'Fila de Espera - KRYONIX',
   description: 'Entre na fila de espera da KRYONIX e seja um dos primeiros a acessar a plataforma',
