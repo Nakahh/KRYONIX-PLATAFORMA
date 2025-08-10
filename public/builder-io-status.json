@@ -1,0 +1,80 @@
+{
+  "status": "ready",
+  "version": "3.0.0",
+  "timestamp": "2025-01-27T12:30:00Z",
+  "platform": "KRYONIX",
+  "builderIOCompatible": true,
+  "pages": {
+    "total": 7,
+    "discoverable": [
+      {
+        "path": "/pt-br",
+        "component": "HomePage",
+        "status": "ready",
+        "metadata": true,
+        "responsive": true
+      },
+      {
+        "path": "/pt-br/progresso",
+        "component": "ProgressPage",
+        "status": "ready",
+        "metadata": true,
+        "responsive": true
+      },
+      {
+        "path": "/pt-br/parcerias-empresariais-contato",
+        "component": "PartnershipsPage",
+        "status": "ready",
+        "metadata": true,
+        "responsive": true
+      },
+      {
+        "path": "/pt-br/dashboard",
+        "component": "DashboardPage",
+        "status": "ready",
+        "metadata": true,
+        "responsive": true
+      },
+      {
+        "path": "/pt-br/login",
+        "component": "LoginPage",
+        "status": "ready",
+        "metadata": true,
+        "responsive": true
+      },
+      {
+        "path": "/pt-br/fila-de-espera",
+        "component": "FilaEsperaPage",
+        "status": "ready",
+        "metadata": true,
+        "responsive": true
+      },
+      {
+        "path": "/pt-br/test-builderio",
+        "component": "TestBuilderIOPage",
+        "status": "ready",
+        "metadata": true,
+        "responsive": true
+      }
+    ]
+  },
+  "locales": {
+    "supported": ["pt-br", "en", "es", "de", "fr"],
+    "default": "pt-br",
+    "routing": "always"
+  },
+  "configuration": {
+    "staticGeneration": true,
+    "headers": {
+      "xFrameOptions": "ALLOWALL",
+      "csp": "frame-ancestors 'self' *.builder.io *.vercel.app builder.io",
+      "discoverable": "true"
+    },
+    "sitemap": "https://www.kryonix.com.br/sitemap.xml",
+    "robots": "https://www.kryonix.com.br/robots.txt"
+  },
+  "agents": {
+    "completed": 15,
+    "status": "all_systems_operational"
+  }
+}
