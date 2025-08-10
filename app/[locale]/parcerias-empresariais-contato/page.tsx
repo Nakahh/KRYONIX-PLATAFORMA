@@ -1,8 +1,6 @@
-import { Metadata } from 'next'
+'use client'
 
-// Força geração estática para Builder.io
-export const dynamic = 'force-static';
-export const revalidate = false;
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Parcerias Empresariais - KRYONIX',
@@ -62,7 +60,7 @@ const partnershipTypes: PartnershipType[] = [
     subtitle: 'Hospedagem e Servidores',
     description: 'Fornecimento de infraestrutura para hospedar a plataforma KRYONIX em troca de participação nos lucros.',
     benefits: [
-      'Participação de 20% nos lucros líquidos',
+      'Participa��ão de 20% nos lucros líquidos',
       'Branding conjunto em todos os materiais',
       'Prioridade em upgrades de infraestrutura',
       'Suporte técnico dedicado 24/7',
