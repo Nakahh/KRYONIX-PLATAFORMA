@@ -1,5 +1,9 @@
 import { Metadata } from 'next'
 
+// Força geração estática para Builder.io
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export const metadata: Metadata = {
   title: 'Parcerias Empresariais - KRYONIX',
   description: 'Oportunidades de parceria com ROI de até 452% em 3 anos. Junte-se aos investidores da KRYONIX',
