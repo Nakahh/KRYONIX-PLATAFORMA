@@ -44,9 +44,6 @@ const nextConfig = {
       },
     ];
   },
-  // Force static generation for all pages
-  output: 'export',
-  trailingSlash: true,
   // Generate static params for all locale pages
   generateStaticParams: true,
   // Optimize for Builder.io
