@@ -11,7 +11,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com/)
 [![AI Powered](https://img.shields.io/badge/AI-Powered-FF6B6B?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/)
 
-**Plataforma SaaS Multi-Tenant Enterprise com 32 Stacks Integrados e Orquestração Autônoma por IA**
+**Plataforma SaaS Multi-Tenant Enterprise com 75+ Stacks Integrados e Orquestração Autônoma por IA**
 
 *Mobile-First • 100% Português • Totalmente Automatizada*
 
@@ -491,7 +491,7 @@ Monitoring:
 
 ## 🚀 Instalação
 
-### 📋 **Pré-requisitos**
+### ��� **Pré-requisitos**
 
 ```bash
 # Versões mínimas necessárias
