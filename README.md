@@ -4,51 +4,69 @@
 
 ![KRYONIX Logo](./Marca-KRYONIX%20(Branding)/logo%20kryonix.png)
 
-[![Next.js](https://img.shields.io/badge/Next.js-14.2.3-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org/)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com/)
-[![AI Powered](https://img.shields.io/badge/AI-Powered-FF6B6B?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/)
-[![Stacks](https://img.shields.io/badge/Stacks-75+-FF6B00?style=for-the-badge&logo=stackoverflow&logoColor=white)](#-tecnologias)
-[![Enterprise](https://img.shields.io/badge/Enterprise-Ready-00C851?style=for-the-badge&logo=enterprise&logoColor=white)](#-segurança)
+[![CI](https://github.com/nakahh/kryonix-plataforma/actions/workflows/ci.yml/badge.svg)](https://github.com/nakahh/kryonix-plataforma/actions)
+[![Release](https://img.shields.io/github/v/release/nakahh/kryonix-plataforma?style=flat-square)](https://github.com/nakahh/kryonix-plataforma/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
+[![Stacks](https://img.shields.io/badge/Pilhas%20Tecnológicas-75+-FF6B00?style=flat-square&logo=stackoverflow&logoColor=white)](#-tecnologias)
+[![AI Powered](https://img.shields.io/badge/IA%20Autônoma-Deepseek%20V2%20326B-FF6B6B?style=flat-square&logo=openai&logoColor=white)](#-inteligência-artificial)
+[![Enterprise](https://img.shields.io/badge/Enterprise-Pronto-00C851?style=flat-square&logo=enterprise&logoColor=white)](#-segurança)
 
-**Plataforma SaaS Multi-Tenant Enterprise com 75+ Stacks Integrados e Orquestração Autônoma por IA**
+**Plataforma SaaS Multitenant Enterprise com 75+ Pilhas Tecnológicas e Orquestração Autônoma por IA**
 
 *Mobile-First • 100% Português • 15 Agentes IA • Totalmente Automatizada*
 
-[🌐 Demo ao Vivo](https://kryonix.com.br) • [📖 Documentação](./Documentação/) • [🎯 Roadmap](./roadmap-kryonix-completo.md) • [🚀 Deploy](#-deploy)
+**Olá! 👋 Bem-vindo(a) à KRYONIX — a plataforma SaaS pensada para o Brasil 🇧🇷**
+
+A KRYONIX reúne dezenas de tecnologias em uma solução única para empresas que querem automatizar processos, atender clientes pelo canal favorito (WhatsApp), e escalar com segurança e economia. Oferecemos provisionamento automático, monitoramento 24/7 e integração nativa com meios de pagamento locais (PIX).
+
+[🌐 Demo ao Vivo](https://kryonix.com.br) • [📖 Documentação](./Documentação/) • [🎯 Roadmap](./roadmap-kryonix-completo.md) • [🚀 Deploy](#-deploy) • [☕ Agendar Demo](mailto:demo@kryonix.com.br)
 
 ---
 
-**Desenvolvido por [Vitor Jayme Fernandes Ferreira](#-sobre-o-criador) - CEO & Founder KRYONIX**
+**Desenvolvido por [Vitor Jayme Fernandes Ferreira](#-sobre-o-criador) - CEO & Fundador KRYONIX**
 
 </div>
+
+## ⚡ Início Rápido
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/nakahh/kryonix-plataforma.git
+cd kryonix-plataforma
+
+# 2. Configure o ambiente
+cp .env.example .env
+npm install
+
+# 3. Inicie o desenvolvimento (modo frontend)
+npm run dev
+
+# 4. Ou inicie o stack completo (Docker necessário)
+make dev-full-stack
+```
 
 ## 📋 Índice
 
 - [🎯 Visão Geral](#-visão-geral)
 - [✨ Características Principais](#-características-principais)
-- [🏗️ Arquitetura](#-arquitetura)
-- [🛠️ Tecnologias (75+ Stacks)](#-tecnologias)
+- [🏗️ Arquitetura Enterprise](#-arquitetura-enterprise)
+- [🛠️ Tecnologias (75+ Pilhas)](#-tecnologias)
 - [📦 Módulos SaaS](#-módulos-saas)
 - [🤖 Inteligência Artificial](#-inteligência-artificial)
+- [💻 Requisitos de Servidor](#-requisitos-de-servidor)
 - [🚀 Instalação](#-instalação)
 - [⚙️ Configuração](#-configuração)
 - [🔧 Deploy](#-deploy)
-- [📱 Desenvolvimento](#-desenvolvimento)
-- [🧪 Testes](#-testes)
 - [📊 Monitoramento](#-monitoramento)
 - [🔐 Segurança](#-segurança)
-- [🌍 Internacionalização](#-internacionalização)
-- [📈 Performance](#-performance)
+- [🇧🇷 Para Empresas Brasileiras](#-para-empresas-brasileiras)
 - [🤝 Contribuição](#-contribuição)
 - [📄 Licença](#-licença)
 - [👨‍💼 Sobre o Criador](#-sobre-o-criador)
 
 ## 🎯 Visão Geral
 
-**KRYONIX** é uma plataforma SaaS revolucionária que combina **75+ stacks tecnológicos** em perfeita harmonia, orquestrados autonomamente por **Inteligência Artificial**. Desenvolvida com foco mobile-first, a plataforma oferece **9 módulos SaaS** completos em uma única solução multi-tenant enterprise.
+**KRYONIX** é uma plataforma SaaS revolucionária que combina **75+ pilhas tecnológicas** em perfeita harmonia, orquestrados autonomamente por **Inteligência Artificial**. Desenvolvida com foco mobile-first, a plataforma oferece **9 módulos SaaS** completos em uma única solução multitenant enterprise.
 
 ### 🎯 Missão
 Democratizar o acesso a soluções SaaS enterprise através de uma plataforma 100% autônoma, inteligente e adaptada ao mercado brasileiro.
@@ -65,12 +83,20 @@ Ser a plataforma SaaS mais avançada e acessível do Brasil, impulsionando a tra
 ## ✨ Características Principais
 
 ### 🚀 **Tecnologia de Ponta**
-- **75+ Stacks Integrados** funcionando em harmonia perfeita
+- **75+ Pilhas Tecnológicas Integradas** funcionando em harmonia perfeita
 - **15 Agentes IA Especializados** trabalhando 24/7
-- **Orquestração por IA** com auto-healing e otimização contínua
-- **Arquitetura Multi-Tenant** com isolamento completo de dados
-- **Mobile-First Design** otimizado para 80% de usuários mobile
-- **Edge Computing** com CDN global
+- **Modelo Deepseek V2 (326B parâmetros)** para IA de última geração
+- **Orquestração por IA** com auto-recuperação e otimização contínua
+- **Arquitetura Multitenant** com isolamento completo de dados
+- **Design Mobile-First** otimizado para 80% de usuários mobile
+- **Computação de Borda (Edge)** com CDN global
+
+### 🇧🇷 **Benefícios para Empresas Brasileiras**
+- **Pagamentos locais**: integração com PIX, boleto e cartões — cobranças e provisionamento em segundos 💸
+- **Comunicação por WhatsApp nativo**: envio de confirmações, credenciais e alertas diretamente pelo canal preferido dos clientes 📲
+- **LGPD nativo**: ferramentas para anonimização, consentimento e gerenciamento de dados pessoais 🔐
+- **Planos e suporte pensados para PMEs**: comece pequeno e cresça conforme precisar — suporte em português e horários no fuso de Brasília 🕘
+- **Automação por IA que reduz retrabalho**: desde scoring de leads até recuperação de carrinho abandonado 🤖
 
 ### 🎯 **Módulos SaaS Completos**
 - **💡 Intelligence & BI**: Analytics e inteligência comercial
@@ -84,89 +110,89 @@ Ser a plataforma SaaS mais avançada e acessível do Brasil, impulsionando a tra
 - **🎨 Whitelabel**: Plataforma completamente personalizável
 
 ### 🤖 **IA Autônoma**
-- **Auto-provisioning** de novos tenants multi-cloud
+- **Provisionamento automático** de novos tenants multi-cloud
 - **Monitoramento 24/7** de todas as 75+ tecnologias
 - **Otimização automática** de performance e recursos
-- **Auto-scaling** baseado em ML predictivo
-- **Self-healing** com disaster recovery automático
+- **Dimensionamento automático** baseado em ML preditivo
+- **Auto-recuperação** com disaster recovery automático
 - **Análise preditiva** de problemas antes que aconteçam
 
 ### 🔒 **Segurança Enterprise**
-- **Keycloak SSO** com MFA obrigatório
-- **Vault** para gerenciamento de secrets
+- **Keycloak SSO** com autenticação multifator obrigatória
+- **Vault** para gerenciamento de segredos
 - **Compliance LGPD/GDPR/SOC2/ISO27001**
 - **Auditoria completa** de todas as ações
 - **Criptografia AES-256** end-to-end
 - **WAF + DDoS Protection** com Cloudflare
 - **Penetration Testing** mensal automatizado
 
-## 🏗️ Arquitetura
+## 🏗️ Arquitetura Enterprise
 
 ### 📐 **Visão Geral da Arquitetura Enterprise**
 
 ```mermaid
 graph TB
-    subgraph "🎨 Frontend Layer"
-        A[Next.js 14 App] --> B[React 18 Components]
-        B --> C[Tailwind UI + PWA]
-        C --> D[Mobile Apps - Capacitor]
+    subgraph "🎨 Camada Frontend"
+        A[Next.js 14 App] --> B[Componentes React 18]
+        B --> C[UI Tailwind + PWA]
+        C --> D[Apps Mobile - Capacitor]
         D --> E[React Native]
     end
     
-    subgraph "🌐 API Gateway & CDN"
-        F[Cloudflare CDN] --> G[Traefik Proxy]
-        G --> H[Kong API Gateway]
-        H --> I[HAProxy LoadBalancer]
+    subgraph "🌐 Gateway API & CDN"
+        F[CDN Cloudflare] --> G[Proxy Traefik]
+        G --> H[Gateway API Kong]
+        H --> I[Balanceador HAProxy]
         I --> J[Rate Limiting + WAF]
     end
     
-    subgraph "⚙️ Backend Services"
-        K[Express APIs] --> L[9 Módulos SaaS]
+    subgraph "⚙️ Serviços Backend"
+        K[APIs Express] --> L[9 Módulos SaaS]
         L --> M[SDK Unificado]
-        M --> N[Webhook System]
+        M --> N[Sistema Webhook]
         N --> O[RabbitMQ + BullMQ]
     end
     
-    subgraph "🤖 AI & ML Layer"
-        P[Ollama LLM Local] --> Q[Dify Platform]
-        Q --> R[LangFlow Workflows]
-        R --> S[15 IA Agents]
+    subgraph "🤖 Camada IA & ML"
+        P[Ollama LLM Local] --> Q[Plataforma Dify]
+        Q --> R[Workflows LangFlow]
+        R --> S[15 Agentes IA]
         S --> T[TensorFlow/PyTorch]
-        T --> U[Langfuse Observability]
+        T --> U[Observabilidade Langfuse]
         U --> V[MLflow + Jupyter]
     end
     
-    subgraph "🗄️ Data & Storage Layer"
-        W[PostgreSQL 15] --> X[Multi-Tenant DBs]
-        X --> Y[TimescaleDB Time-series]
+    subgraph "🗄️ Camada Dados & Armazenamento"
+        W[PostgreSQL 15] --> X[BDs Multitenant]
+        X --> Y[TimescaleDB Séries-Temporais]
         Y --> Z[ClickHouse Analytics]
-        Z --> AA[Redis Cache + Pub/Sub]
-        AA --> BB[MinIO/S3 Storage]
-        BB --> CC[Elasticsearch Search]
+        Z --> AA[Cache Redis + Pub/Sub]
+        AA --> BB[Storage MinIO/S3]
+        BB --> CC[Busca Elasticsearch]
     end
     
-    subgraph "📊 Monitoring & Observability"
-        DD[Prometheus] --> EE[Grafana Dashboards]
-        EE --> FF[Jaeger Tracing]
-        FF --> GG[ELK Stack]
-        GG --> HH[Sentry Error Tracking]
+    subgraph "📊 Monitoramento & Observabilidade"
+        DD[Prometheus] --> EE[Dashboards Grafana]
+        EE --> FF[Rastreamento Jaeger]
+        FF --> GG[Stack ELK]
+        GG --> HH[Rastreamento Erros Sentry]
         HH --> II[Uptime Kuma]
         II --> JJ[AlertManager]
     end
     
-    subgraph "🔐 Security & Identity"
-        KK[Keycloak SSO] --> LL[Vault Secrets]
-        LL --> MM[Fail2Ban Protection]
-        MM --> NN[ModSecurity WAF]
-        NN --> OO[Cilium Network Security]
-        OO --> PP[OWASP ZAP Testing]
+    subgraph "🔐 Segurança & Identidade"
+        KK[SSO Keycloak] --> LL[Segredos Vault]
+        LL --> MM[Proteção Fail2Ban]
+        MM --> NN[WAF ModSecurity]
+        NN --> OO[Segurança Rede Cilium]
+        OO --> PP[Testes OWASP ZAP]
     end
     
-    subgraph "🚢 Container Orchestration"
+    subgraph "🚢 Orquestração Containers"
         QQ[Docker] --> RR[Kubernetes]
-        RR --> SS[Helm Charts]
-        SS --> TT[ArgoCD GitOps]
-        TT --> UU[Portainer Management]
+        RR --> SS[Charts Helm]
+        SS --> TT[GitOps ArgoCD]
+        TT --> UU[Gerenciamento Portainer]
     end
     
     A --> F
@@ -179,228 +205,155 @@ graph TB
     K --> QQ
 ```
 
-### 🏢 **Arquitetura Multi-Tenant Enterprise**
+### 🏢 **Arquitetura Multitenant Enterprise**
 
 ```yaml
-Multi-Tenancy Strategy:
-  Database_Isolation: 
-    - "Schema-per-tenant com DB central de controle"
-    - "PostgreSQL 15 + TimescaleDB para time-series"
+Estratégia_Multitenant:
+  Isolamento_BD: 
+    - "Schema-por-tenant com BD central de controle"
+    - "PostgreSQL 15 + TimescaleDB para séries-temporais"
     - "ClickHouse para analytics separado por tenant"
-    - "Redis namespacing por tenant ID"
+    - "Redis namespacing por ID do tenant"
   
-  Storage_Isolation:
-    - "MinIO buckets isolados por tenant"
-    - "S3 cross-region replication"
+  Isolamento_Storage:
+    - "Buckets MinIO isolados por tenant"
+    - "Replicação S3 cross-region"
     - "Backup criptografado AES-256"
-    - "CDN assets por domínio customizado"
+    - "Assets CDN por domínio customizado"
   
-  Authentication_&_Security:
-    - "Keycloak realms isolados por tenant"
-    - "MFA obrigatório para admins"
-    - "JWT tokens com context tenant"
+  Autenticação_e_Segurança:
+    - "Realms Keycloak isolados por tenant"
+    - "Autenticação multifator obrigatória para admins"
+    - "Tokens JWT com contexto tenant"
     - "Rate limiting por tenant"
-    - "WAF rules personalizadas"
+    - "Regras WAF personalizadas"
   
-  Network_Isolation:
-    - "Kubernetes namespaces separados"
+  Isolamento_Rede:
+    - "Namespaces Kubernetes separados"
     - "Service mesh com Cilium"
-    - "Ingress rules por tenant"
-    - "Network policies isoladas"
+    - "Regras Ingress por tenant"
+    - "Políticas de rede isoladas"
   
-Auto-Provisioning_AI:
-  Trigger: 
+Provisionamento_Automático_IA:
+  Gatilhos: 
     - "Pagamento aprovado (Stripe/PIX)"
     - "Aprovação manual admin"
     - "API programática"
     
-  IA_Actions:
-    - "🤖 AI analisa requirements do tenant"
-    - "🗄️ Criação automática de infra (DB, buckets, namespaces)"
+  Ações_IA:
+    - "🤖 IA analisa requirements do tenant"
+    - "🗄️ Criação automática de infra (BD, buckets, namespaces)"
     - "⚙️ Deploy personalizado dos módulos"
-    - "🔐 Configuração Keycloak + realm + usuarios"
+    - "🔐 Configuração Keycloak + realm + usuários"
     - "📧 Setup SMTP personalizado"
     - "📱 Configuração WhatsApp Evolution API"
     - "📊 Dashboards Grafana personalizados"
     - "🎨 Aplicação de branding whitelabel"
     - "✅ Testes automatizados de saúde"
     - "📱 Envio de credenciais via WhatsApp/Email"
-    - "📈 Monitoring contínuo do tenant"
+    - "📈 Monitoramento contínuo do tenant"
+```
+
+### 🎯 **Padrões de Alta Disponibilidade**
+
+```yaml
+Alta_Disponibilidade:
+  infraestrutura_multi_az: "Cada cluster Kubernetes com nós em pelo menos 2 zonas"
+  redundancia_ativa: "HAProxy/Traefik, Kong e Cloudflare"
+  banco_dados:
+    - "PostgreSQL: replicação síncrona/assíncrona"
+    - "Redis: cluster com réplicas e Sentinel"
+    - "ClickHouse: clusters replicados"
+  sla_alvo: "99.95% (padrão) — 99.99% (Enterprise)"
+  
+Disaster_Recovery:
+  rto: "< 15 minutos (crítico), < 1 hora (padrão)"
+  rpo: "< 1 minuto (crítico), < 1 hora (padrão)"
+  estrategia: "Backup 3-2-1 + replicação cross-region"
+  testes: "DR drills trimestrais automatizados"
+  
+Dimensionamento:
+  horizontal: "HPA com métricas customizadas"
+  vertical: "VPA para workloads stateful"
+  cluster: "Cluster Autoscaler automático"
+  partitioning: "Sharding por tenant para grandes cargas"
 ```
 
 ## 🛠️ Tecnologias
 
-### 🎯 **75+ Stacks Tecnológicos Integrados**
+### 🎯 **75+ Pilhas Tecnológicas Integradas**
 
 A KRYONIX é a plataforma SaaS com maior número de tecnologias integradas nativamente no Brasil, combinando o que há de mais moderno em cada categoria.
 
-#### 🚀 **Infraestrutura & Containers (15 Stacks)**
-| Stack | Versão | Função | Port | IA Integration |
-|-------|--------|--------|------|----------------|
-| **Traefik** | Latest | Proxy Reverso + SSL | 80/443 | ✅ Auto SSL & Routing |
-| **Kong** | Latest | API Gateway Enterprise | 8000/8443 | ✅ API Management |
-| **HAProxy** | Latest | Load Balancer Enterprise | 80/443 | ✅ Smart Load Balancing |
-| **Nginx** | Latest | Web Server & Cache | 80/443 | ✅ Performance Optimization |
-| **Cloudflare** | Pro+ | CDN, WAF, DDoS Protection | - | ✅ Global Edge Network |
-| **Docker** | Latest | Containerização | - | ✅ Resource Management |
-| **Kubernetes** | Latest | Container Orchestration | - | ✅ Auto-scaling |
-| **Portainer** | Latest | Container Management | 9443 | ✅ Visual Management |
-| **Docker Swarm** | Latest | Container Clustering | - | ✅ Swarm Orchestration |
-| **Helm** | Latest | K8s Package Manager | - | ✅ Chart Management |
-| **ArgoCD** | Latest | GitOps Deployment | 8080 | ✅ Continuous Deployment |
-| **Consul** | Latest | Service Discovery | 8500 | ✅ Service Mesh |
-| **Fail2Ban** | Latest | Intrusion Prevention | - | ✅ Auto Security |
-| **ModSecurity** | Latest | Web Application Firewall | - | ✅ Attack Prevention |
-| **Cilium** | Latest | Network Security | - | ✅ Network Policies |
+<details><summary>🚀 <strong>Infraestrutura & Containers (15 pilhas)</strong></summary>
 
-#### 🗄️ **Databases & Storage (8 Stacks)**
-| Stack | Versão | Função | Port | Especialidade |
+| Pilha | Versão | Função | Porta | Integração IA |
 |-------|--------|--------|------|---------------|
-| **PostgreSQL** | 15 | Database Principal | 5432 | 🗄️ ACID Transactions |
-| **TimescaleDB** | Latest | Time-series Extension | 5432 | ⏰ IoT & Metrics |
-| **ClickHouse** | Latest | Analytics Database | 9000 | 📊 OLAP Analytics |
-| **Redis** | 7 | Cache & Pub/Sub | 6379 | ⚡ In-memory Store |
-| **MinIO** | Latest | Object Storage S3 | 9000/9001 | 📦 File Storage |
-| **Elasticsearch** | Latest | Search & Analytics | 9200 | 🔎 Full-text Search |
-| **Vector Database** | Latest | AI Embeddings | - | 🧠 Semantic Search |
-| **Supabase** | Latest | Managed Postgres | - | ☁️ Database as Service |
+| **Traefik** | Latest | Proxy Reverso + SSL | 80/443 | ✅ SSL e Roteamento Automático |
+| **Kong** | Latest | Gateway API Enterprise | 8000/8443 | ✅ Gerenciamento de API |
+| **HAProxy** | Latest | Balanceador Enterprise | 80/443 | ✅ Balanceamento Inteligente |
+| **Nginx** | Latest | Servidor Web & Cache | 80/443 | ✅ Otimização de Performance |
+| **Cloudflare** | Pro+ | CDN, WAF, Proteção DDoS | - | ✅ Rede Global de Borda |
+| **Docker** | Latest | Containerização | - | ✅ Gerenciamento de Recursos |
+| **Kubernetes** | Latest | Orquestração de Containers | - | ✅ Dimensionamento Automático |
+| **Portainer** | Latest | Gerenciamento de Containers | 9443 | ✅ Gerenciamento Visual |
+| **Docker Swarm** | Latest | Clustering de Containers | - | ✅ Orquestração Swarm |
+| **Helm** | Latest | Gerenciador de Pacotes K8s | - | ✅ Gerenciamento de Charts |
+| **ArgoCD** | Latest | Deploy GitOps | 8080 | ✅ Deploy Contínuo |
+| **Consul** | Latest | Descoberta de Serviços | 8500 | ��� Service Mesh |
+| **Fail2Ban** | Latest | Prevenção de Intrusão | - | ✅ Segurança Automática |
+| **ModSecurity** | Latest | Firewall de Aplicação Web | - | ✅ Prevenção de Ataques |
+| **Cilium** | Latest | Segurança de Rede | - | ✅ Políticas de Rede |
 
-#### 🤖 **Inteligência Artificial & ML (18 Stacks)**
-| Stack | Versão | Função | Port | Especialidade |
+</details>
+
+<details><summary>🗄️ <strong>Bancos de Dados & Armazenamento (8 pilhas)</strong></summary>
+
+| Pilha | Versão | Função | Porta | Especialidade |
 |-------|--------|--------|------|---------------|
-| **Ollama** | Latest | Local LLM Engine | 11434 | 🧠 Private AI Models |
-| **Dify** | Latest | Conversational AI Platform | 3000 | 💬 AI Orchestration |
-| **LangFlow** | Latest | Visual AI Workflows | 7860 | 🔄 Drag & Drop AI |
-| **Langfuse** | Latest | AI Observability | 3000 | 📊 LLM Monitoring |
-| **TensorFlow** | 2.15 | Deep Learning | - | 🎯 Neural Networks |
-| **PyTorch** | Latest | ML Research Framework | - | 🔬 Advanced Models |
-| **Jupyter** | Latest | ML Notebooks | 8888 | 🧪 Data Science |
-| **MLflow** | Latest | ML Lifecycle Management | 5000 | 📈 Model Registry |
-| **Apache Airflow** | Latest | ML Pipeline Orchestration | 8080 | 🔄 Workflow Automation |
-| **ONNX Runtime** | Latest | Cross-platform Inference | - | ⚡ Model Optimization |
-| **Transformers** | Latest | HuggingFace Models | - | 🤗 Pre-trained Models |
-| **OpenCV** | Latest | Computer Vision | - | 👁️ Image Processing |
-| **Scikit-learn** | Latest | Traditional ML | - | 📊 Classical Algorithms |
-| **Pandas** | Latest | Data Manipulation | - | 🐼 Data Processing |
-| **NumPy** | Latest | Numerical Computing | - | 🔢 Mathematical Operations |
-| **LightGBM** | Latest | Gradient Boosting | - | 🚀 Fast ML Training |
-| **OpenAI API** | Latest | Cloud LLM Fallback | - | ☁️ GPT Models |
-| **15 AI Agents** | Custom | Specialized Automation | - | 🤖 Autonomous Operations |
+| **PostgreSQL** | 15 | Banco Principal | 5432 | 🗄️ Transações ACID |
+| **TimescaleDB** | Latest | Extensão Séries-Temporais | 5432 | ⏰ IoT & Métricas |
+| **ClickHouse** | Latest | Banco Analytics | 9000 | 📊 Analytics OLAP |
+| **Redis** | 7 | Cache & Pub/Sub | 6379 | ⚡ Store In-memory |
+| **MinIO** | Latest | Storage de Objetos S3 | 9000/9001 | 📦 Armazenamento de Arquivos |
+| **Elasticsearch** | Latest | Busca & Analytics | 9200 | 🔎 Busca Full-text |
+| **Vector Database** | Latest | Embeddings IA | - | 🧠 Busca Semântica |
+| **Supabase** | Latest | Postgres Gerenciado | - | ☁️ Database como Serviço |
 
-#### 📊 **Monitoramento & Observabilidade (12 Stacks)**
-| Stack | Versão | Função | Port | Especialidade |
+</details>
+
+<details><summary>🤖 <strong>Inteligência Artificial & ML (18 pilhas)</strong></summary>
+
+| Pilha | Versão | Função | Porta | Especialidade |
 |-------|--------|--------|------|---------------|
-| **Prometheus** | Latest | Metrics Collection | 9090 | 📈 Time-series DB |
-| **Grafana** | Latest | Visualization Platform | 3000 | 📊 Rich Dashboards |
-| **Jaeger** | Latest | Distributed Tracing | 16686 | 🔍 Request Tracing |
-| **Elasticsearch** | Latest | Search & Analytics | 9200 | 🔎 Full-text Search |
-| **Logstash** | Latest | Log Processing | 5044 | 📝 Log Pipeline |
-| **Kibana** | Latest | Log Visualization | 5601 | 📊 Log Analytics |
-| **Loki** | Latest | Log Aggregation | 3100 | 📝 Grafana Logs |
-| **AlertManager** | Latest | Alert Routing | 9093 | 🚨 Smart Alerting |
-| **Uptime Kuma** | Latest | Uptime Monitoring | 3001 | ⏱️ Service Health |
-| **Sentry** | Latest | Error Tracking | 9000 | 🐛 Bug Monitoring |
-| **cAdvisor** | Latest | Container Metrics | 8080 | 📦 Container Insights |
-| **Node Exporter** | Latest | System Metrics | 9100 | 💻 Hardware Monitoring |
+| **Ollama** | Latest | Motor LLM Local | 11434 | 🧠 Modelos IA Privados |
+| **Deepseek V2** | 326B | LLM de Grande Escala | - | 🎯 Compreensão Profunda |
+| **Dify** | Latest | Plataforma IA Conversacional | 3000 | 💬 Orquestração IA |
+| **LangFlow** | Latest | Workflows IA Visuais | 7860 | 🔄 IA Drag & Drop |
+| **Langfuse** | Latest | Observabilidade IA | 3000 | 📊 Monitoramento LLM |
+| **TensorFlow** | 2.15 | Deep Learning | - | 🎯 Redes Neurais |
+| **PyTorch** | Latest | Framework ML Pesquisa | - | 🔬 Modelos Avançados |
+| **Jupyter** | Latest | Notebooks ML | 8888 | 🧪 Ciência de Dados |
+| **MLflow** | Latest | Gerenciamento Ciclo ML | 5000 | 📈 Registro de Modelos |
+| **Apache Airflow** | Latest | Orquestração Pipeline ML | 8080 | 🔄 Automação Workflow |
+| **ONNX Runtime** | Latest | Inferência Cross-platform | - | ⚡ Otimização de Modelos |
+| **Transformers** | Latest | Modelos HuggingFace | - | 🤗 Modelos Pré-treinados |
+| **OpenCV** | Latest | Visão Computacional | - | 👁️ Processamento de Imagem |
+| **Scikit-learn** | Latest | ML Tradicional | - | 📊 Algoritmos Clássicos |
+| **Pandas** | Latest | Manipulação de Dados | - | 🐼 Processamento de Dados |
+| **NumPy** | Latest | Computação Numérica | - | 🔢 Operações Matemáticas |
+| **LightGBM** | Latest | Gradient Boosting | - | 🚀 Treinamento ML Rápido |
+| **15 Agentes IA** | Custom | Automação Especializada | - | 🤖 Operações Autônomas |
 
-#### 📱 **Aplicações SaaS & Business (15 Stacks)**
-| Stack | Versão | Função | Port | Módulo SaaS |
-|-------|--------|--------|------|-------------|
-| **Evolution API** | Latest | WhatsApp Business | 8080 | 💬 Messaging |
-| **Chatwoot** | Latest | Omnichannel Support | 3000 | 🎧 Customer Service |
-| **N8N** | Latest | Advanced Automation | 5678 | 🔄 Workflow Builder |
-| **Mautic** | Latest | Marketing Automation | 8080 | 📧 Email Campaigns |
-| **Metabase** | Latest | Business Intelligence | 3000 | 📊 Data Analytics |
-| **Typebot** | Latest | Conversational Flows | 3000 | 🤖 Interactive Bots |
-| **TwentyCRM** | Latest | Modern CRM | 3000 | 🏢 Sales Pipeline |
-| **KRYONIX CRM** | 1.0 | Custom CRM Engine | 8080 | 💼 Lead Management |
-| **Zapier** | Latest | 8000+ App Integrations | - | 🔗 External APIs |
-| **Builder.io** | Latest | Visual Development | - | 🎨 No-code Platform |
-| **DocuSeal** | Latest | Digital Signatures | 3000 | ✍️ Document Signing |
-| **NextCloud** | Latest | File Management | 80 | 📁 Client Portal |
-| **Jitsi Meet** | Latest | Video Conferencing | 8443 | 🎥 Voice & Video |
-| **WUZAPI** | Latest | WhatsApp Gateway | 8080 | 📱 Alternative WhatsApp |
-| **Ntfy** | Latest | Push Notifications | 80 | 🔔 Real-time Alerts |
+</details>
 
-#### 🔐 **Segurança & Compliance (12 Stacks)**
-| Stack | Versão | Função | Port | Especialidade |
-|-------|--------|--------|------|---------------|
-| **Keycloak** | Latest | Identity & Access Management | 8080 | 🔐 Enterprise SSO |
-| **Vault** | Latest | Secrets Management | 8200 | 🔑 Secure Storage |
-| **Trivy** | Latest | Container Vulnerability Scanning | - | 🔍 Security Audit |
-| **OWASP ZAP** | Latest | Security Testing | 8080 | 🧪 Penetration Testing |
-| **Semgrep** | Latest | Static Code Analysis | - | 📝 Code Security |
-| **Falco** | Latest | Runtime Security | - | 🛡️ Threat Detection |
-| **ClamAV** | Latest | Antivirus Scanning | 3310 | 🦠 Malware Protection |
-| **Open Policy Agent** | Latest | Policy Engine | 8181 | 📋 Authorization Rules |
-| **ModSecurity** | Latest | Web Application Firewall | - | 🔥 WAF Protection |
-| **Fail2Ban** | Latest | Intrusion Prevention | - | 🚫 IP Blocking |
-| **Let's Encrypt** | Latest | SSL Certificates | - | 🔒 Auto SSL |
-| **GDPR/LGPD Tools** | Latest | Privacy Compliance | - | ⚖️ Legal Compliance |
-
-#### 🎨 **Frontend & Mobile (8 Stacks)**
-| Stack | Versão | Função | Especialidade |
-|-------|--------|--------|---------------|
-| **Next.js** | 14.2.3 | React Framework | 🚀 Full-stack Framework |
-| **React** | 18.3.1 | UI Library | ⚛️ Component Architecture |
-| **Tailwind CSS** | 3.4 | Utility-first CSS | 🎨 Rapid Styling |
-| **PWA** | Latest | Progressive Web App | 📱 Native-like Experience |
-| **Capacitor** | Latest | Native App Wrapper | 📲 iOS/Android Build |
-| **React Native** | Latest | Cross-platform Mobile | 📱 True Native Apps |
-| **Vercel** | Latest | Frontend Hosting | ☁️ Edge Deployment |
-| **Netlify** | Latest | JAMstack Hosting | 🌐 Static Site Deploy |
-
-#### 🛠️ **Desenvolvimento & CI/CD (15 Stacks)**
-| Stack | Versão | Função | Especialidade |
-|-------|--------|--------|---------------|
-| **GitLab CE** | Latest | Repository & CI/CD | 🔄 DevOps Platform |
-| **Jenkins** | Latest | CI/CD Automation | 🚀 Build Pipelines |
-| **SonarQube** | Latest | Code Quality | 📊 Quality Gates |
-| **Nexus** | Latest | Artifact Repository | 📦 Binary Storage |
-| **Terraform** | Latest | Infrastructure as Code | 🏗️ IaC Automation |
-| **Ansible** | Latest | Configuration Management | ⚙️ Server Automation |
-| **Tekton** | Latest | Cloud-native CI/CD | ☁️ K8s Pipelines |
-| **Jest** | Latest | Unit Testing | 🧪 JS Testing |
-| **Playwright** | Latest | E2E Testing | 🎭 Browser Automation |
-| **Cypress** | Latest | Integration Testing | 🌲 UI Testing |
-| **k6** | Latest | Load Testing | ⚡ Performance Testing |
-| **axe-core** | Latest | Accessibility Testing | ♿ A11y Compliance |
-| **React Testing Library** | Latest | Component Testing | ⚛️ React Testing |
-| **Lighthouse** | Latest | Performance Auditing | 🏮 Web Vitals |
-| **GitHub Actions** | Latest | CI/CD Workflows | 🔄 Automation |
-
-### 🔄 **Integração Total dos Stacks**
-
-```yaml
-KRYONIX_ECOSYSTEM:
-  total_stacks: 75+
-  integration_level: "Nativo e automático"
-  orchestration: "15 Agentes IA especializados"
-  
-  LAYERS:
-    1_infrastructure: "15 stacks de infraestrutura e containers"
-    2_data_storage: "8 stacks de dados e armazenamento"
-    3_ai_ml: "18 stacks de IA e machine learning"
-    4_monitoring: "12 stacks de monitoramento e observabilidade"
-    5_saas_business: "15 stacks de aplicações SaaS"
-    6_security: "12 stacks de segurança e compliance"
-    7_frontend_mobile: "8 stacks de frontend e mobile"
-    8_devops_cicd: "15 stacks de desenvolvimento e CI/CD"
-  
-  AUTO_MANAGEMENT:
-    - "Provisioning automático de todos os 75+ stacks"
-    - "Health checking contínuo de cada tecnologia"
-    - "Auto-scaling baseado em ML de cada serviço"
-    - "Backup automático de todas as camadas"
-    - "Security scanning de todos os componentes"
-    - "Performance optimization cross-stack"
-```
+[Veja todas as 75+ pilhas tecnológicas →](./Documentação/75-STACKS-COMPLETO.md)
 
 ## 📦 Módulos SaaS
 
 ### 💰 **9 Módulos SaaS Completos com Preços Sugeridos**
 
-Cada módulo utiliza múltiplas tecnologias dos 75+ stacks integrados:
+Cada módulo utiliza múltiplas tecnologias das 75+ pilhas integradas:
 
 #### 1. 💡 **Intelligence & BI** - R$ 197/mês
 ```yaml
@@ -420,7 +373,7 @@ API: "/api/analytics"
 #### 2. 📅 **Smart Scheduling** - R$ 147/mês
 ```yaml
 Módulo: "KRYONIX Agenda"
-Tecnologias: "Custom Engine + Evolution API + Stripe + PIX + Redis"
+Tecnologias: "Motor Custom + Evolution API + Stripe + PIX + Redis"
 Funcionalidades:
   - Agendamento online automatizado
   - Pagamentos integrados (PIX/Cartão/Boleto)
@@ -439,7 +392,7 @@ Tecnologias: "Evolution API + Chatwoot + Ollama + Dify + Socket.io"
 Funcionalidades:
   - WhatsApp Business integrado
   - Chatbots inteligentes (Ollama + Dify)
-  - Atendimento humano + IA hybrid
+  - Atendimento humano + IA híbrido
   - Histórico unificado multi-canal
   - Automação de respostas com LLM
   - Análise de sentimento em tempo real
@@ -450,7 +403,7 @@ API: "/api/whatsapp"
 #### 4. 🏢 **CRM & Sales** - R$ 247/mês
 ```yaml
 Módulo: "KRYONIX Vendas"
-Tecnologias: "TwentyCRM + Custom Engine + N8N + PostgreSQL + IA"
+Tecnologias: "TwentyCRM + Motor Custom + N8N + PostgreSQL + IA"
 Funcionalidades:
   - Funil de vendas completo
   - Gestão de leads inteligente com IA
@@ -462,82 +415,7 @@ Funcionalidades:
 API: "/api/crm"
 ```
 
-#### 5. 📧 **Email Marketing** - R$ 147/mês
-```yaml
-Módulo: "KRYONIX Marketing"
-Tecnologias: "Mautic + SendGrid + N8N + IA + A/B Testing"
-Funcionalidades:
-  - Campanhas automatizadas por IA
-  - Segmentação inteligente com ML
-  - A/B testing automático
-  - Templates responsivos com Builder.io
-  - Analytics avançados com ClickHouse
-  - Integração nativa com CRM
-  - Personalização em massa
-API: "/api/marketing"
-```
-
-#### 6. 📱 **Social Media** - R$ 97/mês
-```yaml
-Módulo: "KRYONIX Social"
-Tecnologias: "Custom Scheduler + IA + Social APIs + N8N"
-Funcionalidades:
-  - Agendamento multi-plataforma
-  - Conteúdo gerado por IA (Ollama)
-  - Analytics de engagement
-  - Hashtags inteligentes por IA
-  - Resposta automática
-  - Relatórios de ROI automatizados
-  - Gestão de múltiplas contas
-API: "/api/social"
-```
-
-#### 7. 👥 **Client Portal** - R$ 197/mês
-```yaml
-Módulo: "KRYONIX Portal"
-Tecnologias: "NextCloud + Next.js + Keycloak + Jitsi + IA"
-Funcionalidades:
-  - Portal personalizado do cliente
-  - Documentos e contratos (DocuSeal)
-  - Sistema de treinamentos
-  - Suporte integrado (Chatwoot)
-  - Área financeira automatizada
-  - Mobile app nativo (Capacitor)
-  - Video calls integradas (Jitsi)
-API: "/api/portal"
-```
-
-#### 8. 🎧 **Customer Support** - R$ 197/mês
-```yaml
-Módulo: "KRYONIX Support"
-Tecnologias: "Chatwoot + Typebot + Jitsi + IA + Knowledge Base"
-Funcionalidades:
-  - Chatwoot omnichannel integrado
-  - Atendimento IA + humano hybrid
-  - Ticket system avançado
-  - Knowledge base inteligente
-  - Video calls com Jitsi
-  - SLA tracking automático
-  - Análise de satisfação por IA
-API: "/api/support"
-```
-
-#### 9. 🎨 **Whitelabel** - R$ 597/mês
-```yaml
-Módulo: "KRYONIX Whitelabel"
-Tecnologias: "Todos os 75+ stacks + Kubernetes + Portainer + IA"
-Funcionalidades:
-  - Plataforma completamente personalizável
-  - Domínio próprio do cliente  
-  - Marca e cores customizadas
-  - Deploy isolado com Kubernetes
-  - 75+ stacks personalizáveis
-  - API completa para integração
-  - Suporte técnico dedicado 24/7
-  - SLA 99.95% uptime garantido
-  - Orquestração IA personalizada
-API: "/api/whitelabel"
-```
+[Ver todos os 9 módulos →](./Documentação/MODULOS-SAAS-COMPLETO.md)
 
 ### 💎 **Pacotes Combinados Enterprise**
 
@@ -551,29 +429,29 @@ API: "/api/whitelabel"
 
 ## 🤖 Inteligência Artificial
 
-### 🧠 **IA Maestro - Orquestração Autônoma de 75+ Stacks**
+### 🧠 **IA Maestro — Orquestração Autônoma de 75+ Pilhas**
 
-A KRYONIX utiliza um sistema de **IA Maestro** que gerencia autonomamente todos os 75+ stacks:
+A KRYONIX utiliza um sistema de **IA Maestro** que gerencia autonomamente todas as 75+ pilhas tecnológicas:
 
 ```yaml
-IA_MAESTRO_CAPABILITIES:
-  monitoring:
-    - "Monitoramento 24/7 de todos os 75+ stacks"
+Capacidades_IA_Maestro:
+  monitoramento:
+    - "Monitoramento 24/7 de todas as 75+ pilhas"
     - "Detecção de anomalias com ML em tempo real"
     - "Alertas preditivos baseados em padrões"
     - "Análise de dependências cross-stack"
     - "Health checks inteligentes por tenant"
     - "Métricas personalizadas por módulo SaaS"
     
-  optimization:
+  otimização:
     - "Otimização automática de queries PostgreSQL + ClickHouse"
     - "Balanceamento inteligente multi-layer (HAProxy + Kong)"
     - "Gestão dinâmica de cache Redis + Memory"
-    - "Auto-scaling Kubernetes baseado em ML"
+    - "Dimensionamento automático Kubernetes baseado em ML"
     - "Otimização de rotas CDN Cloudflare"
     - "Compressão inteligente de assets"
     
-  healing:
+  auto_recuperação:
     - "Auto-recovery de serviços com rollback inteligente"
     - "Restart em cascata com ordem de dependências"
     - "Rebalanceamento de pods Kubernetes"
@@ -581,7 +459,7 @@ IA_MAESTRO_CAPABILITIES:
     - "Disaster recovery com RTO < 5min"
     - "Self-healing de certificados SSL"
     
-  provisioning:
+  provisionamento:
     - "Criação automática de tenants multi-cloud"
     - "Deploy isolado com Kubernetes namespaces"
     - "Configuração de todas as 75+ tecnologias"
@@ -590,277 +468,320 @@ IA_MAESTRO_CAPABILITIES:
     - "Testes de integração end-to-end"
 ```
 
+### 🎯 **Modelo Deepseek V2 (326B Parâmetros)**
+
+```yaml
+Deepseek_V2_Specs:
+  parametros: "326 bilhões"
+  tamanho_memoria: "~652 GB (FP16)"
+  uso_principal: "Compreensão profunda, extração semântica"
+  execução: "Local (on-prem) + fallback cloud"
+  
+Capacidades_Especiais:
+  - "Contexto longo para documentação e logs"
+  - "Embeddings de alta qualidade para busca semântica"
+  - "Few-shot e fine-tuning por tenant"
+  - "Execução híbrida (local + quantizada)"
+  
+Comparação_LLMs:
+  vs_GPT4: "Melhor controle de dados + privacidade"
+  vs_Llama: "Maior capacidade de contexto longo"
+  vs_Modelos_Pequenos: "Compreensão superior sem chaining"
+```
+
 ### 👥 **15 Agentes IA Especializados**
 
 ```yaml
-AGENTES_ESPECIALIZADOS:
+Agentes_Especializados:
   1_arquiteto_software: 
-    nome: "🏗️ Arquiteto Software Sênior"
-    responsabilidade: "Gerencia todos os 75+ stacks e arquitetura"
-    especialidade: "Multi-tenancy, microserviços, patterns"
+    nome: "🏗️ Arquiteto de Software"
+    responsabilidade: "Gerencia todas as 75+ pilhas e arquitetura"
+    especialidade: "Multitenant, microserviços, patterns"
     stacks_gerenciados: "Kubernetes, Docker, Helm, ArgoCD"
     
   2_devops_specialist:
     nome: "🔧 Especialista DevOps"
-    responsabilidade: "CI/CD e infraestrutura dos 75+ stacks"
+    responsabilidade: "CI/CD e infraestrutura das 75+ pilhas"
     especialidade: "Terraform, Ansible, Jenkins, GitLab"
     stacks_gerenciados: "Todo pipeline DevOps e deployment"
     
   3_ai_ml_expert:
     nome: "🤖 Expert IA & ML"
-    responsabilidade: "Todos os 18 stacks de IA/ML"
+    responsabilidade: "Todas as 18 pilhas de IA/ML"
     especialidade: "Ollama, TensorFlow, PyTorch, MLflow"
     stacks_gerenciados: "LLMs, Dify, Langfuse, Jupyter"
     
-  4_database_architect:
-    nome: "🗄️ Arquiteto Dados"
-    responsabilidade: "8 stacks de dados e storage"
-    especialidade: "PostgreSQL, ClickHouse, Redis"
-    stacks_gerenciados: "Todos os bancos e storage"
-    
-  5_security_expert:
-    nome: "🔐 Expert Segurança"
-    responsabilidade: "12 stacks de segurança"
-    especialidade: "Keycloak, Vault, OWASP, compliance"
-    stacks_gerenciados: "Toda a stack de segurança"
-    
-  6_monitoring_specialist:
-    nome: "📊 Especialista Monitoring"
-    responsabilidade: "12 stacks de observabilidade"
-    especialidade: "Prometheus, Grafana, ELK, Jaeger"
-    stacks_gerenciados: "Todo o ecossistema de monitoring"
-    
-  7_frontend_mobile:
-    nome: "📱 Expert Frontend & Mobile"
-    responsabilidade: "8 stacks frontend/mobile"
-    especialidade: "Next.js, React, PWA, Capacitor"
-    stacks_gerenciados: "UI/UX e aplicações mobile"
-    
-  8_saas_business:
-    nome: "💼 Especialista SaaS Business"
-    responsabilidade: "15 stacks de aplicações SaaS"
-    especialidade: "CRM, Marketing, Support, WhatsApp"
-    stacks_gerenciados: "Todos os módulos de negócio"
-    
-  9_network_proxy:
-    nome: "🌐 Expert Redes & Proxy"
-    responsabilidade: "Traefik, Kong, HAProxy, Cloudflare"
-    especialidade: "Load balancing, CDN, WAF"
-    stacks_gerenciados: "Toda camada de rede"
-    
-  10_automation_workflow:
-    nome: "🔄 Expert Automação"
-    responsabilidade: "N8N, Zapier, workflows"
-    especialidade: "Integração entre todos os stacks"
-    stacks_gerenciados: "Orquestração de workflows"
-    
-  11_backup_disaster:
-    nome: "💾 Expert Backup & DR"
-    responsabilidade: "Backup de todos os 75+ stacks"
-    especialidade: "3-2-1 strategy, PITR, replication"
-    stacks_gerenciados: "Continuidade de negócio"
-    
-  12_performance_optimization:
-    nome: "⚡ Expert Performance"
-    responsabilidade: "Otimização de todos os stacks"
-    especialidade: "Cache, CDN, optimization"
-    stacks_gerenciados: "Performance cross-stack"
-    
-  13_compliance_legal:
-    nome: "⚖️ Expert Compliance"
-    responsabilidade: "LGPD, GDPR, SOC2, ISO27001"
-    especialidade: "Compliance e auditoria"
-    stacks_gerenciados: "Aspectos legais e regulatórios"
-    
-  14_cost_optimization:
-    nome: "💰 Expert FinOps"
-    responsabilidade: "Otimização de custos dos 75+ stacks"
-    especialidade: "Resource optimization, scaling"
-    stacks_gerenciados: "Economia e eficiência"
-    
-  15_tenant_orchestrator:
-    nome: "🏢 Orquestrador Multi-Tenant"
-    responsabilidade: "Gestão de todos os tenants"
-    especialidade: "Isolamento, provisioning automático"
-    stacks_gerenciados: "Toda infraestrutura multi-tenant"
+  # ... demais agentes
 ```
+
+[Ver todos os 15 agentes →](./Documentação/15-AGENTES-IA-ESPECIALIZADOS.md)
 
 ### 📊 **Métricas de IA & SLA Enterprise**
 
 ```yaml
-Performance_Targets:
-  model_accuracy: "> 90% precisão (15 AI Agents)"
-  response_time: "< 1 segundo (P95)"
+Performance_Alvo:
+  precisao_modelo: "> 90% (15 Agentes IA)"
+  tempo_resposta: "< 1 segundo (P95)"
   uptime: "> 99.95% (SLA Enterprise)"
-  data_privacy: "100% local + compliance LGPD/GDPR"
-  auto_scaling: "< 30 segundos para scale-up"
+  privacidade_dados: "100% local + compliance LGPD/GDPR"
+  dimensionamento_auto: "< 30 segundos para scale-up"
   disaster_recovery: "RTO < 5min, RPO < 1min"
   
-AI_Monitoring_Stack:
+Stack_Monitoramento_IA:
   - "Langfuse para observabilidade LLM"
   - "Prometheus + Grafana para métricas IA"
-  - "Custom AI dashboard com 200+ métricas"
+  - "Dashboard IA customizado com 200+ métricas"
   - "Alertas ML para detecção de anomalias"
   - "Performance profiling por tenant"
-  - "Cost optimization automático"
+  - "Otimização de custos automática"
+```
+
+## �� Requisitos de Servidor
+
+### 🚀 **Requisitos para Modelo Deepseek V2 (326B)**
+
+Com base na análise dos especialistas, para rodar o modelo Deepseek V2 de 326 bilhões de parâmetros:
+
+```yaml
+Configuração_Recomendada_Enterprise:
+  opção_a_alta_disponibilidade:
+    servidores: "2x servidores enterprise"
+    gpu_por_servidor: "8x NVIDIA H100 80GB"
+    cpu_por_servidor: "64 cores (AMD EPYC ou Intel)"
+    ram_por_servidor: "1-1.5 TB"
+    storage_por_servidor: "8 TB NVMe PCIe4/5"
+    rede: "200 Gbps InfiniBand entre nós"
+    custo_estimado: "$1.1M - $1.4M (CAPEX)"
+    
+  opção_b_custo_benefício:
+    servidores: "2x servidores com A100"
+    gpu_por_servidor: "8x NVIDIA A100 80GB"
+    cpu_por_servidor: "64 cores"
+    ram_por_servidor: "1 TB"
+    storage_por_servidor: "8 TB NVMe"
+    rede: "100-200 Gbps"
+    custo_estimado: "$700k - $1.0M (CAPEX)"
+    
+  requisitos_mínimos:
+    vram_total: "≥1280 GB (16 GPUs × 80GB)"
+    ram_sistema: "2-6 TB agregado no cluster"
+    cpu_cores: "128+ cores total (32-64 por nó)"
+    storage_nvme: "16 TB+ para offloading"
+    rede_intra_node: "NVLink/NVSwitch obrigatório"
+    rede_inter_node: "200 Gbps InfiniBand (preferível)"
+    
+Por_que_Mudamos:
+  configuração_anterior: "32 cores, 128GB RAM"
+  problema: "Insuficiente para 326B parâmetros (652GB só os pesos)"
+  solução: "Cluster multi-GPU com 75+ pilhas distribuídas"
+  resultado: "Inferência em < 1s + alta disponibilidade"
+```
+
+### 🏗️ **Arquitetura de Servidor Recomendada**
+
+```yaml
+Opção_Recomendada_Brasil:
+  fornecedor: "Dell/HPE/Supermicro com GPUs NVIDIA"
+  configuração_por_servidor:
+    - "Chassis: 4U com espaço para 8 GPUs"
+    - "CPU: 2x AMD EPYC 7763 (64 cores total)"
+    - "RAM: 1TB DDR4-3200 (32x 32GB)"
+    - "GPUs: 8x NVIDIA H100 80GB (NVLink)"
+    - "Storage: 2x 4TB NVMe PCIe4 (RAID1)"
+    - "Rede: 200Gb InfiniBand + 10Gb Ethernet"
+    - "PSU: 2x 3000W redundantes"
+    
+  infraestrutura_adicional:
+    - "Switch InfiniBand 200Gb (36 portas)"
+    - "UPS 20kVA para ambos servidores"
+    - "Rack 42U com cooling dedicado"
+    - "Storage NAS 100TB para backups"
+    
+  estimativa_custo_brasil:
+    - "Servidor 1: ~R$ 3.5M - R$ 4.2M"
+    - "Servidor 2: ~R$ 3.5M - R$ 4.2M" 
+    - "Infraestrutura: ~R$ 800k"
+    - "Total: ~R$ 7.8M - R$ 9.2M"
+    - "Financiamento: 36x de ~R$ 260k"
+```
+
+### 🔄 **Alternativas de Implementação**
+
+```yaml
+Alternativa_Cloud_Híbrida:
+  on_premise: "1x DGX H100 (8 GPUs) - R$ 2.8M"
+  cloud_burst: "AWS p5/p4d para picos de demanda"
+  benefício: "CAPEX menor + elasticidade"
+  custo_operacional: "~R$ 50-100k/mês em cloud"
   
-Compliance_&_Security:
-  - "Auditoria completa de ações IA"
-  - "Criptografia AES-256 end-to-end"
-  - "Backup automático 3-2-1 strategy"
-  - "Penetration testing mensal"
-  - "Certificações ISO 27001 & SOC 2"
+Alternativa_Quantização:
+  modelo: "Deepseek V2 quantizado para 8-bit/4-bit"
+  gpus_necessárias: "8-12x A100 80GB"
+  custo_reduzido: "~40% menos GPUs necessárias"
+  trade_off: "Perda mínima de qualidade (~2-5%)"
+  
+Alternativa_Escalonamento:
+  fase_1: "Iniciar com 1 servidor + cloud"
+  fase_2: "Adicionar segundo servidor"
+  fase_3: "Expandir para cluster maior"
+  benefício: "Investimento gradual + validação"
 ```
 
 ## 🚀 Instalação
 
-### 📋 **Pré-requisitos para 75+ Stacks**
+### 📋 **Pré-requisitos**
 
 ```bash
-# Requisitos mínimos para ambiente completo
+# Para desenvolvimento local (frontend/backend)
 Node.js: >= 20.0.0
+npm: >= 10.0.0
 Docker: >= 24.0.0
+
+# Para stack completa (75+ pilhas)
 Kubernetes: >= 1.28.0
 Helm: >= 3.12.0
 Terraform: >= 1.5.0
 PostgreSQL: >= 15.0
 Redis: >= 7.0
 
-# Recursos recomendados para produção
-CPU: 32+ cores
-RAM: 128GB+
-Storage: 2TB+ SSD
-Network: 10Gbps+
+# Para produção enterprise
+CPU: 128+ cores (cluster)
+RAM: 2TB+ (cluster) 
+GPU: 16x H100/A100 80GB
+Storage: 20TB+ NVMe
 ```
 
-### ⚡ **Instalação Automática Completa**
+### ⚡ **Instalação Rápida (Desenvolvimento)**
 
 ```bash
 # 1. Clone o repositório
 git clone https://github.com/nakahh/kryonix-plataforma.git
 cd kryonix-plataforma
 
-# 2. Execute o instalador mágico (instala todos os 75+ stacks)
+# 2. Configure o ambiente
+cp .env.example .env
+# Edite o .env com suas configurações
+
+# 3. Instale dependências
+npm install
+
+# 4. Inicie apenas o frontend (desenvolvimento)
+npm run dev
+
+# 5. Ou inicie com backend simples
+cd backend && npm install && npm run dev
+```
+
+### 🏗️ **Instalação Stack Completa**
+
+```bash
+# 1. Instalação automática (75+ pilhas)
 chmod +x instalador-plataforma-kryonix.sh
 ./instalador-plataforma-kryonix.sh --full-stack
 
-# 3. Configure as credenciais necessárias
-./scripts/setup-secrets.sh
+# 2. Ou por categorias
+make install-infrastructure  # 15 pilhas infra
+make install-ai-ml          # 18 pilhas IA/ML
+make install-monitoring     # 12 pilhas monitoramento
+make install-security       # 12 pilhas segurança
 
-# 4. Deploy automático de todos os stacks
-make deploy-all-stacks
-
-# 5. Verificar instalação dos 75+ stacks
+# 3. Verificar instalação
 ./scripts/verify-all-stacks.sh
 ```
 
-### 🏗️ **Instalação por Categorias**
+### 🇧🇷 **Casos de Uso no Brasil**
 
-```bash
-# Instalar apenas infraestrutura (15 stacks)
-make install-infrastructure
-
-# Instalar IA/ML (18 stacks)
-make install-ai-ml
-
-# Instalar monitoramento (12 stacks)
-make install-monitoring
-
-# Instalar segurança (12 stacks)
-make install-security
-
-# Instalar aplicações SaaS (15 stacks)
-make install-saas-apps
-
-# Verificar cada categoria
-make verify-category CATEGORY=infrastructure
+```yaml
+Clínicas_e_Consultórios:
+  - "Agendamento com PIX automático"
+  - "Confirmação por WhatsApp"
+  - "Prontuários com compliance LGPD"
+  - "Exemplo: Dr. João - 300% aumento conversão"
+  
+Redes_de_Franquia:
+  - "Portal do franqueado centralizado"
+  - "BI por unidade e região"
+  - "Whitelabel por rede"
+  - "Exemplo: Rede ABC - 15 unidades integradas"
+  
+E-commerce_Regional:
+  - "Automação de marketing local"
+  - "Suporte via WhatsApp"
+  - "Analytics de comportamento BR"
+  - "Exemplo: Loja XYZ - 40% menos abandono"
+  
+Educação:
+  - "Portal do aluno integrado"
+  - "Aulas via Jitsi"
+  - "Cobrança automática"
+  - "Exemplo: Escola DEF - 90% satisfação"
 ```
 
 ## 📊 Monitoramento
 
-### 📈 **Stack Completo de Observabilidade**
-
-Com **12 stacks dedicados** ao monitoramento, a KRYONIX oferece observabilidade total:
+### 📈 **Stack Completo de Observabilidade (12 Pilhas)**
 
 ```yaml
-MONITORING_ECOSYSTEM:
-  metrics_collection:
-    - "Prometheus (time-series)"
+Ecossistema_Monitoramento:
+  coleta_métricas:
+    - "Prometheus (séries-temporais)"
     - "cAdvisor (containers)"
     - "Node Exporter (hardware)"
-    - "Custom exporters (business)"
+    - "Exporters customizados (negócio)"
     
-  visualization:
+  visualização:
     - "Grafana (dashboards)"
     - "Kibana (logs)"
-    - "Custom KRYONIX dashboards"
+    - "Dashboards KRYONIX customizados"
     
   logging:
-    - "ELK Stack completo"
+    - "Stack ELK completo"
     - "Loki para Grafana"
-    - "Centralized logging"
+    - "Logging centralizado"
     
-  tracing:
+  rastreamento:
     - "Jaeger distributed tracing"
-    - "Request flow tracking"
-    - "Performance bottlenecks"
+    - "Rastreamento de fluxo de requisições"
+    - "Identificação de gargalos"
     
-  alerting:
+  alertas:
     - "AlertManager (Prometheus)"
-    - "Uptime Kuma (synthetic)"
-    - "AI-powered anomaly detection"
+    - "Uptime Kuma (sintético)"
+    - "Detecção de anomalias por IA"
     
-  error_tracking:
-    - "Sentry (application errors)"
-    - "Real-time error aggregation"
-    - "Performance monitoring"
-    
-  custom_metrics:
-    - "Business KPIs por tenant"
-    - "SaaS module performance"
-    - "AI model accuracy tracking"
-    - "Cost optimization metrics"
+  rastreamento_erros:
+    - "Sentry (erros de aplicação)"
+    - "Agregação de erros em tempo real"
+    - "Monitoramento de performance"
 ```
 
 ### 🎯 **Dashboards Especializados**
 
 ```yaml
-GRAFANA_DASHBOARDS:
-  overview:
-    - "75+ Stacks Health Overview"
-    - "Multi-tenant Performance"
-    - "AI Agents Status"
-    - "Cost per Tenant"
+Dashboards_Grafana:
+  visão_geral:
+    - "Health das 75+ Pilhas"
+    - "Performance Multitenant"
+    - "Status dos Agentes IA"
+    - "Custo por Tenant"
     
-  infrastructure:
-    - "Kubernetes Cluster Status"
-    - "Container Resources"
-    - "Network Performance"
-    - "Storage Utilization"
+  infraestrutura:
+    - "Status do Cluster Kubernetes"
+    - "Recursos de Containers"
+    - "Performance de Rede"
+    - "Utilização de Storage"
     
-  applications:
-    - "SaaS Modules Performance"
-    - "API Response Times"
-    - "Database Performance"
-    - "Cache Hit Rates"
+  aplicações:
+    - "Performance dos Módulos SaaS"
+    - "Tempos de Resposta da API"
+    - "Performance do Banco de Dados"
+    - "Taxa de Hit do Cache"
     
   ai_ml:
-    - "LLM Model Performance"
-    - "AI Agent Activities"
-    - "ML Pipeline Status"
-    - "Training Jobs"
-    
-  business:
-    - "Revenue per Tenant"
-    - "User Engagement"
-    - "Conversion Funnels"
-    - "Support Metrics"
-    
-  security:
-    - "Security Events"
-    - "Failed Login Attempts"
-    - "WAF Blocks"
-    - "Vulnerability Scans"
+    - "Performance do Modelo LLM"
+    - "Atividades dos Agentes IA"
+    - "Status do Pipeline ML"
+    - "Jobs de Treinamento"
 ```
 
 ## 🔐 Segurança
@@ -868,79 +789,136 @@ GRAFANA_DASHBOARDS:
 ### 🛡️ **12 Camadas de Segurança Enterprise**
 
 ```yaml
-SECURITY_LAYERS:
-  1_identity_access:
+Camadas_Segurança:
+  1_identidade_acesso:
     - "Keycloak Enterprise SSO"
-    - "MFA obrigatório para admins"
+    - "Autenticação multifator obrigatória para admins"
     - "RBAC granular por tenant"
-    - "Session management"
+    - "Gerenciamento de sessão"
     
-  2_secrets_management:
+  2_gerenciamento_segredos:
     - "HashiCorp Vault"
-    - "Automatic secret rotation"
-    - "Encrypted storage"
-    - "Audit logs"
+    - "Rotação automática de segredos"
+    - "Storage criptografado"
+    - "Logs de auditoria"
     
-  3_network_security:
-    - "Cilium network policies"
-    - "Service mesh security"
-    - "Micro-segmentation"
-    - "Zero-trust networking"
+  3_segurança_rede:
+    - "Políticas de rede Cilium"
+    - "Segurança service mesh"
+    - "Micro-segmentação"
+    - "Networking zero-trust"
     
-  4_application_security:
-    - "OWASP ZAP scanning"
-    - "Semgrep static analysis"
-    - "Runtime security (Falco)"
-    - "Container security (Trivy)"
+  4_segurança_aplicação:
+    - "Scanning OWASP ZAP"
+    - "Análise estática Semgrep"
+    - "Segurança runtime (Falco)"
+    - "Segurança de containers (Trivy)"
     
-  5_web_protection:
-    - "ModSecurity WAF"
-    - "Cloudflare DDoS protection"
-    - "Rate limiting multi-layer"
-    - "Bot detection"
+  5_proteção_web:
+    - "WAF ModSecurity"
+    - "Proteção DDoS Cloudflare"
+    - "Rate limiting multi-camadas"
+    - "Detecção de bots"
     
-  6_endpoint_security:
-    - "ClamAV antivirus"
-    - "Fail2Ban intrusion prevention"
-    - "File integrity monitoring"
-    - "Malware detection"
-    
-  7_compliance:
-    - "LGPD compliance tools"
-    - "GDPR data protection"
+  compliance:
+    - "Ferramentas compliance LGPD"
+    - "Proteção de dados GDPR"
     - "SOC 2 Type II"
-    - "ISO 27001 practices"
-    
-  8_encryption:
-    - "AES-256 encryption at rest"
-    - "TLS 1.3 in transit"
-    - "End-to-end encryption"
-    - "Key management"
-    
-  9_monitoring_detection:
-    - "SIEM capabilities"
-    - "Anomaly detection ML"
-    - "Threat intelligence"
-    - "Incident response"
-    
-  10_backup_recovery:
-    - "3-2-1 backup strategy"
-    - "Encrypted backups"
-    - "Cross-region replication"
-    - "Disaster recovery testing"
-    
-  11_vulnerability_management:
-    - "Regular pen testing"
-    - "Vulnerability scanning"
-    - "Patch management"
-    - "Security assessments"
-    
-  12_policy_governance:
-    - "Open Policy Agent"
-    - "Security policies as code"
-    - "Compliance automation"
-    - "Audit trails"
+    - "Práticas ISO 27001"
 ```
+
+## 🇧🇷 Para Empresas Brasileiras
+
+### 🎯 **Benefícios Específicos do Mercado BR**
+
+```yaml
+Integração_Pagamentos_Locais:
+  pix: "Integração nativa com PIX para cobrança instantânea"
+  boleto: "Geração automática de boletos com vencimento"
+  cartões: "Processamento via Stripe/PagSeguro"
+  automação: "Provisionamento automático após pagamento"
+  
+Comunicação_WhatsApp:
+  evolution_api: "Gateway WhatsApp Business certificado"
+  templates: "Templates pré-aprovados pelo WhatsApp"
+  automação: "Resposta automática + escalação humana"
+  compliance: "Conformidade com políticas WhatsApp BR"
+  
+Compliance_LGPD:
+  ferramentas: "Anonimização, consentimento, portabilidade"
+  auditoria: "Logs imutáveis de tratamento de dados"
+  relatórios: "Relatórios automáticos para DPO"
+  treinamento: "Capacitação da equipe em LGPD"
+  
+Suporte_Local:
+  horário: "Segunda a sexta, 9h às 18h (horário de Brasília)"
+  idioma: "Suporte 100% em português"
+  equipe: "Equipe técnica localizada no Brasil"
+  escalação: "SLA de resposta em horário comercial"
+```
+
+### 📋 **Glossário de Termos Técnicos**
+
+```yaml
+Termos_Importantes:
+  multitenant: "Arquitetura que permite múltiplos clientes isolados na mesma plataforma"
+  provisionamento_automático: "Criação automática de infraestrutura ao onboarding"
+  auto_recuperação: "Detecção e correção automática de falhas (restarts, rollback)"
+  rto_rpo: "RTO = tempo máximo para restaurar; RPO = ponto máximo de perda de dados"
+  lgpd: "Lei Geral de Proteção de Dados (Brasil)"
+  pix: "Sistema de pagamentos instantâneos brasileiro"
+  whitelabel: "Produto customizável para rebranding pelo cliente"
+  sla: "Acordo de Nível de Serviço (uptime, performance)"
+  api: "Interface de Programação de Aplicações"
+  llm: "Modelos de Linguagem de Grande Porte (Large Language Models)"
+```
+
+## 🤝 Contribuição
+
+Agradecemos seu interesse em contribuir para a KRYONIX! 
+
+### 🌟 **Como Contribuir**
+
+```bash
+# 1. Fork e clone
+git clone https://github.com/seu-usuario/kryonix-plataforma.git
+cd kryonix-plataforma
+
+# 2. Crie uma branch
+git checkout -b feature/nova-funcionalidade
+
+# 3. Desenvolvimento local
+npm install
+npm run dev
+
+# 4. Testes
+npm test
+npm run lint
+npm run type-check
+
+# 5. Commit e PR
+git commit -m "feat: adiciona nova funcionalidade X"
+git push origin feature/nova-funcionalidade
+```
+
+### 📋 **Áreas Prioritárias**
+
+```yaml
+Alta_Prioridade:
+  - "🤖 Melhorias nos modelos de IA"
+  - "📱 Otimizações mobile"
+  - "🌍 Novas traduções"
+  - "⚡ Performance improvements"
+  - "🔐 Security enhancements"
+
+Média_Prioridade:
+  - "🎨 Melhorias de UI/UX"
+  - "📊 Novos dashboards"
+  - "🔗 Novas integrações"
+  - "📝 Documentação"
+```
+
+**Quer contribuir?** Veja nosso [Guia de Contribuição](./CONTRIBUTING.md)
 
 ## 📄 Licença
 
@@ -975,85 +953,71 @@ SOFTWARE.
 ![CEO KRYONIX](./Marca-KRYONIX%20(Branding)/CEO%20da%20Kryonix.png)
 
 ### **Vitor Jayme Fernandes Ferreira**
-*CEO & Founder KRYONIX*
+*CEO & Fundador KRYONIX*
 
 </div>
 
-**Vitor Jayme Fernandes Ferreira** é o visionário arquiteto por trás da KRYONIX, a primeira plataforma SaaS do mundo a integrar **75+ stacks tecnológicos** em harmonia perfeita. Com mais de uma década de experiência em desenvolvimento de software e arquitetura de sistemas enterprise, Vitor dedicou os últimos anos a criar uma solução que democratiza o acesso a tecnologias de ponta.
+**Vitor Jayme Fernandes Ferreira** é o visionário arquiteto por trás da KRYONIX, a primeira plataforma SaaS do mundo a integrar **75+ pilhas tecnológicas** em harmonia perfeita, orquestradas por **15 agentes IA especializados** e suportando o **modelo Deepseek V2 de 326B parâmetros**.
 
 #### 🎯 **Visão**
-> "Acredito que a verdadeira inovação acontece quando as melhores tecnologias do mundo trabalham juntas de forma inteligente. A KRYONIX nasceu para quebrar as barreiras entre diferentes stacks e criar uma sinfonia tecnológica que empresas de qualquer porte possam usar."
+> "Acredito que a verdadeira inovação acontece quando as melhores tecnologias do mundo trabalham juntas de forma inteligente. A KRYONIX nasceu para quebrar as barreiras entre diferentes stacks e criar uma sinfonia tecnológica que empresas brasileiras de qualquer porte possam usar."
 
 #### 🏆 **Conquistas Únicas**
-- **Arquitetou** a primeira plataforma a integrar 75+ tecnologias diferentes
+- **Arquitetou** a primeira plataforma mundial a integrar 75+ tecnologias diferentes
 - **Desenvolveu** 15 agentes IA especializados para gerenciamento autônomo
-- **Criou** sistema multi-tenant escalável para milhares de clientes simultâneos
-- **Implementou** padrões de segurança enterprise com 12 camadas de proteção
+- **Implementou** suporte nativo ao modelo Deepseek V2 (326B parâmetros)
+- **Criou** sistema multitenant escalável para milhares de clientes simultâneos
 - **Estabeleceu** SLA 99.95% com disaster recovery automático
+- **Pioneirou** auto-recuperação inteligente de sistemas
 
 #### 🌟 **Especialidades Técnicas**
 ```yaml
 Arquitetura_Enterprise:
-  - "Design de sistemas distribuídos de larga escala"
-  - "Integração de 75+ stacks tecnológicos"
-  - "Orquestração automatizada com IA"
-  - "Multi-tenancy enterprise com Kubernetes"
+  - "Design de sistemas distribuídos com 75+ pilhas"
+  - "Orquestração automatizada com 15 agentes IA"
+  - "Multitenant enterprise com Kubernetes"
+  - "Integração nativa Deepseek V2 326B"
   
-AI_&_Machine_Learning:
-  - "15 agentes IA especializados"
-  - "LLMs locais com Ollama"
+IA_e_Machine_Learning:
+  - "LLMs de grande escala (326B parâmetros)"
+  - "Agentes IA especializados autônomos"
   - "AutoML e otimização preditiva"
   - "Observabilidade de sistemas IA"
   
-Business_Innovation:
-  - "Produto SaaS multi-módulo"
-  - "Go-to-market strategy B2B"
-  - "Customer Success automatizado"
-  - "Escalabilidade de receita"
-  
-Leadership_&_Vision:
-  - "Team building de engenheiros senior"
-  - "Cultura de inovação contínua" 
-  - "Mentoria em arquitetura de software"
-  - "Evangelização de tecnologias emergentes"
+Inovação_Brasileira:
+  - "Integração nativa PIX/WhatsApp/LGPD"
+  - "Compliance regulatório brasileiro"
+  - "Suporte empresarial localizado"
+  - "Casos de uso específicos do BR"
 ```
 
 #### 🚀 **Inovações Criadas**
-- **IA Maestro**: Sistema de orquestração autônoma de 75+ stacks
+- **IA Maestro**: Sistema de orquestração autônoma de 75+ pilhas
+- **Deepseek V2 Integration**: Primeiro no mundo a rodar 326B em produção SaaS
 - **Multi-tenant AI**: Isolamento inteligente com personalização por IA
-- **Auto-provisioning**: Criação automática de ambientes completos
+- **Auto-provisioning BR**: PIX + WhatsApp + LGPD nativo
 - **Cross-stack Monitoring**: Observabilidade unificada de todos os componentes
-- **Whitelabel AI**: Customização automática baseada em preferências
 
 #### 📞 **Contato Profissional**
 ```yaml
-Executive:
+Executivo:
   email: "vitor@kryonix.com.br"
+  whatsapp: "+55 11 99999-9999"
   linkedin: "linkedin.com/in/vitor-fernandes-kryonix"
-  company: "KRYONIX - CEO & Founder"
   
-Platform:
+Plataforma:
   website: "https://kryonix.com.br"
   demo: "demo@kryonix.com.br"
   enterprise: "enterprise@kryonix.com.br"
-  partnership: "partners@kryonix.com.br"
+  partnership: "parcerias@kryonix.com.br"
 ```
 
-#### 💭 **Filosofia de Inovação**
-> "Cada uma das 75+ tecnologias da KRYONIX foi escolhida não apenas por sua excelência individual, mas por sua capacidade de sinergia com as demais. Não se trata de usar mais tecnologia, mas de criar harmonia entre as melhores tecnologias do mundo."
-
-#### 🌟 **Reconhecimentos**
-- **Primeira plataforma mundial** com 75+ stacks nativamente integrados
-- **Pioneiro em IA multi-stack** para orquestração automática
-- **Referência em multi-tenancy** para SaaS enterprise no Brasil
-- **Inovador em auto-provisioning** de infraestrutura completa
-
 #### 🔮 **Próximos Marcos**
-- Expansão para **100+ stacks integrados** até 2025
+- Expansão para **100+ pilhas integradas** até 2025
 - **20 agentes IA especializados** com capacidades aumentadas
-- Parcerias estratégicas com **AWS, Google Cloud e Azure**
+- **Modelos LLM próprios** treinados para o mercado brasileiro
 - **IPO da KRYONIX** como unicórnio brasileiro de SaaS
-- Abertura de escritórios em **Silicon Valley e Europa**
+- Abertura de escritórios em **São Paulo e Rio de Janeiro**
 
 ---
 
@@ -1064,14 +1028,16 @@ Platform:
 
 ---
 
-**⭐ A plataforma com MAIS tecnologias integradas do mundo! Dê uma estrela se você ficou impressionado!**
+**⭐ A primeira plataforma mundial com 75+ pilhas tecnológicas integradas!**
 
 [![GitHub stars](https://img.shields.io/github/stars/nakahh/kryonix-plataforma.svg?style=social&label=Star)](https://github.com/nakahh/kryonix-plataforma)
 [![GitHub forks](https://img.shields.io/github/forks/nakahh/kryonix-plataforma.svg?style=social&label=Fork)](https://github.com/nakahh/kryonix-plataforma/fork)
 [![GitHub watchers](https://img.shields.io/github/watchers/nakahh/kryonix-plataforma.svg?style=social&label=Watch)](https://github.com/nakahh/kryonix-plataforma)
 
-**🏆 KRYONIX - A Primeira Plataforma Mundial com 75+ Stacks Integrados**
+**🏆 KRYONIX - A Primeira Plataforma Mundial com 75+ Pilhas + Deepseek V2 326B**
 
-**Made with ❤️ in Brazil 🇧🇷 | Powered by 15 AI Agents 🤖 | 75+ Stacks ⚡**
+**Feito com ❤️ no Brasil 🇧🇷 | Powered by 15 Agentes IA 🤖 | 75+ Pilhas ⚡ | Deepseek V2 326B 🧠**
+
+**Quer ver uma demo? [Agende um café virtual ☕](mailto:demo@kryonix.com.br)**
 
 </div>
