@@ -55,7 +55,7 @@ Democratizar o acesso a soluções SaaS enterprise através de uma plataforma 10
 Ser a plataforma SaaS mais avançada e acessível do Brasil, impulsionando a transformação digital de empresas de todos os portes.
 
 ### 💎 Valores
-- **Inovação Contínua**: Sempre na vanguarda tecnológica
+- **Inova��ão Contínua**: Sempre na vanguarda tecnológica
 - **Acessibilidade**: Tecnologia enterprise para todos
 - **Excelência**: Qualidade sem compromissos
 - **Autonomia**: Sistemas auto-gerenciáveis e inteligentes
@@ -63,10 +63,11 @@ Ser a plataforma SaaS mais avançada e acessível do Brasil, impulsionando a tra
 ## ✨ Características Principais
 
 ### 🚀 **Tecnologia de Ponta**
-- **32 Stacks Integrados** funcionando em harmonia perfeita
+- **75+ Stacks Integrados** funcionando em harmonia perfeita
 - **Orquestração por IA** com auto-healing e otimização contínua
 - **Arquitetura Multi-Tenant** com isolamento completo de dados
 - **Mobile-First Design** otimizado para 80% de usuários mobile
+- **15 Agentes IA Especializados** trabalhando 24/7
 
 ### 🎯 **Módulos SaaS Completos**
 - **💡 Intelligence & BI**: Analytics e inteligência comercial
@@ -76,7 +77,8 @@ Ser a plataforma SaaS mais avançada e acessível do Brasil, impulsionando a tra
 - **📧 Email Marketing**: Marketing automatizado por IA
 - **📱 Social Media**: Gerenciamento e agendamento social
 - **👥 Client Portal**: Portal do cliente e treinamentos
-- **🎨 Whitelabel**: Plataforma personalizável
+- **🎧 Customer Support**: Atendimento omnichannel com IA
+- **🎨 Whitelabel**: Plataforma completamente personalizável
 
 ### 🤖 **IA Autônoma**
 - **Auto-provisioning** de novos tenants
@@ -2592,7 +2594,7 @@ Formas de Contribuir:
   documentation: "Melhoria da documentação"
   testing: "Testes e QA"
   design: "UI/UX e design"
-  translation: "Tradu��ões para novos idiomas"
+  translation: "Traduções para novos idiomas"
   feedback: "Relatórios de bugs e sugestões"
 ```
 
